@@ -88,7 +88,7 @@ func TestExecuteWithRetry_Success(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	resp.Body.Close()
+	_ = resp.Body.Close()
 	if resp.StatusCode != 200 {
 		t.Errorf("status = %d", resp.StatusCode)
 	}
@@ -117,7 +117,7 @@ func TestExecuteWithRetry_RetriesOn500(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	resp.Body.Close()
+	_ = resp.Body.Close()
 	if attempts.Load() != 3 {
 		t.Errorf("attempts = %d, want 3", attempts.Load())
 	}

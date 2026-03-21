@@ -41,7 +41,7 @@ type OAuthClient struct {
 	clientSecret  string
 	tsgID         string
 	tokenEndpoint string
-	tokenBufferMs time.Duration
+	tokenBuffer time.Duration
 
 	mu          sync.Mutex
 	accessToken string
@@ -66,7 +66,7 @@ func NewOAuthClient(opts OAuthClientOpts) *OAuthClient {
 		clientSecret:  opts.ClientSecret,
 		tsgID:         opts.TsgID,
 		tokenEndpoint: endpoint,
-		tokenBufferMs: time.Duration(bufferMs) * time.Millisecond,
+		tokenBuffer: time.Duration(bufferMs) * time.Millisecond,
 	}
 }
 
@@ -76,7 +76,7 @@ func (c *OAuthClient) GetToken() (string, error) {
 	c.mu.Lock()
 
 	// Return cached token if valid
-	if c.accessToken != "" && time.Now().Before(c.expiresAt.Add(-c.tokenBufferMs)) {
+	if c.accessToken != "" && time.Now().Before(c.expiresAt.Add(-c.tokenBuffer)) {
 		token := c.accessToken
 		c.mu.Unlock()
 		return token, nil
@@ -130,7 +130,7 @@ func (c *OAuthClient) IsTokenExpired() bool {
 func (c *OAuthClient) IsTokenExpiringSoon() bool {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	return c.accessToken == "" || time.Now().After(c.expiresAt.Add(-c.tokenBufferMs))
+	return c.accessToken == "" || time.Now().After(c.expiresAt.Add(-c.tokenBuffer))
 }
 
 // GetTokenInfo returns a snapshot of the current token state.
@@ -141,7 +141,7 @@ func (c *OAuthClient) GetTokenInfo() TokenInfo {
 	now := time.Now()
 	hasToken := c.accessToken != ""
 	isExpired := !hasToken || now.After(c.expiresAt)
-	isExpiringSoon := !hasToken || now.After(c.expiresAt.Add(-c.tokenBufferMs))
+	isExpiringSoon := !hasToken || now.After(c.expiresAt.Add(-c.tokenBuffer))
 
 	var expiresIn time.Duration
 	var expiresAt time.Time
@@ -195,7 +195,7 @@ func (c *OAuthClient) fetchToken() (string, error) {
 	if err != nil {
 		return "", aisec.WrapError(fmt.Sprintf("token request failed: %s", err.Error()), aisec.OAuthError, err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	body, _ := io.ReadAll(resp.Body)
 

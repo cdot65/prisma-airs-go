@@ -371,7 +371,7 @@ func (c *ReportsClient) DownloadReport(ctx context.Context, jobID string, format
 		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
 			if resp.StatusCode == 401 || resp.StatusCode == 403 {
 				_, _ = io.Copy(io.Discard, resp.Body)
-				resp.Body.Close()
+				_ = resp.Body.Close()
 				svcCfg.OAuth.ClearToken()
 				return true, nil
 			}
@@ -381,7 +381,7 @@ func (c *ReportsClient) DownloadReport(ctx context.Context, jobID string, format
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	var buf bytes.Buffer
 	if _, err := io.Copy(&buf, resp.Body); err != nil {

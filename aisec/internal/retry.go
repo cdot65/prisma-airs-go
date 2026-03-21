@@ -112,14 +112,14 @@ func ExecuteWithRetry(opts RetryOptions) (*http.Response, error) {
 
 		if IsRetryableStatus(resp.StatusCode) && attempt < opts.MaxRetries {
 			_, _ = io.Copy(io.Discard, resp.Body)
-			resp.Body.Close()
+			_ = resp.Body.Close()
 			time.Sleep(time.Duration(BackoffDelay(attempt)) * time.Millisecond)
 			continue
 		}
 
 		// Non-retryable or retries exhausted
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		errorMessage := ExtractErrorMessage(string(bodyBytes), resp.StatusCode)
 		return nil, aisec.NewAISecSDKError(errorMessage, ClassifyErrorType(resp.StatusCode))
 	}

@@ -72,7 +72,7 @@ func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts 
 		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
 			if resp.StatusCode == 401 || resp.StatusCode == 403 {
 				_, _ = io.Copy(io.Discard, resp.Body)
-				resp.Body.Close()
+				_ = resp.Body.Close()
 				svcCfg.OAuth.ClearToken()
 				return true, nil // retry without consuming budget
 			}
@@ -82,7 +82,7 @@ func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts 
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
