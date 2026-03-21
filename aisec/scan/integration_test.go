@@ -47,8 +47,35 @@ func TestIntegration_SyncScan(t *testing.T) {
 }
 
 func TestIntegration_AsyncScan(t *testing.T) {
-	// TODO: AsyncScanObject wire format is missing req_id + scan_req wrapper
-	// that the API expects (see TS SDK AsyncScanObjectSchema). Skipping until
-	// the SDK model is fixed. Track in a separate issue.
-	t.Skip("AsyncScanObject wire format needs req_id/scan_req wrapper — SDK bug")
+	testutil.LoadProjectEnv(t)
+	testutil.RequireEnv(t, "PANW_AI_SEC_API_KEY", "PANW_AI_SEC_PROFILE_NAME")
+
+	cfg := aisec.NewConfig(aisec.WithAPIKey(os.Getenv("PANW_AI_SEC_API_KEY")))
+	scanner := NewScanner(cfg)
+
+	profileName := os.Getenv("PANW_AI_SEC_PROFILE_NAME")
+
+	objects := []AsyncScanObject{
+		{
+			ReqID: 0,
+			ScanReq: ScanRequest{
+				AiProfile: AiProfile{ProfileName: profileName},
+				Contents: []ContentInner{{
+					Prompt:   "Tell me a joke",
+					Response: "Why did the chicken cross the road? To get to the other side.",
+				}},
+			},
+		},
+	}
+
+	resp, err := scanner.AsyncScan(context.Background(), objects)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if resp.ScanID == "" {
+		t.Error("expected non-empty ScanID")
+	}
+
+	t.Logf("AsyncScan scanID=%s reportID=%s", resp.ScanID, resp.ReportID)
 }

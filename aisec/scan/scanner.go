@@ -83,6 +83,13 @@ func (s *Scanner) AsyncScan(ctx context.Context, objects []AsyncScanObject) (*As
 		)
 	}
 
+	// Validate that each object has a ReqID set; auto-assign if zero.
+	for i := range objects {
+		if objects[i].ReqID == 0 {
+			objects[i].ReqID = uint32(i)
+		}
+	}
+
 	resp, err := internal.DoRequest[AsyncScanResponse](ctx, s.cfg, internal.RequestOptions{
 		Method: "POST",
 		Path:   aisec.AsyncScanPath,
