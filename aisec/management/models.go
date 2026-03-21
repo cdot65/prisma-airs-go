@@ -1,7 +1,5 @@
 package management
 
-import "time"
-
 // ListOpts are common pagination options.
 type ListOpts struct {
 	Limit  int
@@ -76,14 +74,33 @@ type DeleteTopicResponse struct {
 	Message string `json:"message,omitempty"`
 }
 
-// ApiKey represents an API key.
+// ApiKey represents an API key with all spec-defined fields.
 type ApiKey struct {
-	ApiKeyID   string    `json:"api_key_id,omitempty"`
-	ApiKeyName string    `json:"api_key_name,omitempty"`
-	ApiKey     string    `json:"api_key,omitempty"`
-	Active     bool      `json:"active,omitempty"`
-	CreatedAt  string    `json:"created_at,omitempty"`
-	ExpiresAt  time.Time `json:"expires_at,omitempty"`
+	ApiKeyID             string `json:"api_key_id,omitempty"`
+	ApiKeyLast8          string `json:"api_key_last8,omitempty"`
+	ApiKeyName           string `json:"api_key_name,omitempty"`
+	AuthCode             string `json:"auth_code,omitempty"`
+	CspID                string `json:"csp_id,omitempty"`
+	TsgID                string `json:"tsg_id,omitempty"`
+	Expiration           string `json:"expiration,omitempty"`
+	Revoked              bool   `json:"revoked,omitempty"`
+	RevokeReason         string `json:"revoke_reason,omitempty"`
+	CustApp              string `json:"cust_app,omitempty"`
+	CustEnv              string `json:"cust_env,omitempty"`
+	CustAIAgentFramework string `json:"cust_ai_agent_framework,omitempty"`
+	CustCloudProvider    string `json:"cust_cloud_provider,omitempty"`
+	CreatedBy            string `json:"created_by,omitempty"`
+	UpdatedBy            string `json:"updated_by,omitempty"`
+	LastModifiedTS       string `json:"last_modified_ts,omitempty"`
+	RotationTimeInterval int32  `json:"rotation_time_interval,omitempty"`
+	RotationTimeUnit     string `json:"rotation_time_unit,omitempty"`
+	DpName               string `json:"dp_name,omitempty"`
+	Status               string `json:"status,omitempty"`
+	ApiKey               string `json:"api_key,omitempty"`
+	LicExpiration        string `json:"lic_expiration,omitempty"`
+	AvgTextRecords       int32  `json:"avg_text_records,omitempty"`
+	CreationTS           string `json:"creation_ts,omitempty"`
+	CustomerAppID        string `json:"customer_appId,omitempty"`
 }
 
 // ApiKeyListResponse is the list response for API keys.
@@ -175,23 +192,111 @@ type DeploymentProfileListResponse struct {
 	Status string              `json:"status,omitempty"`
 }
 
-// ScanLog represents a scan activity log entry.
+// ScanLog represents a scan activity log entry with all spec-defined fields.
 type ScanLog struct {
-	LogID     string         `json:"log_id,omitempty"`
-	Details   map[string]any `json:"details,omitempty"`
-	CreatedAt string         `json:"created_at,omitempty"`
+	CspID                 string `json:"csp_id,omitempty"`
+	TsgID                 string `json:"tsg_id,omitempty"`
+	ScanID                string `json:"scan_id,omitempty"`
+	ScanSubReqID          int32  `json:"scan_sub_req_id,omitempty"`
+	TransactionID         string `json:"transaction_id,omitempty"`
+	ApiKeyName            string `json:"api_key_name,omitempty"`
+	ProfileID             string `json:"profile_id,omitempty"`
+	ProfileName           string `json:"profile_name,omitempty"`
+	AppName               string `json:"app_name,omitempty"`
+	ModelName             string `json:"model_name,omitempty"`
+	User                  string `json:"user,omitempty"`
+	Environment           string `json:"environment,omitempty"`
+	CloudProvider         string `json:"cloud_provider,omitempty"`
+	AgentFramework        string `json:"agent_framework,omitempty"`
+	Tokens                int32  `json:"tokens,omitempty"`
+	TextRecords           int32  `json:"text_records,omitempty"`
+	ReportID              string `json:"report_id,omitempty"`
+	ReceivedTS            string `json:"received_ts,omitempty"`
+	CompletedTS           string `json:"completed_ts,omitempty"`
+	Status                string `json:"status,omitempty"`
+	Verdict               string `json:"verdict,omitempty"`
+	Action                string `json:"action,omitempty"`
+	IsPrompt              bool   `json:"is_prompt,omitempty"`
+	IsResponse            bool   `json:"is_response,omitempty"`
+	PIFinalVerdict        string `json:"pi_final_verdict,omitempty"`
+	UFFinalVerdict        string `json:"uf_final_verdict,omitempty"`
+	DLPFinalVerdict       string `json:"dlp_final_verdict,omitempty"`
+	DBSFinalVerdict       string `json:"dbs_final_verdict,omitempty"`
+	TCFinalVerdict        string `json:"tc_final_verdict,omitempty"`
+	MCFinalVerdict        string `json:"mc_final_verdict,omitempty"`
+	AgentFinalVerdict     string `json:"agent_final_verdict,omitempty"`
+	CGFinalVerdict        string `json:"cg_final_verdict,omitempty"`
+	TGFinalVerdict        string `json:"tg_final_verdict,omitempty"`
+	PromptPIVerdict       string `json:"prompt_pi_verdict,omitempty"`
+	PromptUFVerdict       string `json:"prompt_uf_verdict,omitempty"`
+	PromptDLPVerdict      string `json:"prompt_dlp_verdict,omitempty"`
+	PromptTCVerdict       string `json:"prompt_tc_verdict,omitempty"`
+	PromptMCVerdict       string `json:"prompt_mc_verdict,omitempty"`
+	PromptAgentVerdict    string `json:"prompt_agent_verdict,omitempty"`
+	PromptTGVerdict       string `json:"prompt_tg_verdict,omitempty"`
+	PromptVerdict         string `json:"prompt_verdict,omitempty"`
+	PromptPIAction        string `json:"prompt_pi_action,omitempty"`
+	PromptUFAction        string `json:"prompt_uf_action,omitempty"`
+	PromptDLPAction       string `json:"prompt_dlp_action,omitempty"`
+	PromptTCAction        string `json:"prompt_tc_action,omitempty"`
+	PromptMCAction        string `json:"prompt_mc_action,omitempty"`
+	PromptAgentAction     string `json:"prompt_agent_action,omitempty"`
+	PromptTGAction        string `json:"prompt_tg_action,omitempty"`
+	ResponseUFVerdict     string `json:"response_uf_verdict,omitempty"`
+	ResponseDLPVerdict    string `json:"response_dlp_verdict,omitempty"`
+	ResponseDBSVerdict    string `json:"response_dbs_verdict,omitempty"`
+	ResponseTCVerdict     string `json:"response_tc_verdict,omitempty"`
+	ResponseMCVerdict     string `json:"response_mc_verdict,omitempty"`
+	ResponseAgentVerdict  string `json:"response_agent_verdict,omitempty"`
+	ResponseCGVerdict     string `json:"response_cg_verdict,omitempty"`
+	ResponseTGVerdict     string `json:"response_tg_verdict,omitempty"`
+	ResponseUFAction      string `json:"response_uf_action,omitempty"`
+	ResponseDLPAction     string `json:"response_dlp_action,omitempty"`
+	ResponseDBSAction     string `json:"response_dbs_action,omitempty"`
+	ResponseTCAction      string `json:"response_tc_action,omitempty"`
+	ResponseMCAction      string `json:"response_mc_action,omitempty"`
+	ResponseAgentAction   string `json:"response_agent_action,omitempty"`
+	ResponseCGAction      string `json:"response_cg_action,omitempty"`
+	ResponseTGAction      string `json:"response_tg_action,omitempty"`
+	ResponseVerdict       string `json:"response_verdict,omitempty"`
+	DetectionServiceFlags int32  `json:"detection_service_flags,omitempty"`
+	ContentMasked         bool   `json:"content_masked,omitempty"`
+	UserIP                string `json:"user_ip,omitempty"`
 }
 
-// ScanLogListOpts are options for listing scan logs.
+// ScanLogListOpts are options for listing scan logs (spec: POST /v1/mgmt/scanlogs).
 type ScanLogListOpts struct {
-	Limit  int
-	Offset int
+	TimeInterval int64  // required: time_interval query param
+	TimeUnit     string // required: time_unit query param (hour, day, etc.)
+	PageNumber   int32  // required: pageNumber query param
+	PageSize     int32  // required: pageSize query param
+	Filter       string // required: filter query param (all|benign|threat)
+	PageToken    string // optional: sent in request body as PageTokenJsonObject
 }
 
-// ScanLogListResponse is the list response for scan logs.
+// PageTokenRequest is the request body for paginated scan log queries.
+type PageTokenRequest struct {
+	PageToken string `json:"page_token,omitempty"`
+}
+
+// ScanResultForDashboard contains dashboard-level scan result summary.
+type ScanResultForDashboard struct {
+	TextRecordsCount       int32     `json:"text_records_count,omitempty"`
+	APICallsCount          int32     `json:"api_calls_count,omitempty"`
+	ThreatsCount           int32     `json:"threats_count,omitempty"`
+	AllTransactionsCount   int32     `json:"all_transactions_count,omitempty"`
+	BenignTransactionCount int32     `json:"benign_transaction_count,omitempty"`
+	ScanResultEntries      []ScanLog `json:"scan_result_entries,omitempty"`
+}
+
+// ScanLogListResponse is the list response for scan logs matching PaginatedScanResultsObject.
 type ScanLogListResponse struct {
-	Items      []ScanLog `json:"scan_logs"`
-	TotalCount int       `json:"total_count,omitempty"`
+	ScanResultForDashboard *ScanResultForDashboard `json:"scan_result_for_dashboard,omitempty"`
+	TotalPages             int32                   `json:"total_pages,omitempty"`
+	PageNumber             int32                   `json:"page_number,omitempty"`
+	PageSize               int32                   `json:"page_size,omitempty"`
+	PageToken              string                  `json:"page_token,omitempty"`
+	Revision               int32                   `json:"revision,omitempty"`
 }
 
 // OAuthToken represents an OAuth token from the management API.
