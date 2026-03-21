@@ -16,9 +16,9 @@ const (
 
 // Default API endpoints.
 const (
-	DefaultEndpoint            = "https://service.api.aisecurity.paloaltonetworks.com"
-	DefaultMgmtEndpoint        = "https://api.sase.paloaltonetworks.com/aisec"
-	DefaultTokenEndpoint       = "https://auth.apps.paloaltonetworks.com/oauth2/access_token"
+	DefaultEndpoint             = "https://service.api.aisecurity.paloaltonetworks.com"
+	DefaultMgmtEndpoint         = "https://api.sase.paloaltonetworks.com/aisec"
+	DefaultTokenEndpoint        = "https://auth.apps.paloaltonetworks.com/oauth2/access_token"
 	DefaultModelSecDataEndpoint = "https://api.sase.paloaltonetworks.com/aims/data"
 	DefaultModelSecMgmtEndpoint = "https://api.sase.paloaltonetworks.com/aims/mgmt"
 	DefaultRedTeamDataEndpoint  = "https://api.sase.paloaltonetworks.com/ai-red-teaming/data-plane"
@@ -92,17 +92,17 @@ const (
 
 // String length limits.
 const (
-	MaxTransactionIDLength  = 100
-	MaxSessionIDLength      = 100
-	MaxScanIDLength         = 36
-	MaxReportIDLength       = 40
-	MaxAIProfileNameLength  = 100
+	MaxTransactionIDLength = 100
+	MaxSessionIDLength     = 100
+	MaxScanIDLength        = 36
+	MaxReportIDLength      = 40
+	MaxAIProfileNameLength = 100
 )
 
 // Batch / query limits.
 const (
-	MaxNumberOfScanIDs         = 5
-	MaxNumberOfReportIDs       = 5
+	MaxNumberOfScanIDs          = 5
+	MaxNumberOfReportIDs        = 5
 	MaxNumberOfBatchScanObjects = 5
 )
 

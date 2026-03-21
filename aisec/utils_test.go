@@ -11,7 +11,7 @@ func TestIsValidUUID(t *testing.T) {
 		{"ABCDEF12-3456-7890-ABCD-EF1234567890", true},
 		{"not-a-uuid", false},
 		{"", false},
-		{"550e8400-e29b-41d4-a716-44665544000", false},  // too short
+		{"550e8400-e29b-41d4-a716-44665544000", false},   // too short
 		{"550e8400-e29b-41d4-a716-4466554400000", false}, // too long
 		{"550e8400e29b41d4a716446655440000", false},      // no dashes
 	}

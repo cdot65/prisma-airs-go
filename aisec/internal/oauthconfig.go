@@ -17,14 +17,14 @@ type OAuthServiceConfig struct {
 
 // ResolveOAuthConfigOpts are options for resolving OAuth config.
 type ResolveOAuthConfigOpts struct {
-	ClientID         string
-	ClientSecret     string
-	TsgID            string
-	BaseURL          string
-	NumRetries       int
-	TokenEndpoint    string
-	TokenBufferMs    int
-	PrimaryEnvPrefix string // e.g. "PANW_RED_TEAM"
+	ClientID          string
+	ClientSecret      string
+	TsgID             string
+	BaseURL           string
+	NumRetries        int
+	TokenEndpoint     string
+	TokenBufferMs     int
+	PrimaryEnvPrefix  string // e.g. "PANW_RED_TEAM"
 	FallbackEnvPrefix string // e.g. "PANW_MGMT"
 }
 
