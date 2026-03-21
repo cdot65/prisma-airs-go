@@ -41,9 +41,10 @@ func main() {
     // 2. Identify expiring keys (within 7 days)
     threshold := time.Now().Add(7 * 24 * time.Hour)
     for _, key := range keys.Items {
-        if key.ExpiresAt.Before(threshold) {
+        expiry, _ := time.Parse(time.RFC3339, key.Expiration)
+        if !expiry.IsZero() && expiry.Before(threshold) {
             fmt.Printf("Key %s expires at %s — regenerating\n",
-                key.ApiKeyName, key.ExpiresAt.Format(time.RFC3339))
+                key.ApiKeyName, key.Expiration)
 
             // 3. Regenerate the key
             newKey, err := client.ApiKeys.Regenerate(ctx, key.ApiKeyID, management.RegenerateKeyRequest{

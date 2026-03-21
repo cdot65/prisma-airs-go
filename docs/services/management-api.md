@@ -87,9 +87,9 @@ newKey, err := client.ApiKeys.Regenerate(ctx, "key-id", management.RegenerateKey
 ```go
 app, err := client.CustomerApps.Create(ctx, management.CreateAppRequest{...})
 apps, err := client.CustomerApps.List(ctx, management.ListOpts{})
-app, err := client.CustomerApps.Get(ctx, "app-id")
+app, err := client.CustomerApps.Get(ctx, "app-name")
 updated, err := client.CustomerApps.Update(ctx, "app-id", management.UpdateAppRequest{...})
-resp, err := client.CustomerApps.Delete(ctx, "app-id")
+resp, err := client.CustomerApps.Delete(ctx, "app-name", "admin@example.com")
 ```
 
 ### DlpProfiles — DLP Data Profiles (Read-Only)
@@ -110,15 +110,20 @@ profile, err := client.DeploymentProfiles.Get(ctx, "profile-id")
 
 ```go
 logs, err := client.ScanLogs.List(ctx, management.ScanLogListOpts{
-    Limit: 50,
+    TimeInterval: 24,
+    TimeUnit:     "hour",
+    PageNumber:   1,
+    PageSize:     50,
+    Filter:       "all",
 })
-logEntry, err := client.ScanLogs.Get(ctx, "log-id")
 ```
 
 ### OAuth — Token Management
 
 ```go
-token, err := client.OAuth.GetToken(ctx)
+token, err := client.OAuth.GetToken(ctx, management.OAuthTokenRequest{
+    ClientID: "your-client-id",
+})
 resp, err := client.OAuth.InvalidateToken(ctx)
 ```
 

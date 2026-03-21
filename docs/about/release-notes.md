@@ -1,5 +1,12 @@
 # Release Notes
 
+## v0.1.1
+
+- **Red Team targets**: align all target models with OpenAPI spec (`TargetCreateRequest`, `TargetUpdateRequest`, `TargetContextUpdate`, `TargetProfileResponse`, `TargetListItem`)
+- **Management enums**: add `ProfileAction` (`allow`, `block`, `alert`, disabled) and `ToxicContentAction` (compound severity-threshold values) typed enums for all security profile action fields
+- **Release CI**: add Go module proxy publish step to release workflow
+- Remove `omitempty` from spec-required response fields across all packages
+
 ## v0.1.0 — Initial Release
 
 - Project scaffolding and Go module setup

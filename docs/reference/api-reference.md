@@ -51,16 +51,14 @@ const (
 
 // Batch limits
 const (
-    MaxScanIDs         = 5
-    MaxReportIDs       = 5
-    MaxBatchScanObjects = 5
+    MaxNumberOfScanIDs          = 5
+    MaxNumberOfReportIDs        = 5
+    MaxNumberOfBatchScanObjects = 5
 )
 
 // Retry
-const (
-    MaxRetries             = 5
-    ForceRetryStatusCodes  = []int{500, 502, 503, 504}
-)
+const MaxNumberOfRetries = 5
+var HTTPForceRetryStatusCodes = []int{500, 502, 503, 504}
 ```
 
 ---
@@ -72,7 +70,7 @@ const (
 ```go
 func NewScanner(cfg *aisec.Config) *Scanner
 
-func (s *Scanner) SyncScan(ctx context.Context, profile AiProfile, content *Content, opts ...SyncScanOption) (*ScanResponse, error)
+func (s *Scanner) SyncScan(ctx context.Context, profile AiProfile, content *Content, opts ...SyncScanOpts) (*ScanResponse, error)
 func (s *Scanner) AsyncScan(ctx context.Context, objects []AsyncScanObject) (*AsyncScanResponse, error)
 func (s *Scanner) QueryByScanIDs(ctx context.Context, scanIDs []string) ([]ScanIDResult, error)
 func (s *Scanner) QueryByReportIDs(ctx context.Context, reportIDs []string) ([]ThreatScanReport, error)
@@ -103,12 +101,52 @@ type AiProfile struct {
 }
 
 type ScanResponse struct {
-    Category         string            `json:"category"`
-    Action           string            `json:"action"`
-    ScanID           string            `json:"scan_id"`
-    ReportID         string            `json:"report_id"`
-    PromptDetected   *PromptDetected   `json:"prompt_detected,omitempty"`
-    ResponseDetected *ResponseDetected `json:"response_detected,omitempty"`
+    Source                   string            `json:"source,omitempty"`
+    ReportID                 string            `json:"report_id"`
+    ScanID                   string            `json:"scan_id"`
+    TrID                     string            `json:"tr_id,omitempty"`
+    SessionID                string            `json:"session_id,omitempty"`
+    ProfileID                string            `json:"profile_id,omitempty"`
+    ProfileName              string            `json:"profile_name,omitempty"`
+    Category                 string            `json:"category"`
+    Action                   string            `json:"action"`
+    Timeout                  bool              `json:"timeout"`
+    Error                    bool              `json:"error"`
+    Errors                   []ContentError    `json:"errors"`
+    PromptDetected           *PromptDetected   `json:"prompt_detected,omitempty"`
+    ResponseDetected         *ResponseDetected `json:"response_detected,omitempty"`
+    PromptMaskedData         *MaskedData       `json:"prompt_masked_data,omitempty"`
+    ResponseMaskedData       *MaskedData       `json:"response_masked_data,omitempty"`
+    PromptDetectionDetails   *DetectionDetails `json:"prompt_detection_details,omitempty"`
+    ResponseDetectionDetails *DetectionDetails `json:"response_detection_details,omitempty"`
+    ToolDetected             *ToolDetected     `json:"tool_detected,omitempty"`
+    CreatedAt                string            `json:"created_at,omitempty"`
+    CompletedAt              string            `json:"completed_at,omitempty"`
+}
+
+type AsyncScanObject struct {
+    ReqID   uint32      `json:"req_id"`
+    ScanReq ScanRequest `json:"scan_req"`
+}
+
+type AsyncScanResponse struct {
+    Received string `json:"received"`
+    ScanID   string `json:"scan_id"`
+    ReportID string `json:"report_id,omitempty"`
+    Source   string `json:"source,omitempty"`
+}
+
+type ToolEvent struct {
+    Metadata *ToolEventMetadata `json:"metadata,omitempty"`
+    Input    string             `json:"input,omitempty"`
+    Output   string             `json:"output,omitempty"`
+}
+
+type ToolEventMetadata struct {
+    Ecosystem   string `json:"ecosystem"`
+    Method      string `json:"method"`
+    ServerName  string `json:"server_name"`
+    ToolInvoked string `json:"tool_invoked,omitempty"`
 }
 ```
 
@@ -119,7 +157,7 @@ type ScanResponse struct {
 ### Client
 
 ```go
-func NewClient(opts Opts) *Client
+func NewClient(opts Opts) (*Client, error)
 
 type Opts struct {
     ClientID      string
@@ -171,6 +209,50 @@ func (c *ApiKeysClient) Delete(ctx context.Context, keyName string, updatedBy st
 func (c *ApiKeysClient) Regenerate(ctx context.Context, keyID string, req RegenerateKeyRequest) (*ApiKey, error)
 ```
 
+### CustomerAppsClient
+
+```go
+func (c *CustomerAppsClient) Create(ctx context.Context, req CreateAppRequest) (*CustomerApp, error)
+func (c *CustomerAppsClient) List(ctx context.Context, opts ListOpts) (*CustomerAppListResponse, error)
+func (c *CustomerAppsClient) Get(ctx context.Context, appName string) (*CustomerApp, error)
+func (c *CustomerAppsClient) Update(ctx context.Context, appID string, req UpdateAppRequest) (*CustomerApp, error)
+func (c *CustomerAppsClient) Delete(ctx context.Context, appName string, updatedBy string) (*DeleteAppResponse, error)
+```
+
+### ScanLogsClient
+
+```go
+func (c *ScanLogsClient) List(ctx context.Context, opts ScanLogListOpts) (*ScanLogListResponse, error)
+```
+
+### OAuthManagementClient
+
+```go
+func (c *OAuthManagementClient) GetToken(ctx context.Context, req OAuthTokenRequest) (*OAuthToken, error)
+func (c *OAuthManagementClient) InvalidateToken(ctx context.Context) (*InvalidateTokenResponse, error)
+```
+
+### Action Enums
+
+```go
+type ProfileAction string
+
+const (
+    ProfileActionAllow    ProfileAction = "allow"
+    ProfileActionBlock    ProfileAction = "block"
+    ProfileActionAlert    ProfileAction = "alert"
+    ProfileActionDisabled ProfileAction = ""
+)
+
+type ToxicContentAction string
+
+const (
+    ToxicContentHighBlockModerateAllow ToxicContentAction = "high:block, moderate:allow"
+    ToxicContentHighBlockModerateBlock ToxicContentAction = "high:block, moderate:block"
+    ToxicContentHighAllowModerateAllow ToxicContentAction = "high:allow, moderate:allow"
+)
+```
+
 ---
 
 ## Package `modelsecurity`
@@ -178,7 +260,7 @@ func (c *ApiKeysClient) Regenerate(ctx context.Context, keyID string, req Regene
 ### Client
 
 ```go
-func NewClient(opts Opts) *Client
+func NewClient(opts Opts) (*Client, error)
 
 type Opts struct {
     ClientID      string
@@ -206,7 +288,7 @@ func (c *Client) GetPyPIAuth(ctx context.Context) (*PyPIAuthResponse, error)
 ### Client
 
 ```go
-func NewClient(opts Opts) *Client
+func NewClient(opts Opts) (*Client, error)
 
 type Opts struct {
     ClientID      string
@@ -219,18 +301,18 @@ type Opts struct {
 }
 
 type Client struct {
-    Scans              *ScansClient
-    Reports            *ReportsClient
+    Scans               *ScansClient
+    Reports             *ReportsClient
     CustomAttackReports *CustomAttackReportsClient
-    Targets            *TargetsClient
-    CustomAttacks      *CustomAttacksClient
+    Targets             *TargetsClient
+    CustomAttacks       *CustomAttacksClient
 }
 
 // Convenience methods
-func (c *Client) GetScanStatistics(ctx context.Context, params StatsParams) (*ScanStatisticsResponse, error)
+func (c *Client) GetScanStatistics(ctx context.Context, params map[string]string) (*ScanStatisticsResponse, error)
 func (c *Client) GetScoreTrend(ctx context.Context, targetID string) (*ScoreTrendResponse, error)
 func (c *Client) GetQuota(ctx context.Context) (*QuotaSummary, error)
-func (c *Client) GetErrorLogs(ctx context.Context, jobID string, opts ErrorLogOpts) (*ErrorLogListResponse, error)
+func (c *Client) GetErrorLogs(ctx context.Context, jobID string, opts ListOpts) (*ErrorLogListResponse, error)
 func (c *Client) UpdateSentiment(ctx context.Context, req SentimentRequest) (*SentimentResponse, error)
 func (c *Client) GetSentiment(ctx context.Context, jobID string) (*SentimentResponse, error)
 func (c *Client) GetDashboardOverview(ctx context.Context) (*DashboardOverviewResponse, error)
@@ -253,6 +335,7 @@ const (
 const (
     ActionAllow = "allow"
     ActionBlock = "block"
+    ActionAlert = "alert"
 )
 
 // Category
@@ -268,14 +351,17 @@ const (
 ### Detection Services
 
 ```go
+type DetectionServiceName string
+
 const (
-    DetectionServiceDLP   = "DLP"
-    DetectionServiceTC    = "TC"
-    DetectionServiceDBS   = "DBS"
-    DetectionServiceCI    = "CI"
-    DetectionServiceURLF  = "URLF"
-    DetectionServiceTG    = "TG"
-    DetectionServiceCG    = "CG"
-    DetectionServiceAGENT = "AGENT"
+    DetectionServiceDLP            DetectionServiceName = "dlp"
+    DetectionServiceInjection      DetectionServiceName = "injection"
+    DetectionServiceURLCats        DetectionServiceName = "url_cats"
+    DetectionServiceToxicContent   DetectionServiceName = "toxic_content"
+    DetectionServiceMaliciousCode  DetectionServiceName = "malicious_code"
+    DetectionServiceAgent          DetectionServiceName = "agent"
+    DetectionServiceTopicViolation DetectionServiceName = "topic_violation"
+    DetectionServiceDBSecurity     DetectionServiceName = "db_security"
+    DetectionServiceUngrounded     DetectionServiceName = "ungrounded"
 )
 ```
