@@ -272,7 +272,7 @@ func TestTargets_Create(t *testing.T) {
 func TestTargets_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(TargetList{
-			Data:       []TargetResponse{{UUID: "tgt-1"}},
+			Data:       []TargetListItem{{UUID: "tgt-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -428,7 +428,7 @@ func TestTargets_Probe_AllFields(t *testing.T) {
 
 func TestTargets_GetProfile(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(TargetProfileResponse{UUID: "tgt-1"})
+		_ = json.NewEncoder(w).Encode(TargetProfileResponse{TargetID: "tgt-1", TargetVersion: 1, Status: "COMPLETED"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -438,8 +438,8 @@ func TestTargets_GetProfile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if prof.UUID != "tgt-1" {
-		t.Errorf("UUID = %q", prof.UUID)
+	if prof.TargetID != "tgt-1" {
+		t.Errorf("TargetID = %q", prof.TargetID)
 	}
 }
 
@@ -633,7 +633,7 @@ func TestDualEndpointRouting(t *testing.T) {
 
 	mgmtSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		mgmtCalled = true
-		_ = json.NewEncoder(w).Encode(TargetList{Data: []TargetResponse{}, Pagination: RedTeamPagination{}})
+		_ = json.NewEncoder(w).Encode(TargetList{Data: []TargetListItem{}, Pagination: RedTeamPagination{}})
 	}))
 	defer mgmtSrv.Close()
 

@@ -895,8 +895,8 @@ func TestTargetResponse_ContextFields(t *testing.T) {
 	if t2.TargetMeta == nil || !t2.TargetMeta.MultiTurn {
 		t.Error("TargetMeta.MultiTurn should be true")
 	}
-	if t2.Background == nil || t2.Background.Industry != "finance" {
-		t.Error("Background.Industry should be finance")
+	if t2.TargetBackground == nil || t2.TargetBackground.Industry != "finance" {
+		t.Error("TargetBackground.Industry should be finance")
 	}
 	if t2.AdditionalCtx == nil || t2.AdditionalCtx.BaseModel != "gpt-4" {
 		t.Error("AdditionalCtx.BaseModel should be gpt-4")
