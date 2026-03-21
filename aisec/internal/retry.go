@@ -111,7 +111,7 @@ func ExecuteWithRetry(opts RetryOptions) (*http.Response, error) {
 		}
 
 		if IsRetryableStatus(resp.StatusCode) && attempt < opts.MaxRetries {
-			io.Copy(io.Discard, resp.Body)
+			_, _ = io.Copy(io.Discard, resp.Body)
 			resp.Body.Close()
 			time.Sleep(time.Duration(BackoffDelay(attempt)) * time.Millisecond)
 			continue

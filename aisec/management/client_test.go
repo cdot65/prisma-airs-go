@@ -15,7 +15,7 @@ func newTestMgmtServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server
 
 	tokenServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"access_token": "test-token",
 			"expires_in":   3600,
 			"token_type":   "Bearer",
@@ -55,7 +55,7 @@ func TestProfiles_Create(t *testing.T) {
 		if r.Method != "POST" {
 			t.Errorf("method = %s", r.Method)
 		}
-		json.NewEncoder(w).Encode(SecurityProfile{ProfileID: "p-1", ProfileName: "test"})
+		_ = json.NewEncoder(w).Encode(SecurityProfile{ProfileID: "p-1", ProfileName: "test"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -75,7 +75,7 @@ func TestProfiles_List(t *testing.T) {
 		if r.Method != "GET" {
 			t.Errorf("method = %s", r.Method)
 		}
-		json.NewEncoder(w).Encode(SecurityProfileListResponse{
+		_ = json.NewEncoder(w).Encode(SecurityProfileListResponse{
 			Items:      []SecurityProfile{{ProfileID: "p-1"}},
 			TotalCount: 1,
 		})
@@ -98,7 +98,7 @@ func TestProfiles_Update(t *testing.T) {
 		if r.Method != "PUT" {
 			t.Errorf("method = %s", r.Method)
 		}
-		json.NewEncoder(w).Encode(SecurityProfile{ProfileID: "p-1", ProfileName: "updated"})
+		_ = json.NewEncoder(w).Encode(SecurityProfile{ProfileID: "p-1", ProfileName: "updated"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -118,7 +118,7 @@ func TestProfiles_Delete(t *testing.T) {
 		if r.Method != "DELETE" {
 			t.Errorf("method = %s", r.Method)
 		}
-		json.NewEncoder(w).Encode(DeleteProfileResponse{Message: "deleted"})
+		_ = json.NewEncoder(w).Encode(DeleteProfileResponse{Message: "deleted"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -135,7 +135,7 @@ func TestProfiles_Delete(t *testing.T) {
 
 func TestTopics_CRUD(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(CustomTopic{TopicID: "t-1", TopicName: "test"})
+		_ = json.NewEncoder(w).Encode(CustomTopic{TopicID: "t-1", TopicName: "test"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -153,7 +153,7 @@ func TestTopics_CRUD(t *testing.T) {
 
 func TestApiKeys_Create(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(ApiKey{ApiKeyID: "k-1", ApiKeyName: "test-key"})
+		_ = json.NewEncoder(w).Encode(ApiKey{ApiKeyID: "k-1", ApiKeyName: "test-key"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -170,7 +170,7 @@ func TestApiKeys_Create(t *testing.T) {
 
 func TestCustomerApps_CRUD(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(CustomerApp{AppID: "a-1", AppName: "test-app"})
+		_ = json.NewEncoder(w).Encode(CustomerApp{AppID: "a-1", AppName: "test-app"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -196,7 +196,7 @@ func TestCustomerApps_CRUD(t *testing.T) {
 
 func TestDlpProfiles_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(DlpProfileListResponse{
+		_ = json.NewEncoder(w).Encode(DlpProfileListResponse{
 			Items: []DlpProfile{{ProfileID: "dlp-1"}}, TotalCount: 1,
 		})
 	})
@@ -215,7 +215,7 @@ func TestDlpProfiles_List(t *testing.T) {
 
 func TestDeploymentProfiles_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(DeploymentProfileListResponse{
+		_ = json.NewEncoder(w).Encode(DeploymentProfileListResponse{
 			Items: []DeploymentProfile{{ProfileID: "dp-1"}}, TotalCount: 1,
 		})
 	})
@@ -234,7 +234,7 @@ func TestDeploymentProfiles_List(t *testing.T) {
 
 func TestScanLogs_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(ScanLogListResponse{
+		_ = json.NewEncoder(w).Encode(ScanLogListResponse{
 			Items: []ScanLog{{LogID: "log-1"}}, TotalCount: 1,
 		})
 	})
@@ -253,7 +253,7 @@ func TestScanLogs_List(t *testing.T) {
 
 func TestOAuth_GetToken(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(OAuthToken{AccessToken: "mgmt-token", ExpiresIn: 3600})
+		_ = json.NewEncoder(w).Encode(OAuthToken{AccessToken: "mgmt-token", ExpiresIn: 3600})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -277,7 +277,7 @@ func TestNewClient_MissingCredentials(t *testing.T) {
 
 func TestSubClients_AllPresent(t *testing.T) {
 	tokenSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(map[string]any{"access_token": "t", "expires_in": 3600})
+		_ = json.NewEncoder(w).Encode(map[string]any{"access_token": "t", "expires_in": 3600})
 	}))
 	defer tokenSrv.Close()
 

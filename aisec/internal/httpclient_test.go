@@ -22,7 +22,7 @@ func TestHTTPRequest_Success(t *testing.T) {
 			t.Error("missing content-type")
 		}
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(map[string]string{"result": "ok"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"result": "ok"})
 	}))
 	defer server.Close()
 
