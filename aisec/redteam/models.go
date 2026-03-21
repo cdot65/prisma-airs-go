@@ -114,6 +114,168 @@ const (
 	FileFormatAll  FileFormat = "ALL"
 )
 
+// AttackStatus represents the status of an individual attack.
+type AttackStatus string
+
+const (
+	AttackStatusInit      AttackStatus = "INIT"
+	AttackStatusAttack    AttackStatus = "ATTACK"
+	AttackStatusDetection AttackStatus = "DETECTION"
+	AttackStatusReport    AttackStatus = "REPORT"
+	AttackStatusCompleted AttackStatus = "COMPLETED"
+	AttackStatusFailed    AttackStatus = "FAILED"
+)
+
+// AttackType represents the type of an attack.
+type AttackType string
+
+const (
+	AttackTypeNormal AttackType = "NORMAL"
+	AttackTypeCustom AttackType = "CUSTOM"
+)
+
+// AuthType represents authentication type for targets.
+type AuthType string
+
+const (
+	AuthTypeOAuth       AuthType = "OAUTH"
+	AuthTypeAccessToken AuthType = "ACCESS_TOKEN"
+)
+
+// BrandSubCategory represents brand attack sub-categories.
+type BrandSubCategory string
+
+const (
+	BrandSubCategoryCompetitorEndorsements BrandSubCategory = "COMPETITOR_ENDORSEMENTS"
+	BrandSubCategoryBrandTarnishing        BrandSubCategory = "BRAND_TARNISHING_SELF_CRITICISM"
+	BrandSubCategoryDiscriminatingClaims   BrandSubCategory = "DISCRIMINATING_CLAIMS"
+	BrandSubCategoryPoliticalEndorsements  BrandSubCategory = "POLITICAL_ENDORSEMENTS"
+)
+
+// ComplianceSubCategory represents compliance attack sub-categories.
+type ComplianceSubCategory string
+
+const (
+	ComplianceSubCategoryOWASP      ComplianceSubCategory = "OWASP"
+	ComplianceSubCategoryMITREATLAS ComplianceSubCategory = "MITRE_ATLAS"
+	ComplianceSubCategoryNIST       ComplianceSubCategory = "NIST"
+	ComplianceSubCategoryDASFV2     ComplianceSubCategory = "DASF_V2"
+)
+
+// SafetySubCategory represents safety attack sub-categories.
+type SafetySubCategory string
+
+const (
+	SafetySubCategoryBias                 SafetySubCategory = "BIAS"
+	SafetySubCategoryCBRN                 SafetySubCategory = "CBRN"
+	SafetySubCategoryCybercrime           SafetySubCategory = "CYBERCRIME"
+	SafetySubCategoryDrugs                SafetySubCategory = "DRUGS"
+	SafetySubCategoryHateToxicAbuse       SafetySubCategory = "HATE_TOXIC_ABUSE"
+	SafetySubCategoryNonViolentCrimes     SafetySubCategory = "NON_VIOLENT_CRIMES"
+	SafetySubCategoryPolitical            SafetySubCategory = "POLITICAL"
+	SafetySubCategorySelfHarm             SafetySubCategory = "SELF_HARM"
+	SafetySubCategorySexual               SafetySubCategory = "SEXUAL"
+	SafetySubCategoryViolentCrimesWeapons SafetySubCategory = "VIOLENT_CRIMES_WEAPONS"
+)
+
+// SecuritySubCategory represents security attack sub-categories.
+type SecuritySubCategory string
+
+const (
+	SecuritySubCategoryAdversarialSuffix       SecuritySubCategory = "ADVERSARIAL_SUFFIX"
+	SecuritySubCategoryEvasion                 SecuritySubCategory = "EVASION"
+	SecuritySubCategoryIndirectPromptInjection SecuritySubCategory = "INDIRECT_PROMPT_INJECTION"
+	SecuritySubCategoryJailbreak               SecuritySubCategory = "JAILBREAK"
+	SecuritySubCategoryMultiTurn               SecuritySubCategory = "MULTI_TURN"
+	SecuritySubCategoryPromptInjection         SecuritySubCategory = "PROMPT_INJECTION"
+	SecuritySubCategoryRemoteCodeExecution     SecuritySubCategory = "REMOTE_CODE_EXECUTION"
+	SecuritySubCategorySystemPromptLeak        SecuritySubCategory = "SYSTEM_PROMPT_LEAK"
+	SecuritySubCategoryToolLeak                SecuritySubCategory = "TOOL_LEAK"
+	SecuritySubCategoryMalwareGeneration       SecuritySubCategory = "MALWARE_GENERATION"
+)
+
+// ErrorSource represents the source of an error log.
+type ErrorSource string
+
+const (
+	ErrorSourceTarget          ErrorSource = "TARGET"
+	ErrorSourceJob             ErrorSource = "JOB"
+	ErrorSourceSystem          ErrorSource = "SYSTEM"
+	ErrorSourceValidation      ErrorSource = "VALIDATION"
+	ErrorSourceTargetProfiling ErrorSource = "TARGET_PROFILING"
+)
+
+// ErrorTypeEnum represents the type of an error log.
+type ErrorTypeEnum string
+
+const (
+	ErrorTypeContentFilter  ErrorTypeEnum = "CONTENT_FILTER"
+	ErrorTypeRateLimit      ErrorTypeEnum = "RATE_LIMIT"
+	ErrorTypeAuthentication ErrorTypeEnum = "AUTHENTICATION"
+	ErrorTypeNetwork        ErrorTypeEnum = "NETWORK"
+	ErrorTypeValidation     ErrorTypeEnum = "VALIDATION"
+	ErrorTypeNetworkChannel ErrorTypeEnum = "NETWORK_CHANNEL"
+	ErrorTypeUnknown        ErrorTypeEnum = "UNKNOWN"
+)
+
+// ProfilingStatus represents the profiling status of a target.
+type ProfilingStatus string
+
+const (
+	ProfilingStatusInit       ProfilingStatus = "INIT"
+	ProfilingStatusQueued     ProfilingStatus = "QUEUED"
+	ProfilingStatusInProgress ProfilingStatus = "IN_PROGRESS"
+	ProfilingStatusCompleted  ProfilingStatus = "COMPLETED"
+	ProfilingStatusFailed     ProfilingStatus = "FAILED"
+)
+
+// StreamType represents the type of a conversation stream.
+type StreamType string
+
+const (
+	StreamTypeNormal      StreamType = "NORMAL"
+	StreamTypeAdversarial StreamType = "ADVERSARIAL"
+)
+
+// PolicyType represents runtime policy types.
+type PolicyType string
+
+const (
+	PolicyTypePromptInjection         PolicyType = "PROMPT_INJECTION"
+	PolicyTypeToxicContent            PolicyType = "TOXIC_CONTENT"
+	PolicyTypeCustomTopicGuardrails   PolicyType = "CUSTOM_TOPIC_GUARDRAILS"
+	PolicyTypeMaliciousCodeDetection  PolicyType = "MALICIOUS_CODE_DETECTION"
+	PolicyTypeMaliciousURLDetection   PolicyType = "MALICIOUS_URL_DETECTION"
+	PolicyTypeSensitiveDataProtection PolicyType = "SENSITIVE_DATA_PROTECTION"
+)
+
+// GuardrailAction represents a guardrail action.
+type GuardrailAction string
+
+const (
+	GuardrailActionAllow GuardrailAction = "ALLOW"
+	GuardrailActionBlock GuardrailAction = "BLOCK"
+)
+
+// DateRangeFilter represents date range filter options.
+type DateRangeFilter string
+
+const (
+	DateRangeFilterLast7Days  DateRangeFilter = "LAST_7_DAYS"
+	DateRangeFilterLast15Days DateRangeFilter = "LAST_15_DAYS"
+	DateRangeFilterLast30Days DateRangeFilter = "LAST_30_DAYS"
+	DateRangeFilterAll        DateRangeFilter = "ALL"
+)
+
+// CountedQuotaEnum represents quota counting status.
+type CountedQuotaEnum string
+
+const (
+	CountedQuotaHeld       CountedQuotaEnum = "HELD"
+	CountedQuotaCounted    CountedQuotaEnum = "COUNTED"
+	CountedQuotaNotCounted CountedQuotaEnum = "NOT_COUNTED"
+)
+
 // --- Pagination ---
 
 // RedTeamPagination holds pagination metadata.
@@ -200,18 +362,42 @@ type SubCategory struct {
 
 // --- Report types ---
 
+// SeverityReport holds severity-level counts.
+type SeverityReport struct {
+	Low      int `json:"low"`
+	Medium   int `json:"medium"`
+	High     int `json:"high"`
+	Critical int `json:"critical"`
+}
+
+// CategoryReport holds per-category report data.
+type CategoryReport struct {
+	Category      string         `json:"category,omitempty"`
+	SubCategories map[string]any `json:"sub_categories,omitempty"`
+}
+
 // StaticJobReport represents a static scan report.
 type StaticJobReport struct {
-	JobID   string         `json:"job_id,omitempty"`
-	Stats   map[string]any `json:"stats,omitempty"`
-	Details map[string]any `json:"details,omitempty"`
+	ASR              *float64         `json:"asr,omitempty"`
+	Score            *float64         `json:"score,omitempty"`
+	SecurityReport   *CategoryReport  `json:"security_report,omitempty"`
+	SafetyReport     *CategoryReport  `json:"safety_report,omitempty"`
+	BrandReport      *CategoryReport  `json:"brand_report,omitempty"`
+	ComplianceReport []map[string]any `json:"compliance_report,omitempty"`
+	SeverityReport   *SeverityReport  `json:"severity_report,omitempty"`
+	ReportSummary    string           `json:"report_summary,omitempty"`
+	Recommendations  map[string]any   `json:"recommendations,omitempty"`
 }
 
 // DynamicJobReport represents a dynamic scan report.
 type DynamicJobReport struct {
-	JobID   string         `json:"job_id,omitempty"`
-	Stats   map[string]any `json:"stats,omitempty"`
-	Details map[string]any `json:"details,omitempty"`
+	TotalGoals    int     `json:"total_goals"`
+	TotalStreams  int     `json:"total_streams"`
+	TotalThreats  int     `json:"total_threats"`
+	GoalsAchieved int     `json:"goals_achieved"`
+	ReportSummary string  `json:"report_summary,omitempty"`
+	Score         float64 `json:"score"`
+	ASR           float64 `json:"asr"`
 }
 
 // ReportDownloadResponse wraps raw bytes from a report download.
@@ -236,17 +422,44 @@ type AttackListResponse struct {
 
 // AttackDetailResponse represents detailed attack information.
 type AttackDetailResponse struct {
-	ID       string         `json:"id,omitempty"`
-	Category string         `json:"category,omitempty"`
-	Severity string         `json:"severity,omitempty"`
-	Details  map[string]any `json:"details,omitempty"`
+	UUID                   string           `json:"uuid,omitempty"`
+	TsgID                  string           `json:"tsg_id,omitempty"`
+	JobID                  string           `json:"job_id,omitempty"`
+	TargetID               string           `json:"target_id,omitempty"`
+	Prompt                 string           `json:"prompt,omitempty"`
+	Status                 string           `json:"status,omitempty"`
+	MarkedSafe             *bool            `json:"marked_safe,omitempty"`
+	Threat                 *bool            `json:"threat,omitempty"`
+	AttackType             string           `json:"attack_type,omitempty"`
+	MultiTurn              bool             `json:"multi_turn,omitempty"`
+	ASR                    *float64         `json:"asr,omitempty"`
+	Version                *int             `json:"version,omitempty"`
+	PromptMappingID        string           `json:"prompt_mapping_id,omitempty"`
+	PromptID               string           `json:"prompt_id,omitempty"`
+	Category               string           `json:"category,omitempty"`
+	SubCategory            string           `json:"sub_category,omitempty"`
+	Severity               string           `json:"severity,omitempty"`
+	CategoryDisplayName    string           `json:"category_display_name,omitempty"`
+	SubCategoryDisplayName string           `json:"sub_category_display_name,omitempty"`
+	ComplianceFrameworks   []string         `json:"compliance_frameworks,omitempty"`
+	Outputs                []map[string]any `json:"outputs,omitempty"`
+	Goal                   map[string]any   `json:"goal,omitempty"`
 }
 
 // AttackMultiTurnDetailResponse represents multi-turn attack detail.
 type AttackMultiTurnDetailResponse struct {
-	ID       string         `json:"id,omitempty"`
-	Category string         `json:"category,omitempty"`
-	Details  map[string]any `json:"details,omitempty"`
+	UUID       string `json:"uuid,omitempty"`
+	TsgID      string `json:"tsg_id,omitempty"`
+	AttackID   string `json:"attack_id,omitempty"`
+	JobID      string `json:"job_id,omitempty"`
+	TargetID   string `json:"target_id,omitempty"`
+	Prompt     string `json:"prompt,omitempty"`
+	Output     string `json:"output,omitempty"`
+	Threat     *bool  `json:"threat,omitempty"`
+	MarkedSafe *bool  `json:"marked_safe,omitempty"`
+	Turn       int    `json:"turn,omitempty"`
+	Generation int    `json:"generation,omitempty"`
+	MultiTurn  bool   `json:"multi_turn,omitempty"`
 }
 
 // RemediationResponse is the remediation advice response.
@@ -269,10 +482,20 @@ type GoalListResponse struct {
 
 // Goal represents a dynamic red team goal.
 type Goal struct {
-	ID       string         `json:"id,omitempty"`
-	GoalType GoalType       `json:"goal_type,omitempty"`
-	Status   string         `json:"status,omitempty"`
-	Details  map[string]any `json:"details,omitempty"`
+	UUID               string         `json:"uuid,omitempty"`
+	GoalType           GoalType       `json:"goal_type,omitempty"`
+	Status             string         `json:"status,omitempty"`
+	Goal               string         `json:"goal,omitempty"`
+	SafeResponse       string         `json:"safe_response,omitempty"`
+	JailbrokenResponse string         `json:"jailbroken_response,omitempty"`
+	GoalMetadata       map[string]any `json:"goal_metadata,omitempty"`
+	CustomGoal         bool           `json:"custom_goal,omitempty"`
+	TsgID              string         `json:"tsg_id,omitempty"`
+	JobID              string         `json:"job_id,omitempty"`
+	GoalToShow         string         `json:"goal_to_show,omitempty"`
+	Threat             *bool          `json:"threat,omitempty"`
+	Version            *int           `json:"version,omitempty"`
+	ExtraInfo          map[string]any `json:"extra_info,omitempty"`
 }
 
 // StreamListResponse is the paginated list of streams.
@@ -447,15 +670,20 @@ type CustomPromptSetArchiveRequest struct {
 
 // CustomPromptSetResponse represents a custom prompt set.
 type CustomPromptSetResponse struct {
-	UUID        string         `json:"uuid"`
-	Name        string         `json:"name,omitempty"`
-	Description string         `json:"description,omitempty"`
-	Status      string         `json:"status,omitempty"`
-	Active      bool           `json:"active,omitempty"`
-	Archive     bool           `json:"archive,omitempty"`
-	Stats       map[string]any `json:"stats,omitempty"`
-	CreatedAt   string         `json:"created_at,omitempty"`
-	UpdatedAt   string         `json:"updated_at,omitempty"`
+	UUID            string         `json:"uuid"`
+	Name            string         `json:"name,omitempty"`
+	Description     string         `json:"description,omitempty"`
+	Version         string         `json:"version,omitempty"`
+	Status          string         `json:"status,omitempty"`
+	Active          bool           `json:"active,omitempty"`
+	Archive         bool           `json:"archive,omitempty"`
+	Stats           map[string]any `json:"stats,omitempty"`
+	ExtraInfo       map[string]any `json:"extra_info,omitempty"`
+	PropertyNames   []string       `json:"property_names,omitempty"`
+	CreatedAt       string         `json:"created_at,omitempty"`
+	UpdatedAt       string         `json:"updated_at,omitempty"`
+	CreatedByUserID string         `json:"created_by_user_id,omitempty"`
+	UpdatedByUserID string         `json:"updated_by_user_id,omitempty"`
 }
 
 // CustomPromptSetList is the paginated list of prompt sets.
@@ -471,8 +699,14 @@ type CustomPromptSetListActive struct {
 
 // CustomPromptSetReference is the reference for a prompt set.
 type CustomPromptSetReference struct {
-	UUID      string         `json:"uuid,omitempty"`
-	Reference map[string]any `json:"reference,omitempty"`
+	UUID      string `json:"uuid,omitempty"`
+	Name      string `json:"name,omitempty"`
+	Version   string `json:"version,omitempty"`
+	Status    string `json:"status,omitempty"`
+	Active    bool   `json:"active,omitempty"`
+	TsgID     string `json:"tsg_id,omitempty"`
+	CreatedAt string `json:"created_at,omitempty"`
+	UpdatedAt string `json:"updated_at,omitempty"`
 }
 
 // CustomPromptSetVersionInfo is the version info for a prompt set.
@@ -498,16 +732,20 @@ type CustomPromptUpdateRequest struct {
 
 // CustomPromptResponse represents a custom prompt.
 type CustomPromptResponse struct {
-	UUID             string         `json:"uuid"`
-	PromptSetID      string         `json:"prompt_set_id,omitempty"`
-	Prompt           string         `json:"prompt,omitempty"`
-	Goal             string         `json:"goal,omitempty"`
-	UserDefinedGoal  string         `json:"user_defined_goal,omitempty"`
-	DetectorCategory string         `json:"detector_category,omitempty"`
-	Severity         string         `json:"severity,omitempty"`
-	Properties       map[string]any `json:"properties,omitempty"`
-	Active           bool           `json:"active,omitempty"`
-	CreatedAt        string         `json:"created_at,omitempty"`
+	UUID                string               `json:"uuid"`
+	PromptSetID         string               `json:"prompt_set_id,omitempty"`
+	Prompt              string               `json:"prompt,omitempty"`
+	Goal                string               `json:"goal,omitempty"`
+	UserDefinedGoal     bool                 `json:"user_defined_goal,omitempty"`
+	DetectorCategory    string               `json:"detector_category,omitempty"`
+	Severity            string               `json:"severity,omitempty"`
+	Properties          map[string]any       `json:"properties,omitempty"`
+	PropertyAssignments []PropertyAssignment `json:"property_assignments,omitempty"`
+	Active              bool                 `json:"active,omitempty"`
+	Status              string               `json:"status,omitempty"`
+	ExtraInfo           map[string]any       `json:"extra_info,omitempty"`
+	CreatedAt           string               `json:"created_at,omitempty"`
+	UpdatedAt           string               `json:"updated_at,omitempty"`
 }
 
 // CustomPromptList is the paginated list of prompts.
@@ -542,27 +780,106 @@ type PropertyValuesMultipleResponse struct {
 	Properties map[string][]string `json:"properties"`
 }
 
+// --- Target context types ---
+
+// TargetMetadata holds target metadata for probing/profiling.
+type TargetMetadata struct {
+	MultiTurn                 bool           `json:"multi_turn,omitempty"`
+	MultiTurnErrorMessage     string         `json:"multi_turn_error_message,omitempty"`
+	RateLimit                 *int           `json:"rate_limit,omitempty"`
+	RateLimitEnabled          bool           `json:"rate_limit_enabled,omitempty"`
+	RateLimitErrorCode        *int           `json:"rate_limit_error_code,omitempty"`
+	RateLimitErrorJSON        map[string]any `json:"rate_limit_error_json,omitempty"`
+	RateLimitErrorMessage     string         `json:"rate_limit_error_message,omitempty"`
+	ContentFilterEnabled      bool           `json:"content_filter_enabled,omitempty"`
+	ContentFilterErrorCode    *int           `json:"content_filter_error_code,omitempty"`
+	ContentFilterErrorJSON    map[string]any `json:"content_filter_error_json,omitempty"`
+	ContentFilterErrorMessage string         `json:"content_filter_error_message,omitempty"`
+	ProbeMessage              string         `json:"probe_message,omitempty"`
+	RequestTimeout            *int           `json:"request_timeout,omitempty"`
+}
+
+// TargetBackground holds target background context.
+type TargetBackground struct {
+	Industry    string   `json:"industry,omitempty"`
+	UseCase     string   `json:"use_case,omitempty"`
+	Competitors []string `json:"competitors,omitempty"`
+}
+
+// TargetAdditionalContext holds additional context for a target.
+type TargetAdditionalContext struct {
+	BaseModel          string   `json:"base_model,omitempty"`
+	CoreArchitecture   string   `json:"core_architecture,omitempty"`
+	SystemPrompt       string   `json:"system_prompt,omitempty"`
+	LanguagesSupported []string `json:"languages_supported,omitempty"`
+	BannedKeywords     []string `json:"banned_keywords,omitempty"`
+	ToolsAccessible    []string `json:"tools_accessible,omitempty"`
+}
+
+// PropertyAssignment is a property name-value pair for prompts.
+type PropertyAssignment struct {
+	PropertyName  string `json:"property_name"`
+	PropertyValue string `json:"property_value"`
+}
+
+// ErrorLog represents a single error log entry.
+type ErrorLog struct {
+	JobID        string `json:"job_id,omitempty"`
+	TargetID     string `json:"target_id,omitempty"`
+	ErrorSource  string `json:"error_source,omitempty"`
+	ErrorType    string `json:"error_type,omitempty"`
+	ErrorMessage string `json:"error_message,omitempty"`
+	CreatedAt    string `json:"created_at,omitempty"`
+}
+
 // --- Dashboard / Statistics types ---
+
+// CountByName is a name+count pair for statistics.
+type CountByName struct {
+	Name  string `json:"name"`
+	Count int    `json:"count"`
+}
+
+// RiskLevel is a level+count pair for risk profiles.
+type RiskLevel struct {
+	Level string `json:"level"`
+	Count int    `json:"count"`
+}
 
 // ScanStatisticsResponse is the scan statistics response.
 type ScanStatisticsResponse struct {
-	Stats map[string]any `json:"stats,omitempty"`
+	TotalScans           int           `json:"total_scans"`
+	TargetsScanned       int           `json:"targets_scanned"`
+	TargetsScannedByType []CountByName `json:"targets_scanned_by_type,omitempty"`
+	ScanStatus           []CountByName `json:"scan_status,omitempty"`
+	RiskProfile          []RiskLevel   `json:"risk_profile,omitempty"`
+}
+
+// ScoreTrendSeries is one data series in a score trend.
+type ScoreTrendSeries struct {
+	Label string    `json:"label"`
+	Data  []float64 `json:"data"`
 }
 
 // ScoreTrendResponse is the score trend response.
 type ScoreTrendResponse struct {
-	TargetID string           `json:"target_id,omitempty"`
-	Series   []map[string]any `json:"series,omitempty"`
+	Labels []string           `json:"labels,omitempty"`
+	Series []ScoreTrendSeries `json:"series,omitempty"`
 }
 
 // QuotaSummary is the quota summary.
 type QuotaSummary struct {
-	Details map[string]any `json:"details,omitempty"`
+	StaticQuota  int `json:"static_quota"`
+	StaticUsed   int `json:"static_used"`
+	DynamicQuota int `json:"dynamic_quota"`
+	DynamicUsed  int `json:"dynamic_used"`
+	CustomQuota  int `json:"custom_quota"`
+	CustomUsed   int `json:"custom_used"`
 }
 
 // ErrorLogListResponse is the paginated list of error logs.
 type ErrorLogListResponse struct {
-	Items      []map[string]any  `json:"items"`
+	Items      []ErrorLog        `json:"items"`
 	Pagination RedTeamPagination `json:"pagination"`
 }
 
