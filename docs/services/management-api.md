@@ -5,11 +5,14 @@ The Management API provides CRUD operations for AIRS configuration — security 
 ## Authentication
 
 ```go
-client := management.NewClient(management.Opts{
+client, err := management.NewClient(management.Opts{
     ClientID:     "your-client-id",
     ClientSecret: "your-client-secret",
     TsgID:        "1234567890",
 })
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 Or use environment variables:
@@ -21,7 +24,10 @@ export PANW_MGMT_TSG_ID=1234567890
 ```
 
 ```go
-client := management.NewClient(management.Opts{})
+client, err := management.NewClient(management.Opts{})
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ## Sub-Clients

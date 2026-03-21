@@ -7,11 +7,14 @@ The Red Team API provides automated attack testing for AI applications. It opera
 Falls back to `PANW_MGMT_*` environment variables if service-specific variables are not set.
 
 ```go
-client := redteam.NewClient(redteam.Opts{
+client, err := redteam.NewClient(redteam.Opts{
     ClientID:     "your-client-id",     // or PANW_RED_TEAM_CLIENT_ID
     ClientSecret: "your-client-secret", // or PANW_RED_TEAM_CLIENT_SECRET
     TsgID:        "1234567890",         // or PANW_RED_TEAM_TSG_ID
 })
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ## Architecture

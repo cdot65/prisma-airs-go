@@ -26,7 +26,10 @@ import (
 
 func main() {
     ctx := context.Background()
-    client := management.NewClient(management.Opts{})
+    client, err := management.NewClient(management.Opts{})
+    if err != nil {
+        log.Fatal(err)
+    }
 
     // 1. List existing keys
     keys, err := client.ApiKeys.List(ctx, management.ListOpts{Limit: 100})

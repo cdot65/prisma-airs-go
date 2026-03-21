@@ -25,10 +25,13 @@ func main() {
     cfg := aisec.NewConfig(aisec.WithAPIKey("YOUR_API_KEY"))
     scanner := scan.NewScanner(cfg)
 
-    content := scan.NewContent(scan.ContentOpts{
+    content, err := scan.NewContent(scan.ContentOpts{
         Prompt:   "What is the capital of France?",
         Response: "The capital of France is Paris.",
     })
+    if err != nil {
+        log.Fatal(err)
+    }
 
     result, err := scanner.SyncScan(
         context.Background(),
@@ -59,11 +62,14 @@ import (
 )
 
 func main() {
-    client := management.NewClient(management.Opts{
+    client, err := management.NewClient(management.Opts{
         ClientID:     "your-client-id",
         ClientSecret: "your-client-secret",
         TsgID:        "1234567890",
     })
+    if err != nil {
+        log.Fatal(err)
+    }
 
     // List security profiles
     profiles, err := client.Profiles.List(context.Background(), management.ListOpts{
@@ -93,7 +99,10 @@ import (
 )
 
 func main() {
-    client := modelsecurity.NewClient(modelsecurity.Opts{}) // reads PANW_MGMT_* env vars
+    client, err := modelsecurity.NewClient(modelsecurity.Opts{}) // reads PANW_MGMT_* env vars
+    if err != nil {
+        log.Fatal(err)
+    }
 
     scans, err := client.Scans.List(context.Background(), modelsecurity.ScanListOpts{
         Limit: 10,
@@ -122,7 +131,10 @@ import (
 )
 
 func main() {
-    client := redteam.NewClient(redteam.Opts{}) // reads PANW_MGMT_* env vars
+    client, err := redteam.NewClient(redteam.Opts{}) // reads PANW_MGMT_* env vars
+    if err != nil {
+        log.Fatal(err)
+    }
 
     // List targets
     targets, err := client.Targets.List(context.Background(), redteam.TargetListOpts{})
