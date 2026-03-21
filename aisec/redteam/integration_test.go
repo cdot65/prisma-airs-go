@@ -80,10 +80,10 @@ func TestIntegration_Targets_CRUD(t *testing.T) {
 	if err != nil {
 		t.Fatalf("List targets: %v", err)
 	}
-	t.Logf("Listed %d targets", len(listResp.Items))
+	t.Logf("Listed %d targets", len(listResp.Data))
 
 	found := false
-	for _, tgt := range listResp.Items {
+	for _, tgt := range listResp.Data {
 		if tgt.UUID == created.UUID {
 			found = true
 			break
@@ -147,15 +147,15 @@ func TestIntegration_Scans_Read(t *testing.T) {
 	if err != nil {
 		t.Fatalf("List scans: %v", err)
 	}
-	t.Logf("RedTeam Scans: %d items", len(resp.Items))
+	t.Logf("RedTeam Scans: %d items", len(resp.Data))
 
-	for i, s := range resp.Items {
+	for i, s := range resp.Data {
 		t.Logf("  Scan[%d]: uuid=%s name=%q type=%s status=%s", i, s.UUID, s.Name, s.JobType, s.Status)
 	}
 
 	// Get first scan detail if available
-	if len(resp.Items) > 0 {
-		first := resp.Items[0]
+	if len(resp.Data) > 0 {
+		first := resp.Data[0]
 		got, err := client.Scans.Get(ctx, first.UUID)
 		if err != nil {
 			t.Logf("WARNING: Get scan %s: %v", first.UUID, err)
@@ -217,9 +217,9 @@ func TestIntegration_Targets_List(t *testing.T) {
 	if err != nil {
 		t.Fatalf("List targets: %v", err)
 	}
-	t.Logf("Targets: %d items", len(resp.Items))
+	t.Logf("Targets: %d items", len(resp.Data))
 
-	for i, tgt := range resp.Items {
+	for i, tgt := range resp.Data {
 		t.Logf("  Target[%d]: uuid=%s name=%q type=%s status=%s", i, tgt.UUID, tgt.Name, tgt.TargetType, tgt.Status)
 	}
 }

@@ -227,6 +227,6 @@ func TestIntegration_OAuth_GetToken(t *testing.T) {
 		t.Error("expected non-empty TokenType")
 	}
 
-	t.Logf("OAuth token: type=%s expiresIn=%d tokenLen=%d",
+	t.Logf("OAuth token: type=%s expiresIn=%s tokenLen=%d",
 		token.TokenType, token.ExpiresIn, len(token.AccessToken))
 }
