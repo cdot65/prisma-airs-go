@@ -580,13 +580,235 @@ func TestGoalListResponse_DataKey(t *testing.T) {
 }
 
 func TestTargetList_DataKey(t *testing.T) {
-	j := `{"data":[{"uuid":"t1","name":"test"}],"pagination":{"total":1,"skip":0,"limit":10}}`
+	j := `{"data":[{"uuid":"t1","name":"test","tsg_id":"tsg1","status":"ACTIVE","active":true,"validated":true,"created_at":"2025-01-01","updated_at":"2025-01-01"}],"pagination":{"total":1,"skip":0,"limit":10}}`
 	var r TargetList
 	if err := json.Unmarshal([]byte(j), &r); err != nil {
 		t.Fatal(err)
 	}
 	if len(r.Data) != 1 || r.Data[0].UUID != "t1" {
 		t.Errorf("Data = %+v", r.Data)
+	}
+}
+
+// --- Spec alignment: target model JSON keys ---
+
+func TestTargetCreateRequest_SpecAlignedJSONKeys(t *testing.T) {
+	bg := &TargetBackground{Industry: "finance", UseCase: "chatbot"}
+	ctx := &TargetAdditionalContext{BaseModel: "gpt-4"}
+	meta := &TargetMetadata{MultiTurn: true}
+	req := TargetCreateRequest{
+		Name:              "test",
+		TargetBackground:  bg,
+		AdditionalContext: ctx,
+		TargetMeta:        meta,
+	}
+	data, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := make(map[string]any)
+	if err := json.Unmarshal(data, &m); err != nil {
+		t.Fatal(err)
+	}
+	// Spec keys must be target_background, additional_context, target_metadata
+	if _, ok := m["target_background"]; !ok {
+		t.Error("missing JSON key target_background")
+	}
+	if _, ok := m["additional_context"]; !ok {
+		t.Error("missing JSON key additional_context")
+	}
+	if _, ok := m["target_metadata"]; !ok {
+		t.Error("missing JSON key target_metadata")
+	}
+	// Old wrong keys must NOT appear
+	if _, ok := m["background"]; ok {
+		t.Error("unexpected JSON key background (should be target_background)")
+	}
+	if _, ok := m["context"]; ok {
+		t.Error("unexpected JSON key context (should be additional_context)")
+	}
+	if _, ok := m["metadata"]; ok {
+		t.Error("unexpected JSON key metadata (should be target_metadata)")
+	}
+}
+
+func TestTargetUpdateRequest_SpecAlignedFields(t *testing.T) {
+	bg := &TargetBackground{Industry: "healthcare"}
+	ctx := &TargetAdditionalContext{SystemPrompt: "you are helpful"}
+	meta := &TargetMetadata{ProbeMessage: "hello"}
+	req := TargetUpdateRequest{
+		Name:                     "updated",
+		APIEndpointType:          APIEndpointTypePrivate,
+		ResponseMode:             ResponseModeRest,
+		SessionSupported:         true,
+		ExtraInfo:                map[string]any{"k": "v"},
+		NetworkBrokerChannelUUID: "ch-uuid",
+		TargetMeta:               meta,
+		TargetBackground:         bg,
+		AdditionalContext:        ctx,
+	}
+	data, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := make(map[string]any)
+	if err := json.Unmarshal(data, &m); err != nil {
+		t.Fatal(err)
+	}
+	for _, key := range []string{
+		"name", "api_endpoint_type", "response_mode", "session_supported",
+		"extra_info", "network_broker_channel_uuid",
+		"target_metadata", "target_background", "additional_context",
+	} {
+		if _, ok := m[key]; !ok {
+			t.Errorf("missing JSON key %q", key)
+		}
+	}
+}
+
+func TestTargetContextUpdate_SpecAlignedKeys(t *testing.T) {
+	req := TargetContextUpdate{
+		TargetBackground:  &TargetBackground{Industry: "tech"},
+		AdditionalContext: &TargetAdditionalContext{BaseModel: "claude"},
+	}
+	data, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := make(map[string]any)
+	if err := json.Unmarshal(data, &m); err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := m["target_background"]; !ok {
+		t.Error("missing JSON key target_background")
+	}
+	if _, ok := m["additional_context"]; !ok {
+		t.Error("missing JSON key additional_context")
+	}
+	// Must NOT have old wrong keys
+	if _, ok := m["background"]; ok {
+		t.Error("unexpected JSON key background")
+	}
+	if _, ok := m["context"]; ok {
+		t.Error("unexpected JSON key context")
+	}
+	if _, ok := m["metadata"]; ok {
+		t.Error("unexpected JSON key metadata — not in spec")
+	}
+}
+
+func TestTargetProfileResponse_SpecAlignedFields(t *testing.T) {
+	j := `{
+		"target_id":"t1",
+		"target_version":3,
+		"status":"COMPLETED",
+		"target_background":{"industry":"finance"},
+		"additional_context":{"base_model":"gpt-4"},
+		"other_details":{"items":{"code_execution":true}},
+		"ai_generated_fields":["industry","base_model"],
+		"profiling_status":"COMPLETED"
+	}`
+	var r TargetProfileResponse
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if r.TargetID != "t1" {
+		t.Errorf("TargetID = %q, want t1", r.TargetID)
+	}
+	if r.TargetVersion != 3 {
+		t.Errorf("TargetVersion = %d, want 3", r.TargetVersion)
+	}
+	if r.Status != "COMPLETED" {
+		t.Errorf("Status = %q", r.Status)
+	}
+	if r.TargetBackground == nil || r.TargetBackground.Industry != "finance" {
+		t.Error("TargetBackground.Industry should be finance")
+	}
+	if r.AdditionalContext == nil || r.AdditionalContext.BaseModel != "gpt-4" {
+		t.Error("AdditionalContext.BaseModel should be gpt-4")
+	}
+	if r.OtherDetails == nil {
+		t.Error("OtherDetails should not be nil")
+	}
+	if len(r.AIGeneratedFields) != 2 {
+		t.Errorf("AIGeneratedFields = %v", r.AIGeneratedFields)
+	}
+	if r.ProfilingStatus != ProfilingStatusCompleted {
+		t.Errorf("ProfilingStatus = %q", r.ProfilingStatus)
+	}
+}
+
+func TestTargetResponse_RequiredFieldsNoOmitempty(t *testing.T) {
+	// Zero-value TargetResponse should still serialize required fields
+	resp := TargetResponse{}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := make(map[string]any)
+	if err := json.Unmarshal(data, &m); err != nil {
+		t.Fatal(err)
+	}
+	required := []string{"uuid", "tsg_id", "name", "status", "active", "validated", "created_at", "updated_at"}
+	for _, key := range required {
+		if _, ok := m[key]; !ok {
+			t.Errorf("required field %q missing from zero-value JSON", key)
+		}
+	}
+}
+
+func TestTargetListItem_SpecFields(t *testing.T) {
+	j := `{
+		"uuid":"t1","tsg_id":"tsg1","name":"test","status":"ACTIVE",
+		"active":true,"validated":true,"created_at":"2025-01-01","updated_at":"2025-01-01",
+		"target_type":"APPLICATION","connection_type":"CUSTOM",
+		"version":2,"session_supported":false
+	}`
+	var item TargetListItem
+	if err := json.Unmarshal([]byte(j), &item); err != nil {
+		t.Fatal(err)
+	}
+	if item.UUID != "t1" {
+		t.Errorf("UUID = %q", item.UUID)
+	}
+	if item.TsgID != "tsg1" {
+		t.Errorf("TsgID = %q", item.TsgID)
+	}
+	if item.Name != "test" {
+		t.Errorf("Name = %q", item.Name)
+	}
+	if item.Status != TargetStatusActive {
+		t.Errorf("Status = %q", item.Status)
+	}
+}
+
+func TestTargetList_UsesTargetListItem(t *testing.T) {
+	j := `{"data":[{"uuid":"t1","tsg_id":"tsg1","name":"test","status":"ACTIVE","active":true,"validated":true,"created_at":"2025-01-01","updated_at":"2025-01-01"}],"pagination":{"total":1,"skip":0,"limit":10}}`
+	var r TargetList
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if len(r.Data) != 1 {
+		t.Fatalf("Data len = %d", len(r.Data))
+	}
+	// Verify Data is []TargetListItem (compile-time check via field access)
+	item := r.Data[0]
+	if item.UUID != "t1" {
+		t.Errorf("UUID = %q", item.UUID)
+	}
+}
+
+func TestOtherDetails_JSON(t *testing.T) {
+	j := `{"items":{"code_execution":true,"internet_access":false}}`
+	var d OtherDetails
+	if err := json.Unmarshal([]byte(j), &d); err != nil {
+		t.Fatal(err)
+	}
+	if d.Items == nil {
+		t.Fatal("Items should not be nil")
+	}
+	if d.Items["code_execution"] != true {
+		t.Errorf("Items = %v", d.Items)
 	}
 }
 
@@ -673,8 +895,8 @@ func TestTargetResponse_ContextFields(t *testing.T) {
 	if t2.TargetMeta == nil || !t2.TargetMeta.MultiTurn {
 		t.Error("TargetMeta.MultiTurn should be true")
 	}
-	if t2.Background == nil || t2.Background.Industry != "finance" {
-		t.Error("Background.Industry should be finance")
+	if t2.TargetBackground == nil || t2.TargetBackground.Industry != "finance" {
+		t.Error("TargetBackground.Industry should be finance")
 	}
 	if t2.AdditionalCtx == nil || t2.AdditionalCtx.BaseModel != "gpt-4" {
 		t.Error("AdditionalCtx.BaseModel should be gpt-4")

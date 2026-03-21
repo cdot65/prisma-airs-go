@@ -82,22 +82,35 @@ report, err := client.CustomAttackReports.Get(ctx, "report-id")
 
 ```go
 // Create a target
-target, err := client.Targets.Create(ctx, redteam.CreateTargetRequest{
+target, err := client.Targets.Create(ctx, redteam.TargetCreateRequest{
     Name: "my-chatbot",
+    TargetBackground: &redteam.TargetBackground{
+        Industry: "Finance",
+        UseCase:  "Customer Support",
+    },
+    AdditionalContext: &redteam.TargetAdditionalContext{
+        BaseModel:    "gpt-4",
+        SystemPrompt: "You are a helpful assistant.",
+    },
     // ... connection parameters
-})
+}, false)
 
 // CRUD operations
 targets, err := client.Targets.List(ctx, redteam.TargetListOpts{})
 target, err := client.Targets.Get(ctx, "target-uuid")
-updated, err := client.Targets.Update(ctx, "target-uuid", redteam.UpdateTargetRequest{...})
+updated, err := client.Targets.Update(ctx, "target-uuid", redteam.TargetUpdateRequest{
+    Name: "updated-chatbot",
+}, false)
 resp, err := client.Targets.Delete(ctx, "target-uuid")
 
 // Probe target (validate connection)
-probe, err := client.Targets.Probe(ctx, "target-uuid", redteam.ProbeRequest{...})
+probe, err := client.Targets.Probe(ctx, redteam.TargetProbeRequest{Name: "test"})
 
-// Get target profile
+// Get/update target profile
 profile, err := client.Targets.GetProfile(ctx, "target-uuid")
+updated, err = client.Targets.UpdateProfile(ctx, "target-uuid", redteam.TargetContextUpdate{
+    TargetBackground: &redteam.TargetBackground{Industry: "Healthcare"},
+})
 ```
 
 ## Custom Attacks (Management Plane)

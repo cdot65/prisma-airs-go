@@ -566,71 +566,98 @@ type PropertyStatistic struct {
 
 // TargetCreateRequest is the request to create a target.
 type TargetCreateRequest struct {
-	Name                     string               `json:"name"`
-	Description              string               `json:"description,omitempty"`
-	TargetType               TargetType           `json:"target_type,omitempty"`
-	ConnectionType           TargetConnectionType `json:"connection_type,omitempty"`
-	ConnectionParams         map[string]any       `json:"connection_params,omitempty"`
-	Background               map[string]any       `json:"background,omitempty"`
-	Context                  map[string]any       `json:"context,omitempty"`
-	Metadata                 map[string]any       `json:"metadata,omitempty"`
-	APIEndpointType          APIEndpointType      `json:"api_endpoint_type,omitempty"`
-	NetworkBrokerChannelUUID string               `json:"network_broker_channel_uuid,omitempty"`
-	ResponseMode             string               `json:"response_mode,omitempty"`
-	SessionSupported         bool                 `json:"session_supported,omitempty"`
-	ExtraInfo                map[string]any       `json:"extra_info,omitempty"`
+	Name                     string                   `json:"name"`
+	Description              string                   `json:"description,omitempty"`
+	TargetType               TargetType               `json:"target_type,omitempty"`
+	ConnectionType           TargetConnectionType     `json:"connection_type,omitempty"`
+	ConnectionParams         map[string]any           `json:"connection_params,omitempty"`
+	APIEndpointType          APIEndpointType          `json:"api_endpoint_type,omitempty"`
+	NetworkBrokerChannelUUID string                   `json:"network_broker_channel_uuid,omitempty"`
+	ResponseMode             string                   `json:"response_mode,omitempty"`
+	SessionSupported         bool                     `json:"session_supported,omitempty"`
+	ExtraInfo                map[string]any           `json:"extra_info,omitempty"`
+	TargetMeta               *TargetMetadata          `json:"target_metadata,omitempty"`
+	TargetBackground         *TargetBackground        `json:"target_background,omitempty"`
+	AdditionalContext        *TargetAdditionalContext `json:"additional_context,omitempty"`
 }
 
 // TargetUpdateRequest is the request to update a target.
 type TargetUpdateRequest struct {
-	Name             string               `json:"name,omitempty"`
-	Description      string               `json:"description,omitempty"`
-	TargetType       TargetType           `json:"target_type,omitempty"`
-	ConnectionType   TargetConnectionType `json:"connection_type,omitempty"`
-	ConnectionParams map[string]any       `json:"connection_params,omitempty"`
-	Background       map[string]any       `json:"background,omitempty"`
-	Context          map[string]any       `json:"context,omitempty"`
-	Metadata         map[string]any       `json:"metadata,omitempty"`
+	Name                     string                   `json:"name"`
+	Description              string                   `json:"description,omitempty"`
+	TargetType               TargetType               `json:"target_type,omitempty"`
+	ConnectionType           TargetConnectionType     `json:"connection_type,omitempty"`
+	ConnectionParams         map[string]any           `json:"connection_params,omitempty"`
+	APIEndpointType          APIEndpointType          `json:"api_endpoint_type,omitempty"`
+	NetworkBrokerChannelUUID string                   `json:"network_broker_channel_uuid,omitempty"`
+	ResponseMode             ResponseMode             `json:"response_mode,omitempty"`
+	SessionSupported         bool                     `json:"session_supported,omitempty"`
+	ExtraInfo                map[string]any           `json:"extra_info,omitempty"`
+	TargetMeta               *TargetMetadata          `json:"target_metadata,omitempty"`
+	TargetBackground         *TargetBackground        `json:"target_background,omitempty"`
+	AdditionalContext        *TargetAdditionalContext `json:"additional_context,omitempty"`
 }
 
 // TargetContextUpdate is the request to update a target's context.
 type TargetContextUpdate struct {
-	Background map[string]any `json:"background,omitempty"`
-	Context    map[string]any `json:"context,omitempty"`
-	Metadata   map[string]any `json:"metadata,omitempty"`
+	TargetBackground  *TargetBackground        `json:"target_background,omitempty"`
+	AdditionalContext *TargetAdditionalContext `json:"additional_context,omitempty"`
 }
 
 // TargetResponse represents a target.
 type TargetResponse struct {
 	UUID             string                   `json:"uuid"`
-	Name             string                   `json:"name,omitempty"`
+	TsgID            string                   `json:"tsg_id"`
+	Name             string                   `json:"name"`
 	Description      string                   `json:"description,omitempty"`
 	TargetType       TargetType               `json:"target_type,omitempty"`
-	Status           TargetStatus             `json:"status,omitempty"`
+	Status           TargetStatus             `json:"status"`
 	ConnectionType   TargetConnectionType     `json:"connection_type,omitempty"`
 	ConnectionParams map[string]any           `json:"connection_params,omitempty"`
-	CreatedAt        string                   `json:"created_at,omitempty"`
-	UpdatedAt        string                   `json:"updated_at,omitempty"`
-	Active           bool                     `json:"active,omitempty"`
-	TsgID            string                   `json:"tsg_id,omitempty"`
-	Version          int                      `json:"version,omitempty"`
-	ProfilingStatus  string                   `json:"profiling_status,omitempty"`
 	APIEndpointType  APIEndpointType          `json:"api_endpoint_type,omitempty"`
 	ResponseMode     string                   `json:"response_mode,omitempty"`
 	SessionSupported bool                     `json:"session_supported,omitempty"`
-	Validated        bool                     `json:"validated,omitempty"`
+	ExtraInfo        map[string]any           `json:"extra_info,omitempty"`
+	Active           bool                     `json:"active"`
+	Validated        bool                     `json:"validated"`
+	Version          int                      `json:"version,omitempty"`
 	SecretVersion    string                   `json:"secret_version,omitempty"`
 	CreatedByUserID  string                   `json:"created_by_user_id,omitempty"`
 	UpdatedByUserID  string                   `json:"updated_by_user_id,omitempty"`
-	ExtraInfo        map[string]any           `json:"extra_info,omitempty"`
+	CreatedAt        string                   `json:"created_at"`
+	UpdatedAt        string                   `json:"updated_at"`
 	TargetMeta       *TargetMetadata          `json:"target_metadata,omitempty"`
-	Background       *TargetBackground        `json:"target_background,omitempty"`
+	TargetBackground *TargetBackground        `json:"target_background,omitempty"`
+	ProfilingStatus  ProfilingStatus          `json:"profiling_status,omitempty"`
 	AdditionalCtx    *TargetAdditionalContext `json:"additional_context,omitempty"`
+}
+
+// TargetListItem represents a target in a list response (TargetListItemSchema).
+type TargetListItem struct {
+	UUID             string               `json:"uuid"`
+	TsgID            string               `json:"tsg_id"`
+	Name             string               `json:"name"`
+	Description      string               `json:"description,omitempty"`
+	TargetType       TargetType           `json:"target_type,omitempty"`
+	ConnectionType   TargetConnectionType `json:"connection_type,omitempty"`
+	APIEndpointType  APIEndpointType      `json:"api_endpoint_type,omitempty"`
+	ResponseMode     string               `json:"response_mode,omitempty"`
+	SessionSupported bool                 `json:"session_supported,omitempty"`
+	ExtraInfo        map[string]any       `json:"extra_info,omitempty"`
+	Status           TargetStatus         `json:"status"`
+	Active           bool                 `json:"active"`
+	Validated        bool                 `json:"validated"`
+	Version          int                  `json:"version,omitempty"`
+	SecretVersion    string               `json:"secret_version,omitempty"`
+	CreatedByUserID  string               `json:"created_by_user_id,omitempty"`
+	UpdatedByUserID  string               `json:"updated_by_user_id,omitempty"`
+	CreatedAt        string               `json:"created_at"`
+	UpdatedAt        string               `json:"updated_at"`
 }
 
 // TargetList is the paginated list of targets.
 type TargetList struct {
-	Data       []TargetResponse  `json:"data"`
+	Data       []TargetListItem  `json:"data"`
 	Pagination RedTeamPagination `json:"pagination"`
 }
 
@@ -653,10 +680,16 @@ type TargetProbeRequest struct {
 	ProbeFields              []string             `json:"probe_fields,omitempty"`
 }
 
-// TargetProfileResponse is the target profile.
+// TargetProfileResponse is the target profile response.
 type TargetProfileResponse struct {
-	UUID    string         `json:"uuid,omitempty"`
-	Profile map[string]any `json:"profile,omitempty"`
+	TargetID          string                   `json:"target_id"`
+	TargetVersion     int                      `json:"target_version"`
+	Status            string                   `json:"status"`
+	TargetBackground  *TargetBackground        `json:"target_background,omitempty"`
+	AdditionalContext *TargetAdditionalContext `json:"additional_context,omitempty"`
+	OtherDetails      *OtherDetails            `json:"other_details,omitempty"`
+	AIGeneratedFields []string                 `json:"ai_generated_fields,omitempty"`
+	ProfilingStatus   ProfilingStatus          `json:"profiling_status,omitempty"`
 }
 
 // BaseResponse is a generic base response.
@@ -821,6 +854,11 @@ type TargetBackground struct {
 	Industry    string   `json:"industry,omitempty"`
 	UseCase     string   `json:"use_case,omitempty"`
 	Competitors []string `json:"competitors,omitempty"`
+}
+
+// OtherDetails holds additional profiler discoveries.
+type OtherDetails struct {
+	Items map[string]any `json:"items,omitempty"`
 }
 
 // TargetAdditionalContext holds additional context for a target.
