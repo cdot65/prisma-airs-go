@@ -1,6 +1,6 @@
 package modelsecurity
 
-// Enums matching TS SDK model-security-enums.ts
+// Enums matching API spec
 
 // EvalOutcome represents the outcome of a scan evaluation.
 type EvalOutcome string
@@ -111,137 +111,263 @@ const (
 	RuleEditableFieldTypeList   RuleEditableFieldType = "LIST"
 )
 
+// ThreatCategory represents threat categories for model scan issues.
+type ThreatCategory string
+
+// ErrorCode represents error codes for scans.
+type ErrorCode string
+
+// RuleFieldValueKey is a valid key for rule field values.
+type RuleFieldValueKey string
+
+const (
+	RuleFieldValueKeyApprovedFormats   RuleFieldValueKey = "approved_formats"
+	RuleFieldValueKeyApprovedLocations RuleFieldValueKey = "approved_locations"
+	RuleFieldValueKeyApprovedLicenses  RuleFieldValueKey = "approved_licenses"
+	RuleFieldValueKeyDenyOrgs          RuleFieldValueKey = "deny_orgs"
+	RuleFieldValueKeyDeniedOrgModels   RuleFieldValueKey = "denied_org_models"
+	RuleFieldValueKeyApprovedOrgModels RuleFieldValueKey = "approved_org_models"
+)
+
 // --- Pagination ---
 
 // PaginationMeta holds pagination metadata.
 type PaginationMeta struct {
-	Total int `json:"total"`
-	Skip  int `json:"skip"`
-	Limit int `json:"limit"`
+	TotalItems *int `json:"total_items,omitempty"`
+}
+
+// --- Common types ---
+
+// Label is a key-value label for scans.
+type Label struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+// RuleRemediation holds remediation info for a security rule.
+type RuleRemediation struct {
+	Description string   `json:"description"`
+	Steps       []string `json:"steps"`
+	URL         string   `json:"url"`
+}
+
+// RuleEditableFieldDropdown is a dropdown option for editable fields.
+type RuleEditableFieldDropdown struct {
+	Value string `json:"value"`
+	Label string `json:"label"`
+}
+
+// RuleEditableField describes an editable field on a rule.
+type RuleEditableField struct {
+	AttributeName  string                      `json:"attribute_name"`
+	Type           string                      `json:"type"`
+	DisplayName    string                      `json:"display_name"`
+	DisplayType    RuleEditableFieldType       `json:"display_type"`
+	Description    string                      `json:"description,omitempty"`
+	DropdownValues []RuleEditableFieldDropdown `json:"dropdown_values,omitempty"`
+}
+
+// RuleConfiguration holds per-rule config in a security group create request.
+type RuleConfiguration struct {
+	FieldValues map[string]any `json:"field_values,omitempty"`
+	State       RuleState      `json:"state,omitempty"`
+}
+
+// EvalSummary is the summary of evaluation outcomes.
+type EvalSummary struct {
+	RulesPassed int `json:"rules_passed"`
+	RulesFailed int `json:"rules_failed"`
+	TotalRules  int `json:"total_rules"`
+}
+
+// ScanDetails holds scanner details for a scan create request.
+type ScanDetails struct {
+	ScannerVersion    string         `json:"scanner_version"`
+	TimeStarted       string         `json:"time_started"`
+	Files             []FileScanData `json:"files"`
+	TotalFilesScanned int            `json:"total_files_scanned"`
+	TotalFilesSkipped int            `json:"total_files_skipped"`
+	ModelFormats      []string       `json:"model_formats"`
+	ModelSizeBytes    int64          `json:"model_size_bytes"`
+	ScanDurationMs    int64          `json:"scan_duration_ms"`
+	ErrorCode         string         `json:"error_code,omitempty"`
+	ErrorMessage      string         `json:"error_message,omitempty"`
+}
+
+// FileScanData holds per-file scan data.
+type FileScanData struct {
+	FilePath        string           `json:"file_path"`
+	ModelscanStatus ModelScanStatus  `json:"modelscan_status"`
+	BlobID          string           `json:"blob_id"`
+	ErrorMessage    string           `json:"error_message,omitempty"`
+	Formats         []string         `json:"formats,omitempty"`
+	IssuesDetected  []ModelScanIssue `json:"issues_detected,omitempty"`
+}
+
+// ModelScanIssue is a detected issue in a model file.
+type ModelScanIssue struct {
+	Description string `json:"description"`
+	Source      string `json:"source"`
+	Module      string `json:"module,omitempty"`
+	Operator    string `json:"operator,omitempty"`
+	Threat      string `json:"threat,omitempty"`
 }
 
 // --- Scan types ---
 
 // ScanCreateRequest is the request to create a model security scan.
 type ScanCreateRequest struct {
-	Name              string            `json:"name"`
-	SourceType        SourceType        `json:"source_type"`
-	SecurityGroupUUID string            `json:"security_group_uuid,omitempty"`
-	Source            map[string]any    `json:"source,omitempty"`
-	Labels            map[string]string `json:"labels,omitempty"`
-}
-
-// EvaluationSummary is the summary of evaluation outcomes.
-type EvaluationSummary struct {
-	Passed int `json:"passed"`
-	Failed int `json:"failed"`
-	Error  int `json:"error"`
+	ModelURI          string       `json:"model_uri"`
+	SecurityGroupUUID string       `json:"security_group_uuid"`
+	ScanOrigin        ScanOrigin   `json:"scan_origin"`
+	AllowPatterns     []string     `json:"allow_patterns,omitempty"`
+	IgnorePatterns    []string     `json:"ignore_patterns,omitempty"`
+	Labels            []Label      `json:"labels,omitempty"`
+	ModelAuthor       string       `json:"model_author,omitempty"`
+	ModelName         string       `json:"model_name,omitempty"`
+	ModelVersion      string       `json:"model_version,omitempty"`
+	ScanDetails       *ScanDetails `json:"scan_details,omitempty"`
 }
 
 // ScanBaseResponse is the base scan response.
 type ScanBaseResponse struct {
-	UUID              string             `json:"uuid"`
-	Name              string             `json:"name"`
-	SourceType        SourceType         `json:"source_type,omitempty"`
-	SecurityGroupUUID string             `json:"security_group_uuid,omitempty"`
-	EvalOutcome       EvalOutcome        `json:"eval_outcome,omitempty"`
-	EvalSummary       *EvaluationSummary `json:"eval_summary,omitempty"`
-	Labels            map[string]string  `json:"labels,omitempty"`
-	CreatedAt         string             `json:"created_at,omitempty"`
-	UpdatedAt         string             `json:"updated_at,omitempty"`
+	UUID                     string       `json:"uuid"`
+	TsgID                    string       `json:"tsg_id,omitempty"`
+	CreatedAt                string       `json:"created_at,omitempty"`
+	UpdatedAt                string       `json:"updated_at,omitempty"`
+	ModelURI                 string       `json:"model_uri,omitempty"`
+	Owner                    string       `json:"owner,omitempty"`
+	ScanOrigin               ScanOrigin   `json:"scan_origin,omitempty"`
+	SecurityGroupUUID        string       `json:"security_group_uuid,omitempty"`
+	SecurityGroupName        string       `json:"security_group_name,omitempty"`
+	ModelVersionUUID         string       `json:"model_version_uuid,omitempty"`
+	EvalOutcome              EvalOutcome  `json:"eval_outcome,omitempty"`
+	SourceType               SourceType   `json:"source_type,omitempty"`
+	CreatedBy                string       `json:"created_by,omitempty"`
+	EnabledRuleCountSnapshot *int         `json:"enabled_rule_count_snapshot,omitempty"`
+	ErrorCode                string       `json:"error_code,omitempty"`
+	ErrorMessage             string       `json:"error_message,omitempty"`
+	EvalSummary              *EvalSummary `json:"eval_summary,omitempty"`
+	Labels                   []Label      `json:"labels,omitempty"`
+	ModelFormats             []string     `json:"model_formats,omitempty"`
+	ScannerVersion           string       `json:"scanner_version,omitempty"`
+	TimeStarted              string       `json:"time_started,omitempty"`
+	TotalFilesScanned        *int         `json:"total_files_scanned,omitempty"`
+	TotalFilesSkipped        *int         `json:"total_files_skipped,omitempty"`
 }
 
 // ScanList is the paginated list of scans.
 type ScanList struct {
-	Items    []ScanBaseResponse `json:"items"`
-	Metadata PaginationMeta     `json:"metadata"`
+	Items    []ScanBaseResponse `json:"scans"`
+	Metadata PaginationMeta     `json:"pagination"`
 }
 
 // --- Rule Evaluation types ---
 
 // RuleEvaluationResponse represents a single rule evaluation.
 type RuleEvaluationResponse struct {
-	UUID             string               `json:"uuid"`
-	ScanUUID         string               `json:"scan_uuid,omitempty"`
-	RuleInstanceUUID string               `json:"rule_instance_uuid,omitempty"`
-	RuleName         string               `json:"rule_name,omitempty"`
-	Result           RuleEvaluationResult `json:"result,omitempty"`
-	Details          map[string]any       `json:"details,omitempty"`
-	CreatedAt        string               `json:"created_at,omitempty"`
+	UUID              string               `json:"uuid"`
+	TsgID             string               `json:"tsg_id,omitempty"`
+	CreatedAt         string               `json:"created_at,omitempty"`
+	UpdatedAt         string               `json:"updated_at,omitempty"`
+	Result            RuleEvaluationResult `json:"result,omitempty"`
+	ViolationCount    int                  `json:"violation_count,omitempty"`
+	RuleInstanceUUID  string               `json:"rule_instance_uuid,omitempty"`
+	ScanUUID          string               `json:"scan_uuid,omitempty"`
+	RuleName          string               `json:"rule_name,omitempty"`
+	RuleDescription   string               `json:"rule_description,omitempty"`
+	RuleInstanceState RuleState            `json:"rule_instance_state,omitempty"`
 }
 
 // RuleEvaluationList is the paginated list of rule evaluations.
 type RuleEvaluationList struct {
-	Items    []RuleEvaluationResponse `json:"items"`
-	Metadata PaginationMeta           `json:"metadata"`
+	Items    []RuleEvaluationResponse `json:"evaluations"`
+	Metadata PaginationMeta           `json:"pagination"`
 }
 
 // --- File types ---
 
 // FileResponse represents a file in a scan.
 type FileResponse struct {
-	UUID    string         `json:"uuid"`
-	Path    string         `json:"path,omitempty"`
-	Type    FileType       `json:"type,omitempty"`
-	Result  FileScanResult `json:"result,omitempty"`
-	Size    int64          `json:"size,omitempty"`
-	Details map[string]any `json:"details,omitempty"`
+	UUID             string         `json:"uuid"`
+	TsgID            string         `json:"tsg_id,omitempty"`
+	CreatedAt        string         `json:"created_at,omitempty"`
+	UpdatedAt        string         `json:"updated_at,omitempty"`
+	Path             string         `json:"path,omitempty"`
+	ParentPath       string         `json:"parent_path,omitempty"`
+	Type             FileType       `json:"type,omitempty"`
+	Result           FileScanResult `json:"result,omitempty"`
+	ModelVersionUUID string         `json:"model_version_uuid,omitempty"`
+	BlobID           string         `json:"blob_id,omitempty"`
+	Formats          []string       `json:"formats,omitempty"`
+	ScanUUID         string         `json:"scan_uuid,omitempty"`
 }
 
 // FileList is the paginated list of files.
 type FileList struct {
-	Items    []FileResponse `json:"items"`
-	Metadata PaginationMeta `json:"metadata"`
+	Items    []FileResponse `json:"files"`
+	Metadata PaginationMeta `json:"pagination"`
 }
 
 // --- Violation types ---
 
 // ViolationResponse represents a rule violation.
 type ViolationResponse struct {
-	UUID      string         `json:"uuid"`
-	ScanUUID  string         `json:"scan_uuid,omitempty"`
-	RuleName  string         `json:"rule_name,omitempty"`
-	Details   map[string]any `json:"details,omitempty"`
-	CreatedAt string         `json:"created_at,omitempty"`
+	UUID              string    `json:"uuid"`
+	TsgID             string    `json:"tsg_id,omitempty"`
+	CreatedAt         string    `json:"created_at,omitempty"`
+	UpdatedAt         string    `json:"updated_at,omitempty"`
+	Description       string    `json:"description,omitempty"`
+	RuleInstanceUUID  string    `json:"rule_instance_uuid,omitempty"`
+	RuleName          string    `json:"rule_name,omitempty"`
+	RuleDescription   string    `json:"rule_description,omitempty"`
+	RuleInstanceState RuleState `json:"rule_instance_state,omitempty"`
+	File              string    `json:"file,omitempty"`
+	Hash              string    `json:"hash,omitempty"`
+	Module            string    `json:"module,omitempty"`
+	Operator          string    `json:"operator,omitempty"`
+	Threat            string    `json:"threat,omitempty"`
+	ThreatDescription string    `json:"threat_description,omitempty"`
 }
 
 // ViolationList is the paginated list of violations.
 type ViolationList struct {
-	Items    []ViolationResponse `json:"items"`
-	Metadata PaginationMeta      `json:"metadata"`
+	Items    []ViolationResponse `json:"violations"`
+	Metadata PaginationMeta      `json:"pagination"`
 }
 
 // --- Label types ---
 
 // LabelsCreateRequest is the request to add/set labels.
 type LabelsCreateRequest struct {
-	Labels map[string]string `json:"labels"`
+	Labels []Label `json:"labels"`
 }
 
 // LabelsResponse is the response from label operations.
 type LabelsResponse struct {
-	Labels map[string]string `json:"labels"`
+	Labels []Label `json:"labels"`
 }
 
 // LabelKeyList is the paginated list of label keys.
 type LabelKeyList struct {
-	Items    []string       `json:"items"`
-	Metadata PaginationMeta `json:"metadata"`
+	Items    []string       `json:"keys"`
+	Metadata PaginationMeta `json:"pagination"`
 }
 
 // LabelValueList is the paginated list of label values.
 type LabelValueList struct {
-	Items    []string       `json:"items"`
-	Metadata PaginationMeta `json:"metadata"`
+	Items    []string       `json:"values"`
+	Metadata PaginationMeta `json:"pagination"`
 }
 
 // --- Security Group types ---
 
 // ModelSecurityGroupCreateRequest is the request to create a security group.
 type ModelSecurityGroupCreateRequest struct {
-	Name        string     `json:"name"`
-	Description string     `json:"description,omitempty"`
-	SourceType  SourceType `json:"source_type,omitempty"`
+	Name               string                       `json:"name"`
+	SourceType         SourceType                   `json:"source_type"`
+	Description        string                       `json:"description,omitempty"`
+	RuleConfigurations map[string]RuleConfiguration `json:"rule_configurations,omitempty"`
 }
 
 // ModelSecurityGroupUpdateRequest is the request to update a security group.
@@ -253,61 +379,70 @@ type ModelSecurityGroupUpdateRequest struct {
 // ModelSecurityGroupResponse is a security group.
 type ModelSecurityGroupResponse struct {
 	UUID        string                  `json:"uuid"`
+	TsgID       string                  `json:"tsg_id,omitempty"`
+	CreatedAt   string                  `json:"created_at,omitempty"`
+	UpdatedAt   string                  `json:"updated_at,omitempty"`
 	Name        string                  `json:"name,omitempty"`
 	Description string                  `json:"description,omitempty"`
 	SourceType  SourceType              `json:"source_type,omitempty"`
 	State       ModelSecurityGroupState `json:"state,omitempty"`
-	CreatedAt   string                  `json:"created_at,omitempty"`
-	UpdatedAt   string                  `json:"updated_at,omitempty"`
+	IsTombstone bool                    `json:"is_tombstone,omitempty"`
 }
 
 // ListModelSecurityGroupsResponse is the paginated list of security groups.
 type ListModelSecurityGroupsResponse struct {
-	Items    []ModelSecurityGroupResponse `json:"items"`
-	Metadata PaginationMeta               `json:"metadata"`
+	Items    []ModelSecurityGroupResponse `json:"security_groups"`
+	Metadata PaginationMeta               `json:"pagination"`
 }
 
 // --- Rule Instance types ---
 
 // ModelSecurityRuleInstanceUpdateRequest is the request to update a rule instance.
 type ModelSecurityRuleInstanceUpdateRequest struct {
-	State  RuleState      `json:"state,omitempty"`
-	Config map[string]any `json:"config,omitempty"`
+	SecurityGroupUUID string         `json:"security_group_uuid"`
+	State             RuleState      `json:"state,omitempty"`
+	FieldValues       map[string]any `json:"field_values,omitempty"`
 }
 
 // ModelSecurityRuleInstanceResponse is a rule instance within a security group.
 type ModelSecurityRuleInstanceResponse struct {
-	UUID             string         `json:"uuid"`
-	SecurityRuleUUID string         `json:"security_rule_uuid,omitempty"`
-	State            RuleState      `json:"state,omitempty"`
-	Config           map[string]any `json:"config,omitempty"`
-	RuleName         string         `json:"rule_name,omitempty"`
-	CreatedAt        string         `json:"created_at,omitempty"`
-	UpdatedAt        string         `json:"updated_at,omitempty"`
+	UUID              string                     `json:"uuid"`
+	TsgID             string                     `json:"tsg_id,omitempty"`
+	CreatedAt         string                     `json:"created_at,omitempty"`
+	UpdatedAt         string                     `json:"updated_at,omitempty"`
+	SecurityGroupUUID string                     `json:"security_group_uuid,omitempty"`
+	SecurityRuleUUID  string                     `json:"security_rule_uuid,omitempty"`
+	State             RuleState                  `json:"state,omitempty"`
+	FieldValues       map[string]any             `json:"field_values,omitempty"`
+	Rule              *ModelSecurityRuleResponse `json:"rule,omitempty"`
 }
 
 // ListModelSecurityRuleInstancesResponse is the paginated list of rule instances.
 type ListModelSecurityRuleInstancesResponse struct {
-	Items    []ModelSecurityRuleInstanceResponse `json:"items"`
-	Metadata PaginationMeta                      `json:"metadata"`
+	Items    []ModelSecurityRuleInstanceResponse `json:"rule_instances"`
+	Metadata PaginationMeta                      `json:"pagination"`
 }
 
 // --- Security Rule types ---
 
 // ModelSecurityRuleResponse is a security rule (read-only).
 type ModelSecurityRuleResponse struct {
-	UUID        string     `json:"uuid"`
-	Name        string     `json:"name,omitempty"`
-	Description string     `json:"description,omitempty"`
-	SourceType  SourceType `json:"source_type,omitempty"`
-	RuleType    RuleType   `json:"rule_type,omitempty"`
-	CreatedAt   string     `json:"created_at,omitempty"`
+	UUID              string              `json:"uuid"`
+	Name              string              `json:"name,omitempty"`
+	Description       string              `json:"description,omitempty"`
+	RuleType          RuleType            `json:"rule_type,omitempty"`
+	CompatibleSources []SourceType        `json:"compatible_sources,omitempty"`
+	DefaultState      RuleState           `json:"default_state,omitempty"`
+	Remediation       *RuleRemediation    `json:"remediation,omitempty"`
+	EditableFields    []RuleEditableField `json:"editable_fields,omitempty"`
+	ConstantValues    map[string]any      `json:"constant_values,omitempty"`
+	DefaultValues     map[string]any      `json:"default_values,omitempty"`
 }
 
 // ListModelSecurityRulesResponse is the paginated list of security rules.
 type ListModelSecurityRulesResponse struct {
-	Items    []ModelSecurityRuleResponse `json:"items"`
-	Metadata PaginationMeta              `json:"metadata"`
+	Items    []ModelSecurityRuleResponse `json:"rules"`
+	Metadata PaginationMeta              `json:"pagination"`
 }
 
 // --- PyPI Auth ---

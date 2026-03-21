@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/cdot65/prisma-airs-go/aisec"
 	"github.com/cdot65/prisma-airs-go/aisec/internal"
@@ -515,6 +516,12 @@ func buildGroupListParams(opts GroupListOpts) map[string]string {
 	}
 	if opts.SearchQuery != "" {
 		params["search_query"] = opts.SearchQuery
+	}
+	if len(opts.SourceTypes) > 0 {
+		params["source_types"] = strings.Join(opts.SourceTypes, ",")
+	}
+	if len(opts.EnabledRules) > 0 {
+		params["enabled_rules"] = strings.Join(opts.EnabledRules, ",")
 	}
 	return params
 }
