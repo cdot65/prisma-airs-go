@@ -232,8 +232,8 @@ func (c *ApiKeysClient) List(ctx context.Context, opts ListOpts) (*ApiKeyListRes
 
 func (c *ApiKeysClient) Delete(ctx context.Context, keyName, updatedBy string) (*ApiKeyDeleteResponse, error) {
 	resp, err := internal.DoMgmtRequest[ApiKeyDeleteResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.MgmtAPIKeyPath,
-		Params: map[string]string{"api_key_name": keyName, "updated_by": updatedBy},
+		Method: http.MethodDelete, Path: aisec.MgmtAPIKeyPath + "/delete/" + keyName,
+		Params: map[string]string{"updated_by": updatedBy},
 	})
 	if err != nil {
 		return nil, err

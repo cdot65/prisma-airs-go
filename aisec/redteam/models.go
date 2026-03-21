@@ -336,7 +336,7 @@ type JobResponse struct {
 
 // JobListResponse is the paginated list of jobs.
 type JobListResponse struct {
-	Items      []JobResponse     `json:"items"`
+	Data       []JobResponse     `json:"data"`
 	Pagination RedTeamPagination `json:"pagination"`
 }
 
@@ -416,7 +416,7 @@ type AttackListItem struct {
 
 // AttackListResponse is the paginated list of attacks.
 type AttackListResponse struct {
-	Items      []AttackListItem  `json:"items"`
+	Data       []AttackListItem  `json:"data"`
 	Pagination RedTeamPagination `json:"pagination"`
 }
 
@@ -476,7 +476,7 @@ type RuntimePolicyConfigResponse struct {
 
 // GoalListResponse is the paginated list of goals.
 type GoalListResponse struct {
-	Items      []Goal            `json:"items"`
+	Data       []Goal            `json:"data"`
 	Pagination RedTeamPagination `json:"pagination"`
 }
 
@@ -500,14 +500,28 @@ type Goal struct {
 
 // StreamListResponse is the paginated list of streams.
 type StreamListResponse struct {
-	Items      []map[string]any  `json:"items"`
-	Pagination RedTeamPagination `json:"pagination"`
+	Data       []StreamDetailResponse `json:"data"`
+	Pagination RedTeamPagination      `json:"pagination"`
 }
 
 // StreamDetailResponse is the detail of a single stream.
 type StreamDetailResponse struct {
-	ID      string         `json:"id,omitempty"`
-	Details map[string]any `json:"details,omitempty"`
+	UUID                 string         `json:"uuid,omitempty"`
+	TsgID                string         `json:"tsg_id,omitempty"`
+	JobID                string         `json:"job_id,omitempty"`
+	TargetID             string         `json:"target_id,omitempty"`
+	GoalID               string         `json:"goal_id,omitempty"`
+	StreamIdx            int            `json:"stream_idx,omitempty"`
+	StreamType           string         `json:"stream_type,omitempty"`
+	Threat               *bool          `json:"threat,omitempty"`
+	MarkedSafe           *bool          `json:"marked_safe,omitempty"`
+	Iteration            int            `json:"iteration,omitempty"`
+	FirstThreatIteration *int           `json:"first_threat_iteration,omitempty"`
+	CreatedAt            string         `json:"created_at,omitempty"`
+	UpdatedAt            string         `json:"updated_at,omitempty"`
+	Version              int            `json:"version,omitempty"`
+	Goal                 map[string]any `json:"goal,omitempty"`
+	ExtraInfo            map[string]any `json:"extra_info,omitempty"`
 }
 
 // --- Custom Attack Report types ---
@@ -521,7 +535,7 @@ type CustomAttackReportResponse struct {
 
 // PromptSetsReportResponse is the prompt sets report.
 type PromptSetsReportResponse struct {
-	Items []map[string]any `json:"items"`
+	Data []map[string]any `json:"data"`
 }
 
 // PromptDetailResponse is the detail of a single prompt.
@@ -532,7 +546,7 @@ type PromptDetailResponse struct {
 
 // CustomAttacksListResponse is the paginated list of custom attacks in a report.
 type CustomAttacksListResponse struct {
-	Items      []map[string]any  `json:"items"`
+	Data       []map[string]any  `json:"data"`
 	Pagination RedTeamPagination `json:"pagination"`
 }
 
@@ -588,32 +602,35 @@ type TargetContextUpdate struct {
 
 // TargetResponse represents a target.
 type TargetResponse struct {
-	UUID             string               `json:"uuid"`
-	Name             string               `json:"name,omitempty"`
-	Description      string               `json:"description,omitempty"`
-	TargetType       TargetType           `json:"target_type,omitempty"`
-	Status           TargetStatus         `json:"status,omitempty"`
-	ConnectionType   TargetConnectionType `json:"connection_type,omitempty"`
-	ConnectionParams map[string]any       `json:"connection_params,omitempty"`
-	CreatedAt        string               `json:"created_at,omitempty"`
-	UpdatedAt        string               `json:"updated_at,omitempty"`
-	Active           bool                 `json:"active,omitempty"`
-	TsgID            string               `json:"tsg_id,omitempty"`
-	Version          int                  `json:"version,omitempty"`
-	ProfilingStatus  string               `json:"profiling_status,omitempty"`
-	APIEndpointType  APIEndpointType      `json:"api_endpoint_type,omitempty"`
-	ResponseMode     string               `json:"response_mode,omitempty"`
-	SessionSupported bool                 `json:"session_supported,omitempty"`
-	Validated        bool                 `json:"validated,omitempty"`
-	SecretVersion    string               `json:"secret_version,omitempty"`
-	CreatedByUserID  string               `json:"created_by_user_id,omitempty"`
-	UpdatedByUserID  string               `json:"updated_by_user_id,omitempty"`
-	ExtraInfo        map[string]any       `json:"extra_info,omitempty"`
+	UUID             string                   `json:"uuid"`
+	Name             string                   `json:"name,omitempty"`
+	Description      string                   `json:"description,omitempty"`
+	TargetType       TargetType               `json:"target_type,omitempty"`
+	Status           TargetStatus             `json:"status,omitempty"`
+	ConnectionType   TargetConnectionType     `json:"connection_type,omitempty"`
+	ConnectionParams map[string]any           `json:"connection_params,omitempty"`
+	CreatedAt        string                   `json:"created_at,omitempty"`
+	UpdatedAt        string                   `json:"updated_at,omitempty"`
+	Active           bool                     `json:"active,omitempty"`
+	TsgID            string                   `json:"tsg_id,omitempty"`
+	Version          int                      `json:"version,omitempty"`
+	ProfilingStatus  string                   `json:"profiling_status,omitempty"`
+	APIEndpointType  APIEndpointType          `json:"api_endpoint_type,omitempty"`
+	ResponseMode     string                   `json:"response_mode,omitempty"`
+	SessionSupported bool                     `json:"session_supported,omitempty"`
+	Validated        bool                     `json:"validated,omitempty"`
+	SecretVersion    string                   `json:"secret_version,omitempty"`
+	CreatedByUserID  string                   `json:"created_by_user_id,omitempty"`
+	UpdatedByUserID  string                   `json:"updated_by_user_id,omitempty"`
+	ExtraInfo        map[string]any           `json:"extra_info,omitempty"`
+	TargetMeta       *TargetMetadata          `json:"target_metadata,omitempty"`
+	Background       *TargetBackground        `json:"target_background,omitempty"`
+	AdditionalCtx    *TargetAdditionalContext `json:"additional_context,omitempty"`
 }
 
 // TargetList is the paginated list of targets.
 type TargetList struct {
-	Items      []TargetResponse  `json:"items"`
+	Data       []TargetResponse  `json:"data"`
 	Pagination RedTeamPagination `json:"pagination"`
 }
 
@@ -688,13 +705,13 @@ type CustomPromptSetResponse struct {
 
 // CustomPromptSetList is the paginated list of prompt sets.
 type CustomPromptSetList struct {
-	Items      []CustomPromptSetResponse `json:"items"`
+	Data       []CustomPromptSetResponse `json:"data"`
 	Pagination RedTeamPagination         `json:"pagination"`
 }
 
 // CustomPromptSetListActive is the active prompt sets list.
 type CustomPromptSetListActive struct {
-	Items []CustomPromptSetResponse `json:"items"`
+	Data []CustomPromptSetResponse `json:"data"`
 }
 
 // CustomPromptSetReference is the reference for a prompt set.
@@ -750,13 +767,13 @@ type CustomPromptResponse struct {
 
 // CustomPromptList is the paginated list of prompts.
 type CustomPromptList struct {
-	Items      []CustomPromptResponse `json:"items"`
+	Data       []CustomPromptResponse `json:"data"`
 	Pagination RedTeamPagination      `json:"pagination"`
 }
 
 // PropertyNamesListResponse lists property names.
 type PropertyNamesListResponse struct {
-	Items []map[string]any `json:"items"`
+	Data []string `json:"data"`
 }
 
 // PropertyNameCreateRequest is the request to create a property name.
@@ -777,7 +794,7 @@ type PropertyValuesResponse struct {
 
 // PropertyValuesMultipleResponse lists values for multiple properties.
 type PropertyValuesMultipleResponse struct {
-	Properties map[string][]string `json:"properties"`
+	Data map[string][]string `json:"data"`
 }
 
 // --- Target context types ---
@@ -867,19 +884,23 @@ type ScoreTrendResponse struct {
 	Series []ScoreTrendSeries `json:"series,omitempty"`
 }
 
-// QuotaSummary is the quota summary.
+// QuotaDetails holds quota details for a specific scan type.
+type QuotaDetails struct {
+	Allocated int  `json:"allocated"`
+	Unlimited bool `json:"unlimited"`
+	Consumed  int  `json:"consumed"`
+}
+
+// QuotaSummary is the quota summary organized by scan type.
 type QuotaSummary struct {
-	StaticQuota  int `json:"static_quota"`
-	StaticUsed   int `json:"static_used"`
-	DynamicQuota int `json:"dynamic_quota"`
-	DynamicUsed  int `json:"dynamic_used"`
-	CustomQuota  int `json:"custom_quota"`
-	CustomUsed   int `json:"custom_used"`
+	Static  QuotaDetails `json:"static"`
+	Dynamic QuotaDetails `json:"dynamic"`
+	Custom  QuotaDetails `json:"custom"`
 }
 
 // ErrorLogListResponse is the paginated list of error logs.
 type ErrorLogListResponse struct {
-	Items      []ErrorLog        `json:"items"`
+	Data       []ErrorLog        `json:"data"`
 	Pagination RedTeamPagination `json:"pagination"`
 }
 

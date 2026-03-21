@@ -230,7 +230,7 @@ type CreateApiKeyRequest struct {
 	Revoked              bool   `json:"revoked"`
 	CustApp              string `json:"cust_app"`
 	CreatedBy            string `json:"created_by"`
-	RotationTimeInterval int    `json:"rotation_time_interval"`
+	RotationTimeInterval int32  `json:"rotation_time_interval"`
 	RotationTimeUnit     string `json:"rotation_time_unit"`
 	DpName               string `json:"dp_name,omitempty"`
 	CustEnv              string `json:"cust_env,omitempty"`
@@ -241,8 +241,8 @@ type CreateApiKeyRequest struct {
 // RegenerateKeyRequest is the request to regenerate an API key.
 type RegenerateKeyRequest struct {
 	UpdatedBy            string `json:"updated_by,omitempty"`
-	RotationTimeInterval int32  `json:"rotation_time_interval,omitempty"`
-	RotationTimeUnit     string `json:"rotation_time_unit,omitempty"`
+	RotationTimeInterval int32  `json:"rotation_time_interval"`
+	RotationTimeUnit     string `json:"rotation_time_unit"`
 }
 
 // ApiKeyDeleteResponse is the response from deleting an API key.
@@ -437,7 +437,7 @@ type ScanLogListResponse struct {
 type OAuthToken struct {
 	AccessToken string `json:"access_token,omitempty"`
 	TokenType   string `json:"token_type,omitempty"`
-	ExpiresIn   int    `json:"expires_in,omitempty"`
+	ExpiresIn   string `json:"expires_in,omitempty"`
 	IssuedAt    string `json:"issued_at,omitempty"`
 	ClientID    string `json:"client_id,omitempty"`
 	Status      string `json:"status,omitempty"`

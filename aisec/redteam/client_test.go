@@ -81,7 +81,7 @@ func TestScans_Create(t *testing.T) {
 func TestScans_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(JobListResponse{
-			Items:      []JobResponse{{UUID: "job-1"}},
+			Data:       []JobResponse{{UUID: "job-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -93,8 +93,8 @@ func TestScans_List(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
@@ -191,7 +191,7 @@ func TestReports_GetDynamicReport(t *testing.T) {
 func TestReports_ListAttacks(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(AttackListResponse{
-			Items:      []AttackListItem{{ID: "atk-1"}},
+			Data:       []AttackListItem{{ID: "atk-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -203,15 +203,15 @@ func TestReports_ListAttacks(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
 func TestReports_ListGoals(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(GoalListResponse{
-			Items:      []Goal{{UUID: "goal-1"}},
+			Data:       []Goal{{UUID: "goal-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -223,8 +223,8 @@ func TestReports_ListGoals(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
@@ -272,7 +272,7 @@ func TestTargets_Create(t *testing.T) {
 func TestTargets_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(TargetList{
-			Items:      []TargetResponse{{UUID: "tgt-1"}},
+			Data:       []TargetResponse{{UUID: "tgt-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -284,8 +284,8 @@ func TestTargets_List(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
@@ -474,7 +474,7 @@ func TestCustomAttacks_ListPromptSets(t *testing.T) {
 			t.Errorf("path = %s", r.URL.Path)
 		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetList{
-			Items:      []CustomPromptSetResponse{{UUID: "ps-1"}},
+			Data:       []CustomPromptSetResponse{{UUID: "ps-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -486,14 +486,14 @@ func TestCustomAttacks_ListPromptSets(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
 func TestCustomAttacks_GetPropertyNames(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(PropertyNamesListResponse{Items: []map[string]any{{"name": "category"}}})
+		_ = json.NewEncoder(w).Encode(PropertyNamesListResponse{Data: []string{"category"}})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -503,8 +503,8 @@ func TestCustomAttacks_GetPropertyNames(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
@@ -529,7 +529,11 @@ func TestGetScanStatistics(t *testing.T) {
 
 func TestGetQuota(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(QuotaSummary{StaticQuota: 100, StaticUsed: 50})
+		_ = json.NewEncoder(w).Encode(QuotaSummary{
+			Static:  QuotaDetails{Allocated: 100, Consumed: 50},
+			Dynamic: QuotaDetails{Allocated: 200},
+			Custom:  QuotaDetails{Allocated: 50},
+		})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -539,8 +543,8 @@ func TestGetQuota(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if quota.StaticQuota != 100 {
-		t.Errorf("StaticQuota = %d", quota.StaticQuota)
+	if quota.Static.Allocated != 100 {
+		t.Errorf("Static.Allocated = %d", quota.Static.Allocated)
 	}
 }
 
@@ -623,13 +627,13 @@ func TestDualEndpointRouting(t *testing.T) {
 
 	dataSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		dataCalled = true
-		_ = json.NewEncoder(w).Encode(JobListResponse{Items: []JobResponse{}, Pagination: RedTeamPagination{}})
+		_ = json.NewEncoder(w).Encode(JobListResponse{Data: []JobResponse{}, Pagination: RedTeamPagination{}})
 	}))
 	defer dataSrv.Close()
 
 	mgmtSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		mgmtCalled = true
-		_ = json.NewEncoder(w).Encode(TargetList{Items: []TargetResponse{}, Pagination: RedTeamPagination{}})
+		_ = json.NewEncoder(w).Encode(TargetList{Data: []TargetResponse{}, Pagination: RedTeamPagination{}})
 	}))
 	defer mgmtSrv.Close()
 
@@ -762,7 +766,7 @@ func TestReports_GetDynamicRuntimePolicy(t *testing.T) {
 func TestReports_ListGoalStreams(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(StreamListResponse{
-			Items:      []map[string]any{{"id": "s-1"}},
+			Data:       []StreamDetailResponse{{UUID: "s-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -774,14 +778,14 @@ func TestReports_ListGoalStreams(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
 func TestReports_GetStreamDetail(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(StreamDetailResponse{ID: "s-1"})
+		_ = json.NewEncoder(w).Encode(StreamDetailResponse{UUID: "s-1"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -791,8 +795,8 @@ func TestReports_GetStreamDetail(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.ID != "s-1" {
-		t.Errorf("ID = %q", resp.ID)
+	if resp.UUID != "s-1" {
+		t.Errorf("UUID = %q", resp.UUID)
 	}
 }
 
@@ -826,7 +830,7 @@ func TestReports_DownloadReport(t *testing.T) {
 
 func TestCustomAttackReports_GetPromptSets(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(PromptSetsReportResponse{Items: []map[string]any{{"id": "ps-1"}}})
+		_ = json.NewEncoder(w).Encode(PromptSetsReportResponse{Data: []map[string]any{{"id": "ps-1"}}})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -836,8 +840,8 @@ func TestCustomAttackReports_GetPromptSets(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
@@ -878,7 +882,7 @@ func TestCustomAttackReports_GetPromptDetail(t *testing.T) {
 func TestCustomAttackReports_ListCustomAttacks(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(CustomAttacksListResponse{
-			Items:      []map[string]any{{"id": "ca-1"}},
+			Data:       []map[string]any{{"id": "ca-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -890,8 +894,8 @@ func TestCustomAttackReports_ListCustomAttacks(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
@@ -951,7 +955,7 @@ func TestGetScoreTrend(t *testing.T) {
 func TestGetErrorLogs(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(ErrorLogListResponse{
-			Items:      []ErrorLog{{JobID: "e-1"}},
+			Data:       []ErrorLog{{JobID: "e-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -963,8 +967,8 @@ func TestGetErrorLogs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
@@ -1122,7 +1126,7 @@ func TestCustomAttacks_ListActivePromptSets(t *testing.T) {
 			t.Errorf("path = %s", r.URL.Path)
 		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetListActive{
-			Items: []CustomPromptSetResponse{{UUID: "ps-1"}},
+			Data: []CustomPromptSetResponse{{UUID: "ps-1"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -1133,8 +1137,8 @@ func TestCustomAttacks_ListActivePromptSets(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
@@ -1182,7 +1186,7 @@ func TestCustomAttacks_ListPrompts(t *testing.T) {
 			t.Errorf("path = %s", r.URL.Path)
 		}
 		_ = json.NewEncoder(w).Encode(CustomPromptList{
-			Items:      []CustomPromptResponse{{UUID: "p-1"}},
+			Data:       []CustomPromptResponse{{UUID: "p-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -1194,8 +1198,8 @@ func TestCustomAttacks_ListPrompts(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Items) != 1 {
-		t.Errorf("items = %d", len(resp.Items))
+	if len(resp.Data) != 1 {
+		t.Errorf("items = %d", len(resp.Data))
 	}
 }
 
@@ -1308,7 +1312,7 @@ func TestCustomAttacks_GetPropertyValuesMultiple(t *testing.T) {
 			t.Errorf("method = %s", r.Method)
 		}
 		_ = json.NewEncoder(w).Encode(PropertyValuesMultipleResponse{
-			Properties: map[string][]string{"cat": {"v1"}},
+			Data: map[string][]string{"cat": {"v1"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -1319,8 +1323,8 @@ func TestCustomAttacks_GetPropertyValuesMultiple(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Properties) != 1 {
-		t.Errorf("properties = %d", len(resp.Properties))
+	if len(resp.Data) != 1 {
+		t.Errorf("data = %d", len(resp.Data))
 	}
 }
 
