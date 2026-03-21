@@ -402,9 +402,6 @@ func buildScanListParams(opts ScanListOpts) map[string]string {
 	if opts.Limit > 0 {
 		params["limit"] = fmt.Sprintf("%d", opts.Limit)
 	}
-	if opts.SortBy != "" {
-		params["sort_by"] = opts.SortBy
-	}
 	if opts.SortOrder != "" {
 		params["sort_order"] = opts.SortOrder
 	}

@@ -678,6 +678,89 @@ func TestListResponses_JSONTags(t *testing.T) {
 	}
 }
 
+func TestErrorCode_Constants(t *testing.T) {
+	codes := []ErrorCode{
+		ErrorCodeUnknownError, ErrorCodeScanError, ErrorCodeInvalidResponse,
+		ErrorCodeAccessDenied, ErrorCodeMissingCredentials, ErrorCodeNoSuchKey,
+		ErrorCodeNoSuchBucket, ErrorCodeInvalidBucketName, ErrorCodeInternalError,
+		ErrorCodeServiceUnavailable, ErrorCodeInvalidObjectState,
+		ErrorCodeUnknownRemoteServiceError, ErrorCodeUnsupportedRemoteStorage,
+		ErrorCodeMissingArtifacts, ErrorCodeWorkerError, ErrorCodePolicyEvalError,
+	}
+	if len(codes) != 16 {
+		t.Errorf("expected 16 error codes, got %d", len(codes))
+	}
+	if string(ErrorCodeScanError) != "SCAN_ERROR" {
+		t.Errorf("ErrorCodeScanError = %q", ErrorCodeScanError)
+	}
+}
+
+func TestThreatCategory_Constants(t *testing.T) {
+	cats := []ThreatCategory{
+		ThreatCategoryPAITARV100, ThreatCategoryPAITGGUF100, ThreatCategoryPAITGGUF101,
+		ThreatCategoryPAITKERAS100, ThreatCategoryPAITKERAS101, ThreatCategoryPAITKERAS102,
+		ThreatCategoryPAITJOBLIB100, ThreatCategoryPAITJOBLIB101,
+		ThreatCategoryPAITPKL100, ThreatCategoryPAITPKL101,
+		ThreatCategoryPAITPYTCH100, ThreatCategoryPAITPYTCH101,
+		ThreatCategoryPAITEXDIR100, ThreatCategoryPAITEXDIR101,
+		ThreatCategoryPAITONNX200, ThreatCategoryPAITTF200,
+		ThreatCategoryPAITLMAFL300, ThreatCategoryPAITLITERT300,
+		ThreatCategoryPAITLITERT301, ThreatCategoryPAITLITERT302,
+		ThreatCategoryPAITKERAS300, ThreatCategoryPAITKERAS301,
+		ThreatCategoryPAITTCHST300, ThreatCategoryPAITTCHST301,
+		ThreatCategoryPAITTF300, ThreatCategoryPAITTF301, ThreatCategoryPAITTF302,
+		ThreatCategoryPAITTMT300, ThreatCategoryPAITTMT301,
+		ThreatCategoryUnapprovedFormats,
+	}
+	if len(cats) != 30 {
+		t.Errorf("expected 30 threat categories, got %d", len(cats))
+	}
+	if string(ThreatCategoryPAITARV100) != "PAIT-ARV-100" {
+		t.Errorf("ThreatCategoryPAITARV100 = %q", ThreatCategoryPAITARV100)
+	}
+}
+
+func TestLabelsResponse_EmptyJSON(t *testing.T) {
+	raw := `{}`
+	var resp LabelsResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.Labels != nil {
+		t.Errorf("expected nil labels, got %v", resp.Labels)
+	}
+
+	// Round-trip with labels
+	raw2 := `{"labels":[{"key":"env","value":"prod"}]}`
+	var resp2 LabelsResponse
+	if err := json.Unmarshal([]byte(raw2), &resp2); err != nil {
+		t.Fatal(err)
+	}
+	if len(resp2.Labels) != 1 || resp2.Labels[0].Key != "env" {
+		t.Errorf("labels = %v", resp2.Labels)
+	}
+
+	// Marshal empty omits labels
+	data, err := json.Marshal(LabelsResponse{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != "{}" {
+		t.Errorf("empty marshal = %s", string(data))
+	}
+}
+
+func TestScanListOpts_NoSortBy(t *testing.T) {
+	opts := ScanListOpts{Limit: 10, SortOrder: "desc"}
+	params := buildScanListParams(opts)
+	if _, ok := params["sort_by"]; ok {
+		t.Error("sort_by should not be in params")
+	}
+	if params["sort_order"] != "desc" {
+		t.Errorf("sort_order = %q", params["sort_order"])
+	}
+}
+
 func TestBuildGroupListParams_SourceTypesAndEnabledRules(t *testing.T) {
 	params := buildGroupListParams(GroupListOpts{
 		SourceTypes:  []string{"LOCAL", "S3"},

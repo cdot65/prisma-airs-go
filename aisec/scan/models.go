@@ -74,8 +74,8 @@ type ScanResponse struct {
 	ResponseDetected         *ResponseDetected `json:"response_detected,omitempty"`
 	PromptMaskedData         *MaskedData       `json:"prompt_masked_data,omitempty"`
 	ResponseMaskedData       *MaskedData       `json:"response_masked_data,omitempty"`
-	PromptDetectionDetails   map[string]any    `json:"prompt_detection_details,omitempty"`
-	ResponseDetectionDetails map[string]any    `json:"response_detection_details,omitempty"`
+	PromptDetectionDetails   *DetectionDetails `json:"prompt_detection_details,omitempty"`
+	ResponseDetectionDetails *DetectionDetails `json:"response_detection_details,omitempty"`
 	ToolDetected             *ToolDetected     `json:"tool_detected,omitempty"`
 	CreatedAt                string            `json:"created_at,omitempty"`
 	CompletedAt              string            `json:"completed_at,omitempty"`
@@ -173,6 +173,11 @@ type TopicGuardRails struct {
 	BlockedTopics []string `json:"blocked_topics,omitempty"`
 }
 
+// DetectionDetails holds detection details for prompt/response.
+type DetectionDetails struct {
+	TopicGuardrailsDetails *TopicGuardRails `json:"topic_guardrails_details,omitempty"`
+}
+
 // ToolDetectionDetails holds additional detection details.
 type ToolDetectionDetails struct {
 	TopicGuardrailsDetails *TopicGuardRails `json:"topic_guardrails_details,omitempty"`
@@ -242,17 +247,27 @@ type DSResultMetadata struct {
 
 // UrlfEntry is a URL filter report entry.
 type UrlfEntry struct {
-	URL       string `json:"url,omitempty"`
-	RiskLevel string `json:"risk_level,omitempty"`
-	Action    string `json:"action,omitempty"`
+	URL        string   `json:"url,omitempty"`
+	RiskLevel  string   `json:"risk_level,omitempty"`
+	Action     string   `json:"action,omitempty"`
+	Categories []string `json:"categories,omitempty"`
+}
+
+// DlpPatternDetections holds pattern detection offsets for DLP.
+type DlpPatternDetections struct {
+	Pattern          string  `json:"pattern,omitempty"`
+	DetectionOffsets [][]int `json:"detection_offsets,omitempty"`
 }
 
 // DlpReport holds DLP detection report details.
 type DlpReport struct {
-	DlpReportID       string `json:"dlp_report_id,omitempty"`
-	DlpProfileName    string `json:"dlp_profile_name,omitempty"`
-	DlpProfileID      string `json:"dlp_profile_id,omitempty"`
-	DlpProfileVersion int    `json:"dlp_profile_version,omitempty"`
+	DlpReportID                 string                 `json:"dlp_report_id,omitempty"`
+	DlpProfileName              string                 `json:"dlp_profile_name,omitempty"`
+	DlpProfileID                string                 `json:"dlp_profile_id,omitempty"`
+	DlpProfileVersion           int                    `json:"dlp_profile_version,omitempty"`
+	DataPatternRule1Verdict     string                 `json:"data_pattern_rule1_verdict,omitempty"`
+	DataPatternRule2Verdict     string                 `json:"data_pattern_rule2_verdict,omitempty"`
+	DataPatternDetectionOffsets []DlpPatternDetections `json:"data_pattern_detection_offsets,omitempty"`
 }
 
 // DbsEntry is a database security report entry.
@@ -270,23 +285,34 @@ type TcReport struct {
 
 // McEntry is a malicious code analysis entry.
 type McEntry struct {
-	CodeType string `json:"code_type,omitempty"`
-	Verdict  string `json:"verdict,omitempty"`
-	Action   string `json:"action,omitempty"`
+	FileType   string `json:"file_type,omitempty"`
+	CodeSha256 string `json:"code_sha256,omitempty"`
+}
+
+// MalwareReport holds malware script report details.
+type MalwareReport struct {
+	Verdict string `json:"verdict,omitempty"`
+}
+
+// CmdEntry is a command injection report entry.
+type CmdEntry struct {
+	CodeBlock string `json:"code_block,omitempty"`
+	Verdict   string `json:"verdict,omitempty"`
 }
 
 // McReport holds malicious code report details.
 type McReport struct {
-	AllCodeBlocks       []string       `json:"all_code_blocks,omitempty"`
-	CodeAnalysisByType  []McEntry      `json:"code_analysis_by_type,omitempty"`
-	Verdict             string         `json:"verdict,omitempty"`
-	MalwareScriptReport map[string]any `json:"malware_script_report,omitempty"`
+	AllCodeBlocks          []string       `json:"all_code_blocks,omitempty"`
+	CodeAnalysisByType     []McEntry      `json:"code_analysis_by_type,omitempty"`
+	Verdict                string         `json:"verdict,omitempty"`
+	MalwareScriptReport    *MalwareReport `json:"malware_script_report,omitempty"`
+	CommandInjectionReport []CmdEntry     `json:"command_injection_report,omitempty"`
 }
 
 // AgentEntry is an agent detection pattern entry.
 type AgentEntry struct {
-	Pattern string `json:"pattern,omitempty"`
-	Verdict string `json:"verdict,omitempty"`
+	CategoryType string `json:"category_type,omitempty"`
+	Verdict      string `json:"verdict,omitempty"`
 }
 
 // AgentReport holds agent detection report details.
@@ -338,7 +364,7 @@ type ThreatScanReport struct {
 	Source           string                   `json:"source,omitempty"`
 	ReportID         string                   `json:"report_id,omitempty"`
 	ScanID           string                   `json:"scan_id,omitempty"`
-	ReqID            int                      `json:"req_id,omitempty"`
+	ReqID            uint32                   `json:"req_id,omitempty"`
 	TransactionID    string                   `json:"transaction_id,omitempty"`
 	SessionID        string                   `json:"session_id,omitempty"`
 	DetectionResults []DetectionServiceResult `json:"detection_results,omitempty"`

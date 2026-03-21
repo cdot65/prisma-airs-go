@@ -8,12 +8,14 @@ type ListOpts struct {
 
 // SecurityProfile represents an AI security profile.
 type SecurityProfile struct {
-	ProfileID   string         `json:"profile_id,omitempty"`
-	ProfileName string         `json:"profile_name,omitempty"`
-	Active      bool           `json:"active,omitempty"`
-	Policy      map[string]any `json:"policy,omitempty"`
-	CreatedAt   string         `json:"created_at,omitempty"`
-	UpdatedAt   string         `json:"updated_at,omitempty"`
+	ProfileID      string         `json:"profile_id,omitempty"`
+	ProfileName    string         `json:"profile_name,omitempty"`
+	Revision       int32          `json:"revision,omitempty"`
+	Active         bool           `json:"active,omitempty"`
+	Policy         map[string]any `json:"policy,omitempty"`
+	CreatedBy      string         `json:"created_by,omitempty"`
+	UpdatedBy      string         `json:"updated_by,omitempty"`
+	LastModifiedTs string         `json:"last_modified_ts,omitempty"`
 }
 
 // SecurityProfileListResponse is the list response for profiles.
@@ -41,12 +43,16 @@ type DeleteProfileResponse struct {
 
 // CustomTopic represents a custom detection topic.
 type CustomTopic struct {
-	TopicID     string   `json:"topic_id,omitempty"`
-	TopicName   string   `json:"topic_name,omitempty"`
-	Description string   `json:"description,omitempty"`
-	Examples    []string `json:"examples,omitempty"`
-	CreatedAt   string   `json:"created_at,omitempty"`
-	UpdatedAt   string   `json:"updated_at,omitempty"`
+	TopicID        string   `json:"topic_id,omitempty"`
+	TopicName      string   `json:"topic_name,omitempty"`
+	Revision       int64    `json:"revision,omitempty"`
+	Active         bool     `json:"active,omitempty"`
+	Description    string   `json:"description,omitempty"`
+	Examples       []string `json:"examples,omitempty"`
+	CreatedBy      string   `json:"created_by,omitempty"`
+	UpdatedBy      string   `json:"updated_by,omitempty"`
+	LastModifiedTs string   `json:"last_modified_ts,omitempty"`
+	CreatedTs      string   `json:"created_ts,omitempty"`
 }
 
 // CustomTopicListResponse is the list response for topics.
@@ -111,8 +117,17 @@ type ApiKeyListResponse struct {
 
 // CreateApiKeyRequest is the request to create an API key.
 type CreateApiKeyRequest struct {
-	ApiKeyName string `json:"api_key_name"`
-	UpdatedBy  string `json:"updated_by,omitempty"`
+	ApiKeyName           string `json:"api_key_name"`
+	AuthCode             string `json:"auth_code"`
+	Revoked              bool   `json:"revoked"`
+	CustApp              string `json:"cust_app"`
+	CreatedBy            string `json:"created_by"`
+	RotationTimeInterval int    `json:"rotation_time_interval"`
+	RotationTimeUnit     string `json:"rotation_time_unit"`
+	DpName               string `json:"dp_name,omitempty"`
+	CustEnv              string `json:"cust_env,omitempty"`
+	CustCloudProvider    string `json:"cust_cloud_provider,omitempty"`
+	CustAIAgentFramework string `json:"cust_ai_agent_framework,omitempty"`
 }
 
 // RegenerateKeyRequest is the request to regenerate an API key.
@@ -127,11 +142,16 @@ type ApiKeyDeleteResponse struct {
 
 // CustomerApp represents a customer application.
 type CustomerApp struct {
-	AppID       string `json:"app_id,omitempty"`
-	AppName     string `json:"app_name,omitempty"`
-	Description string `json:"description,omitempty"`
-	CreatedAt   string `json:"created_at,omitempty"`
-	UpdatedAt   string `json:"updated_at,omitempty"`
+	CustomerAppID    string `json:"customer_appId,omitempty"`
+	AppName          string `json:"app_name,omitempty"`
+	TsgID            string `json:"tsg_id,omitempty"`
+	ModelName        string `json:"model_name,omitempty"`
+	CloudProvider    string `json:"cloud_provider,omitempty"`
+	Environment      string `json:"environment,omitempty"`
+	Status           string `json:"status,omitempty"`
+	CreatedBy        string `json:"created_by,omitempty"`
+	UpdatedBy        string `json:"updated_by,omitempty"`
+	AiAgentFramework string `json:"ai_agent_framework,omitempty"`
 }
 
 // CustomerAppListResponse is the list response for customer apps.
@@ -142,14 +162,18 @@ type CustomerAppListResponse struct {
 
 // CreateAppRequest is the request to create a customer app.
 type CreateAppRequest struct {
-	AppName     string `json:"app_name"`
-	Description string `json:"description,omitempty"`
+	AppName       string `json:"app_name"`
+	TsgID         string `json:"tsg_id"`
+	CloudProvider string `json:"cloud_provider"`
+	Environment   string `json:"environment"`
 }
 
 // UpdateAppRequest is the request to update a customer app.
 type UpdateAppRequest struct {
-	AppName     string `json:"app_name,omitempty"`
-	Description string `json:"description,omitempty"`
+	AppName       string `json:"app_name,omitempty"`
+	ModelName     string `json:"model_name,omitempty"`
+	CloudProvider string `json:"cloud_provider,omitempty"`
+	Environment   string `json:"environment,omitempty"`
 }
 
 // DeleteAppResponse is the response from deleting a customer app.
@@ -178,12 +202,12 @@ type DlpProfileListResponse struct {
 
 // DeploymentProfile represents a deployment profile.
 type DeploymentProfile struct {
-	AuthCode             string `json:"auth_code,omitempty"`
-	DpName               string `json:"dp_name,omitempty"`
-	ExpirationDate       string `json:"expiration_date,omitempty"`
-	MonthlyBillionTokens int    `json:"monthly_billion_tokens,omitempty"`
-	Status               string `json:"status,omitempty"`
-	TsgID                string `json:"tsg_id,omitempty"`
+	AuthCode       string `json:"auth_code,omitempty"`
+	DpName         string `json:"dp_name,omitempty"`
+	TsgID          string `json:"tsg_id,omitempty"`
+	Status         string `json:"status,omitempty"`
+	ExpirationDate string `json:"expiration_date,omitempty"`
+	AveTextRecords int32  `json:"ave_text_records,omitempty"`
 }
 
 // DeploymentProfileListResponse is the list response for deployment profiles.

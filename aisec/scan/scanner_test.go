@@ -454,6 +454,196 @@ func TestDetectionServiceResult_JSONFormat(t *testing.T) {
 	}
 }
 
+func TestMcEntry_JSONFormat(t *testing.T) {
+	entry := McEntry{FileType: "python", CodeSha256: "abc123"}
+	data, err := json.Marshal(entry)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded["file_type"] != "python" {
+		t.Errorf("file_type = %v", decoded["file_type"])
+	}
+	if decoded["code_sha256"] != "abc123" {
+		t.Errorf("code_sha256 = %v", decoded["code_sha256"])
+	}
+	if decoded["code_type"] != nil {
+		t.Error("code_type should not exist")
+	}
+	if decoded["verdict"] != nil {
+		t.Error("verdict should not exist on McEntry")
+	}
+	if decoded["action"] != nil {
+		t.Error("action should not exist on McEntry")
+	}
+}
+
+func TestAgentEntry_JSONFormat(t *testing.T) {
+	entry := AgentEntry{CategoryType: "prompt_injection", Verdict: "malicious"}
+	data, err := json.Marshal(entry)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded["category_type"] != "prompt_injection" {
+		t.Errorf("category_type = %v", decoded["category_type"])
+	}
+	if decoded["verdict"] != "malicious" {
+		t.Errorf("verdict = %v", decoded["verdict"])
+	}
+	if decoded["pattern"] != nil {
+		t.Error("pattern should not exist on AgentEntry")
+	}
+}
+
+func TestUrlfEntry_JSONFormat(t *testing.T) {
+	entry := UrlfEntry{
+		URL:        "http://example.com",
+		RiskLevel:  "high",
+		Action:     "block",
+		Categories: []string{"malware", "phishing"},
+	}
+	data, err := json.Marshal(entry)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	cats, ok := decoded["categories"].([]any)
+	if !ok || len(cats) != 2 {
+		t.Fatalf("categories = %v", decoded["categories"])
+	}
+	if cats[0] != "malware" {
+		t.Errorf("categories[0] = %v", cats[0])
+	}
+}
+
+func TestDlpReport_JSONFormat(t *testing.T) {
+	report := DlpReport{
+		DlpReportID:             "rpt-1",
+		DataPatternRule1Verdict: "hit",
+		DataPatternRule2Verdict: "miss",
+		DataPatternDetectionOffsets: []DlpPatternDetections{
+			{Pattern: "SSN", DetectionOffsets: [][]int{{0, 11}}},
+		},
+	}
+	data, err := json.Marshal(report)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded["data_pattern_rule1_verdict"] != "hit" {
+		t.Errorf("data_pattern_rule1_verdict = %v", decoded["data_pattern_rule1_verdict"])
+	}
+	if decoded["data_pattern_rule2_verdict"] != "miss" {
+		t.Errorf("data_pattern_rule2_verdict = %v", decoded["data_pattern_rule2_verdict"])
+	}
+	offsets, ok := decoded["data_pattern_detection_offsets"].([]any)
+	if !ok || len(offsets) != 1 {
+		t.Fatalf("data_pattern_detection_offsets = %v", decoded["data_pattern_detection_offsets"])
+	}
+}
+
+func TestMcReport_WithCmdInjection(t *testing.T) {
+	report := McReport{
+		Verdict:             "malicious",
+		MalwareScriptReport: &MalwareReport{Verdict: "malicious"},
+		CommandInjectionReport: []CmdEntry{
+			{CodeBlock: "rm -rf /", Verdict: "malicious"},
+		},
+	}
+	data, err := json.Marshal(report)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	cmds, ok := decoded["command_injection_report"].([]any)
+	if !ok || len(cmds) != 1 {
+		t.Fatalf("command_injection_report = %v", decoded["command_injection_report"])
+	}
+	malware, ok := decoded["malware_script_report"].(map[string]any)
+	if !ok {
+		t.Fatal("malware_script_report should be an object")
+	}
+	if malware["verdict"] != "malicious" {
+		t.Errorf("malware_script_report.verdict = %v", malware["verdict"])
+	}
+}
+
+func TestDetectionDetails_JSONFormat(t *testing.T) {
+	resp := ScanResponse{
+		ScanID:   "scan-1",
+		ReportID: "rpt-1",
+		Category: "benign",
+		Action:   "allow",
+		PromptDetectionDetails: &DetectionDetails{
+			TopicGuardrailsDetails: &TopicGuardRails{
+				AllowedTopics: []string{"general"},
+				BlockedTopics: []string{"violence"},
+			},
+		},
+		ResponseDetectionDetails: &DetectionDetails{
+			TopicGuardrailsDetails: &TopicGuardRails{
+				BlockedTopics: []string{"pii"},
+			},
+		},
+	}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	pdd, ok := decoded["prompt_detection_details"].(map[string]any)
+	if !ok {
+		t.Fatal("prompt_detection_details should be an object")
+	}
+	tgd, ok := pdd["topic_guardrails_details"].(map[string]any)
+	if !ok {
+		t.Fatal("topic_guardrails_details should be an object")
+	}
+	allowed, ok := tgd["allowed_topics"].([]any)
+	if !ok || len(allowed) != 1 || allowed[0] != "general" {
+		t.Errorf("allowed_topics = %v", tgd["allowed_topics"])
+	}
+
+	rdd, ok := decoded["response_detection_details"].(map[string]any)
+	if !ok {
+		t.Fatal("response_detection_details should be an object")
+	}
+	if rdd["topic_guardrails_details"] == nil {
+		t.Error("response_detection_details missing topic_guardrails_details")
+	}
+}
+
 func TestToolDetected_FullRoundTrip(t *testing.T) {
 	td := ToolDetected{
 		Verdict: "malicious",
