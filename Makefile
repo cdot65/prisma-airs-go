@@ -1,4 +1,4 @@
-.PHONY: fmt vet lint test test-coverage build check clean
+.PHONY: fmt vet lint test test-coverage test-integration build check clean
 
 ## Format source code
 fmt:
@@ -20,6 +20,10 @@ test:
 test-coverage:
 	go test -race -coverprofile=coverage.out ./...
 	go tool cover -func=coverage.out
+
+## Run integration tests (requires .env with real credentials)
+test-integration:
+	go test -race -v -tags=integration ./...
 
 ## Build all packages
 build:

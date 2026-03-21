@@ -71,9 +71,8 @@ func buildListParams(opts ListOpts) map[string]string {
 	if opts.Limit > 0 {
 		params["limit"] = fmt.Sprintf("%d", opts.Limit)
 	}
-	if opts.Offset > 0 {
-		params["offset"] = fmt.Sprintf("%d", opts.Offset)
-	}
+	// Always include offset — the API requires the query parameter even when 0.
+	params["offset"] = fmt.Sprintf("%d", opts.Offset)
 	return params
 }
 
