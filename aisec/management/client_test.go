@@ -427,7 +427,7 @@ func TestScanLogs_List_WithPageToken(t *testing.T) {
 
 func TestOAuth_GetToken(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(OAuthToken{AccessToken: "mgmt-token", ExpiresIn: 3600})
+		_ = json.NewEncoder(w).Encode(OAuthToken{AccessToken: "mgmt-token", ExpiresIn: "3600"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -621,8 +621,8 @@ func TestApiKeys_Delete(t *testing.T) {
 		if r.Method != "DELETE" {
 			t.Errorf("method = %s", r.Method)
 		}
-		if r.URL.Query().Get("api_key_name") != "my-key" {
-			t.Errorf("api_key_name = %q", r.URL.Query().Get("api_key_name"))
+		if !strings.Contains(r.URL.Path, "/delete/my-key") {
+			t.Errorf("path should contain /delete/my-key, got %s", r.URL.Path)
 		}
 		if r.URL.Query().Get("updated_by") != "admin" {
 			t.Errorf("updated_by = %q", r.URL.Query().Get("updated_by"))
@@ -1094,7 +1094,7 @@ func TestRegenerateKeyRequest_JSON(t *testing.T) {
 }
 
 func TestOAuthToken_ExtraFields(t *testing.T) {
-	j := `{"access_token":"tok","token_type":"Bearer","expires_in":3600,"issued_at":"2025-01-01","client_id":"cid","status":"active"}`
+	j := `{"access_token":"tok","token_type":"Bearer","expires_in":"3600","issued_at":"2025-01-01","client_id":"cid","status":"active"}`
 	var tok OAuthToken
 	if err := json.Unmarshal([]byte(j), &tok); err != nil {
 		t.Fatal(err)

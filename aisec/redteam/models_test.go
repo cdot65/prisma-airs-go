@@ -506,18 +506,19 @@ func TestScoreTrendResponse_TypedFields(t *testing.T) {
 
 func TestQuotaSummary_TypedFields(t *testing.T) {
 	j := `{
-		"static_quota":100,"static_used":50,"dynamic_quota":200,"dynamic_used":30,
-		"custom_quota":50,"custom_used":10
+		"static":{"allocated":100,"unlimited":false,"consumed":50},
+		"dynamic":{"allocated":200,"unlimited":true,"consumed":30},
+		"custom":{"allocated":50,"unlimited":false,"consumed":10}
 	}`
 	var q QuotaSummary
 	if err := json.Unmarshal([]byte(j), &q); err != nil {
 		t.Fatal(err)
 	}
-	if q.StaticQuota != 100 {
-		t.Errorf("StaticQuota = %d", q.StaticQuota)
+	if q.Static.Allocated != 100 {
+		t.Errorf("Static.Allocated = %d", q.Static.Allocated)
 	}
-	if q.DynamicUsed != 30 {
-		t.Errorf("DynamicUsed = %d", q.DynamicUsed)
+	if q.Dynamic.Consumed != 30 {
+		t.Errorf("Dynamic.Consumed = %d", q.Dynamic.Consumed)
 	}
 }
 
@@ -540,5 +541,168 @@ func TestScanStatisticsResponse_TypedFields(t *testing.T) {
 	}
 	if len(s.TargetsScannedByType) != 1 {
 		t.Errorf("TargetsScannedByType = %v", s.TargetsScannedByType)
+	}
+}
+
+// --- Spec alignment: "data" JSON key for list responses ---
+
+func TestJobListResponse_DataKey(t *testing.T) {
+	j := `{"data":[{"uuid":"j1","name":"test"}],"pagination":{"total":1,"skip":0,"limit":10}}`
+	var r JobListResponse
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if len(r.Data) != 1 || r.Data[0].UUID != "j1" {
+		t.Errorf("Data = %+v", r.Data)
+	}
+}
+
+func TestAttackListResponse_DataKey(t *testing.T) {
+	j := `{"data":[{"id":"a1"}],"pagination":{"total":1,"skip":0,"limit":10}}`
+	var r AttackListResponse
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if len(r.Data) != 1 {
+		t.Errorf("Data len = %d", len(r.Data))
+	}
+}
+
+func TestGoalListResponse_DataKey(t *testing.T) {
+	j := `{"data":[{"uuid":"g1","goal_type":"BASE"}],"pagination":{"total":1,"skip":0,"limit":10}}`
+	var r GoalListResponse
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if len(r.Data) != 1 || r.Data[0].UUID != "g1" {
+		t.Errorf("Data = %+v", r.Data)
+	}
+}
+
+func TestTargetList_DataKey(t *testing.T) {
+	j := `{"data":[{"uuid":"t1","name":"test"}],"pagination":{"total":1,"skip":0,"limit":10}}`
+	var r TargetList
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if len(r.Data) != 1 || r.Data[0].UUID != "t1" {
+		t.Errorf("Data = %+v", r.Data)
+	}
+}
+
+func TestErrorLogListResponse_DataKey(t *testing.T) {
+	j := `{"data":[{"job_id":"j1","error_source":"TARGET"}],"pagination":{"total":1,"skip":0,"limit":10}}`
+	var r ErrorLogListResponse
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if len(r.Data) != 1 || r.Data[0].JobID != "j1" {
+		t.Errorf("Data = %+v", r.Data)
+	}
+}
+
+// --- QuotaSummary nested structure ---
+
+func TestQuotaSummary_NestedStructure(t *testing.T) {
+	j := `{
+		"static":{"allocated":100,"unlimited":false,"consumed":50},
+		"dynamic":{"allocated":200,"unlimited":true,"consumed":30},
+		"custom":{"allocated":50,"unlimited":false,"consumed":10}
+	}`
+	var q QuotaSummary
+	if err := json.Unmarshal([]byte(j), &q); err != nil {
+		t.Fatal(err)
+	}
+	if q.Static.Allocated != 100 {
+		t.Errorf("Static.Allocated = %d", q.Static.Allocated)
+	}
+	if q.Dynamic.Unlimited != true {
+		t.Error("Dynamic.Unlimited should be true")
+	}
+	if q.Custom.Consumed != 10 {
+		t.Errorf("Custom.Consumed = %d", q.Custom.Consumed)
+	}
+}
+
+// --- StreamDetailResponse typed ---
+
+func TestStreamDetailResponse_TypedFields(t *testing.T) {
+	j := `{
+		"uuid":"s1","tsg_id":"t1","job_id":"j1","target_id":"tgt1",
+		"goal_id":"g1","stream_idx":0,"stream_type":"NORMAL",
+		"threat":true,"marked_safe":false,"iteration":3,
+		"created_at":"2025-01-01","updated_at":"2025-06-01","version":1
+	}`
+	var s StreamDetailResponse
+	if err := json.Unmarshal([]byte(j), &s); err != nil {
+		t.Fatal(err)
+	}
+	if s.UUID != "s1" {
+		t.Errorf("UUID = %q", s.UUID)
+	}
+	if s.TsgID != "t1" {
+		t.Errorf("TsgID = %q", s.TsgID)
+	}
+	if s.JobID != "j1" {
+		t.Errorf("JobID = %q", s.JobID)
+	}
+	if s.StreamType != "NORMAL" {
+		t.Errorf("StreamType = %q", s.StreamType)
+	}
+	if s.Threat == nil || !*s.Threat {
+		t.Error("Threat should be true")
+	}
+	if s.Iteration != 3 {
+		t.Errorf("Iteration = %d", s.Iteration)
+	}
+}
+
+// --- TargetResponse context fields ---
+
+func TestTargetResponse_ContextFields(t *testing.T) {
+	j := `{
+		"uuid":"t1","name":"test",
+		"target_metadata":{"multi_turn":true,"probe_message":"hi"},
+		"target_background":{"industry":"finance"},
+		"additional_context":{"base_model":"gpt-4"}
+	}`
+	var t2 TargetResponse
+	if err := json.Unmarshal([]byte(j), &t2); err != nil {
+		t.Fatal(err)
+	}
+	if t2.TargetMeta == nil || !t2.TargetMeta.MultiTurn {
+		t.Error("TargetMeta.MultiTurn should be true")
+	}
+	if t2.Background == nil || t2.Background.Industry != "finance" {
+		t.Error("Background.Industry should be finance")
+	}
+	if t2.AdditionalCtx == nil || t2.AdditionalCtx.BaseModel != "gpt-4" {
+		t.Error("AdditionalCtx.BaseModel should be gpt-4")
+	}
+}
+
+// --- PropertyNamesListResponse typed ---
+
+func TestPropertyNamesListResponse_DataKey(t *testing.T) {
+	j := `{"data":["color","size"]}`
+	var r PropertyNamesListResponse
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if len(r.Data) != 2 || r.Data[0] != "color" {
+		t.Errorf("Data = %v", r.Data)
+	}
+}
+
+// --- PropertyValuesMultipleResponse data key ---
+
+func TestPropertyValuesMultipleResponse_DataKey(t *testing.T) {
+	j := `{"data":{"color":["red","blue"]}}`
+	var r PropertyValuesMultipleResponse
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if len(r.Data["color"]) != 2 {
+		t.Errorf("Data = %v", r.Data)
 	}
 }

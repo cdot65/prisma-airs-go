@@ -420,6 +420,12 @@ func buildScanListParams(opts ScanListOpts) map[string]string {
 	if opts.LabelsQuery != "" {
 		params["labels_query"] = opts.LabelsQuery
 	}
+	if len(opts.EvalOutcomes) > 0 {
+		params["eval_outcomes"] = strings.Join(opts.EvalOutcomes, ",")
+	}
+	if len(opts.SourceTypes) > 0 {
+		params["source_types"] = strings.Join(opts.SourceTypes, ",")
+	}
 	return params
 }
 
