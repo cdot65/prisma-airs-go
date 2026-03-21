@@ -102,3 +102,31 @@ func TestContentFromJSON(t *testing.T) {
 		t.Error("ContentFromJSON mismatch")
 	}
 }
+
+func TestContent_CodePrompt(t *testing.T) {
+	c, err := NewContent(ContentOpts{CodePrompt: "def hello():"})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if c.CodePrompt() != "def hello():" {
+		t.Errorf("CodePrompt() = %q", c.CodePrompt())
+	}
+	j := c.ToJSON()
+	if j.CodePrompt != "def hello():" {
+		t.Errorf("ToJSON().CodePrompt = %q", j.CodePrompt)
+	}
+}
+
+func TestContent_CodeResponse(t *testing.T) {
+	c, err := NewContent(ContentOpts{CodeResponse: "print('hi')"})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if c.CodeResponse() != "print('hi')" {
+		t.Errorf("CodeResponse() = %q", c.CodeResponse())
+	}
+	j := c.ToJSON()
+	if j.CodeResponse != "print('hi')" {
+		t.Errorf("ToJSON().CodeResponse = %q", j.CodeResponse)
+	}
+}
