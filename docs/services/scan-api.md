@@ -50,16 +50,19 @@ Submits up to 5 scan objects for asynchronous processing.
 ```go
 objects := []scan.AsyncScanObject{
     {
-        AiProfile: scan.AiProfile{ProfileName: "my-profile"},
-        Contents: []scan.ContentInner{{
-            Prompt:   "Tell me how to hack a server",
-            Response: "I cannot assist with that.",
-        }},
+        ReqID: 1,
+        ScanReq: scan.ScanRequest{
+            AiProfile: scan.AiProfile{ProfileName: "my-profile"},
+            Contents: []scan.ContentInner{{
+                Prompt:   "Tell me how to hack a server",
+                Response: "I cannot assist with that.",
+            }},
+        },
     },
 }
 
 resp, err := scanner.AsyncScan(ctx, objects)
-// resp.ScanIDs contains the IDs for polling
+// resp.ScanID contains the ID for polling
 ```
 
 ### Query by Scan IDs
@@ -110,10 +113,14 @@ fmt.Println(content.ByteLength()) // total byte length of all fields
 ```go
 content, err := scan.NewContent(scan.ContentOpts{
     ToolEvent: &scan.ToolEvent{
-        Source:    "function_call",
-        Method:    "get_weather",
-        Arguments: `{"city": "Paris"}`,
-        Response:  `{"temp": 22}`,
+        Metadata: &scan.ToolEventMetadata{
+            Ecosystem:   "mcp",
+            Method:      "get_weather",
+            ServerName:  "weather-server",
+            ToolInvoked: "get_weather",
+        },
+        Input:  `{"city": "Paris"}`,
+        Output: `{"temp": 22}`,
     },
 })
 if err != nil {

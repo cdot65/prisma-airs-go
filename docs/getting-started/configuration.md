@@ -33,10 +33,10 @@ cfg := aisec.NewConfig(
 
 ```go
 // From environment variables
-client := management.NewClient(management.Opts{})
+client, err := management.NewClient(management.Opts{})
 
 // Explicit configuration
-client := management.NewClient(management.Opts{
+client, err := management.NewClient(management.Opts{
     ClientID:     "your-client-id",
     ClientSecret: "your-client-secret",
     TsgID:        "1234567890",
@@ -76,9 +76,9 @@ Falls back to `PANW_MGMT_*` variables if service-specific variables are not set.
 | Region | Endpoint |
 |--------|----------|
 | US (default) | `https://service.api.aisecurity.paloaltonetworks.com` |
-| EU | `https://service.api.aisecurity.eu.paloaltonetworks.com` |
-| India | `https://service.api.aisecurity.in.paloaltonetworks.com` |
-| Singapore | `https://service.api.aisecurity.sg.paloaltonetworks.com` |
+| EU | `https://service-de.api.aisecurity.paloaltonetworks.com` |
+| India | `https://service-in.api.aisecurity.paloaltonetworks.com` |
+| Singapore | `https://service-sg.api.aisecurity.paloaltonetworks.com` |
 
 ### Management / Model Security / Red Team
 

@@ -112,7 +112,7 @@ func main() {
     }
 
     for _, s := range scans.Items {
-        fmt.Printf("Scan: %s (Status: %s)\n", s.Name, s.EvalOutcome)
+        fmt.Printf("Scan: %s (Status: %s)\n", s.UUID, s.EvalOutcome)
     }
 }
 ```
@@ -142,7 +142,7 @@ func main() {
         log.Fatal(err)
     }
 
-    for _, t := range targets.Items {
+    for _, t := range targets.Data {
         fmt.Printf("Target: %s (%s)\n", t.Name, t.UUID)
     }
 

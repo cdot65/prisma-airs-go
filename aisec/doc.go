@@ -11,15 +11,20 @@
 //
 // Scan API with API key:
 //
-//	import "github.com/cdot65/prisma-airs-go/aisec"
+//	import (
+//	    "github.com/cdot65/prisma-airs-go/aisec"
+//	    "github.com/cdot65/prisma-airs-go/aisec/scan"
+//	)
 //
 //	cfg := aisec.NewConfig(aisec.WithAPIKey("your-api-key"))
-//	scanner := aisec.NewScanner(cfg)
+//	scanner := scan.NewScanner(cfg)
 //	resp, err := scanner.SyncScan(ctx, profile, content)
 //
 // Management API with OAuth2:
 //
-//	client := aisec.NewManagementClient(aisec.ManagementOpts{
+//	import "github.com/cdot65/prisma-airs-go/aisec/management"
+//
+//	client, err := management.NewClient(management.Opts{
 //	    ClientID:     "id",
 //	    ClientSecret: "secret",
 //	    TsgID:        "tsg-id",
