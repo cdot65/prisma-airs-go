@@ -6,13 +6,121 @@ type ListOpts struct {
 	Offset int
 }
 
+// --- Policy nested types (AIProfileObject.policy) ---
+
+// LatencyConfig holds latency configuration for an AI security profile.
+type LatencyConfig struct {
+	InlineTimeoutAction string `json:"inline-timeout-action,omitempty"`
+	MaxInlineLatency    int32  `json:"max-inline-latency,omitempty"`
+}
+
+// ToxicCategoryConfig holds per-category toxic content configuration.
+type ToxicCategoryConfig struct {
+	Category string `json:"category"`
+	Action   string `json:"action"`
+}
+
+// TopicRef references a custom topic by name, ID, and revision.
+type TopicRef struct {
+	TopicName string `json:"topic_name"`
+	TopicID   string `json:"topic_id"`
+	Revision  int64  `json:"revision"`
+}
+
+// TopicArrayConfig holds a topic guardrail action + topic list.
+type TopicArrayConfig struct {
+	Action string     `json:"action"`
+	Topic  []TopicRef `json:"topic"`
+}
+
+// DataLeakMember is a DLP data leak member entry.
+type DataLeakMember struct {
+	Text    string `json:"text"`
+	ID      string `json:"id,omitempty"`
+	Version string `json:"version,omitempty"`
+}
+
+// DataLeakDetectionConfig holds data leak detection configuration.
+type DataLeakDetectionConfig struct {
+	Member         []DataLeakMember `json:"member"`
+	Action         string           `json:"action"`
+	MaskDataInline bool             `json:"mask-data-inline,omitempty"`
+}
+
+// DataProtectionConfig holds data protection configuration.
+type DataProtectionConfig struct {
+	DataLeakDetection *DataLeakDetectionConfig `json:"data-leak-detection,omitempty"`
+}
+
+// URLCategoryMember holds URL category member list.
+type URLCategoryMember struct {
+	Member []string `json:"member,omitempty"`
+}
+
+// AppProtectionConfig holds app protection URL category configuration.
+type AppProtectionConfig struct {
+	AlertURLCategory *URLCategoryMember `json:"alert-url-category,omitempty"`
+	BlockURLCategory *URLCategoryMember `json:"block-url-category,omitempty"`
+	AllowURLCategory *URLCategoryMember `json:"allow-url-category,omitempty"`
+}
+
+// ModelProtectionConfig holds model protection configuration.
+type ModelProtectionConfig struct {
+	Name              string                `json:"name"`
+	Action            string                `json:"action"`
+	ToxicCategoryList []ToxicCategoryConfig `json:"toxic-category-list,omitempty"`
+	TopicList         []TopicArrayConfig    `json:"topic-list,omitempty"`
+}
+
+// AgentProtectionConfig holds agent protection configuration.
+type AgentProtectionConfig struct {
+	Name   string `json:"name"`
+	Action string `json:"action"`
+}
+
+// ModelConfiguration holds the model-configuration section of a security profile.
+type ModelConfiguration struct {
+	MaskDataInStorage bool                    `json:"mask-data-in-storage,omitempty"`
+	Latency           *LatencyConfig          `json:"latency,omitempty"`
+	DataProtection    *DataProtectionConfig   `json:"data-protection,omitempty"`
+	AppProtection     *AppProtectionConfig    `json:"app-protection,omitempty"`
+	ModelProtection   []ModelProtectionConfig `json:"model-protection,omitempty"`
+	AgentProtection   []AgentProtectionConfig `json:"agent-protection,omitempty"`
+}
+
+// AiSecurityProfileConfig is one entry in the ai-security-profiles array.
+type AiSecurityProfileConfig struct {
+	ModelType          string              `json:"model-type,omitempty"`
+	ContentType        string              `json:"content-type,omitempty"`
+	ModelConfiguration *ModelConfiguration `json:"model-configuration,omitempty"`
+}
+
+// DLPDataProfileConfig is one entry in the dlp-data-profiles array.
+type DLPDataProfileConfig struct {
+	Name         string         `json:"name,omitempty"`
+	UUID         string         `json:"uuid,omitempty"`
+	ID           string         `json:"id,omitempty"`
+	Version      string         `json:"version,omitempty"`
+	Rule1        map[string]any `json:"rule1,omitempty"`
+	Rule2        map[string]any `json:"rule2,omitempty"`
+	LogSeverity  string         `json:"log-severity,omitempty"`
+	NonFileBased string         `json:"non-file-based,omitempty"`
+	FileBased    string         `json:"file-based,omitempty"`
+}
+
+// ProfilePolicy is the typed policy object inside a SecurityProfile.
+type ProfilePolicy struct {
+	DlpDataProfiles    []DLPDataProfileConfig    `json:"dlp-data-profiles,omitempty"`
+	AiSecurityProfiles []AiSecurityProfileConfig `json:"ai-security-profiles,omitempty"`
+}
+
 // SecurityProfile represents an AI security profile.
 type SecurityProfile struct {
 	ProfileID      string         `json:"profile_id,omitempty"`
 	ProfileName    string         `json:"profile_name,omitempty"`
 	Revision       int32          `json:"revision,omitempty"`
 	Active         bool           `json:"active,omitempty"`
-	Policy         map[string]any `json:"policy,omitempty"`
+	Policy         *ProfilePolicy `json:"policy,omitempty"`
 	CreatedBy      string         `json:"created_by,omitempty"`
 	UpdatedBy      string         `json:"updated_by,omitempty"`
 	LastModifiedTs string         `json:"last_modified_ts,omitempty"`
@@ -27,13 +135,13 @@ type SecurityProfileListResponse struct {
 // CreateProfileRequest is the request to create a profile.
 type CreateProfileRequest struct {
 	ProfileName string         `json:"profile_name"`
-	Policy      map[string]any `json:"policy,omitempty"`
+	Policy      *ProfilePolicy `json:"policy,omitempty"`
 }
 
 // UpdateProfileRequest is the request to update a profile.
 type UpdateProfileRequest struct {
 	ProfileName string         `json:"profile_name,omitempty"`
-	Policy      map[string]any `json:"policy,omitempty"`
+	Policy      *ProfilePolicy `json:"policy,omitempty"`
 }
 
 // DeleteProfileResponse is the response from deleting a profile.
@@ -132,7 +240,9 @@ type CreateApiKeyRequest struct {
 
 // RegenerateKeyRequest is the request to regenerate an API key.
 type RegenerateKeyRequest struct {
-	UpdatedBy string `json:"updated_by,omitempty"`
+	UpdatedBy            string `json:"updated_by,omitempty"`
+	RotationTimeInterval int32  `json:"rotation_time_interval,omitempty"`
+	RotationTimeUnit     string `json:"rotation_time_unit,omitempty"`
 }
 
 // ApiKeyDeleteResponse is the response from deleting an API key.
@@ -328,6 +438,37 @@ type OAuthToken struct {
 	AccessToken string `json:"access_token,omitempty"`
 	TokenType   string `json:"token_type,omitempty"`
 	ExpiresIn   int    `json:"expires_in,omitempty"`
+	IssuedAt    string `json:"issued_at,omitempty"`
+	ClientID    string `json:"client_id,omitempty"`
+	Status      string `json:"status,omitempty"`
+}
+
+// DeleteConflictResponse is the 409 conflict response when deleting a profile/topic in use.
+type DeleteConflictResponse struct {
+	Message string            `json:"message,omitempty"`
+	Payload []SecurityProfile `json:"payload,omitempty"`
+}
+
+// APIKeyDPInfo holds API key + deployment profile info within a customer app.
+type APIKeyDPInfo struct {
+	ApiKeyName string `json:"api_key_name,omitempty"`
+	DpName     string `json:"dp_name,omitempty"`
+	AuthCode   string `json:"auth_code,omitempty"`
+}
+
+// CustomerAppWithKeyInfo extends CustomerApp with associated API key/DP info.
+type CustomerAppWithKeyInfo struct {
+	CustomerAppID    string         `json:"customer_appId,omitempty"`
+	AppName          string         `json:"app_name,omitempty"`
+	TsgID            string         `json:"tsg_id,omitempty"`
+	ModelName        string         `json:"model_name,omitempty"`
+	CloudProvider    string         `json:"cloud_provider,omitempty"`
+	Environment      string         `json:"environment,omitempty"`
+	Status           string         `json:"status,omitempty"`
+	CreatedBy        string         `json:"created_by,omitempty"`
+	UpdatedBy        string         `json:"updated_by,omitempty"`
+	AiAgentFramework string         `json:"ai_agent_framework,omitempty"`
+	ApiKeysDPInfo    []APIKeyDPInfo `json:"api_keys_dp_info,omitempty"`
 }
 
 // InvalidateTokenResponse is the response from invalidating a token.

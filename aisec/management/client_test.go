@@ -750,7 +750,7 @@ func TestSecurityProfile_JSONRoundTrip(t *testing.T) {
 		ProfileName:    "test-profile",
 		Revision:       3,
 		Active:         true,
-		Policy:         map[string]any{"key": "val"},
+		Policy:         &ProfilePolicy{DlpDataProfiles: []DLPDataProfileConfig{{Name: "test"}}},
 		CreatedBy:      "user@example.com",
 		UpdatedBy:      "admin@example.com",
 		LastModifiedTs: "2025-06-01T00:00:00Z",
@@ -1020,5 +1020,117 @@ func TestScanLog_JSONRoundTrip(t *testing.T) {
 	}
 	if decoded.UserIP != log.UserIP {
 		t.Errorf("UserIP = %q", decoded.UserIP)
+	}
+}
+
+func TestProfilePolicy_JSON(t *testing.T) {
+	j := `{
+		"dlp-data-profiles": [{"name":"Sensitive","uuid":"u1","id":"1","version":"2"}],
+		"ai-security-profiles": [{"model-type":"GPT","content-type":"prompt"}]
+	}`
+	var p ProfilePolicy
+	if err := json.Unmarshal([]byte(j), &p); err != nil {
+		t.Fatal(err)
+	}
+	if len(p.DlpDataProfiles) != 1 || p.DlpDataProfiles[0].Name != "Sensitive" {
+		t.Errorf("DlpDataProfiles = %+v", p.DlpDataProfiles)
+	}
+	if len(p.AiSecurityProfiles) != 1 || p.AiSecurityProfiles[0].ModelType != "GPT" {
+		t.Errorf("AiSecurityProfiles = %+v", p.AiSecurityProfiles)
+	}
+}
+
+func TestSecurityProfile_TypedPolicy(t *testing.T) {
+	j := `{
+		"profile_id":"p1",
+		"profile_name":"test",
+		"revision":1,
+		"policy":{
+			"dlp-data-profiles":[],
+			"ai-security-profiles":[{"model-type":"GPT","content-type":"prompt","model-configuration":{"max-inline-latency":5}}]
+		}
+	}`
+	var sp SecurityProfile
+	if err := json.Unmarshal([]byte(j), &sp); err != nil {
+		t.Fatal(err)
+	}
+	if sp.Policy == nil {
+		t.Fatal("Policy should not be nil")
+	}
+	if len(sp.Policy.AiSecurityProfiles) != 1 {
+		t.Errorf("AiSecurityProfiles len = %d", len(sp.Policy.AiSecurityProfiles))
+	}
+}
+
+func TestModelProtectionConfig_JSON(t *testing.T) {
+	j := `[{"name":"toxic-content","action":"block","toxic-category-list":[{"category":"hate","action":"high:block"}]}]`
+	var mp []ModelProtectionConfig
+	if err := json.Unmarshal([]byte(j), &mp); err != nil {
+		t.Fatal(err)
+	}
+	if len(mp) != 1 || mp[0].Name != "toxic-content" {
+		t.Errorf("ModelProtection = %+v", mp)
+	}
+	if len(mp[0].ToxicCategoryList) != 1 || mp[0].ToxicCategoryList[0].Category != "hate" {
+		t.Errorf("ToxicCategoryList = %+v", mp[0].ToxicCategoryList)
+	}
+}
+
+func TestRegenerateKeyRequest_JSON(t *testing.T) {
+	req := RegenerateKeyRequest{
+		RotationTimeInterval: 30,
+		RotationTimeUnit:     "days",
+		UpdatedBy:            "user@example.com",
+	}
+	data, _ := json.Marshal(req)
+	var m map[string]any
+	_ = json.Unmarshal(data, &m)
+	if m["rotation_time_interval"] != float64(30) {
+		t.Errorf("rotation_time_interval = %v", m["rotation_time_interval"])
+	}
+	if m["rotation_time_unit"] != "days" {
+		t.Errorf("rotation_time_unit = %v", m["rotation_time_unit"])
+	}
+}
+
+func TestOAuthToken_ExtraFields(t *testing.T) {
+	j := `{"access_token":"tok","token_type":"Bearer","expires_in":3600,"issued_at":"2025-01-01","client_id":"cid","status":"active"}`
+	var tok OAuthToken
+	if err := json.Unmarshal([]byte(j), &tok); err != nil {
+		t.Fatal(err)
+	}
+	if tok.IssuedAt != "2025-01-01" {
+		t.Errorf("IssuedAt = %q", tok.IssuedAt)
+	}
+	if tok.ClientID != "cid" {
+		t.Errorf("ClientID = %q", tok.ClientID)
+	}
+	if tok.Status != "active" {
+		t.Errorf("Status = %q", tok.Status)
+	}
+}
+
+func TestDeleteConflictResponse_JSON(t *testing.T) {
+	j := `{"message":"in use","payload":[{"profile_id":"p1","profile_name":"test","revision":2}]}`
+	var r DeleteConflictResponse
+	if err := json.Unmarshal([]byte(j), &r); err != nil {
+		t.Fatal(err)
+	}
+	if r.Message != "in use" {
+		t.Errorf("Message = %q", r.Message)
+	}
+	if len(r.Payload) != 1 || r.Payload[0].ProfileID != "p1" {
+		t.Errorf("Payload = %+v", r.Payload)
+	}
+}
+
+func TestCustomerAppWithKeyInfo_JSON(t *testing.T) {
+	j := `{"customer_appId":"a1","app_name":"test","tsg_id":"t1","api_keys_dp_info":[{"api_key_name":"k1","dp_name":"dp1","auth_code":"ac1"}]}`
+	var app CustomerAppWithKeyInfo
+	if err := json.Unmarshal([]byte(j), &app); err != nil {
+		t.Fatal(err)
+	}
+	if len(app.ApiKeysDPInfo) != 1 || app.ApiKeysDPInfo[0].ApiKeyName != "k1" {
+		t.Errorf("ApiKeysDPInfo = %+v", app.ApiKeysDPInfo)
 	}
 }
