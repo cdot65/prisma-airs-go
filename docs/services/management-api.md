@@ -122,6 +122,42 @@ token, err := client.OAuth.GetToken(ctx)
 resp, err := client.OAuth.InvalidateToken(ctx)
 ```
 
+## Action Enums
+
+Security profile action fields use typed enums instead of bare strings.
+
+### ProfileAction
+
+Used on all action fields across profile configs (latency, model-protection, agent-protection, data-leak-detection, topic-list) and scan log action fields.
+
+```go
+management.ProfileActionAllow    // "allow"
+management.ProfileActionBlock    // "block"
+management.ProfileActionAlert    // "alert"
+management.ProfileActionDisabled // "" (empty — disabled/unset)
+```
+
+Example:
+
+```go
+cfg := management.ModelProtectionConfig{
+    Name:   "prompt-injection",
+    Action: management.ProfileActionBlock,
+}
+```
+
+### ToxicContentAction
+
+Compound action for toxic content categories — encodes severity-level thresholds.
+
+```go
+management.ToxicContentHighBlockModerateAllow // "high:block, moderate:allow"
+management.ToxicContentHighBlockModerateBlock // "high:block, moderate:block"
+management.ToxicContentHighAllowModerateAllow // "high:allow, moderate:allow"
+```
+
+Note: `ToxicCategoryConfig.Action` remains `string` since it accepts both simple (`ProfileAction`) and compound (`ToxicContentAction`) values.
+
 ## Error Handling
 
 ```go
