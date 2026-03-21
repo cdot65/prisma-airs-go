@@ -103,6 +103,14 @@ const (
 	SortDirectionDesc SortDirection = "desc"
 )
 
+// SortByFileField represents sortable file fields.
+type SortByFileField string
+
+const (
+	SortByFileFieldPath SortByFileField = "path"
+	SortByFileFieldType SortByFileField = "type"
+)
+
 // RuleEditableFieldType represents editable field types.
 type RuleEditableFieldType string
 

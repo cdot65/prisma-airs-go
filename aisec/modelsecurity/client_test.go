@@ -773,3 +773,12 @@ func TestBuildGroupListParams_SourceTypesAndEnabledRules(t *testing.T) {
 		t.Errorf("enabled_rules = %q", params["enabled_rules"])
 	}
 }
+
+func TestSortByFileField_Values(t *testing.T) {
+	if SortByFileFieldPath != SortByFileField("path") {
+		t.Errorf("SortByFileFieldPath = %q", SortByFileFieldPath)
+	}
+	if SortByFileFieldType != SortByFileField("type") {
+		t.Errorf("SortByFileFieldType = %q", SortByFileFieldType)
+	}
+}
