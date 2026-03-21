@@ -246,3 +246,46 @@ func TestOAuthClient_DefaultTokenEndpoint(t *testing.T) {
 		t.Errorf("endpoint = %q", client.TokenEndpoint())
 	}
 }
+
+func TestOAuthClient_CustomTokenEndpoint(t *testing.T) {
+	client := NewOAuthClient(OAuthClientOpts{
+		ClientID:      "id",
+		ClientSecret:  "secret",
+		TsgID:         "123",
+		TokenEndpoint: "https://custom.example.com/token",
+	})
+	if client.TokenEndpoint() != "https://custom.example.com/token" {
+		t.Errorf("endpoint = %q", client.TokenEndpoint())
+	}
+}
+
+func TestOAuthClient_IsTokenExpiringSoon(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"access_token": "short-lived-token",
+			"expires_in":   10,
+			"token_type":   "Bearer",
+		})
+	}))
+	defer srv.Close()
+
+	client := NewOAuthClient(OAuthClientOpts{
+		ClientID:      "id",
+		ClientSecret:  "secret",
+		TsgID:         "123",
+		TokenEndpoint: srv.URL,
+		TokenBufferMs: 30 * 1000, // 30s buffer, token expires in 10s
+	})
+
+	// Before fetching: should be "expiring soon" (no token)
+	if !client.IsTokenExpiringSoon() {
+		t.Error("should be expiring soon with no token")
+	}
+
+	_, _ = client.GetToken()
+
+	// With 10s expiry and 30s buffer, it should be "expiring soon"
+	if !client.IsTokenExpiringSoon() {
+		t.Error("should be expiring soon with 10s expiry and 30s buffer")
+	}
+}

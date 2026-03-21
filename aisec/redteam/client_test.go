@@ -570,3 +570,621 @@ func TestDualEndpointRouting(t *testing.T) {
 		t.Error("Targets.List should hit mgmt endpoint")
 	}
 }
+
+// --- Reports (untested methods) ---
+
+func TestReports_GetAttackDetail(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "GET" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(AttackDetailResponse{ID: "a-1", Category: "injection"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Reports.GetAttackDetail(context.Background(), "job-1", "a-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.ID != "a-1" {
+		t.Errorf("ID = %q", resp.ID)
+	}
+}
+
+func TestReports_GetMultiTurnAttackDetail(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(AttackMultiTurnDetailResponse{ID: "a-1", Category: "injection"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Reports.GetMultiTurnAttackDetail(context.Background(), "job-1", "a-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.ID != "a-1" {
+		t.Errorf("ID = %q", resp.ID)
+	}
+}
+
+func TestReports_GetStaticRemediation(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(RemediationResponse{JobID: "job-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Reports.GetStaticRemediation(context.Background(), "job-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.JobID != "job-1" {
+		t.Errorf("JobID = %q", resp.JobID)
+	}
+}
+
+func TestReports_GetStaticRuntimePolicy(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(RuntimeSecurityProfileResponse{JobID: "job-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Reports.GetStaticRuntimePolicy(context.Background(), "job-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.JobID != "job-1" {
+		t.Errorf("JobID = %q", resp.JobID)
+	}
+}
+
+func TestReports_GetDynamicRemediation(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(RemediationResponse{JobID: "job-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Reports.GetDynamicRemediation(context.Background(), "job-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.JobID != "job-1" {
+		t.Errorf("JobID = %q", resp.JobID)
+	}
+}
+
+func TestReports_GetDynamicRuntimePolicy(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(RuntimeSecurityProfileResponse{JobID: "job-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Reports.GetDynamicRuntimePolicy(context.Background(), "job-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.JobID != "job-1" {
+		t.Errorf("JobID = %q", resp.JobID)
+	}
+}
+
+func TestReports_ListGoalStreams(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(StreamListResponse{
+			Items:      []map[string]any{{"id": "s-1"}},
+			Pagination: RedTeamPagination{Total: 1},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Reports.ListGoalStreams(context.Background(), "job-1", "goal-1", ListOpts{Limit: 10})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp.Items) != 1 {
+		t.Errorf("items = %d", len(resp.Items))
+	}
+}
+
+func TestReports_GetStreamDetail(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(StreamDetailResponse{ID: "s-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Reports.GetStreamDetail(context.Background(), "s-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.ID != "s-1" {
+		t.Errorf("ID = %q", resp.ID)
+	}
+}
+
+// --- CustomAttackReports (untested methods) ---
+
+func TestCustomAttackReports_GetPromptSets(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(PromptSetsReportResponse{Items: []map[string]any{{"id": "ps-1"}}})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttackReports.GetPromptSets(context.Background(), "job-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp.Items) != 1 {
+		t.Errorf("items = %d", len(resp.Items))
+	}
+}
+
+func TestCustomAttackReports_GetPromptsBySet(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode([]PromptDetailResponse{{ID: "pr-1"}})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttackReports.GetPromptsBySet(context.Background(), "job-1", "ps-1", PromptsBySetListOpts{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp) != 1 {
+		t.Errorf("items = %d", len(resp))
+	}
+}
+
+func TestCustomAttackReports_GetPromptDetail(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(PromptDetailResponse{ID: "pr-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttackReports.GetPromptDetail(context.Background(), "job-1", "pr-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.ID != "pr-1" {
+		t.Errorf("ID = %q", resp.ID)
+	}
+}
+
+func TestCustomAttackReports_ListCustomAttacks(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(CustomAttacksListResponse{
+			Items:      []map[string]any{{"id": "ca-1"}},
+			Pagination: RedTeamPagination{Total: 1},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttackReports.ListCustomAttacks(context.Background(), "job-1", CustomAttacksReportListOpts{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp.Items) != 1 {
+		t.Errorf("items = %d", len(resp.Items))
+	}
+}
+
+func TestCustomAttackReports_GetAttackOutputs(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode([]CustomAttackOutput{{ID: "out-1"}})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttackReports.GetAttackOutputs(context.Background(), "job-1", "ca-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp) != 1 {
+		t.Errorf("items = %d", len(resp))
+	}
+}
+
+func TestCustomAttackReports_GetPropertyStats(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode([]PropertyStatistic{{PropertyName: "type"}})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttackReports.GetPropertyStats(context.Background(), "job-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp) != 1 {
+		t.Errorf("items = %d", len(resp))
+	}
+}
+
+// --- Convenience methods (untested) ---
+
+func TestGetScoreTrend(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(ScoreTrendResponse{TargetID: "t-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.GetScoreTrend(context.Background(), "t-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.TargetID != "t-1" {
+		t.Errorf("TargetID = %q", resp.TargetID)
+	}
+}
+
+func TestGetErrorLogs(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(ErrorLogListResponse{
+			Items:      []map[string]any{{"id": "e-1"}},
+			Pagination: RedTeamPagination{Total: 1},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.GetErrorLogs(context.Background(), "job-1", ListOpts{Limit: 10})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp.Items) != 1 {
+		t.Errorf("items = %d", len(resp.Items))
+	}
+}
+
+func TestUpdateSentiment(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "PUT" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(SentimentResponse{JobID: "job-1", Sentiment: "positive"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.UpdateSentiment(context.Background(), SentimentRequest{JobID: "job-1", Sentiment: "positive"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Sentiment != "positive" {
+		t.Errorf("Sentiment = %q", resp.Sentiment)
+	}
+}
+
+// --- CustomAttacks client (additional coverage) ---
+
+func TestTargets_UpdateProfile(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "PUT" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(TargetResponse{UUID: "t-1", Name: "updated"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Targets.UpdateProfile(context.Background(), "t-1", TargetContextUpdate{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "t-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_GetPromptSet(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(CustomPromptSetResponse{UUID: "ps-1", Name: "test"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.GetPromptSet(context.Background(), "ps-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "ps-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_UpdatePromptSet(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "PUT" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(CustomPromptSetResponse{UUID: "ps-1", Name: "updated"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.UpdatePromptSet(context.Background(), "ps-1", CustomPromptSetUpdateRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "ps-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_ArchivePromptSet(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "PUT" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(CustomPromptSetResponse{UUID: "ps-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.ArchivePromptSet(context.Background(), "ps-1", CustomPromptSetArchiveRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "ps-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_GetPromptSetReference(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(CustomPromptSetReference{UUID: "ps-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.GetPromptSetReference(context.Background(), "ps-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "ps-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_GetPromptSetVersionInfo(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(CustomPromptSetVersionInfo{UUID: "ps-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.GetPromptSetVersionInfo(context.Background(), "ps-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "ps-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_ListActivePromptSets(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(CustomPromptSetListActive{
+			Items: []CustomPromptSetResponse{{UUID: "ps-1"}},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.ListActivePromptSets(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp.Items) != 1 {
+		t.Errorf("items = %d", len(resp.Items))
+	}
+}
+
+func TestCustomAttacks_CreatePrompt(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(CustomPromptResponse{UUID: "p-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.CreatePrompt(context.Background(), CustomPromptCreateRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "p-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_ListPrompts(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(CustomPromptList{
+			Items:      []CustomPromptResponse{{UUID: "p-1"}},
+			Pagination: RedTeamPagination{Total: 1},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.ListPrompts(context.Background(), "ps-1", PromptListOpts{Limit: 10})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp.Items) != 1 {
+		t.Errorf("items = %d", len(resp.Items))
+	}
+}
+
+func TestCustomAttacks_GetPrompt(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(CustomPromptResponse{UUID: "p-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.GetPrompt(context.Background(), "ps-1", "p-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "p-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_UpdatePrompt(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "PUT" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(CustomPromptResponse{UUID: "p-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.UpdatePrompt(context.Background(), "ps-1", "p-1", CustomPromptUpdateRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "p-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_DeletePrompt(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "DELETE" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(BaseResponse{Message: "deleted"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.DeletePrompt(context.Background(), "ps-1", "p-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Message != "deleted" {
+		t.Errorf("Message = %q", resp.Message)
+	}
+}
+
+func TestCustomAttacks_CreatePropertyName(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(BaseResponse{Message: "created"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.CreatePropertyName(context.Background(), PropertyNameCreateRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Message != "created" {
+		t.Errorf("Message = %q", resp.Message)
+	}
+}
+
+func TestCustomAttacks_GetPropertyValues(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(PropertyValuesResponse{Values: []string{"v1", "v2"}})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.GetPropertyValues(context.Background(), "category")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp.Values) != 2 {
+		t.Errorf("values = %d", len(resp.Values))
+	}
+}
+
+func TestCustomAttacks_GetPropertyValuesMultiple(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(PropertyValuesMultipleResponse{
+			Properties: map[string][]string{"cat": {"v1"}},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.GetPropertyValuesMultiple(context.Background(), []string{"cat"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(resp.Properties) != 1 {
+		t.Errorf("properties = %d", len(resp.Properties))
+	}
+}
+
+func TestCustomAttacks_CreatePropertyValue(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(BaseResponse{Message: "created"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.CreatePropertyValue(context.Background(), PropertyValueCreateRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Message != "created" {
+		t.Errorf("Message = %q", resp.Message)
+	}
+}

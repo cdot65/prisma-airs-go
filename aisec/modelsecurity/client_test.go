@@ -585,3 +585,38 @@ func TestDualEndpointRouting(t *testing.T) {
 		t.Error("SecurityGroups.List should hit mgmt endpoint")
 	}
 }
+
+func TestScans_DeleteLabels(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "DELETE" {
+			t.Errorf("method = %s", r.Method)
+		}
+		keys := r.URL.Query()["keys"]
+		if len(keys) != 2 || keys[0] != "env" || keys[1] != "team" {
+			t.Errorf("keys = %v", keys)
+		}
+		w.WriteHeader(204)
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	err := client.Scans.DeleteLabels(context.Background(), "550e8400-e29b-41d4-a716-446655440000", []string{"env", "team"})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestScans_DeleteLabels_InvalidUUID(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		t.Error("should not reach server")
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	err := client.Scans.DeleteLabels(context.Background(), "invalid", []string{"env"})
+	if err == nil {
+		t.Fatal("expected error for invalid UUID")
+	}
+}
