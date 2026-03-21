@@ -29,14 +29,17 @@ graph TD
 
 ## Scans (Data Plane)
 
-### CRUD Operations
+### Create and Query
 
 ```go
 // Create a scan
-scan, err := client.Scans.Create(ctx, modelsecurity.CreateScanRequest{
-    Name:   "my-model-scan",
-    Source:  modelsecurity.SourceHuggingFace,
-    // ...
+scan, err := client.Scans.Create(ctx, modelsecurity.ScanCreateRequest{
+    ModelURI:          "hf://org/model",
+    SecurityGroupUUID: "group-uuid",
+    ScanOrigin:        modelsecurity.ScanOriginModelSecuritySDK,
+    Labels: []modelsecurity.Label{
+        {Key: "env", Value: "prod"},
+    },
 })
 
 // List scans
@@ -50,10 +53,20 @@ scan, err := client.Scans.Get(ctx, "scan-uuid")
 
 ```go
 // List evaluations for a scan
-evals, err := client.Scans.GetEvaluations(ctx, "scan-uuid", modelsecurity.EvalListOpts{})
+evals, err := client.Scans.GetEvaluations(ctx, "scan-uuid", modelsecurity.EvaluationListOpts{})
 
 // Get a specific evaluation
-eval, err := client.Scans.GetEvaluation(ctx, "scan-uuid", "eval-uuid")
+eval, err := client.Scans.GetEvaluation(ctx, "eval-uuid")
+```
+
+### Violations
+
+```go
+// List violations for a scan
+violations, err := client.Scans.GetViolations(ctx, "scan-uuid", modelsecurity.ViolationListOpts{})
+
+// Get a specific violation
+violation, err := client.Scans.GetViolation(ctx, "violation-uuid")
 ```
 
 ### Files
@@ -61,24 +74,33 @@ eval, err := client.Scans.GetEvaluation(ctx, "scan-uuid", "eval-uuid")
 ```go
 // List files for a scan
 files, err := client.Scans.GetFiles(ctx, "scan-uuid", modelsecurity.FileListOpts{})
-
-// Get a specific file
-file, err := client.Scans.GetFile(ctx, "scan-uuid", "path/to/file")
 ```
 
 ### Labels
 
 ```go
+// Add labels to a scan
+resp, err := client.Scans.AddLabels(ctx, "scan-uuid", modelsecurity.LabelsCreateRequest{
+    Labels: []modelsecurity.Label{
+        {Key: "env", Value: "prod"},
+    },
+})
+
+// Set (replace) labels on a scan
+resp, err := client.Scans.SetLabels(ctx, "scan-uuid", modelsecurity.LabelsCreateRequest{
+    Labels: []modelsecurity.Label{
+        {Key: "env", Value: "staging"},
+    },
+})
+
+// Delete labels by key
+err := client.Scans.DeleteLabels(ctx, "scan-uuid", []string{"env"})
+
 // List label keys
-labels, err := client.Scans.ListLabels(ctx, modelsecurity.LabelListOpts{})
+keys, err := client.Scans.GetLabelKeys(ctx, modelsecurity.LabelListOpts{})
 
 // Get values for a label key
-values, err := client.Scans.GetLabel(ctx, "environment", modelsecurity.LabelValueOpts{})
-
-// Set labels on a scan
-resp, err := client.Scans.SetLabels(ctx, "scan-uuid", modelsecurity.SetLabelsRequest{
-    Labels: map[string]string{"environment": "production"},
-})
+values, err := client.Scans.GetLabelValues(ctx, "env", modelsecurity.LabelListOpts{})
 ```
 
 ## Security Groups (Management Plane)
@@ -86,38 +108,48 @@ resp, err := client.Scans.SetLabels(ctx, "scan-uuid", modelsecurity.SetLabelsReq
 ### Group CRUD
 
 ```go
-group, err := client.SecurityGroups.Create(ctx, modelsecurity.CreateGroupRequest{...})
+group, err := client.SecurityGroups.Create(ctx, modelsecurity.ModelSecurityGroupCreateRequest{
+    Name:       "my-group",
+    SourceType: modelsecurity.SourceTypeHuggingFace,
+})
 groups, err := client.SecurityGroups.List(ctx, modelsecurity.GroupListOpts{})
-group, err := client.SecurityGroups.Get(ctx, "group-id")
-updated, err := client.SecurityGroups.Update(ctx, "group-id", modelsecurity.UpdateGroupRequest{...})
-resp, err := client.SecurityGroups.Delete(ctx, "group-id")
+group, err := client.SecurityGroups.Get(ctx, "group-uuid")
+updated, err := client.SecurityGroups.Update(ctx, "group-uuid", modelsecurity.ModelSecurityGroupUpdateRequest{
+    Name: "updated-name",
+})
+err := client.SecurityGroups.Delete(ctx, "group-uuid")
 ```
 
 ### Rule Instances (Nested Under Groups)
 
 ```go
 // List rule instances for a group
-instances, err := client.SecurityGroups.ListRuleInstances(ctx, "group-id", modelsecurity.RuleInstanceListOpts{})
+instances, err := client.SecurityGroups.ListRuleInstances(ctx, "group-uuid", modelsecurity.RuleInstanceListOpts{})
 
-// CRUD on individual rule instances
-instance, err := client.SecurityGroups.GetRuleInstance(ctx, "group-id", "instance-id")
-instance, err := client.SecurityGroups.CreateRuleInstance(ctx, "group-id", modelsecurity.CreateRuleInstanceRequest{...})
-instance, err := client.SecurityGroups.UpdateRuleInstance(ctx, "group-id", "instance-id", modelsecurity.UpdateRuleInstanceRequest{...})
-resp, err := client.SecurityGroups.DeleteRuleInstance(ctx, "group-id", "instance-id")
+// Get a rule instance
+instance, err := client.SecurityGroups.GetRuleInstance(ctx, "group-uuid", "instance-uuid")
+
+// Update a rule instance
+instance, err := client.SecurityGroups.UpdateRuleInstance(ctx, "group-uuid", "instance-uuid",
+    modelsecurity.ModelSecurityRuleInstanceUpdateRequest{
+        SecurityGroupUUID: "group-uuid",
+        State:             modelsecurity.RuleStateBlocking,
+    },
+)
 ```
 
 ## Security Rules (Management Plane, Read-Only)
 
 ```go
 rules, err := client.SecurityRules.List(ctx, modelsecurity.RuleListOpts{})
-rule, err := client.SecurityRules.Get(ctx, "rule-id")
+rule, err := client.SecurityRules.Get(ctx, "rule-uuid")
 ```
 
 ## PyPI Authentication
 
 ```go
 auth, err := client.GetPyPIAuth(ctx)
-fmt.Println(auth.Username, auth.Password)
+fmt.Println(auth.URL, auth.ExpiresAt)
 ```
 
 ## Error Handling

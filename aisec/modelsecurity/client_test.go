@@ -9,6 +9,8 @@ import (
 	"testing"
 )
 
+func intPtr(n int) *int { return &n }
+
 // newTestServers creates mock token + API servers for model security tests.
 func newTestServers(t *testing.T, handler http.HandlerFunc) (*httptest.Server, *httptest.Server) {
 	t.Helper()
@@ -59,15 +61,16 @@ func TestScans_Create(t *testing.T) {
 		if !strings.Contains(r.URL.Path, "/v1/scans") {
 			t.Errorf("path = %s", r.URL.Path)
 		}
-		_ = json.NewEncoder(w).Encode(ScanBaseResponse{UUID: "scan-1", Name: "test-scan"})
+		_ = json.NewEncoder(w).Encode(ScanBaseResponse{UUID: "scan-1", ModelURI: "hf://test/model"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
 	scan, err := client.Scans.Create(context.Background(), ScanCreateRequest{
-		Name:       "test-scan",
-		SourceType: SourceTypeLocal,
+		ModelURI:          "hf://test/model",
+		SecurityGroupUUID: "550e8400-e29b-41d4-a716-446655440000",
+		ScanOrigin:        ScanOriginModelSecuritySDK,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -84,7 +87,7 @@ func TestScans_List(t *testing.T) {
 		}
 		_ = json.NewEncoder(w).Encode(ScanList{
 			Items:    []ScanBaseResponse{{UUID: "scan-1"}},
-			Metadata: PaginationMeta{Total: 1},
+			Metadata: PaginationMeta{TotalItems: intPtr(1)},
 		})
 	})
 	defer tokenSrv.Close()
@@ -136,7 +139,7 @@ func TestScans_GetEvaluations(t *testing.T) {
 		}
 		_ = json.NewEncoder(w).Encode(RuleEvaluationList{
 			Items:    []RuleEvaluationResponse{{UUID: "eval-1"}},
-			Metadata: PaginationMeta{Total: 1},
+			Metadata: PaginationMeta{TotalItems: intPtr(1)},
 		})
 	})
 	defer tokenSrv.Close()
@@ -156,7 +159,7 @@ func TestScans_GetFiles(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(FileList{
 			Items:    []FileResponse{{UUID: "file-1"}},
-			Metadata: PaginationMeta{Total: 1},
+			Metadata: PaginationMeta{TotalItems: intPtr(1)},
 		})
 	})
 	defer tokenSrv.Close()
@@ -176,7 +179,7 @@ func TestScans_GetViolations(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(ViolationList{
 			Items:    []ViolationResponse{{UUID: "viol-1"}},
-			Metadata: PaginationMeta{Total: 1},
+			Metadata: PaginationMeta{TotalItems: intPtr(1)},
 		})
 	})
 	defer tokenSrv.Close()
@@ -197,19 +200,19 @@ func TestScans_AddLabels(t *testing.T) {
 		if r.Method != "POST" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(LabelsResponse{Labels: map[string]string{"env": "prod"}})
+		_ = json.NewEncoder(w).Encode(LabelsResponse{Labels: []Label{{Key: "env", Value: "prod"}}})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
 	resp, err := client.Scans.AddLabels(context.Background(), "550e8400-e29b-41d4-a716-446655440000", LabelsCreateRequest{
-		Labels: map[string]string{"env": "prod"},
+		Labels: []Label{{Key: "env", Value: "prod"}},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.Labels["env"] != "prod" {
+	if len(resp.Labels) != 1 || resp.Labels[0].Key != "env" || resp.Labels[0].Value != "prod" {
 		t.Errorf("labels = %v", resp.Labels)
 	}
 }
@@ -219,19 +222,19 @@ func TestScans_SetLabels(t *testing.T) {
 		if r.Method != "PUT" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(LabelsResponse{Labels: map[string]string{"env": "staging"}})
+		_ = json.NewEncoder(w).Encode(LabelsResponse{Labels: []Label{{Key: "env", Value: "staging"}}})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
 	resp, err := client.Scans.SetLabels(context.Background(), "550e8400-e29b-41d4-a716-446655440000", LabelsCreateRequest{
-		Labels: map[string]string{"env": "staging"},
+		Labels: []Label{{Key: "env", Value: "staging"}},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.Labels["env"] != "staging" {
+	if len(resp.Labels) != 1 || resp.Labels[0].Value != "staging" {
 		t.Errorf("labels = %v", resp.Labels)
 	}
 }
@@ -240,7 +243,7 @@ func TestScans_GetLabelKeys(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(LabelKeyList{
 			Items:    []string{"env", "team"},
-			Metadata: PaginationMeta{Total: 2},
+			Metadata: PaginationMeta{TotalItems: intPtr(2)},
 		})
 	})
 	defer tokenSrv.Close()
@@ -260,7 +263,7 @@ func TestScans_GetLabelValues(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(LabelValueList{
 			Items:    []string{"prod", "staging"},
-			Metadata: PaginationMeta{Total: 2},
+			Metadata: PaginationMeta{TotalItems: intPtr(2)},
 		})
 	})
 	defer tokenSrv.Close()
@@ -323,7 +326,7 @@ func TestSecurityGroups_Create(t *testing.T) {
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	sg, err := client.SecurityGroups.Create(context.Background(), ModelSecurityGroupCreateRequest{Name: "test-group"})
+	sg, err := client.SecurityGroups.Create(context.Background(), ModelSecurityGroupCreateRequest{Name: "test-group", SourceType: SourceTypeLocal})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -336,7 +339,7 @@ func TestSecurityGroups_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(ListModelSecurityGroupsResponse{
 			Items:    []ModelSecurityGroupResponse{{UUID: "sg-1"}},
-			Metadata: PaginationMeta{Total: 1},
+			Metadata: PaginationMeta{TotalItems: intPtr(1)},
 		})
 	})
 	defer tokenSrv.Close()
@@ -410,7 +413,7 @@ func TestSecurityGroups_ListRuleInstances(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(ListModelSecurityRuleInstancesResponse{
 			Items:    []ModelSecurityRuleInstanceResponse{{UUID: "ri-1"}},
-			Metadata: PaginationMeta{Total: 1},
+			Metadata: PaginationMeta{TotalItems: intPtr(1)},
 		})
 	})
 	defer tokenSrv.Close()
@@ -454,7 +457,10 @@ func TestSecurityGroups_UpdateRuleInstance(t *testing.T) {
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	ri, err := client.SecurityGroups.UpdateRuleInstance(context.Background(), "550e8400-e29b-41d4-a716-446655440000", "550e8400-e29b-41d4-a716-446655440001", ModelSecurityRuleInstanceUpdateRequest{State: RuleStateBlocking})
+	ri, err := client.SecurityGroups.UpdateRuleInstance(context.Background(), "550e8400-e29b-41d4-a716-446655440000", "550e8400-e29b-41d4-a716-446655440001", ModelSecurityRuleInstanceUpdateRequest{
+		SecurityGroupUUID: "550e8400-e29b-41d4-a716-446655440000",
+		State:             RuleStateBlocking,
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -469,7 +475,7 @@ func TestSecurityRules_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(ListModelSecurityRulesResponse{
 			Items:    []ModelSecurityRuleResponse{{UUID: "rule-1"}},
-			Metadata: PaginationMeta{Total: 1},
+			Metadata: PaginationMeta{TotalItems: intPtr(1)},
 		})
 	})
 	defer tokenSrv.Close()
@@ -618,5 +624,69 @@ func TestScans_DeleteLabels_InvalidUUID(t *testing.T) {
 	err := client.Scans.DeleteLabels(context.Background(), "invalid", []string{"env"})
 	if err == nil {
 		t.Fatal("expected error for invalid UUID")
+	}
+}
+
+// --- JSON serialization tests ---
+
+func TestScanList_JSONTags(t *testing.T) {
+	list := ScanList{
+		Items:    []ScanBaseResponse{{UUID: "s1"}},
+		Metadata: PaginationMeta{TotalItems: intPtr(1)},
+	}
+	data, err := json.Marshal(list)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s := string(data)
+	if !strings.Contains(s, `"scans"`) {
+		t.Errorf("expected 'scans' key, got %s", s)
+	}
+	if !strings.Contains(s, `"pagination"`) {
+		t.Errorf("expected 'pagination' key, got %s", s)
+	}
+	if !strings.Contains(s, `"total_items"`) {
+		t.Errorf("expected 'total_items' key, got %s", s)
+	}
+}
+
+func TestListResponses_JSONTags(t *testing.T) {
+	tests := []struct {
+		name    string
+		val     any
+		wantKey string
+	}{
+		{"RuleEvaluationList", RuleEvaluationList{Items: []RuleEvaluationResponse{{UUID: "e1"}}}, `"evaluations"`},
+		{"FileList", FileList{Items: []FileResponse{{UUID: "f1"}}}, `"files"`},
+		{"ViolationList", ViolationList{Items: []ViolationResponse{{UUID: "v1"}}}, `"violations"`},
+		{"LabelKeyList", LabelKeyList{Items: []string{"k1"}}, `"keys"`},
+		{"LabelValueList", LabelValueList{Items: []string{"v1"}}, `"values"`},
+		{"SecurityGroups", ListModelSecurityGroupsResponse{Items: []ModelSecurityGroupResponse{{UUID: "sg1"}}}, `"security_groups"`},
+		{"RuleInstances", ListModelSecurityRuleInstancesResponse{Items: []ModelSecurityRuleInstanceResponse{{UUID: "ri1"}}}, `"rule_instances"`},
+		{"Rules", ListModelSecurityRulesResponse{Items: []ModelSecurityRuleResponse{{UUID: "r1"}}}, `"rules"`},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			data, err := json.Marshal(tt.val)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !strings.Contains(string(data), tt.wantKey) {
+				t.Errorf("expected %s key, got %s", tt.wantKey, string(data))
+			}
+		})
+	}
+}
+
+func TestBuildGroupListParams_SourceTypesAndEnabledRules(t *testing.T) {
+	params := buildGroupListParams(GroupListOpts{
+		SourceTypes:  []string{"LOCAL", "S3"},
+		EnabledRules: []string{"rule-1", "rule-2"},
+	})
+	if params["source_types"] != "LOCAL,S3" {
+		t.Errorf("source_types = %q", params["source_types"])
+	}
+	if params["enabled_rules"] != "rule-1,rule-2" {
+		t.Errorf("enabled_rules = %q", params["enabled_rules"])
 	}
 }
