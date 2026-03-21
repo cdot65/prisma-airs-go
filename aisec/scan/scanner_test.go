@@ -22,13 +22,13 @@ func TestScanner_SyncScan(t *testing.T) {
 		}
 
 		var body map[string]any
-		json.NewDecoder(r.Body).Decode(&body)
+		_ = json.NewDecoder(r.Body).Decode(&body)
 		if body["ai_profile"] == nil {
 			t.Error("missing ai_profile")
 		}
 
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(ScanResponse{
+		_ = json.NewEncoder(w).Encode(ScanResponse{
 			ScanID:   "scan-123",
 			ReportID: "rpt-123",
 			Category: "benign",
@@ -94,7 +94,7 @@ func TestScanner_QueryByScanIDs_Valid(t *testing.T) {
 			t.Error("missing scan_ids param")
 		}
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode([]ScanIDResult{{ScanID: "test-id", Status: "completed"}})
+		_ = json.NewEncoder(w).Encode([]ScanIDResult{{ScanID: "test-id", Status: "completed"}})
 	}))
 	defer server.Close()
 
@@ -151,7 +151,7 @@ func TestScanner_QueryByScanIDs_TooMany(t *testing.T) {
 func TestScanner_QueryByReportIDs_Valid(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode([]ThreatScanReport{{ReportID: "rpt-1"}})
+		_ = json.NewEncoder(w).Encode([]ThreatScanReport{{ReportID: "rpt-1"}})
 	}))
 	defer server.Close()
 

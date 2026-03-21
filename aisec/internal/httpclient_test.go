@@ -22,7 +22,7 @@ func TestHTTPRequest_Success(t *testing.T) {
 			t.Error("missing content-type")
 		}
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(map[string]string{"result": "ok"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"result": "ok"})
 	}))
 	defer server.Close()
 
@@ -48,7 +48,7 @@ func TestHTTPRequest_WithQueryParams(t *testing.T) {
 			t.Errorf("limit = %q", r.URL.Query().Get("limit"))
 		}
 		w.WriteHeader(200)
-		w.Write([]byte(`{}`))
+		_, _ = w.Write([]byte(`{}`))
 	}))
 	defer server.Close()
 
@@ -74,7 +74,7 @@ func TestHTTPRequest_BearerToken(t *testing.T) {
 			t.Error("should not have API key header when using bearer token")
 		}
 		w.WriteHeader(200)
-		w.Write([]byte(`{}`))
+		_, _ = w.Write([]byte(`{}`))
 	}))
 	defer server.Close()
 
@@ -91,7 +91,7 @@ func TestHTTPRequest_BearerToken(t *testing.T) {
 func TestHTTPRequest_ContextCancellation(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		w.Write([]byte(`{}`))
+		_, _ = w.Write([]byte(`{}`))
 	}))
 	defer server.Close()
 

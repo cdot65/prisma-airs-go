@@ -121,12 +121,5 @@ func (c *Content) ToJSON() ContentInner {
 
 // ContentFromJSON creates a Content from an API response object.
 func ContentFromJSON(ci ContentInner) (*Content, error) {
-	return NewContent(ContentOpts{
-		Prompt:       ci.Prompt,
-		Response:     ci.Response,
-		Context:      ci.Context,
-		CodePrompt:   ci.CodePrompt,
-		CodeResponse: ci.CodeResponse,
-		ToolEvent:    ci.ToolEvent,
-	})
+	return NewContent(ContentOpts(ci))
 }

@@ -25,7 +25,7 @@ func newTestOAuthServer(t *testing.T, expiresIn int) *httptest.Server {
 		}
 
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"access_token": "test-token-123",
 			"expires_in":   expiresIn,
 			"token_type":   "Bearer",
@@ -58,7 +58,7 @@ func TestOAuthClient_TokenCaching(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		calls.Add(1)
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"access_token": "cached-token",
 			"expires_in":   3600,
 			"token_type":   "Bearer",
@@ -74,7 +74,7 @@ func TestOAuthClient_TokenCaching(t *testing.T) {
 	})
 
 	// First call fetches
-	client.GetToken()
+	_, _ = client.GetToken()
 	// Second call should use cache
 	token, _ := client.GetToken()
 	if token != "cached-token" {
@@ -96,7 +96,7 @@ func TestOAuthClient_ClearToken(t *testing.T) {
 		TokenEndpoint: server.URL,
 	})
 
-	client.GetToken()
+	_, _ = client.GetToken()
 	info := client.GetTokenInfo()
 	if !info.HasToken {
 		t.Error("should have token after GetToken")
@@ -133,7 +133,7 @@ func TestOAuthClient_TokenInfo(t *testing.T) {
 	}
 
 	// After fetch
-	client.GetToken()
+	_, _ = client.GetToken()
 	info = client.GetTokenInfo()
 	if !info.HasToken {
 		t.Error("should have token")
@@ -155,7 +155,7 @@ func TestOAuthClient_ConcurrentDeduplication(t *testing.T) {
 		calls.Add(1)
 		time.Sleep(50 * time.Millisecond) // simulate latency
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"access_token": "dedup-token",
 			"expires_in":   3600,
 			"token_type":   "Bearer",
@@ -194,7 +194,7 @@ func TestOAuthClient_ConcurrentDeduplication(t *testing.T) {
 func TestOAuthClient_ErrorResponse(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(401)
-		json.NewEncoder(w).Encode(map[string]string{
+		_ = json.NewEncoder(w).Encode(map[string]string{
 			"error":             "invalid_client",
 			"error_description": "bad credentials",
 		})
@@ -230,7 +230,7 @@ func TestOAuthClient_IsTokenExpired(t *testing.T) {
 		t.Error("should be expired without token")
 	}
 
-	client.GetToken()
+	_, _ = client.GetToken()
 	if client.IsTokenExpired() {
 		t.Error("should not be expired right after fetch")
 	}

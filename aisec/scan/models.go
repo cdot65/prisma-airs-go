@@ -49,36 +49,36 @@ type ContentInner struct {
 
 // ScanRequest is the complete scan request payload.
 type ScanRequest struct {
-	AiProfile AiProfile       `json:"ai_profile"`
-	Contents  []ContentInner  `json:"contents"`
-	TrID      string          `json:"tr_id,omitempty"`
-	SessionID string          `json:"session_id,omitempty"`
-	Metadata  *Metadata       `json:"metadata,omitempty"`
+	AiProfile AiProfile      `json:"ai_profile"`
+	Contents  []ContentInner `json:"contents"`
+	TrID      string         `json:"tr_id,omitempty"`
+	SessionID string         `json:"session_id,omitempty"`
+	Metadata  *Metadata      `json:"metadata,omitempty"`
 }
 
 // ScanResponse is the complete scan response from the AIRS API.
 type ScanResponse struct {
-	Source                   string                  `json:"source,omitempty"`
-	ReportID                 string                  `json:"report_id"`
-	ScanID                   string                  `json:"scan_id"`
-	TrID                     string                  `json:"tr_id,omitempty"`
-	SessionID                string                  `json:"session_id,omitempty"`
-	ProfileID                string                  `json:"profile_id,omitempty"`
-	ProfileName              string                  `json:"profile_name,omitempty"`
-	Category                 string                  `json:"category"`
-	Action                   string                  `json:"action"`
-	Timeout                  bool                    `json:"timeout,omitempty"`
-	Error                    bool                    `json:"error,omitempty"`
-	Errors                   []ContentError          `json:"errors,omitempty"`
-	PromptDetected           *PromptDetected         `json:"prompt_detected,omitempty"`
-	ResponseDetected         *ResponseDetected       `json:"response_detected,omitempty"`
-	PromptMaskedData         *MaskedData             `json:"prompt_masked_data,omitempty"`
-	ResponseMaskedData       *MaskedData             `json:"response_masked_data,omitempty"`
-	PromptDetectionDetails   map[string]any          `json:"prompt_detection_details,omitempty"`
-	ResponseDetectionDetails map[string]any          `json:"response_detection_details,omitempty"`
-	ToolDetected             *ToolDetected           `json:"tool_detected,omitempty"`
-	CreatedAt                string                  `json:"created_at,omitempty"`
-	CompletedAt              string                  `json:"completed_at,omitempty"`
+	Source                   string            `json:"source,omitempty"`
+	ReportID                 string            `json:"report_id"`
+	ScanID                   string            `json:"scan_id"`
+	TrID                     string            `json:"tr_id,omitempty"`
+	SessionID                string            `json:"session_id,omitempty"`
+	ProfileID                string            `json:"profile_id,omitempty"`
+	ProfileName              string            `json:"profile_name,omitempty"`
+	Category                 string            `json:"category"`
+	Action                   string            `json:"action"`
+	Timeout                  bool              `json:"timeout,omitempty"`
+	Error                    bool              `json:"error,omitempty"`
+	Errors                   []ContentError    `json:"errors,omitempty"`
+	PromptDetected           *PromptDetected   `json:"prompt_detected,omitempty"`
+	ResponseDetected         *ResponseDetected `json:"response_detected,omitempty"`
+	PromptMaskedData         *MaskedData       `json:"prompt_masked_data,omitempty"`
+	ResponseMaskedData       *MaskedData       `json:"response_masked_data,omitempty"`
+	PromptDetectionDetails   map[string]any    `json:"prompt_detection_details,omitempty"`
+	ResponseDetectionDetails map[string]any    `json:"response_detection_details,omitempty"`
+	ToolDetected             *ToolDetected     `json:"tool_detected,omitempty"`
+	CreatedAt                string            `json:"created_at,omitempty"`
+	CompletedAt              string            `json:"completed_at,omitempty"`
 }
 
 // PromptDetected holds detection flags for the prompt.
@@ -186,7 +186,7 @@ type ThreatScanReport struct {
 	ReqID            int                      `json:"req_id,omitempty"`
 	TransactionID    string                   `json:"transaction_id,omitempty"`
 	SessionID        string                   `json:"session_id,omitempty"`
-	DetectionResults []DetectionServiceResult  `json:"detection_results,omitempty"`
+	DetectionResults []DetectionServiceResult `json:"detection_results,omitempty"`
 }
 
 // Enums as string constants.
