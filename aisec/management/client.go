@@ -132,6 +132,19 @@ func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityP
 	return &resp.Data, nil
 }
 
+// ForceDelete force-deletes a profile: DELETE /v1/mgmt/profile/{profile_id}/force?updated_by=
+func (c *ProfilesClient) ForceDelete(ctx context.Context, profileID string, updatedBy string) (*DeleteProfileResponse, error) {
+	resp, err := internal.DoMgmtRequest[DeleteProfileResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+		Method: http.MethodDelete,
+		Path:   aisec.MgmtProfileForcePath + "/" + profileID + "/force",
+		Params: map[string]string{"updated_by": updatedBy},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
 // TopicsClient provides CRUD for custom detection topics.
 type TopicsClient struct {
 	svcCfg *internal.OAuthServiceConfig
@@ -178,9 +191,12 @@ func (c *TopicsClient) Delete(ctx context.Context, topicID string) (*DeleteTopic
 	return &resp.Data, nil
 }
 
-func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string) (*DeleteTopicResponse, error) {
+// ForceDelete force-deletes a topic: DELETE /v1/mgmt/topic/{topic_id}/force?updated_by=
+func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string, updatedBy string) (*DeleteTopicResponse, error) {
 	resp, err := internal.DoMgmtRequest[DeleteTopicResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.MgmtTopicForcePath + "/" + topicID,
+		Method: http.MethodDelete,
+		Path:   aisec.MgmtTopicForcePath + "/" + topicID + "/force",
+		Params: map[string]string{"updated_by": updatedBy},
 	})
 	if err != nil {
 		return nil, err
@@ -261,9 +277,11 @@ func (c *CustomerAppsClient) List(ctx context.Context, opts ListOpts) (*Customer
 	return &resp.Data, nil
 }
 
-func (c *CustomerAppsClient) Get(ctx context.Context, appID string) (*CustomerApp, error) {
+// Get retrieves a customer app by name: GET /v1/mgmt/customerapp?app_name=
+func (c *CustomerAppsClient) Get(ctx context.Context, appName string) (*CustomerApp, error) {
 	resp, err := internal.DoMgmtRequest[CustomerApp](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.MgmtCustomerAppPath + "/" + appID,
+		Method: http.MethodGet, Path: aisec.MgmtCustomerAppPath,
+		Params: map[string]string{"app_name": appName},
 	})
 	if err != nil {
 		return nil, err
@@ -271,9 +289,12 @@ func (c *CustomerAppsClient) Get(ctx context.Context, appID string) (*CustomerAp
 	return &resp.Data, nil
 }
 
-func (c *CustomerAppsClient) Update(ctx context.Context, appID string, req UpdateAppRequest) (*CustomerApp, error) {
+// Update updates a customer app: PUT /v1/mgmt/customerapp?customer_app_id=
+func (c *CustomerAppsClient) Update(ctx context.Context, customerAppID string, req UpdateAppRequest) (*CustomerApp, error) {
 	resp, err := internal.DoMgmtRequest[CustomerApp](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.MgmtCustomerAppPath + "/" + appID, Body: req,
+		Method: http.MethodPut, Path: aisec.MgmtCustomerAppPath,
+		Params: map[string]string{"customer_app_id": customerAppID},
+		Body:   req,
 	})
 	if err != nil {
 		return nil, err
@@ -281,9 +302,11 @@ func (c *CustomerAppsClient) Update(ctx context.Context, appID string, req Updat
 	return &resp.Data, nil
 }
 
-func (c *CustomerAppsClient) Delete(ctx context.Context, appID string) (*DeleteAppResponse, error) {
+// Delete deletes a customer app: DELETE /v1/mgmt/customerapp?app_name=&updated_by=
+func (c *CustomerAppsClient) Delete(ctx context.Context, appName string, updatedBy string) (*DeleteAppResponse, error) {
 	resp, err := internal.DoMgmtRequest[DeleteAppResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.MgmtCustomerAppPath + "/" + appID,
+		Method: http.MethodDelete, Path: aisec.MgmtCustomerAppPath,
+		Params: map[string]string{"app_name": appName, "updated_by": updatedBy},
 	})
 	if err != nil {
 		return nil, err
@@ -341,31 +364,28 @@ func (c *DeploymentProfilesClient) Get(ctx context.Context, profileID string) (*
 	return &resp.Data, nil
 }
 
-// ScanLogsClient provides read-only access to scan logs.
+// ScanLogsClient provides access to scan logs.
 type ScanLogsClient struct {
 	svcCfg *internal.OAuthServiceConfig
 }
 
+// List retrieves scan logs: POST /v1/mgmt/scanlogs with required query params and optional body.
 func (c *ScanLogsClient) List(ctx context.Context, opts ScanLogListOpts) (*ScanLogListResponse, error) {
-	params := map[string]string{}
-	if opts.Limit > 0 {
-		params["limit"] = fmt.Sprintf("%d", opts.Limit)
+	params := map[string]string{
+		"time_interval": fmt.Sprintf("%d", opts.TimeInterval),
+		"time_unit":     opts.TimeUnit,
+		"pageNumber":    fmt.Sprintf("%d", opts.PageNumber),
+		"pageSize":      fmt.Sprintf("%d", opts.PageSize),
+		"filter":        opts.Filter,
 	}
-	if opts.Offset > 0 {
-		params["offset"] = fmt.Sprintf("%d", opts.Offset)
-	}
-	resp, err := internal.DoMgmtRequest[ScanLogListResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.MgmtScanLogsPath, Params: params,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
 
-func (c *ScanLogsClient) Get(ctx context.Context, logID string) (*ScanLog, error) {
-	resp, err := internal.DoMgmtRequest[ScanLog](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.MgmtScanLogsPath + "/" + logID,
+	var body any
+	if opts.PageToken != "" {
+		body = PageTokenRequest{PageToken: opts.PageToken}
+	}
+
+	resp, err := internal.DoMgmtRequest[ScanLogListResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.MgmtScanLogsPath, Params: params, Body: body,
 	})
 	if err != nil {
 		return nil, err
