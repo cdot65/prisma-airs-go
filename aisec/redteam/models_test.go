@@ -706,3 +706,20 @@ func TestPropertyValuesMultipleResponse_DataKey(t *testing.T) {
 		t.Errorf("Data = %v", r.Data)
 	}
 }
+
+func TestCategoryModel_RequiredFieldsSerialized(t *testing.T) {
+	resp := CategoryModel{}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	m := make(map[string]any)
+	if err := json.Unmarshal(data, &m); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	for _, key := range []string{"id", "sub_categories"} {
+		if _, ok := m[key]; !ok {
+			t.Errorf("required field %q missing from JSON", key)
+		}
+	}
+}
