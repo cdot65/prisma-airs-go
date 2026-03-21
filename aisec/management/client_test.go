@@ -184,7 +184,7 @@ func TestApiKeys_Create(t *testing.T) {
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
-	key, err := client.ApiKeys.Create(context.Background(), CreateApiKeyRequest{ApiKeyName: "test-key"})
+	key, err := client.ApiKeys.Create(context.Background(), CreateApiKeyRequest{ApiKeyName: "test-key", AuthCode: "ac-1", Revoked: false, CustApp: "app1", CreatedBy: "user@example.com", RotationTimeInterval: 90, RotationTimeUnit: "days"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -195,27 +195,27 @@ func TestApiKeys_Create(t *testing.T) {
 
 func TestCustomerApps_CRUD(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(CustomerApp{AppID: "a-1", AppName: "test-app"})
+		_ = json.NewEncoder(w).Encode(CustomerApp{CustomerAppID: "a-1", AppName: "test-app"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
 
-	app, err := client.CustomerApps.Create(context.Background(), CreateAppRequest{AppName: "test-app"})
+	app, err := client.CustomerApps.Create(context.Background(), CreateAppRequest{AppName: "test-app", TsgID: "123", CloudProvider: "aws", Environment: "prod"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if app.AppID != "a-1" {
-		t.Errorf("AppID = %q", app.AppID)
+	if app.CustomerAppID != "a-1" {
+		t.Errorf("CustomerAppID = %q", app.CustomerAppID)
 	}
 
 	got, err := client.CustomerApps.Get(context.Background(), "test-app")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got.AppID != "a-1" {
-		t.Errorf("AppID = %q", got.AppID)
+	if got.CustomerAppID != "a-1" {
+		t.Errorf("CustomerAppID = %q", got.CustomerAppID)
 	}
 }
 
@@ -231,7 +231,7 @@ func TestCustomerApps_Get_QueryParam(t *testing.T) {
 		if strings.Contains(r.URL.Path, "/customerapp/") {
 			t.Errorf("path = %q, should not have path param", r.URL.Path)
 		}
-		_ = json.NewEncoder(w).Encode(CustomerApp{AppID: "a-1", AppName: "my-app"})
+		_ = json.NewEncoder(w).Encode(CustomerApp{CustomerAppID: "a-1", AppName: "my-app"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -254,7 +254,7 @@ func TestCustomerApps_Update_QueryParam(t *testing.T) {
 		if r.URL.Query().Get("customer_app_id") != "app-123" {
 			t.Errorf("customer_app_id = %q, want app-123", r.URL.Query().Get("customer_app_id"))
 		}
-		_ = json.NewEncoder(w).Encode(CustomerApp{AppID: "app-123", AppName: "updated"})
+		_ = json.NewEncoder(w).Encode(CustomerApp{CustomerAppID: "app-123", AppName: "updated"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -668,7 +668,7 @@ func TestCustomerApps_List(t *testing.T) {
 			t.Errorf("method = %s", r.Method)
 		}
 		_ = json.NewEncoder(w).Encode(CustomerAppListResponse{
-			Items: []CustomerApp{{AppID: "a-1"}},
+			Items: []CustomerApp{{CustomerAppID: "a-1"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -741,6 +741,158 @@ func TestOAuth_InvalidateToken(t *testing.T) {
 	}
 	if resp.Message != "invalidated" {
 		t.Errorf("Message = %q", resp.Message)
+	}
+}
+
+func TestSecurityProfile_JSONRoundTrip(t *testing.T) {
+	p := SecurityProfile{
+		ProfileID:      "p-1",
+		ProfileName:    "test-profile",
+		Revision:       3,
+		Active:         true,
+		Policy:         map[string]any{"key": "val"},
+		CreatedBy:      "user@example.com",
+		UpdatedBy:      "admin@example.com",
+		LastModifiedTs: "2025-06-01T00:00:00Z",
+	}
+
+	data, err := json.Marshal(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded SecurityProfile
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded.ProfileID != p.ProfileID {
+		t.Errorf("ProfileID = %q", decoded.ProfileID)
+	}
+	if decoded.Revision != p.Revision {
+		t.Errorf("Revision = %d", decoded.Revision)
+	}
+	if decoded.CreatedBy != p.CreatedBy {
+		t.Errorf("CreatedBy = %q", decoded.CreatedBy)
+	}
+	if decoded.UpdatedBy != p.UpdatedBy {
+		t.Errorf("UpdatedBy = %q", decoded.UpdatedBy)
+	}
+	if decoded.LastModifiedTs != p.LastModifiedTs {
+		t.Errorf("LastModifiedTs = %q", decoded.LastModifiedTs)
+	}
+
+	// Verify JSON key names
+	var raw map[string]any
+	_ = json.Unmarshal(data, &raw)
+	if _, ok := raw["created_by"]; !ok {
+		t.Error("missing created_by in JSON")
+	}
+	if _, ok := raw["updated_by"]; !ok {
+		t.Error("missing updated_by in JSON")
+	}
+	if _, ok := raw["revision"]; !ok {
+		t.Error("missing revision in JSON")
+	}
+}
+
+func TestCustomTopic_JSONRoundTrip(t *testing.T) {
+	topic := CustomTopic{
+		TopicID:        "t-1",
+		TopicName:      "test-topic",
+		Revision:       5,
+		Active:         true,
+		Description:    "a test topic",
+		Examples:       []string{"ex1", "ex2"},
+		CreatedBy:      "user@example.com",
+		UpdatedBy:      "admin@example.com",
+		LastModifiedTs: "2025-06-01T00:00:00Z",
+		CreatedTs:      "2025-01-01T00:00:00Z",
+	}
+
+	data, err := json.Marshal(topic)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded CustomTopic
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded.TopicID != topic.TopicID {
+		t.Errorf("TopicID = %q", decoded.TopicID)
+	}
+	if decoded.Revision != topic.Revision {
+		t.Errorf("Revision = %d", decoded.Revision)
+	}
+	if decoded.Active != topic.Active {
+		t.Errorf("Active = %v", decoded.Active)
+	}
+	if decoded.CreatedBy != topic.CreatedBy {
+		t.Errorf("CreatedBy = %q", decoded.CreatedBy)
+	}
+	if decoded.CreatedTs != topic.CreatedTs {
+		t.Errorf("CreatedTs = %q", decoded.CreatedTs)
+	}
+	if decoded.LastModifiedTs != topic.LastModifiedTs {
+		t.Errorf("LastModifiedTs = %q", decoded.LastModifiedTs)
+	}
+
+	var raw map[string]any
+	_ = json.Unmarshal(data, &raw)
+	if _, ok := raw["revision"]; !ok {
+		t.Error("missing revision in JSON")
+	}
+	if _, ok := raw["created_ts"]; !ok {
+		t.Error("missing created_ts in JSON")
+	}
+}
+
+func TestCustomerApp_JSONRoundTrip(t *testing.T) {
+	app := CustomerApp{
+		CustomerAppID:    "app-1",
+		AppName:          "test-app",
+		TsgID:            "tsg-1",
+		ModelName:        "gpt-4",
+		CloudProvider:    "aws",
+		Environment:      "production",
+		Status:           "active",
+		CreatedBy:        "user@example.com",
+		UpdatedBy:        "admin@example.com",
+		AiAgentFramework: "langchain",
+	}
+
+	data, err := json.Marshal(app)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded CustomerApp
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded.CustomerAppID != app.CustomerAppID {
+		t.Errorf("CustomerAppID = %q", decoded.CustomerAppID)
+	}
+	if decoded.TsgID != app.TsgID {
+		t.Errorf("TsgID = %q", decoded.TsgID)
+	}
+	if decoded.CloudProvider != app.CloudProvider {
+		t.Errorf("CloudProvider = %q", decoded.CloudProvider)
+	}
+	if decoded.AiAgentFramework != app.AiAgentFramework {
+		t.Errorf("AiAgentFramework = %q", decoded.AiAgentFramework)
+	}
+
+	var raw map[string]any
+	_ = json.Unmarshal(data, &raw)
+	if _, ok := raw["customer_appId"]; !ok {
+		t.Error("missing customer_appId in JSON")
+	}
+	if _, ok := raw["ai_agent_framework"]; !ok {
+		t.Error("missing ai_agent_framework in JSON")
 	}
 }
 

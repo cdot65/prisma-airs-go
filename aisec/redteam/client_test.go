@@ -384,7 +384,7 @@ func TestTargets_Probe_AllFields(t *testing.T) {
 		if req.ConnectionType != TargetConnectionTypeRest {
 			t.Errorf("ConnectionType = %q", req.ConnectionType)
 		}
-		if req.APIEndpointType != APIEndpointTypeChatCompletion {
+		if req.APIEndpointType != APIEndpointTypePublic {
 			t.Errorf("APIEndpointType = %q", req.APIEndpointType)
 		}
 		if req.ResponseMode != ResponseModeRest {
@@ -411,7 +411,7 @@ func TestTargets_Probe_AllFields(t *testing.T) {
 		Description:      "A full probe",
 		TargetType:       TargetTypeApplication,
 		ConnectionType:   TargetConnectionTypeRest,
-		APIEndpointType:  APIEndpointTypeChatCompletion,
+		APIEndpointType:  APIEndpointTypePublic,
 		ResponseMode:     ResponseModeRest,
 		SessionSupported: &sessionSupported,
 		ConnectionParams: map[string]any{"url": "https://example.com"},
@@ -804,20 +804,20 @@ func TestReports_DownloadReport(t *testing.T) {
 		if !strings.Contains(r.URL.Path, "/v1/report/job-1/download") {
 			t.Errorf("path = %s", r.URL.Path)
 		}
-		if r.URL.Query().Get("file_format") != "PDF" {
+		if r.URL.Query().Get("file_format") != "JSON" {
 			t.Errorf("file_format = %s", r.URL.Query().Get("file_format"))
 		}
-		_, _ = w.Write([]byte("fake-pdf-content"))
+		_, _ = w.Write([]byte("fake-json-content"))
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	data, err := client.Reports.DownloadReport(context.Background(), "job-1", FileFormatPDF)
+	data, err := client.Reports.DownloadReport(context.Background(), "job-1", FileFormatJSON)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if string(data) != "fake-pdf-content" {
+	if string(data) != "fake-json-content" {
 		t.Errorf("data = %q", string(data))
 	}
 }
@@ -1480,5 +1480,170 @@ func TestCustomPromptResponse_JSON(t *testing.T) {
 	}
 	if resp.Severity != "HIGH" {
 		t.Errorf("Severity = %q", resp.Severity)
+	}
+}
+
+func TestAPIEndpointType_Constants(t *testing.T) {
+	vals := []APIEndpointType{
+		APIEndpointTypePublic, APIEndpointTypePrivate, APIEndpointTypeNetworkBroker,
+	}
+	if len(vals) != 3 {
+		t.Errorf("expected 3, got %d", len(vals))
+	}
+	if string(APIEndpointTypePublic) != "PUBLIC" {
+		t.Errorf("APIEndpointTypePublic = %q", APIEndpointTypePublic)
+	}
+	if string(APIEndpointTypeNetworkBroker) != "NETWORK_BROKER" {
+		t.Errorf("APIEndpointTypeNetworkBroker = %q", APIEndpointTypeNetworkBroker)
+	}
+}
+
+func TestFileFormat_Constants(t *testing.T) {
+	vals := []FileFormat{FileFormatCSV, FileFormatJSON, FileFormatAll}
+	if len(vals) != 3 {
+		t.Errorf("expected 3, got %d", len(vals))
+	}
+	if string(FileFormatAll) != "ALL" {
+		t.Errorf("FileFormatAll = %q", FileFormatAll)
+	}
+}
+
+func TestTargetCreateRequest_NewFields_JSON(t *testing.T) {
+	req := TargetCreateRequest{
+		Name:                     "test",
+		APIEndpointType:          APIEndpointTypePrivate,
+		NetworkBrokerChannelUUID: "ch-uuid",
+		ResponseMode:             "REST",
+		SessionSupported:         true,
+		ExtraInfo:                map[string]any{"key": "val"},
+	}
+	data, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var decoded TargetCreateRequest
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+	if decoded.APIEndpointType != APIEndpointTypePrivate {
+		t.Errorf("APIEndpointType = %q", decoded.APIEndpointType)
+	}
+	if decoded.NetworkBrokerChannelUUID != "ch-uuid" {
+		t.Errorf("NetworkBrokerChannelUUID = %q", decoded.NetworkBrokerChannelUUID)
+	}
+	if decoded.ResponseMode != "REST" {
+		t.Errorf("ResponseMode = %q", decoded.ResponseMode)
+	}
+	if !decoded.SessionSupported {
+		t.Error("SessionSupported should be true")
+	}
+	if decoded.ExtraInfo["key"] != "val" {
+		t.Errorf("ExtraInfo = %v", decoded.ExtraInfo)
+	}
+}
+
+func TestTargetResponse_NewFields_JSON(t *testing.T) {
+	raw := `{
+		"uuid": "tgt-1",
+		"active": true,
+		"tsg_id": "tsg-123",
+		"version": 2,
+		"profiling_status": "DONE",
+		"api_endpoint_type": "PRIVATE",
+		"response_mode": "STREAMING",
+		"session_supported": true,
+		"validated": true,
+		"secret_version": "v1",
+		"created_by_user_id": "user-1",
+		"updated_by_user_id": "user-2",
+		"extra_info": {"k": "v"}
+	}`
+	var resp TargetResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if !resp.Active {
+		t.Error("Active should be true")
+	}
+	if resp.TsgID != "tsg-123" {
+		t.Errorf("TsgID = %q", resp.TsgID)
+	}
+	if resp.Version != 2 {
+		t.Errorf("Version = %d", resp.Version)
+	}
+	if resp.ProfilingStatus != "DONE" {
+		t.Errorf("ProfilingStatus = %q", resp.ProfilingStatus)
+	}
+	if resp.APIEndpointType != APIEndpointTypePrivate {
+		t.Errorf("APIEndpointType = %q", resp.APIEndpointType)
+	}
+	if resp.ResponseMode != "STREAMING" {
+		t.Errorf("ResponseMode = %q", resp.ResponseMode)
+	}
+	if !resp.SessionSupported {
+		t.Error("SessionSupported should be true")
+	}
+	if !resp.Validated {
+		t.Error("Validated should be true")
+	}
+	if resp.SecretVersion != "v1" {
+		t.Errorf("SecretVersion = %q", resp.SecretVersion)
+	}
+	if resp.CreatedByUserID != "user-1" {
+		t.Errorf("CreatedByUserID = %q", resp.CreatedByUserID)
+	}
+	if resp.UpdatedByUserID != "user-2" {
+		t.Errorf("UpdatedByUserID = %q", resp.UpdatedByUserID)
+	}
+}
+
+func TestJobResponse_NewFields_JSON(t *testing.T) {
+	raw := `{
+		"uuid": "job-1",
+		"target_id": "tgt-1",
+		"extra_info": {"k": "v"},
+		"invocation_id": "inv-1",
+		"created_by_user_id": "user-1"
+	}`
+	var resp JobResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.TargetID != "tgt-1" {
+		t.Errorf("TargetID = %q", resp.TargetID)
+	}
+	if resp.InvocationID != "inv-1" {
+		t.Errorf("InvocationID = %q", resp.InvocationID)
+	}
+	if resp.CreatedByUserID != "user-1" {
+		t.Errorf("CreatedByUserID = %q", resp.CreatedByUserID)
+	}
+	if resp.ExtraInfo["k"] != "v" {
+		t.Errorf("ExtraInfo = %v", resp.ExtraInfo)
+	}
+}
+
+func TestJobCreateRequest_NewFields_JSON(t *testing.T) {
+	v := 3
+	req := JobCreateRequest{
+		Name:      "test",
+		Target:    TargetJobRequest{UUID: "t-1"},
+		JobType:   JobTypeStatic,
+		Version:   &v,
+		ExtraInfo: map[string]any{"k": "v"},
+	}
+	data, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var decoded JobCreateRequest
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+	if decoded.Version == nil || *decoded.Version != 3 {
+		t.Errorf("Version = %v", decoded.Version)
+	}
+	if decoded.ExtraInfo["k"] != "v" {
+		t.Errorf("ExtraInfo = %v", decoded.ExtraInfo)
 	}
 }

@@ -63,9 +63,9 @@ const (
 type APIEndpointType string
 
 const (
-	APIEndpointTypeChatCompletion APIEndpointType = "CHAT_COMPLETION"
-	APIEndpointTypeCompletion     APIEndpointType = "COMPLETION"
-	APIEndpointTypeCustom         APIEndpointType = "CUSTOM"
+	APIEndpointTypePublic        APIEndpointType = "PUBLIC"
+	APIEndpointTypePrivate       APIEndpointType = "PRIVATE"
+	APIEndpointTypeNetworkBroker APIEndpointType = "NETWORK_BROKER"
 )
 
 // RedTeamCategory represents a red team attack category.
@@ -109,9 +109,9 @@ const (
 type FileFormat string
 
 const (
-	FileFormatPDF  FileFormat = "PDF"
 	FileFormatCSV  FileFormat = "CSV"
 	FileFormatJSON FileFormat = "JSON"
+	FileFormatAll  FileFormat = "ALL"
 )
 
 // --- Pagination ---
@@ -137,6 +137,8 @@ type JobCreateRequest struct {
 	Target      TargetJobRequest `json:"target"`
 	JobType     JobType          `json:"job_type"`
 	JobMetadata map[string]any   `json:"job_metadata,omitempty"`
+	Version     *int             `json:"version,omitempty"`
+	ExtraInfo   map[string]any   `json:"extra_info,omitempty"`
 }
 
 // JobTargetResponse is the nested target info in a job response.
@@ -148,22 +150,26 @@ type JobTargetResponse struct {
 
 // JobResponse represents a red team scan job.
 type JobResponse struct {
-	UUID        string            `json:"uuid"`
-	Name        string            `json:"name,omitempty"`
-	TsgID       string            `json:"tsg_id,omitempty"`
-	Target      JobTargetResponse `json:"target,omitempty"`
-	JobType     JobType           `json:"job_type,omitempty"`
-	Status      JobStatus         `json:"status,omitempty"`
-	JobMetadata map[string]any    `json:"job_metadata,omitempty"`
-	Version     int               `json:"version,omitempty"`
-	TargetType  TargetType        `json:"target_type,omitempty"`
-	Total       int               `json:"total,omitempty"`
-	Completed   int               `json:"completed,omitempty"`
-	Score       float64           `json:"score,omitempty"`
-	ASR         float64           `json:"asr,omitempty"`
-	CreatedAt   string            `json:"created_at,omitempty"`
-	UpdatedAt   string            `json:"updated_at,omitempty"`
-	FinishedAt  string            `json:"finished_at,omitempty"`
+	UUID            string            `json:"uuid"`
+	Name            string            `json:"name,omitempty"`
+	TsgID           string            `json:"tsg_id,omitempty"`
+	Target          JobTargetResponse `json:"target,omitempty"`
+	JobType         JobType           `json:"job_type,omitempty"`
+	Status          JobStatus         `json:"status,omitempty"`
+	JobMetadata     map[string]any    `json:"job_metadata,omitempty"`
+	Version         int               `json:"version,omitempty"`
+	TargetType      TargetType        `json:"target_type,omitempty"`
+	Total           int               `json:"total,omitempty"`
+	Completed       int               `json:"completed,omitempty"`
+	Score           float64           `json:"score,omitempty"`
+	ASR             float64           `json:"asr,omitempty"`
+	CreatedAt       string            `json:"created_at,omitempty"`
+	UpdatedAt       string            `json:"updated_at,omitempty"`
+	FinishedAt      string            `json:"finished_at,omitempty"`
+	TargetID        string            `json:"target_id,omitempty"`
+	ExtraInfo       map[string]any    `json:"extra_info,omitempty"`
+	InvocationID    string            `json:"invocation_id,omitempty"`
+	CreatedByUserID string            `json:"created_by_user_id,omitempty"`
 }
 
 // JobListResponse is the paginated list of jobs.
@@ -323,14 +329,19 @@ type PropertyStatistic struct {
 
 // TargetCreateRequest is the request to create a target.
 type TargetCreateRequest struct {
-	Name             string               `json:"name"`
-	Description      string               `json:"description,omitempty"`
-	TargetType       TargetType           `json:"target_type,omitempty"`
-	ConnectionType   TargetConnectionType `json:"connection_type,omitempty"`
-	ConnectionParams map[string]any       `json:"connection_params,omitempty"`
-	Background       map[string]any       `json:"background,omitempty"`
-	Context          map[string]any       `json:"context,omitempty"`
-	Metadata         map[string]any       `json:"metadata,omitempty"`
+	Name                     string               `json:"name"`
+	Description              string               `json:"description,omitempty"`
+	TargetType               TargetType           `json:"target_type,omitempty"`
+	ConnectionType           TargetConnectionType `json:"connection_type,omitempty"`
+	ConnectionParams         map[string]any       `json:"connection_params,omitempty"`
+	Background               map[string]any       `json:"background,omitempty"`
+	Context                  map[string]any       `json:"context,omitempty"`
+	Metadata                 map[string]any       `json:"metadata,omitempty"`
+	APIEndpointType          APIEndpointType      `json:"api_endpoint_type,omitempty"`
+	NetworkBrokerChannelUUID string               `json:"network_broker_channel_uuid,omitempty"`
+	ResponseMode             string               `json:"response_mode,omitempty"`
+	SessionSupported         bool                 `json:"session_supported,omitempty"`
+	ExtraInfo                map[string]any       `json:"extra_info,omitempty"`
 }
 
 // TargetUpdateRequest is the request to update a target.
@@ -363,6 +374,18 @@ type TargetResponse struct {
 	ConnectionParams map[string]any       `json:"connection_params,omitempty"`
 	CreatedAt        string               `json:"created_at,omitempty"`
 	UpdatedAt        string               `json:"updated_at,omitempty"`
+	Active           bool                 `json:"active,omitempty"`
+	TsgID            string               `json:"tsg_id,omitempty"`
+	Version          int                  `json:"version,omitempty"`
+	ProfilingStatus  string               `json:"profiling_status,omitempty"`
+	APIEndpointType  APIEndpointType      `json:"api_endpoint_type,omitempty"`
+	ResponseMode     string               `json:"response_mode,omitempty"`
+	SessionSupported bool                 `json:"session_supported,omitempty"`
+	Validated        bool                 `json:"validated,omitempty"`
+	SecretVersion    string               `json:"secret_version,omitempty"`
+	CreatedByUserID  string               `json:"created_by_user_id,omitempty"`
+	UpdatedByUserID  string               `json:"updated_by_user_id,omitempty"`
+	ExtraInfo        map[string]any       `json:"extra_info,omitempty"`
 }
 
 // TargetList is the paginated list of targets.

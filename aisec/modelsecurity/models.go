@@ -114,8 +114,60 @@ const (
 // ThreatCategory represents threat categories for model scan issues.
 type ThreatCategory string
 
+const (
+	ThreatCategoryPAITARV100        ThreatCategory = "PAIT-ARV-100"
+	ThreatCategoryPAITGGUF100       ThreatCategory = "PAIT-GGUF-100"
+	ThreatCategoryPAITGGUF101       ThreatCategory = "PAIT-GGUF-101"
+	ThreatCategoryPAITKERAS100      ThreatCategory = "PAIT-KERAS-100"
+	ThreatCategoryPAITKERAS101      ThreatCategory = "PAIT-KERAS-101"
+	ThreatCategoryPAITKERAS102      ThreatCategory = "PAIT-KERAS-102"
+	ThreatCategoryPAITJOBLIB100     ThreatCategory = "PAIT-JOBLIB-100"
+	ThreatCategoryPAITJOBLIB101     ThreatCategory = "PAIT-JOBLIB-101"
+	ThreatCategoryPAITPKL100        ThreatCategory = "PAIT-PKL-100"
+	ThreatCategoryPAITPKL101        ThreatCategory = "PAIT-PKL-101"
+	ThreatCategoryPAITPYTCH100      ThreatCategory = "PAIT-PYTCH-100"
+	ThreatCategoryPAITPYTCH101      ThreatCategory = "PAIT-PYTCH-101"
+	ThreatCategoryPAITEXDIR100      ThreatCategory = "PAIT-EXDIR-100"
+	ThreatCategoryPAITEXDIR101      ThreatCategory = "PAIT-EXDIR-101"
+	ThreatCategoryPAITONNX200       ThreatCategory = "PAIT-ONNX-200"
+	ThreatCategoryPAITTF200         ThreatCategory = "PAIT-TF-200"
+	ThreatCategoryPAITLMAFL300      ThreatCategory = "PAIT-LMAFL-300"
+	ThreatCategoryPAITLITERT300     ThreatCategory = "PAIT-LITERT-300"
+	ThreatCategoryPAITLITERT301     ThreatCategory = "PAIT-LITERT-301"
+	ThreatCategoryPAITLITERT302     ThreatCategory = "PAIT-LITERT-302"
+	ThreatCategoryPAITKERAS300      ThreatCategory = "PAIT-KERAS-300"
+	ThreatCategoryPAITKERAS301      ThreatCategory = "PAIT-KERAS-301"
+	ThreatCategoryPAITTCHST300      ThreatCategory = "PAIT-TCHST-300"
+	ThreatCategoryPAITTCHST301      ThreatCategory = "PAIT-TCHST-301"
+	ThreatCategoryPAITTF300         ThreatCategory = "PAIT-TF-300"
+	ThreatCategoryPAITTF301         ThreatCategory = "PAIT-TF-301"
+	ThreatCategoryPAITTF302         ThreatCategory = "PAIT-TF-302"
+	ThreatCategoryPAITTMT300        ThreatCategory = "PAIT-TMT-300"
+	ThreatCategoryPAITTMT301        ThreatCategory = "PAIT-TMT-301"
+	ThreatCategoryUnapprovedFormats ThreatCategory = "UNAPPROVED_FORMATS"
+)
+
 // ErrorCode represents error codes for scans.
 type ErrorCode string
+
+const (
+	ErrorCodeUnknownError              ErrorCode = "UNKNOWN_ERROR"
+	ErrorCodeScanError                 ErrorCode = "SCAN_ERROR"
+	ErrorCodeInvalidResponse           ErrorCode = "INVALID_RESPONSE"
+	ErrorCodeAccessDenied              ErrorCode = "ACCESS_DENIED"
+	ErrorCodeMissingCredentials        ErrorCode = "MISSING_CREDENTIALS"
+	ErrorCodeNoSuchKey                 ErrorCode = "NO_SUCH_KEY"
+	ErrorCodeNoSuchBucket              ErrorCode = "NO_SUCH_BUCKET"
+	ErrorCodeInvalidBucketName         ErrorCode = "INVALID_BUCKET_NAME"
+	ErrorCodeInternalError             ErrorCode = "INTERNAL_ERROR"
+	ErrorCodeServiceUnavailable        ErrorCode = "SERVICE_UNAVAILABLE"
+	ErrorCodeInvalidObjectState        ErrorCode = "INVALID_OBJECT_STATE"
+	ErrorCodeUnknownRemoteServiceError ErrorCode = "UNKNOWN_REMOTE_SERVICE_ERROR"
+	ErrorCodeUnsupportedRemoteStorage  ErrorCode = "UNSUPPORTED_REMOTE_STORAGE"
+	ErrorCodeMissingArtifacts          ErrorCode = "MISSING_ARTIFACTS"
+	ErrorCodeWorkerError               ErrorCode = "WORKER_ERROR"
+	ErrorCodePolicyEvalError           ErrorCode = "POLICY_EVAL_ERROR"
+)
 
 // RuleFieldValueKey is a valid key for rule field values.
 type RuleFieldValueKey string
@@ -345,7 +397,7 @@ type LabelsCreateRequest struct {
 
 // LabelsResponse is the response from label operations.
 type LabelsResponse struct {
-	Labels []Label `json:"labels"`
+	Labels []Label `json:"labels,omitempty"`
 }
 
 // LabelKeyList is the paginated list of label keys.
@@ -459,7 +511,6 @@ type PyPIAuthResponse struct {
 type ScanListOpts struct {
 	Skip              int
 	Limit             int
-	SortBy            string
 	SortOrder         string
 	SearchQuery       string
 	EvalOutcomes      []string
