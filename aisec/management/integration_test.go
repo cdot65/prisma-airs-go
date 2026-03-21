@@ -5,6 +5,7 @@ package management
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -116,8 +117,9 @@ func TestIntegration_Topics_CRUD(t *testing.T) {
 		t.Logf("Verified topic %s appears in list (%d total)", created.TopicID, len(listResp.Items))
 	}
 
-	// 3. Update topic description
+	// 3. Update topic description (topic_name is required by the API)
 	updated, err := client.Topics.Update(ctx, created.TopicID, UpdateTopicRequest{
+		TopicName:   topicName,
 		Description: "updated description for integration test",
 	})
 	if err != nil {
@@ -215,7 +217,27 @@ func TestIntegration_OAuth_GetToken(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	token, err := client.OAuth.GetToken(ctx)
+	// Requires a valid Apigee client_id for a customer app
+	clientID := os.Getenv("PANW_MGMT_OAUTH_APP_CLIENT_ID")
+	if clientID == "" {
+		t.Skip("PANW_MGMT_OAUTH_APP_CLIENT_ID not set")
+	}
+
+	// Look up an existing customer app to use
+	apps, err := client.CustomerApps.List(ctx, ListOpts{Limit: 1})
+	if err != nil {
+		t.Fatalf("CustomerApps.List: %v", err)
+	}
+	if len(apps.Items) == 0 {
+		t.Skip("no customer apps found, cannot test OAuth.GetToken")
+	}
+	appName := apps.Items[0].AppName
+	t.Logf("Using customer app: %s", appName)
+
+	token, err := client.OAuth.GetToken(ctx, OAuthTokenRequest{
+		ClientID:    clientID,
+		CustomerApp: appName,
+	})
 	if err != nil {
 		t.Fatalf("OAuth.GetToken failed: %v", err)
 	}

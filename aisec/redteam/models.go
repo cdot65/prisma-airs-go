@@ -813,7 +813,7 @@ type TargetMetadata struct {
 	ContentFilterErrorJSON    map[string]any `json:"content_filter_error_json,omitempty"`
 	ContentFilterErrorMessage string         `json:"content_filter_error_message,omitempty"`
 	ProbeMessage              string         `json:"probe_message,omitempty"`
-	RequestTimeout            *int           `json:"request_timeout,omitempty"`
+	RequestTimeout            *float64       `json:"request_timeout,omitempty"`
 }
 
 // TargetBackground holds target background context.

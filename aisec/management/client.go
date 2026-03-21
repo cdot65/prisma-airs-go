@@ -104,7 +104,7 @@ func (c *ProfilesClient) List(ctx context.Context, opts ListOpts) (*SecurityProf
 
 func (c *ProfilesClient) Update(ctx context.Context, profileID string, req UpdateProfileRequest) (*SecurityProfile, error) {
 	resp, err := internal.DoMgmtRequest[SecurityProfile](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.MgmtProfilePath + "/" + profileID, Body: req,
+		Method: http.MethodPut, Path: aisec.MgmtProfilePath + "/uuid/" + profileID, Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -123,13 +123,18 @@ func (c *ProfilesClient) Delete(ctx context.Context, profileID string) (*DeleteP
 }
 
 func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityProfile, error) {
-	resp, err := internal.DoMgmtRequest[SecurityProfile](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.MgmtProfilePath, Params: map[string]string{"profile_name": name},
-	})
+	// No dedicated get-by-name endpoint in the API spec.
+	// List all profiles and filter client-side.
+	resp, err := c.List(ctx, ListOpts{Limit: 1000})
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+	for _, p := range resp.Items {
+		if p.ProfileName == name {
+			return &p, nil
+		}
+	}
+	return nil, aisec.NewAISecSDKError("profile not found: "+name, aisec.ClientSideError)
 }
 
 // ForceDelete force-deletes a profile: DELETE /v1/mgmt/profile/{profile_id}/force?updated_by=
@@ -173,7 +178,7 @@ func (c *TopicsClient) List(ctx context.Context, opts ListOpts) (*CustomTopicLis
 
 func (c *TopicsClient) Update(ctx context.Context, topicID string, req UpdateTopicRequest) (*CustomTopic, error) {
 	resp, err := internal.DoMgmtRequest[CustomTopic](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.MgmtTopicPath + "/" + topicID, Body: req,
+		Method: http.MethodPut, Path: aisec.MgmtTopicPath + "/uuid/" + topicID, Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -182,26 +187,26 @@ func (c *TopicsClient) Update(ctx context.Context, topicID string, req UpdateTop
 }
 
 func (c *TopicsClient) Delete(ctx context.Context, topicID string) (*DeleteTopicResponse, error) {
-	resp, err := internal.DoMgmtRequest[DeleteTopicResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+	resp, err := internal.DoMgmtRequest[string](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: aisec.MgmtTopicPath + "/" + topicID,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+	return &DeleteTopicResponse{Message: resp.Data}, nil
 }
 
-// ForceDelete force-deletes a topic: DELETE /v1/mgmt/topic/{topic_id}/force?updated_by=
+// ForceDelete force-deletes a topic: DELETE /v1/mgmt/topic/force/{topic_id}?updated_by=
 func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string, updatedBy string) (*DeleteTopicResponse, error) {
-	resp, err := internal.DoMgmtRequest[DeleteTopicResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+	resp, err := internal.DoMgmtRequest[string](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete,
-		Path:   aisec.MgmtTopicForcePath + "/" + topicID + "/force",
+		Path:   aisec.MgmtTopicForcePath + "/force/" + topicID,
 		Params: map[string]string{"updated_by": updatedBy},
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+	return &DeleteTopicResponse{Message: resp.Data}, nil
 }
 
 // ApiKeysClient provides API key lifecycle operations.
@@ -330,13 +335,18 @@ func (c *DlpProfilesClient) List(ctx context.Context, opts ListOpts) (*DlpProfil
 }
 
 func (c *DlpProfilesClient) Get(ctx context.Context, profileID string) (*DlpProfile, error) {
-	resp, err := internal.DoMgmtRequest[DlpProfile](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.MgmtDLPProfilesPath + "/" + profileID,
-	})
+	// No dedicated get-by-ID endpoint in the API spec.
+	// List all DLP profiles and filter client-side.
+	resp, err := c.List(ctx, ListOpts{Limit: 1000})
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+	for _, p := range resp.Items {
+		if p.ID == profileID {
+			return &p, nil
+		}
+	}
+	return nil, aisec.NewAISecSDKError("DLP profile not found: "+profileID, aisec.ClientSideError)
 }
 
 // DeploymentProfilesClient provides read-only access to deployment profiles.
@@ -398,9 +408,10 @@ type OAuthManagementClient struct {
 	svcCfg *internal.OAuthServiceConfig
 }
 
-func (c *OAuthManagementClient) GetToken(ctx context.Context) (*OAuthToken, error) {
+func (c *OAuthManagementClient) GetToken(ctx context.Context, req OAuthTokenRequest) (*OAuthToken, error) {
 	resp, err := internal.DoMgmtRequest[OAuthToken](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.MgmtOAuthTokenPath,
+		Method: http.MethodPost, Path: aisec.MgmtOAuthTokenPath,
+		Body: req,
 	})
 	if err != nil {
 		return nil, err
