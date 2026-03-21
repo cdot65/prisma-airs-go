@@ -67,9 +67,9 @@ type ScanResponse struct {
 	ProfileName              string            `json:"profile_name,omitempty"`
 	Category                 string            `json:"category"`
 	Action                   string            `json:"action"`
-	Timeout                  bool              `json:"timeout,omitempty"`
-	Error                    bool              `json:"error,omitempty"`
-	Errors                   []ContentError    `json:"errors,omitempty"`
+	Timeout                  bool              `json:"timeout"`
+	Error                    bool              `json:"error"`
+	Errors                   []ContentError    `json:"errors"`
 	PromptDetected           *PromptDetected   `json:"prompt_detected,omitempty"`
 	ResponseDetected         *ResponseDetected `json:"response_detected,omitempty"`
 	PromptMaskedData         *MaskedData       `json:"prompt_masked_data,omitempty"`
@@ -205,8 +205,8 @@ type IODetected struct {
 
 // ScanSummary holds aggregated detection flags and threats.
 type ScanSummary struct {
-	Detections *ToolDetectionFlags `json:"detections,omitempty"`
-	Threats    []string            `json:"threats,omitempty"`
+	Detections *ToolDetectionFlags `json:"detections"`
+	Threats    []string            `json:"threats"`
 }
 
 // ToolDetected holds detection results for tool/agent interactions.
@@ -227,8 +227,8 @@ type AsyncScanObject struct {
 
 // AsyncScanResponse is the async scan API response.
 type AsyncScanResponse struct {
-	Received string `json:"received,omitempty"`
-	ScanID   string `json:"scan_id,omitempty"`
+	Received string `json:"received"`
+	ScanID   string `json:"scan_id"`
 	ReportID string `json:"report_id,omitempty"`
 	Source   string `json:"source,omitempty"`
 }
@@ -348,16 +348,16 @@ type PiReport struct {
 
 // DlpSnippetMeta holds metadata for a DLP snippet.
 type DlpSnippetMeta struct {
-	DataPattern     string `json:"data_pattern,omitempty"`
-	ConfidenceLevel string `json:"confidence_level,omitempty"`
+	DataPattern     string `json:"data_pattern"`
+	ConfidenceLevel string `json:"confidence_level"`
 	DataPatternType string `json:"data_pattern_type,omitempty"`
-	Occurrence      int64  `json:"occurrence,omitempty"`
+	Occurrence      int64  `json:"occurrence"`
 }
 
 // DlpSnippetObject holds DLP snippet data with metadata.
 type DlpSnippetObject struct {
-	Meta     *DlpSnippetMeta `json:"meta,omitempty"`
-	Snippets []string        `json:"snippets,omitempty"`
+	Meta     *DlpSnippetMeta `json:"meta"`
+	Snippets []string        `json:"snippets"`
 }
 
 // CgReport holds contextual grounding report details.

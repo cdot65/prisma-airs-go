@@ -348,9 +348,9 @@ type JobAbortResponse struct {
 
 // CategoryModel represents a red team attack category.
 type CategoryModel struct {
-	ID            string         `json:"id,omitempty"`
+	ID            string         `json:"id"`
 	Name          string         `json:"name,omitempty"`
-	SubCategories []SubCategory  `json:"sub_categories,omitempty"`
+	SubCategories []SubCategory  `json:"sub_categories"`
 	Details       map[string]any `json:"details,omitempty"`
 }
 

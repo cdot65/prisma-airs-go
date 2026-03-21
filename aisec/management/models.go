@@ -451,9 +451,9 @@ type DeleteConflictResponse struct {
 
 // APIKeyDPInfo holds API key + deployment profile info within a customer app.
 type APIKeyDPInfo struct {
-	ApiKeyName string `json:"api_key_name,omitempty"`
-	DpName     string `json:"dp_name,omitempty"`
-	AuthCode   string `json:"auth_code,omitempty"`
+	ApiKeyName string `json:"api_key_name"`
+	DpName     string `json:"dp_name"`
+	AuthCode   string `json:"auth_code"`
 }
 
 // CustomerAppWithKeyInfo extends CustomerApp with associated API key/DP info.
