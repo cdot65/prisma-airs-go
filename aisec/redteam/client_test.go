@@ -54,25 +54,34 @@ func TestScans_Create(t *testing.T) {
 		if r.Method != "POST" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(JobResponse{ID: "job-1", Name: "test-scan"})
+		var req JobCreateRequest
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		if req.Target.UUID != "t-1" {
+			t.Errorf("target.uuid = %q", req.Target.UUID)
+		}
+		_ = json.NewEncoder(w).Encode(JobResponse{UUID: "job-1", Name: "test-scan"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	job, err := client.Scans.Create(context.Background(), JobCreateRequest{TargetID: "t-1", JobType: JobTypeStatic})
+	job, err := client.Scans.Create(context.Background(), JobCreateRequest{
+		Name:    "test-scan",
+		Target:  TargetJobRequest{UUID: "t-1"},
+		JobType: JobTypeStatic,
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if job.ID != "job-1" {
-		t.Errorf("ID = %q", job.ID)
+	if job.UUID != "job-1" {
+		t.Errorf("UUID = %q", job.UUID)
 	}
 }
 
 func TestScans_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(JobListResponse{
-			Items:      []JobResponse{{ID: "job-1"}},
+			Items:      []JobResponse{{UUID: "job-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -91,7 +100,7 @@ func TestScans_List(t *testing.T) {
 
 func TestScans_Get(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(JobResponse{ID: "job-1"})
+		_ = json.NewEncoder(w).Encode(JobResponse{UUID: "job-1"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -101,8 +110,8 @@ func TestScans_Get(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if job.ID != "job-1" {
-		t.Errorf("ID = %q", job.ID)
+	if job.UUID != "job-1" {
+		t.Errorf("UUID = %q", job.UUID)
 	}
 }
 
@@ -342,13 +351,73 @@ func TestTargets_Probe(t *testing.T) {
 		if r.Method != "POST" {
 			t.Errorf("method = %s", r.Method)
 		}
+		var req TargetProbeRequest
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		if req.Name != "probe-target" {
+			t.Errorf("Name = %q", req.Name)
+		}
 		_ = json.NewEncoder(w).Encode(TargetResponse{UUID: "tgt-1"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	tgt, err := client.Targets.Probe(context.Background(), TargetProbeRequest{UUID: "tgt-1"})
+	tgt, err := client.Targets.Probe(context.Background(), TargetProbeRequest{Name: "probe-target"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tgt.UUID != "tgt-1" {
+		t.Errorf("UUID = %q", tgt.UUID)
+	}
+}
+
+func TestTargets_Probe_AllFields(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		var req TargetProbeRequest
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		if req.Name != "full-probe" {
+			t.Errorf("Name = %q", req.Name)
+		}
+		if req.TargetType != TargetTypeApplication {
+			t.Errorf("TargetType = %q", req.TargetType)
+		}
+		if req.ConnectionType != TargetConnectionTypeRest {
+			t.Errorf("ConnectionType = %q", req.ConnectionType)
+		}
+		if req.APIEndpointType != APIEndpointTypeChatCompletion {
+			t.Errorf("APIEndpointType = %q", req.APIEndpointType)
+		}
+		if req.ResponseMode != ResponseModeRest {
+			t.Errorf("ResponseMode = %q", req.ResponseMode)
+		}
+		if req.SessionSupported == nil || *req.SessionSupported != true {
+			t.Errorf("SessionSupported = %v", req.SessionSupported)
+		}
+		if req.UUID != "existing-uuid" {
+			t.Errorf("UUID = %q", req.UUID)
+		}
+		if len(req.ProbeFields) != 1 || req.ProbeFields[0] != "field1" {
+			t.Errorf("ProbeFields = %v", req.ProbeFields)
+		}
+		_ = json.NewEncoder(w).Encode(TargetResponse{UUID: "tgt-1"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	sessionSupported := true
+	tgt, err := client.Targets.Probe(context.Background(), TargetProbeRequest{
+		Name:             "full-probe",
+		Description:      "A full probe",
+		TargetType:       TargetTypeApplication,
+		ConnectionType:   TargetConnectionTypeRest,
+		APIEndpointType:  APIEndpointTypeChatCompletion,
+		ResponseMode:     ResponseModeRest,
+		SessionSupported: &sessionSupported,
+		ConnectionParams: map[string]any{"url": "https://example.com"},
+		UUID:             "existing-uuid",
+		ProbeFields:      []string{"field1"},
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -381,6 +450,9 @@ func TestCustomAttacks_CreatePromptSet(t *testing.T) {
 		if r.Method != "POST" {
 			t.Errorf("method = %s", r.Method)
 		}
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/custom-prompt-set") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetResponse{UUID: "ps-1", Name: "test-set"})
 	})
 	defer tokenSrv.Close()
@@ -398,6 +470,9 @@ func TestCustomAttacks_CreatePromptSet(t *testing.T) {
 
 func TestCustomAttacks_ListPromptSets(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/list-custom-prompt-sets") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetList{
 			Items:      []CustomPromptSetResponse{{UUID: "ps-1"}},
 			Pagination: RedTeamPagination{Total: 1},
@@ -571,7 +646,7 @@ func TestDualEndpointRouting(t *testing.T) {
 	}
 }
 
-// --- Reports (untested methods) ---
+// --- Reports (additional methods) ---
 
 func TestReports_GetAttackDetail(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
@@ -629,7 +704,10 @@ func TestReports_GetStaticRemediation(t *testing.T) {
 
 func TestReports_GetStaticRuntimePolicy(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(RuntimeSecurityProfileResponse{JobID: "job-1"})
+		if !strings.Contains(r.URL.Path, "/runtime-policy-config") {
+			t.Errorf("path should contain /runtime-policy-config, got %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(RuntimePolicyConfigResponse{JobID: "job-1"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -663,7 +741,10 @@ func TestReports_GetDynamicRemediation(t *testing.T) {
 
 func TestReports_GetDynamicRuntimePolicy(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(RuntimeSecurityProfileResponse{JobID: "job-1"})
+		if !strings.Contains(r.URL.Path, "/runtime-policy-config") {
+			t.Errorf("path should contain /runtime-policy-config, got %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(RuntimePolicyConfigResponse{JobID: "job-1"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -715,7 +796,33 @@ func TestReports_GetStreamDetail(t *testing.T) {
 	}
 }
 
-// --- CustomAttackReports (untested methods) ---
+func TestReports_DownloadReport(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "GET" {
+			t.Errorf("method = %s", r.Method)
+		}
+		if !strings.Contains(r.URL.Path, "/v1/report/job-1/download") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		if r.URL.Query().Get("file_format") != "PDF" {
+			t.Errorf("file_format = %s", r.URL.Query().Get("file_format"))
+		}
+		_, _ = w.Write([]byte("fake-pdf-content"))
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	data, err := client.Reports.DownloadReport(context.Background(), "job-1", FileFormatPDF)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != "fake-pdf-content" {
+		t.Errorf("data = %q", string(data))
+	}
+}
+
+// --- CustomAttackReports (additional methods) ---
 
 func TestCustomAttackReports_GetPromptSets(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
@@ -822,7 +929,7 @@ func TestCustomAttackReports_GetPropertyStats(t *testing.T) {
 	}
 }
 
-// --- Convenience methods (untested) ---
+// --- Convenience methods (additional) ---
 
 func TestGetScoreTrend(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
@@ -905,6 +1012,9 @@ func TestTargets_UpdateProfile(t *testing.T) {
 
 func TestCustomAttacks_GetPromptSet(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetResponse{UUID: "ps-1", Name: "test"})
 	})
 	defer tokenSrv.Close()
@@ -924,6 +1034,9 @@ func TestCustomAttacks_UpdatePromptSet(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "PUT" {
 			t.Errorf("method = %s", r.Method)
+		}
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1") {
+			t.Errorf("path = %s", r.URL.Path)
 		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetResponse{UUID: "ps-1", Name: "updated"})
 	})
@@ -945,6 +1058,9 @@ func TestCustomAttacks_ArchivePromptSet(t *testing.T) {
 		if r.Method != "PUT" {
 			t.Errorf("method = %s", r.Method)
 		}
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1/archive") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetResponse{UUID: "ps-1"})
 	})
 	defer tokenSrv.Close()
@@ -962,6 +1078,9 @@ func TestCustomAttacks_ArchivePromptSet(t *testing.T) {
 
 func TestCustomAttacks_GetPromptSetReference(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1/reference") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetReference{UUID: "ps-1"})
 	})
 	defer tokenSrv.Close()
@@ -979,6 +1098,9 @@ func TestCustomAttacks_GetPromptSetReference(t *testing.T) {
 
 func TestCustomAttacks_GetPromptSetVersionInfo(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1/version-info") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetVersionInfo{UUID: "ps-1"})
 	})
 	defer tokenSrv.Close()
@@ -996,6 +1118,9 @@ func TestCustomAttacks_GetPromptSetVersionInfo(t *testing.T) {
 
 func TestCustomAttacks_ListActivePromptSets(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/active-custom-prompt-sets") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptSetListActive{
 			Items: []CustomPromptSetResponse{{UUID: "ps-1"}},
 		})
@@ -1018,13 +1143,31 @@ func TestCustomAttacks_CreatePrompt(t *testing.T) {
 		if r.Method != "POST" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(CustomPromptResponse{UUID: "p-1"})
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/custom-prompt-set/custom-prompt") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		var req CustomPromptCreateRequest
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		if req.PromptSetID != "ps-1" {
+			t.Errorf("PromptSetID = %q", req.PromptSetID)
+		}
+		if req.Prompt != "test prompt" {
+			t.Errorf("Prompt = %q", req.Prompt)
+		}
+		if req.Goal != "test goal" {
+			t.Errorf("Goal = %q", req.Goal)
+		}
+		_ = json.NewEncoder(w).Encode(CustomPromptResponse{UUID: "p-1", Prompt: "test prompt", Goal: "test goal"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	resp, err := client.CustomAttacks.CreatePrompt(context.Background(), CustomPromptCreateRequest{})
+	resp, err := client.CustomAttacks.CreatePrompt(context.Background(), CustomPromptCreateRequest{
+		PromptSetID: "ps-1",
+		Prompt:      "test prompt",
+		Goal:        "test goal",
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1035,6 +1178,9 @@ func TestCustomAttacks_CreatePrompt(t *testing.T) {
 
 func TestCustomAttacks_ListPrompts(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.Contains(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1/list-custom-prompts") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptList{
 			Items:      []CustomPromptResponse{{UUID: "p-1"}},
 			Pagination: RedTeamPagination{Total: 1},
@@ -1055,6 +1201,9 @@ func TestCustomAttacks_ListPrompts(t *testing.T) {
 
 func TestCustomAttacks_GetPrompt(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.Contains(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1/custom-prompt/p-1") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptResponse{UUID: "p-1"})
 	})
 	defer tokenSrv.Close()
@@ -1075,6 +1224,9 @@ func TestCustomAttacks_UpdatePrompt(t *testing.T) {
 		if r.Method != "PUT" {
 			t.Errorf("method = %s", r.Method)
 		}
+		if !strings.Contains(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1/custom-prompt/p-1") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomPromptResponse{UUID: "p-1"})
 	})
 	defer tokenSrv.Close()
@@ -1094,6 +1246,9 @@ func TestCustomAttacks_DeletePrompt(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "DELETE" {
 			t.Errorf("method = %s", r.Method)
+		}
+		if !strings.Contains(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1/custom-prompt/p-1") {
+			t.Errorf("path = %s", r.URL.Path)
 		}
 		_ = json.NewEncoder(w).Encode(BaseResponse{Message: "deleted"})
 	})
@@ -1186,5 +1341,144 @@ func TestCustomAttacks_CreatePropertyValue(t *testing.T) {
 	}
 	if resp.Message != "created" {
 		t.Errorf("Message = %q", resp.Message)
+	}
+}
+
+// --- JSON round-trip tests ---
+
+func TestJobCreateRequest_JSON(t *testing.T) {
+	req := JobCreateRequest{
+		Name:    "test-job",
+		Target:  TargetJobRequest{UUID: "t-1", Version: 2},
+		JobType: JobTypeStatic,
+		JobMetadata: map[string]any{
+			"key": "value",
+		},
+	}
+	data, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s := string(data)
+	if !strings.Contains(s, `"target":{`) {
+		t.Errorf("missing target object: %s", s)
+	}
+	if !strings.Contains(s, `"job_metadata":{`) {
+		t.Errorf("missing job_metadata: %s", s)
+	}
+	if strings.Contains(s, `"target_id"`) {
+		t.Errorf("should not contain target_id: %s", s)
+	}
+	if strings.Contains(s, `"metadata"`) {
+		t.Errorf("should not contain metadata: %s", s)
+	}
+}
+
+func TestJobResponse_JSON(t *testing.T) {
+	raw := `{
+		"uuid": "job-1",
+		"name": "test",
+		"tsg_id": "tsg-123",
+		"target": {"uuid": "t-1", "name": "tgt", "version": 3},
+		"job_type": "STATIC",
+		"status": "COMPLETED",
+		"job_metadata": {"key": "val"},
+		"version": 1,
+		"target_type": "APPLICATION",
+		"total": 100,
+		"completed": 95,
+		"score": 0.85,
+		"asr": 0.15
+	}`
+	var resp JobResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "job-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+	if resp.TsgID != "tsg-123" {
+		t.Errorf("TsgID = %q", resp.TsgID)
+	}
+	if resp.Target.UUID != "t-1" {
+		t.Errorf("Target.UUID = %q", resp.Target.UUID)
+	}
+	if resp.Total != 100 {
+		t.Errorf("Total = %d", resp.Total)
+	}
+	if resp.Completed != 95 {
+		t.Errorf("Completed = %d", resp.Completed)
+	}
+	if resp.Score != 0.85 {
+		t.Errorf("Score = %f", resp.Score)
+	}
+	if resp.ASR != 0.15 {
+		t.Errorf("ASR = %f", resp.ASR)
+	}
+}
+
+func TestCustomPromptCreateRequest_JSON(t *testing.T) {
+	req := CustomPromptCreateRequest{
+		PromptSetID: "ps-1",
+		Prompt:      "test prompt",
+		Goal:        "test goal",
+	}
+	data, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s := string(data)
+	if !strings.Contains(s, `"prompt_set_id":"ps-1"`) {
+		t.Errorf("missing prompt_set_id: %s", s)
+	}
+	if !strings.Contains(s, `"prompt":"test prompt"`) {
+		t.Errorf("missing prompt: %s", s)
+	}
+	if !strings.Contains(s, `"goal":"test goal"`) {
+		t.Errorf("missing goal: %s", s)
+	}
+	if strings.Contains(s, `"content"`) {
+		t.Errorf("should not contain content: %s", s)
+	}
+	if strings.Contains(s, `"prompt_set_uuid"`) {
+		t.Errorf("should not contain prompt_set_uuid: %s", s)
+	}
+}
+
+func TestCustomPromptResponse_JSON(t *testing.T) {
+	raw := `{
+		"uuid": "p-1",
+		"prompt_set_id": "ps-1",
+		"prompt": "test",
+		"goal": "a goal",
+		"user_defined_goal": "user goal",
+		"detector_category": "security",
+		"severity": "HIGH",
+		"active": true
+	}`
+	var resp CustomPromptResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.UUID != "p-1" {
+		t.Errorf("UUID = %q", resp.UUID)
+	}
+	if resp.PromptSetID != "ps-1" {
+		t.Errorf("PromptSetID = %q", resp.PromptSetID)
+	}
+	if resp.Prompt != "test" {
+		t.Errorf("Prompt = %q", resp.Prompt)
+	}
+	if resp.Goal != "a goal" {
+		t.Errorf("Goal = %q", resp.Goal)
+	}
+	if resp.UserDefinedGoal != "user goal" {
+		t.Errorf("UserDefinedGoal = %q", resp.UserDefinedGoal)
+	}
+	if resp.DetectorCategory != "security" {
+		t.Errorf("DetectorCategory = %q", resp.DetectorCategory)
+	}
+	if resp.Severity != "HIGH" {
+		t.Errorf("Severity = %q", resp.Severity)
 	}
 }

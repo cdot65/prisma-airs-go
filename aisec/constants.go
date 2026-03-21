@@ -175,4 +175,12 @@ const (
 	RedTeamTargetPath        = "/v1/target"
 	RedTeamCustomAttackPath  = "/v1/custom-attack"
 	RedTeamMgmtDashboardPath = "/v1/dashboard/overview"
+
+	// Custom attack prompt set sub-paths (management plane).
+	RedTeamCustomPromptSetPath        = "/v1/custom-attack/custom-prompt-set"
+	RedTeamListCustomPromptSetsPath   = "/v1/custom-attack/list-custom-prompt-sets"
+	RedTeamActiveCustomPromptSetsPath = "/v1/custom-attack/active-custom-prompt-sets"
+
+	// Report download (data plane).
+	RedTeamReportDownloadPath = "/v1/report"
 )

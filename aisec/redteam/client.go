@@ -1,9 +1,12 @@
 package redteam
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"net/http"
+	"net/url"
 
 	"github.com/cdot65/prisma-airs-go/aisec"
 	"github.com/cdot65/prisma-airs-go/aisec/internal"
@@ -277,9 +280,9 @@ func (c *ReportsClient) GetStaticRemediation(ctx context.Context, jobID string) 
 	return &resp.Data, nil
 }
 
-func (c *ReportsClient) GetStaticRuntimePolicy(ctx context.Context, jobID string) (*RuntimeSecurityProfileResponse, error) {
-	resp, err := internal.DoMgmtRequest[RuntimeSecurityProfileResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + jobID + "/runtime-security-profile",
+func (c *ReportsClient) GetStaticRuntimePolicy(ctx context.Context, jobID string) (*RuntimePolicyConfigResponse, error) {
+	resp, err := internal.DoMgmtRequest[RuntimePolicyConfigResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + jobID + "/runtime-policy-config",
 	})
 	if err != nil {
 		return nil, err
@@ -297,9 +300,9 @@ func (c *ReportsClient) GetDynamicRemediation(ctx context.Context, jobID string)
 	return &resp.Data, nil
 }
 
-func (c *ReportsClient) GetDynamicRuntimePolicy(ctx context.Context, jobID string) (*RuntimeSecurityProfileResponse, error) {
-	resp, err := internal.DoMgmtRequest[RuntimeSecurityProfileResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + jobID + "/runtime-security-profile",
+func (c *ReportsClient) GetDynamicRuntimePolicy(ctx context.Context, jobID string) (*RuntimePolicyConfigResponse, error) {
+	resp, err := internal.DoMgmtRequest[RuntimePolicyConfigResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + jobID + "/runtime-policy-config",
 	})
 	if err != nil {
 		return nil, err
@@ -335,6 +338,56 @@ func (c *ReportsClient) GetStreamDetail(ctx context.Context, streamID string) (*
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+// DownloadReport downloads a report in the specified format.
+func (c *ReportsClient) DownloadReport(ctx context.Context, jobID string, format FileFormat) ([]byte, error) {
+	svcCfg := c.dataCfg
+	path := aisec.RedTeamReportDownloadPath + "/" + jobID + "/download"
+
+	u, err := url.Parse(svcCfg.BaseURL + path)
+	if err != nil {
+		return nil, fmt.Errorf("invalid URL: %s%s: %w", svcCfg.BaseURL, path, err)
+	}
+	q := u.Query()
+	q.Set("file_format", string(format))
+	u.RawQuery = q.Encode()
+
+	resp, err := internal.ExecuteWithRetry(internal.RetryOptions{
+		MaxRetries: svcCfg.NumRetries,
+		Execute: func(attempt int) (*http.Response, error) {
+			token, tokenErr := svcCfg.OAuth.GetToken()
+			if tokenErr != nil {
+				return nil, tokenErr
+			}
+			req, reqErr := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
+			if reqErr != nil {
+				return nil, reqErr
+			}
+			req.Header.Set("User-Agent", aisec.UserAgent)
+			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
+			return http.DefaultClient.Do(req)
+		},
+		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
+			if resp.StatusCode == 401 || resp.StatusCode == 403 {
+				_, _ = io.Copy(io.Discard, resp.Body)
+				resp.Body.Close()
+				svcCfg.OAuth.ClearToken()
+				return true, nil
+			}
+			return false, nil
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var buf bytes.Buffer
+	if _, err := io.Copy(&buf, resp.Body); err != nil {
+		return nil, fmt.Errorf("failed to read report body: %w", err)
+	}
+	return buf.Bytes(), nil
 }
 
 // --- Custom Attack Reports Client (data plane) ---
@@ -522,7 +575,7 @@ type CustomAttacksClient struct {
 
 func (c *CustomAttacksClient) CreatePromptSet(ctx context.Context, req CustomPromptSetCreateRequest) (*CustomPromptSetResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.RedTeamCustomAttackPath + "/prompt-set", Body: req,
+		Method: http.MethodPost, Path: aisec.RedTeamCustomPromptSetPath, Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -532,7 +585,7 @@ func (c *CustomAttacksClient) CreatePromptSet(ctx context.Context, req CustomPro
 
 func (c *CustomAttacksClient) ListPromptSets(ctx context.Context, opts PromptSetListOpts) (*CustomPromptSetList, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetList](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/prompt-set", Params: buildPromptSetListParams(opts),
+		Method: http.MethodGet, Path: aisec.RedTeamListCustomPromptSetsPath, Params: buildPromptSetListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -542,7 +595,7 @@ func (c *CustomAttacksClient) ListPromptSets(ctx context.Context, opts PromptSet
 
 func (c *CustomAttacksClient) GetPromptSet(ctx context.Context, uuid string) (*CustomPromptSetResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/" + uuid,
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid,
 	})
 	if err != nil {
 		return nil, err
@@ -552,7 +605,7 @@ func (c *CustomAttacksClient) GetPromptSet(ctx context.Context, uuid string) (*C
 
 func (c *CustomAttacksClient) UpdatePromptSet(ctx context.Context, uuid string, req CustomPromptSetUpdateRequest) (*CustomPromptSetResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/" + uuid, Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid, Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -562,7 +615,7 @@ func (c *CustomAttacksClient) UpdatePromptSet(ctx context.Context, uuid string, 
 
 func (c *CustomAttacksClient) ArchivePromptSet(ctx context.Context, uuid string, req CustomPromptSetArchiveRequest) (*CustomPromptSetResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/" + uuid + "/archive", Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid + "/archive", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -572,7 +625,7 @@ func (c *CustomAttacksClient) ArchivePromptSet(ctx context.Context, uuid string,
 
 func (c *CustomAttacksClient) GetPromptSetReference(ctx context.Context, uuid string) (*CustomPromptSetReference, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetReference](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/" + uuid + "/reference",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid + "/reference",
 	})
 	if err != nil {
 		return nil, err
@@ -582,7 +635,7 @@ func (c *CustomAttacksClient) GetPromptSetReference(ctx context.Context, uuid st
 
 func (c *CustomAttacksClient) GetPromptSetVersionInfo(ctx context.Context, uuid string) (*CustomPromptSetVersionInfo, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetVersionInfo](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/" + uuid + "/version-info",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid + "/version-info",
 	})
 	if err != nil {
 		return nil, err
@@ -592,7 +645,7 @@ func (c *CustomAttacksClient) GetPromptSetVersionInfo(ctx context.Context, uuid 
 
 func (c *CustomAttacksClient) ListActivePromptSets(ctx context.Context) (*CustomPromptSetListActive, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetListActive](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/active",
+		Method: http.MethodGet, Path: aisec.RedTeamActiveCustomPromptSetsPath,
 	})
 	if err != nil {
 		return nil, err
@@ -604,7 +657,7 @@ func (c *CustomAttacksClient) ListActivePromptSets(ctx context.Context) (*Custom
 
 func (c *CustomAttacksClient) CreatePrompt(ctx context.Context, req CustomPromptCreateRequest) (*CustomPromptResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.RedTeamCustomAttackPath + "/prompt", Body: req,
+		Method: http.MethodPost, Path: aisec.RedTeamCustomPromptSetPath + "/custom-prompt", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -612,9 +665,9 @@ func (c *CustomAttacksClient) CreatePrompt(ctx context.Context, req CustomPrompt
 	return &resp.Data, nil
 }
 
-func (c *CustomAttacksClient) ListPrompts(ctx context.Context, promptSetUUID string, opts PromptListOpts) (*CustomPromptList, error) {
+func (c *CustomAttacksClient) ListPrompts(ctx context.Context, promptSetID string, opts PromptListOpts) (*CustomPromptList, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptList](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/" + promptSetUUID + "/prompts",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + promptSetID + "/list-custom-prompts",
 		Params: buildPromptListParams(opts),
 	})
 	if err != nil {
@@ -623,9 +676,9 @@ func (c *CustomAttacksClient) ListPrompts(ctx context.Context, promptSetUUID str
 	return &resp.Data, nil
 }
 
-func (c *CustomAttacksClient) GetPrompt(ctx context.Context, promptSetUUID, promptUUID string) (*CustomPromptResponse, error) {
+func (c *CustomAttacksClient) GetPrompt(ctx context.Context, promptSetID, promptID string) (*CustomPromptResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/" + promptSetUUID + "/prompts/" + promptUUID,
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + promptSetID + "/custom-prompt/" + promptID,
 	})
 	if err != nil {
 		return nil, err
@@ -633,9 +686,9 @@ func (c *CustomAttacksClient) GetPrompt(ctx context.Context, promptSetUUID, prom
 	return &resp.Data, nil
 }
 
-func (c *CustomAttacksClient) UpdatePrompt(ctx context.Context, promptSetUUID, promptUUID string, req CustomPromptUpdateRequest) (*CustomPromptResponse, error) {
+func (c *CustomAttacksClient) UpdatePrompt(ctx context.Context, promptSetID, promptID string, req CustomPromptUpdateRequest) (*CustomPromptResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/" + promptSetUUID + "/prompts/" + promptUUID, Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamCustomPromptSetPath + "/" + promptSetID + "/custom-prompt/" + promptID, Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -643,9 +696,9 @@ func (c *CustomAttacksClient) UpdatePrompt(ctx context.Context, promptSetUUID, p
 	return &resp.Data, nil
 }
 
-func (c *CustomAttacksClient) DeletePrompt(ctx context.Context, promptSetUUID, promptUUID string) (*BaseResponse, error) {
+func (c *CustomAttacksClient) DeletePrompt(ctx context.Context, promptSetID, promptID string) (*BaseResponse, error) {
 	resp, err := internal.DoMgmtRequest[BaseResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.RedTeamCustomAttackPath + "/prompt-set/" + promptSetUUID + "/prompts/" + promptUUID,
+		Method: http.MethodDelete, Path: aisec.RedTeamCustomPromptSetPath + "/" + promptSetID + "/custom-prompt/" + promptID,
 	})
 	if err != nil {
 		return nil, err

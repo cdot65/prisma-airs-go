@@ -59,6 +59,15 @@ const (
 	TargetConnectionTypeStreaming   TargetConnectionType = "STREAMING"
 )
 
+// APIEndpointType represents the API endpoint type for a target.
+type APIEndpointType string
+
+const (
+	APIEndpointTypeChatCompletion APIEndpointType = "CHAT_COMPLETION"
+	APIEndpointTypeCompletion     APIEndpointType = "COMPLETION"
+	APIEndpointTypeCustom         APIEndpointType = "CUSTOM"
+)
+
 // RedTeamCategory represents a red team attack category.
 type RedTeamCategory string
 
@@ -96,6 +105,15 @@ const (
 	GoalTypeGoalManipulation GoalType = "GOAL_MANIPULATION"
 )
 
+// FileFormat represents a report download format.
+type FileFormat string
+
+const (
+	FileFormatPDF  FileFormat = "PDF"
+	FileFormatCSV  FileFormat = "CSV"
+	FileFormatJSON FileFormat = "JSON"
+)
+
 // --- Pagination ---
 
 // RedTeamPagination holds pagination metadata.
@@ -107,26 +125,45 @@ type RedTeamPagination struct {
 
 // --- Job / Scan types ---
 
+// TargetJobRequest is the nested target reference in a job create request.
+type TargetJobRequest struct {
+	UUID    string `json:"uuid"`
+	Version int    `json:"version,omitempty"`
+}
+
 // JobCreateRequest is the request to create a red team scan job.
 type JobCreateRequest struct {
-	TargetID string         `json:"target_id"`
-	JobType  JobType        `json:"job_type"`
-	Name     string         `json:"name,omitempty"`
-	Metadata map[string]any `json:"metadata,omitempty"`
+	Name        string           `json:"name"`
+	Target      TargetJobRequest `json:"target"`
+	JobType     JobType          `json:"job_type"`
+	JobMetadata map[string]any   `json:"job_metadata,omitempty"`
+}
+
+// JobTargetResponse is the nested target info in a job response.
+type JobTargetResponse struct {
+	UUID    string `json:"uuid,omitempty"`
+	Name    string `json:"name,omitempty"`
+	Version int    `json:"version,omitempty"`
 }
 
 // JobResponse represents a red team scan job.
 type JobResponse struct {
-	ID         string         `json:"id"`
-	Name       string         `json:"name,omitempty"`
-	TargetID   string         `json:"target_id,omitempty"`
-	JobType    JobType        `json:"job_type,omitempty"`
-	Status     JobStatus      `json:"status,omitempty"`
-	Metadata   map[string]any `json:"metadata,omitempty"`
-	Stats      map[string]any `json:"stats,omitempty"`
-	CreatedAt  string         `json:"created_at,omitempty"`
-	UpdatedAt  string         `json:"updated_at,omitempty"`
-	FinishedAt string         `json:"finished_at,omitempty"`
+	UUID        string            `json:"uuid"`
+	Name        string            `json:"name,omitempty"`
+	TsgID       string            `json:"tsg_id,omitempty"`
+	Target      JobTargetResponse `json:"target,omitempty"`
+	JobType     JobType           `json:"job_type,omitempty"`
+	Status      JobStatus         `json:"status,omitempty"`
+	JobMetadata map[string]any    `json:"job_metadata,omitempty"`
+	Version     int               `json:"version,omitempty"`
+	TargetType  TargetType        `json:"target_type,omitempty"`
+	Total       int               `json:"total,omitempty"`
+	Completed   int               `json:"completed,omitempty"`
+	Score       float64           `json:"score,omitempty"`
+	ASR         float64           `json:"asr,omitempty"`
+	CreatedAt   string            `json:"created_at,omitempty"`
+	UpdatedAt   string            `json:"updated_at,omitempty"`
+	FinishedAt  string            `json:"finished_at,omitempty"`
 }
 
 // JobListResponse is the paginated list of jobs.
@@ -171,6 +208,11 @@ type DynamicJobReport struct {
 	Details map[string]any `json:"details,omitempty"`
 }
 
+// ReportDownloadResponse wraps raw bytes from a report download.
+type ReportDownloadResponse struct {
+	Data []byte `json:"data,omitempty"`
+}
+
 // AttackListItem represents an attack in a list.
 type AttackListItem struct {
 	ID       string         `json:"id,omitempty"`
@@ -207,8 +249,8 @@ type RemediationResponse struct {
 	Details map[string]any `json:"details,omitempty"`
 }
 
-// RuntimeSecurityProfileResponse is the runtime security profile.
-type RuntimeSecurityProfileResponse struct {
+// RuntimePolicyConfigResponse is the runtime policy configuration.
+type RuntimePolicyConfigResponse struct {
 	JobID    string         `json:"job_id,omitempty"`
 	Policies map[string]any `json:"policies,omitempty"`
 }
@@ -331,7 +373,21 @@ type TargetList struct {
 
 // TargetProbeRequest is the request to probe a target.
 type TargetProbeRequest struct {
-	UUID string `json:"uuid"`
+	Name                     string               `json:"name"`
+	Description              string               `json:"description,omitempty"`
+	TargetType               TargetType           `json:"target_type,omitempty"`
+	ConnectionType           TargetConnectionType `json:"connection_type,omitempty"`
+	APIEndpointType          APIEndpointType      `json:"api_endpoint_type,omitempty"`
+	ResponseMode             ResponseMode         `json:"response_mode,omitempty"`
+	SessionSupported         *bool                `json:"session_supported,omitempty"`
+	ConnectionParams         map[string]any       `json:"connection_params,omitempty"`
+	NetworkBrokerChannelUUID string               `json:"network_broker_channel_uuid,omitempty"`
+	ExtraInfo                map[string]any       `json:"extra_info,omitempty"`
+	TargetMetadata           map[string]any       `json:"target_metadata,omitempty"`
+	TargetBackground         map[string]any       `json:"target_background,omitempty"`
+	AdditionalContext        map[string]any       `json:"additional_context,omitempty"`
+	UUID                     string               `json:"uuid,omitempty"`
+	ProbeFields              []string             `json:"probe_fields,omitempty"`
 }
 
 // TargetProfileResponse is the target profile.
@@ -404,25 +460,31 @@ type CustomPromptSetVersionInfo struct {
 
 // CustomPromptCreateRequest is the request to create a prompt.
 type CustomPromptCreateRequest struct {
-	PromptSetUUID string         `json:"prompt_set_uuid"`
-	Content       string         `json:"content"`
-	Properties    map[string]any `json:"properties,omitempty"`
+	PromptSetID string         `json:"prompt_set_id"`
+	Prompt      string         `json:"prompt"`
+	Goal        string         `json:"goal,omitempty"`
+	Properties  map[string]any `json:"properties,omitempty"`
 }
 
 // CustomPromptUpdateRequest is the request to update a prompt.
 type CustomPromptUpdateRequest struct {
-	Content    string         `json:"content,omitempty"`
+	Prompt     string         `json:"prompt,omitempty"`
+	Goal       string         `json:"goal,omitempty"`
 	Properties map[string]any `json:"properties,omitempty"`
 }
 
 // CustomPromptResponse represents a custom prompt.
 type CustomPromptResponse struct {
-	UUID          string         `json:"uuid"`
-	PromptSetUUID string         `json:"prompt_set_uuid,omitempty"`
-	Content       string         `json:"content,omitempty"`
-	Properties    map[string]any `json:"properties,omitempty"`
-	Active        bool           `json:"active,omitempty"`
-	CreatedAt     string         `json:"created_at,omitempty"`
+	UUID             string         `json:"uuid"`
+	PromptSetID      string         `json:"prompt_set_id,omitempty"`
+	Prompt           string         `json:"prompt,omitempty"`
+	Goal             string         `json:"goal,omitempty"`
+	UserDefinedGoal  string         `json:"user_defined_goal,omitempty"`
+	DetectorCategory string         `json:"detector_category,omitempty"`
+	Severity         string         `json:"severity,omitempty"`
+	Properties       map[string]any `json:"properties,omitempty"`
+	Active           bool           `json:"active,omitempty"`
+	CreatedAt        string         `json:"created_at,omitempty"`
 }
 
 // CustomPromptList is the paginated list of prompts.
