@@ -76,8 +76,7 @@ func TestProfiles_List(t *testing.T) {
 			t.Errorf("method = %s", r.Method)
 		}
 		_ = json.NewEncoder(w).Encode(SecurityProfileListResponse{
-			Items:      []SecurityProfile{{ProfileID: "p-1"}},
-			TotalCount: 1,
+			Items: []SecurityProfile{{ProfileID: "p-1"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -197,7 +196,7 @@ func TestCustomerApps_CRUD(t *testing.T) {
 func TestDlpProfiles_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(DlpProfileListResponse{
-			Items: []DlpProfile{{ProfileID: "dlp-1"}}, TotalCount: 1,
+			Items: []DlpProfile{{ID: "dlp-1"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -216,7 +215,7 @@ func TestDlpProfiles_List(t *testing.T) {
 func TestDeploymentProfiles_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(DeploymentProfileListResponse{
-			Items: []DeploymentProfile{{ProfileID: "dp-1"}}, TotalCount: 1,
+			Items: []DeploymentProfile{{DpName: "dp-1"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -338,7 +337,7 @@ func TestTopics_List(t *testing.T) {
 			t.Errorf("method = %s", r.Method)
 		}
 		_ = json.NewEncoder(w).Encode(CustomTopicListResponse{
-			Items: []CustomTopic{{TopicID: "t-1", TopicName: "test"}}, TotalCount: 1,
+			Items: []CustomTopic{{TopicID: "t-1", TopicName: "test"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -420,7 +419,7 @@ func TestApiKeys_List(t *testing.T) {
 			t.Errorf("method = %s", r.Method)
 		}
 		_ = json.NewEncoder(w).Encode(ApiKeyListResponse{
-			Items: []ApiKey{{ApiKeyID: "k-1"}}, TotalCount: 1,
+			Items: []ApiKey{{ApiKeyID: "k-1"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -488,7 +487,7 @@ func TestCustomerApps_List(t *testing.T) {
 			t.Errorf("method = %s", r.Method)
 		}
 		_ = json.NewEncoder(w).Encode(CustomerAppListResponse{
-			Items: []CustomerApp{{AppID: "a-1"}}, TotalCount: 1,
+			Items: []CustomerApp{{AppID: "a-1"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -549,7 +548,7 @@ func TestDlpProfiles_Get(t *testing.T) {
 		if r.Method != "GET" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(DlpProfile{ProfileID: "dlp-1", ProfileName: "test-dlp"})
+		_ = json.NewEncoder(w).Encode(DlpProfile{ID: "dlp-1", Name: "test-dlp"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -559,8 +558,8 @@ func TestDlpProfiles_Get(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if p.ProfileID != "dlp-1" {
-		t.Errorf("ProfileID = %q", p.ProfileID)
+	if p.ID != "dlp-1" {
+		t.Errorf("ID = %q", p.ID)
 	}
 }
 
@@ -569,7 +568,7 @@ func TestDeploymentProfiles_Get(t *testing.T) {
 		if r.Method != "GET" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(DeploymentProfile{ProfileID: "dp-1", ProfileName: "test-dp"})
+		_ = json.NewEncoder(w).Encode(DeploymentProfile{DpName: "dp-1", AuthCode: "test-dp"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -579,8 +578,8 @@ func TestDeploymentProfiles_Get(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if p.ProfileID != "dp-1" {
-		t.Errorf("ProfileID = %q", p.ProfileID)
+	if p.DpName != "dp-1" {
+		t.Errorf("DpName = %q", p.DpName)
 	}
 }
 

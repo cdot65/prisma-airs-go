@@ -20,8 +20,8 @@ type SecurityProfile struct {
 
 // SecurityProfileListResponse is the list response for profiles.
 type SecurityProfileListResponse struct {
-	Items      []SecurityProfile `json:"items"`
-	TotalCount int               `json:"total_count,omitempty"`
+	Items      []SecurityProfile `json:"ai_profiles"`
+	NextOffset int               `json:"next_offset,omitempty"`
 }
 
 // CreateProfileRequest is the request to create a profile.
@@ -53,8 +53,8 @@ type CustomTopic struct {
 
 // CustomTopicListResponse is the list response for topics.
 type CustomTopicListResponse struct {
-	Items      []CustomTopic `json:"items"`
-	TotalCount int           `json:"total_count,omitempty"`
+	Items      []CustomTopic `json:"custom_topics"`
+	NextOffset int           `json:"next_offset,omitempty"`
 }
 
 // CreateTopicRequest is the request to create a topic.
@@ -88,8 +88,8 @@ type ApiKey struct {
 
 // ApiKeyListResponse is the list response for API keys.
 type ApiKeyListResponse struct {
-	Items      []ApiKey `json:"items"`
-	TotalCount int      `json:"total_count,omitempty"`
+	Items      []ApiKey `json:"api_keys"`
+	NextOffset int      `json:"next_offset,omitempty"`
 }
 
 // CreateApiKeyRequest is the request to create an API key.
@@ -119,8 +119,8 @@ type CustomerApp struct {
 
 // CustomerAppListResponse is the list response for customer apps.
 type CustomerAppListResponse struct {
-	Items      []CustomerApp `json:"items"`
-	TotalCount int           `json:"total_count,omitempty"`
+	Items      []CustomerApp `json:"customer_apps"`
+	NextOffset int           `json:"next_offset,omitempty"`
 }
 
 // CreateAppRequest is the request to create a customer app.
@@ -142,28 +142,37 @@ type DeleteAppResponse struct {
 
 // DlpProfile represents a DLP data profile.
 type DlpProfile struct {
-	ProfileID   string         `json:"profile_id,omitempty"`
-	ProfileName string         `json:"profile_name,omitempty"`
-	Details     map[string]any `json:"details,omitempty"`
+	ID           string         `json:"id,omitempty"`
+	Name         string         `json:"name,omitempty"`
+	Description  string         `json:"description,omitempty"`
+	FileBased    string         `json:"file-based,omitempty"`
+	NonFileBased string         `json:"non-file-based,omitempty"`
+	LogSeverity  string         `json:"log-severity,omitempty"`
+	Rule1        map[string]any `json:"rule1,omitempty"`
+	Rule2        map[string]any `json:"rule2,omitempty"`
+	UUID         string         `json:"uuid,omitempty"`
+	Version      string         `json:"version,omitempty"`
 }
 
 // DlpProfileListResponse is the list response for DLP profiles.
 type DlpProfileListResponse struct {
-	Items      []DlpProfile `json:"items"`
-	TotalCount int          `json:"total_count,omitempty"`
+	Items []DlpProfile `json:"dlp_profiles"`
 }
 
 // DeploymentProfile represents a deployment profile.
 type DeploymentProfile struct {
-	ProfileID   string         `json:"profile_id,omitempty"`
-	ProfileName string         `json:"profile_name,omitempty"`
-	Details     map[string]any `json:"details,omitempty"`
+	AuthCode             string `json:"auth_code,omitempty"`
+	DpName               string `json:"dp_name,omitempty"`
+	ExpirationDate       string `json:"expiration_date,omitempty"`
+	MonthlyBillionTokens int    `json:"monthly_billion_tokens,omitempty"`
+	Status               string `json:"status,omitempty"`
+	TsgID                string `json:"tsg_id,omitempty"`
 }
 
 // DeploymentProfileListResponse is the list response for deployment profiles.
 type DeploymentProfileListResponse struct {
-	Items      []DeploymentProfile `json:"items"`
-	TotalCount int                 `json:"total_count,omitempty"`
+	Items  []DeploymentProfile `json:"deployment_profiles"`
+	Status string              `json:"status,omitempty"`
 }
 
 // ScanLog represents a scan activity log entry.
@@ -181,7 +190,7 @@ type ScanLogListOpts struct {
 
 // ScanLogListResponse is the list response for scan logs.
 type ScanLogListResponse struct {
-	Items      []ScanLog `json:"items"`
+	Items      []ScanLog `json:"scan_logs"`
 	TotalCount int       `json:"total_count,omitempty"`
 }
 
