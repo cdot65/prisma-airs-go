@@ -38,4 +38,21 @@ jobs:
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
           echo "Release tag: $TAG"
-          echo "Go modules are published automatically via proxy.golang.org"
+
+      - name: Publish to Go module proxy
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          echo "Requesting proxy.golang.org to index $TAG..."
+          RESP=$(curl -s -w "\n%{http_code}" "https://proxy.golang.org/github.com/cdot65/prisma-airs-go/@v/${TAG}.info")
+          HTTP_CODE=$(echo "$RESP" | tail -1)
+          BODY=$(echo "$RESP" | head -n -1)
+          echo "Response ($HTTP_CODE): $BODY"
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "Successfully published to proxy.golang.org"
+          else
+            echo "Proxy indexing returned $HTTP_CODE — may take a few minutes to propagate"
+          fi
+
+          echo "Requesting pkg.go.dev to index..."
+          curl -s "https://pkg.go.dev/github.com/cdot65/prisma-airs-go@${TAG}" > /dev/null || true
+          echo "Module will be available at: https://pkg.go.dev/github.com/cdot65/prisma-airs-go@${TAG}"
