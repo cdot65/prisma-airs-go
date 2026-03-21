@@ -41,7 +41,7 @@ type OAuthClient struct {
 	clientSecret  string
 	tsgID         string
 	tokenEndpoint string
-	tokenBuffer time.Duration
+	tokenBuffer   time.Duration
 
 	mu          sync.Mutex
 	accessToken string
@@ -66,7 +66,7 @@ func NewOAuthClient(opts OAuthClientOpts) *OAuthClient {
 		clientSecret:  opts.ClientSecret,
 		tsgID:         opts.TsgID,
 		tokenEndpoint: endpoint,
-		tokenBuffer: time.Duration(bufferMs) * time.Millisecond,
+		tokenBuffer:   time.Duration(bufferMs) * time.Millisecond,
 	}
 }
 
