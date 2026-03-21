@@ -87,6 +87,66 @@ func TestScanner_AsyncScan_TooManyObjects(t *testing.T) {
 	}
 }
 
+func TestScanner_AsyncScan_WireFormat(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body []map[string]any
+		_ = json.NewDecoder(r.Body).Decode(&body)
+
+		if len(body) != 1 {
+			t.Fatalf("expected 1 object, got %d", len(body))
+		}
+		obj := body[0]
+
+		// Verify req_id exists
+		if _, ok := obj["req_id"]; !ok {
+			t.Error("missing req_id in async scan object")
+		}
+
+		// Verify scan_req wrapper exists
+		scanReq, ok := obj["scan_req"]
+		if !ok {
+			t.Error("missing scan_req wrapper in async scan object")
+		}
+
+		// Verify scan_req contains ai_profile and contents
+		if sr, ok := scanReq.(map[string]any); ok {
+			if sr["ai_profile"] == nil {
+				t.Error("missing ai_profile in scan_req")
+			}
+			if sr["contents"] == nil {
+				t.Error("missing contents in scan_req")
+			}
+		}
+
+		w.WriteHeader(200)
+		_ = json.NewEncoder(w).Encode(AsyncScanResponse{
+			ScanID: "async-123",
+		})
+	}))
+	defer server.Close()
+
+	cfg := aisec.NewConfig(aisec.WithAPIKey("k"), aisec.WithEndpoint(server.URL))
+	scanner := NewScanner(cfg)
+
+	objects := []AsyncScanObject{
+		{
+			ReqID: 1,
+			ScanReq: ScanRequest{
+				AiProfile: AiProfile{ProfileName: "test"},
+				Contents:  []ContentInner{{Prompt: "hello"}},
+			},
+		},
+	}
+
+	resp, err := scanner.AsyncScan(context.Background(), objects)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resp.ScanID != "async-123" {
+		t.Errorf("ScanID = %q", resp.ScanID)
+	}
+}
+
 func TestScanner_QueryByScanIDs_Valid(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ids := r.URL.Query().Get("scan_ids")
@@ -205,5 +265,232 @@ func TestModels_JSONSerialization(t *testing.T) {
 	}
 	if decoded.ScanID != "scan-1" || decoded.Category != "benign" {
 		t.Errorf("decoded = %+v", decoded)
+	}
+}
+
+func TestAsyncScanObject_JSONFormat(t *testing.T) {
+	obj := AsyncScanObject{
+		ReqID: 42,
+		ScanReq: ScanRequest{
+			AiProfile: AiProfile{ProfileName: "test-profile"},
+			Contents:  []ContentInner{{Prompt: "hello"}},
+		},
+	}
+	data, err := json.Marshal(obj)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded["req_id"] == nil {
+		t.Error("missing req_id in JSON")
+	}
+	if decoded["scan_req"] == nil {
+		t.Error("missing scan_req in JSON")
+	}
+	// Should NOT have ai_profile at top level
+	if decoded["ai_profile"] != nil {
+		t.Error("ai_profile should be inside scan_req, not at top level")
+	}
+}
+
+func TestContentError_JSONFormat(t *testing.T) {
+	ce := ContentError{
+		ContentType: ContentErrorTypePrompt,
+		Feature:     DetectionServiceDLP,
+		Status:      ErrorStatusTimeout,
+	}
+	data, err := json.Marshal(ce)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded["content_type"] != "prompt" {
+		t.Errorf("content_type = %v", decoded["content_type"])
+	}
+	if decoded["feature"] != "dlp" {
+		t.Errorf("feature = %v", decoded["feature"])
+	}
+	if decoded["status"] != "timeout" {
+		t.Errorf("status = %v", decoded["status"])
+	}
+}
+
+func TestPatternDetection_JSONFormat(t *testing.T) {
+	pd := PatternDetection{
+		Pattern:   "SSN",
+		Locations: [][]int{{0, 11}, {20, 31}},
+	}
+	data, err := json.Marshal(pd)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded["pattern"] != "SSN" {
+		t.Errorf("pattern = %v", decoded["pattern"])
+	}
+	locs, ok := decoded["locations"].([]any)
+	if !ok || len(locs) != 2 {
+		t.Fatalf("locations = %v", decoded["locations"])
+	}
+	// Verify first location pair
+	pair, ok := locs[0].([]any)
+	if !ok || len(pair) != 2 {
+		t.Errorf("first location pair = %v", locs[0])
+	}
+}
+
+func TestIODetected_JSONFormat(t *testing.T) {
+	io := IODetected{
+		DetectionEntries: []ToolDetectionEntry{
+			{
+				ToolInvoked: "get_file",
+				Detections:  &ToolDetectionFlags{DLP: true, Injection: true},
+				Threats:     []string{"credential leakage"},
+			},
+		},
+	}
+	data, err := json.Marshal(io)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	entries, ok := decoded["detection_entries"].([]any)
+	if !ok || len(entries) != 1 {
+		t.Fatalf("detection_entries = %v", decoded["detection_entries"])
+	}
+
+	// Should NOT have flat boolean fields
+	if decoded["url_cats"] != nil || decoded["dlp"] != nil {
+		t.Error("IODetected should not have flat boolean fields")
+	}
+}
+
+func TestScanSummary_JSONFormat(t *testing.T) {
+	ss := ScanSummary{
+		Detections: &ToolDetectionFlags{DLP: true, MaliciousCode: true},
+		Threats:    []string{"credential leakage", "context poisoning"},
+	}
+	data, err := json.Marshal(ss)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded["detections"] == nil {
+		t.Error("missing detections")
+	}
+	threats, ok := decoded["threats"].([]any)
+	if !ok || len(threats) != 2 {
+		t.Fatalf("threats = %v", decoded["threats"])
+	}
+	// Should NOT have verdict/action
+	if decoded["verdict"] != nil || decoded["action"] != nil {
+		t.Error("ScanSummary should not have verdict/action fields")
+	}
+}
+
+func TestDetectionServiceResult_JSONFormat(t *testing.T) {
+	dsr := DetectionServiceResult{
+		DataType:         "prompt",
+		DetectionService: "dlp",
+		Verdict:          "malicious",
+		Action:           "block",
+		Metadata: &DSResultMetadata{
+			Ecosystem: "mcp",
+			Direction: "input",
+		},
+		ResultDetail: &DSDetailResult{
+			DlpReport: &DlpReport{
+				DlpReportID:    "rpt-1",
+				DlpProfileName: "default",
+			},
+		},
+	}
+	data, err := json.Marshal(dsr)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded map[string]any
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded["data_type"] != "prompt" {
+		t.Errorf("data_type = %v", decoded["data_type"])
+	}
+	if decoded["detection_service"] != "dlp" {
+		t.Errorf("detection_service = %v", decoded["detection_service"])
+	}
+	if decoded["metadata"] == nil {
+		t.Error("missing metadata")
+	}
+	if decoded["result_detail"] == nil {
+		t.Error("missing result_detail")
+	}
+}
+
+func TestToolDetected_FullRoundTrip(t *testing.T) {
+	td := ToolDetected{
+		Verdict: "malicious",
+		Metadata: &ToolEventMetadata{
+			Ecosystem:   "mcp",
+			Method:      "tools/call",
+			ServerName:  "test-server",
+			ToolInvoked: "get_file",
+		},
+		Summary: &ScanSummary{
+			Detections: &ToolDetectionFlags{DLP: true},
+			Threats:    []string{"data leak"},
+		},
+		InputDetected: &IODetected{
+			DetectionEntries: []ToolDetectionEntry{
+				{ToolInvoked: "get_file", Threats: []string{"injection"}},
+			},
+		},
+	}
+
+	data, err := json.Marshal(td)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded ToolDetected
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded.Verdict != "malicious" {
+		t.Errorf("Verdict = %q", decoded.Verdict)
+	}
+	if decoded.Summary == nil || decoded.Summary.Detections == nil || !decoded.Summary.Detections.DLP {
+		t.Error("Summary.Detections.DLP should be true")
+	}
+	if decoded.InputDetected == nil || len(decoded.InputDetected.DetectionEntries) != 1 {
+		t.Error("InputDetected should have 1 entry")
 	}
 }

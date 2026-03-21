@@ -111,16 +111,91 @@ type MaskedData struct {
 }
 
 // PatternDetection represents a detected pattern in content.
+// Locations is an array of [start, end] offset pairs.
 type PatternDetection struct {
-	Pattern string `json:"pattern,omitempty"`
-	Start   int    `json:"start,omitempty"`
-	End     int    `json:"end,omitempty"`
+	Pattern   string  `json:"pattern,omitempty"`
+	Locations [][]int `json:"locations,omitempty"`
 }
 
-// ContentError represents an error that occurred during content scanning.
+// ContentErrorType is the type of content that encountered an error.
+type ContentErrorType string
+
+const (
+	ContentErrorTypePrompt   ContentErrorType = "prompt"
+	ContentErrorTypeResponse ContentErrorType = "response"
+)
+
+// DetectionServiceName identifies a detection service.
+type DetectionServiceName string
+
+const (
+	DetectionServiceDLP            DetectionServiceName = "dlp"
+	DetectionServiceInjection      DetectionServiceName = "injection"
+	DetectionServiceURLCats        DetectionServiceName = "url_cats"
+	DetectionServiceToxicContent   DetectionServiceName = "toxic_content"
+	DetectionServiceMaliciousCode  DetectionServiceName = "malicious_code"
+	DetectionServiceAgent          DetectionServiceName = "agent"
+	DetectionServiceTopicViolation DetectionServiceName = "topic_violation"
+	DetectionServiceDBSecurity     DetectionServiceName = "db_security"
+	DetectionServiceUngrounded     DetectionServiceName = "ungrounded"
+)
+
+// ErrorStatus indicates error or timeout.
+type ErrorStatus string
+
+const (
+	ErrorStatusError   ErrorStatus = "error"
+	ErrorStatusTimeout ErrorStatus = "timeout"
+)
+
+// ContentError represents an error during content scanning.
 type ContentError struct {
-	Type   string `json:"type,omitempty"`
-	Status string `json:"status,omitempty"`
+	ContentType ContentErrorType     `json:"content_type,omitempty"`
+	Feature     DetectionServiceName `json:"feature,omitempty"`
+	Status      ErrorStatus          `json:"status,omitempty"`
+}
+
+// ToolDetectionFlags holds boolean detection flags per service.
+type ToolDetectionFlags struct {
+	Injection      bool `json:"injection,omitempty"`
+	URLCats        bool `json:"url_cats,omitempty"`
+	DLP            bool `json:"dlp,omitempty"`
+	DBSecurity     bool `json:"db_security,omitempty"`
+	ToxicContent   bool `json:"toxic_content,omitempty"`
+	MaliciousCode  bool `json:"malicious_code,omitempty"`
+	Agent          bool `json:"agent,omitempty"`
+	TopicViolation bool `json:"topic_violation,omitempty"`
+}
+
+// TopicGuardRails holds topic guardrail details.
+type TopicGuardRails struct {
+	AllowedTopics []string `json:"allowed_topics,omitempty"`
+	BlockedTopics []string `json:"blocked_topics,omitempty"`
+}
+
+// ToolDetectionDetails holds additional detection details.
+type ToolDetectionDetails struct {
+	TopicGuardrailsDetails *TopicGuardRails `json:"topic_guardrails_details,omitempty"`
+}
+
+// ToolDetectionEntry is a single detection entry for tool I/O.
+type ToolDetectionEntry struct {
+	ToolInvoked string                `json:"tool_invoked,omitempty"`
+	Detections  *ToolDetectionFlags   `json:"detections,omitempty"`
+	Threats     []string              `json:"threats,omitempty"`
+	Details     *ToolDetectionDetails `json:"details,omitempty"`
+	MaskedData  *MaskedData           `json:"masked_data,omitempty"`
+}
+
+// IODetected holds I/O detection results as an array of detection entries.
+type IODetected struct {
+	DetectionEntries []ToolDetectionEntry `json:"detection_entries,omitempty"`
+}
+
+// ScanSummary holds aggregated detection flags and threats.
+type ScanSummary struct {
+	Detections *ToolDetectionFlags `json:"detections,omitempty"`
+	Threats    []string            `json:"threats,omitempty"`
 }
 
 // ToolDetected holds detection results for tool/agent interactions.
@@ -132,25 +207,11 @@ type ToolDetected struct {
 	OutputDetected *IODetected        `json:"output_detected,omitempty"`
 }
 
-// ScanSummary holds verdict and action.
-type ScanSummary struct {
-	Verdict string `json:"verdict,omitempty"`
-	Action  string `json:"action,omitempty"`
-}
-
-// IODetected holds I/O detection flags.
-type IODetected struct {
-	URLCats       *bool `json:"url_cats,omitempty"`
-	DLP           *bool `json:"dlp,omitempty"`
-	Injection     *bool `json:"injection,omitempty"`
-	ToxicContent  *bool `json:"toxic_content,omitempty"`
-	MaliciousCode *bool `json:"malicious_code,omitempty"`
-}
-
 // AsyncScanObject is a batch item for async scanning.
+// Each object wraps a ScanRequest with a unique request ID.
 type AsyncScanObject struct {
-	AiProfile AiProfile      `json:"ai_profile"`
-	Contents  []ContentInner `json:"contents"`
+	ReqID   uint32      `json:"req_id"`
+	ScanReq ScanRequest `json:"scan_req"`
 }
 
 // AsyncScanResponse is the async scan API response.
@@ -170,12 +231,106 @@ type ScanIDResult struct {
 	Result *ScanResponse `json:"result,omitempty"`
 }
 
+// DSResultMetadata holds metadata for a detection service result.
+type DSResultMetadata struct {
+	Ecosystem   string `json:"ecosystem,omitempty"`
+	Method      string `json:"method,omitempty"`
+	ServerName  string `json:"server_name,omitempty"`
+	ToolInvoked string `json:"tool_invoked,omitempty"`
+	Direction   string `json:"direction,omitempty"`
+}
+
+// UrlfEntry is a URL filter report entry.
+type UrlfEntry struct {
+	URL       string `json:"url,omitempty"`
+	RiskLevel string `json:"risk_level,omitempty"`
+	Action    string `json:"action,omitempty"`
+}
+
+// DlpReport holds DLP detection report details.
+type DlpReport struct {
+	DlpReportID       string `json:"dlp_report_id,omitempty"`
+	DlpProfileName    string `json:"dlp_profile_name,omitempty"`
+	DlpProfileID      string `json:"dlp_profile_id,omitempty"`
+	DlpProfileVersion int    `json:"dlp_profile_version,omitempty"`
+}
+
+// DbsEntry is a database security report entry.
+type DbsEntry struct {
+	SubType string `json:"sub_type,omitempty"`
+	Verdict string `json:"verdict,omitempty"`
+	Action  string `json:"action,omitempty"`
+}
+
+// TcReport holds toxic content report details.
+type TcReport struct {
+	Confidence string `json:"confidence,omitempty"`
+	Verdict    string `json:"verdict,omitempty"`
+}
+
+// McEntry is a malicious code analysis entry.
+type McEntry struct {
+	CodeType string `json:"code_type,omitempty"`
+	Verdict  string `json:"verdict,omitempty"`
+	Action   string `json:"action,omitempty"`
+}
+
+// McReport holds malicious code report details.
+type McReport struct {
+	AllCodeBlocks       []string       `json:"all_code_blocks,omitempty"`
+	CodeAnalysisByType  []McEntry      `json:"code_analysis_by_type,omitempty"`
+	Verdict             string         `json:"verdict,omitempty"`
+	MalwareScriptReport map[string]any `json:"malware_script_report,omitempty"`
+}
+
+// AgentEntry is an agent detection pattern entry.
+type AgentEntry struct {
+	Pattern string `json:"pattern,omitempty"`
+	Verdict string `json:"verdict,omitempty"`
+}
+
+// AgentReport holds agent detection report details.
+type AgentReport struct {
+	ModelVerdict   string       `json:"model_verdict,omitempty"`
+	AgentFramework string       `json:"agent_framework,omitempty"`
+	AgentPatterns  []AgentEntry `json:"agent_patterns,omitempty"`
+}
+
+// TgReport holds topic guardrails report details.
+type TgReport struct {
+	AllowedTopicList string   `json:"allowed_topic_list,omitempty"`
+	BlockedTopicList string   `json:"blocked_topic_list,omitempty"`
+	AllowedTopics    []string `json:"allowedTopics,omitempty"`
+	BlockedTopics    []string `json:"blockedTopics,omitempty"`
+}
+
+// CgReport holds contextual grounding report details.
+type CgReport struct {
+	Status      string `json:"status,omitempty"`
+	Explanation string `json:"explanation,omitempty"`
+	Category    string `json:"category,omitempty"`
+}
+
+// DSDetailResult holds detailed results from each detection service.
+type DSDetailResult struct {
+	UrlfReport            []UrlfEntry  `json:"urlf_report,omitempty"`
+	DlpReport             *DlpReport   `json:"dlp_report,omitempty"`
+	DbsReport             []DbsEntry   `json:"dbs_report,omitempty"`
+	TcReport              *TcReport    `json:"tc_report,omitempty"`
+	McReport              *McReport    `json:"mc_report,omitempty"`
+	AgentReport           *AgentReport `json:"agent_report,omitempty"`
+	TopicGuardrailsReport *TgReport    `json:"topic_guardrails_report,omitempty"`
+	CgReport              *CgReport    `json:"cg_report,omitempty"`
+}
+
 // DetectionServiceResult holds results from a single detection service.
 type DetectionServiceResult struct {
-	ServiceName string         `json:"service_name,omitempty"`
-	Verdict     string         `json:"verdict,omitempty"`
-	Action      string         `json:"action,omitempty"`
-	Details     map[string]any `json:"details,omitempty"`
+	DataType         string            `json:"data_type,omitempty"`
+	DetectionService string            `json:"detection_service,omitempty"`
+	Verdict          string            `json:"verdict,omitempty"`
+	Action           string            `json:"action,omitempty"`
+	Metadata         *DSResultMetadata `json:"metadata,omitempty"`
+	ResultDetail     *DSDetailResult   `json:"result_detail,omitempty"`
 }
 
 // ThreatScanReport is a detailed threat scan report.
@@ -202,14 +357,4 @@ const (
 	CategoryBenign    = "benign"
 	CategoryMalicious = "malicious"
 	CategoryUnknown   = "unknown"
-
-	DetectionServiceDLP            = "dlp"
-	DetectionServiceInjection      = "injection"
-	DetectionServiceURLCats        = "url_cats"
-	DetectionServiceToxicContent   = "toxic_content"
-	DetectionServiceMaliciousCode  = "malicious_code"
-	DetectionServiceAgent          = "agent"
-	DetectionServiceTopicViolation = "topic_violation"
-	DetectionServiceDBSecurity     = "db_security"
-	DetectionServiceUngrounded     = "ungrounded"
 )
