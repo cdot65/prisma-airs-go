@@ -433,6 +433,12 @@ type ScanLogListResponse struct {
 	Revision               int32                   `json:"revision,omitempty"`
 }
 
+// OAuthTokenRequest is the request body for getting an OAuth token via the management API.
+type OAuthTokenRequest struct {
+	ClientID    string `json:"client_id"`
+	CustomerApp string `json:"customer_app,omitempty"`
+}
+
 // OAuthToken represents an OAuth token from the management API.
 type OAuthToken struct {
 	AccessToken string `json:"access_token,omitempty"`

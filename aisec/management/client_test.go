@@ -433,7 +433,7 @@ func TestOAuth_GetToken(t *testing.T) {
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
-	token, err := client.OAuth.GetToken(context.Background())
+	token, err := client.OAuth.GetToken(context.Background(), OAuthTokenRequest{ClientID: "test-client", CustomerApp: "test-app"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -488,10 +488,12 @@ func TestProfiles_GetByName(t *testing.T) {
 		if r.Method != "GET" {
 			t.Errorf("method = %s", r.Method)
 		}
-		if r.URL.Query().Get("profile_name") != "my-profile" {
-			t.Errorf("profile_name = %q", r.URL.Query().Get("profile_name"))
-		}
-		_ = json.NewEncoder(w).Encode(SecurityProfile{ProfileID: "p-1", ProfileName: "my-profile"})
+		_ = json.NewEncoder(w).Encode(SecurityProfileListResponse{
+			Items: []SecurityProfile{
+				{ProfileID: "p-1", ProfileName: "my-profile"},
+				{ProfileID: "p-2", ProfileName: "other"},
+			},
+		})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -553,7 +555,7 @@ func TestTopics_Delete(t *testing.T) {
 		if r.Method != "DELETE" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(DeleteTopicResponse{Message: "deleted"})
+		_ = json.NewEncoder(w).Encode("deleted")
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -573,13 +575,13 @@ func TestTopics_ForceDelete(t *testing.T) {
 		if r.Method != "DELETE" {
 			t.Errorf("method = %s", r.Method)
 		}
-		if !strings.Contains(r.URL.Path, "/topic/t-1/force") {
-			t.Errorf("path = %q, want /topic/t-1/force", r.URL.Path)
+		if !strings.Contains(r.URL.Path, "/topic/force/t-1") {
+			t.Errorf("path = %q, want /topic/force/t-1", r.URL.Path)
 		}
 		if r.URL.Query().Get("updated_by") != "admin@example.com" {
 			t.Errorf("updated_by = %q", r.URL.Query().Get("updated_by"))
 		}
-		_ = json.NewEncoder(w).Encode(DeleteTopicResponse{Message: "force deleted"})
+		_ = json.NewEncoder(w).Encode("force deleted")
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -689,7 +691,12 @@ func TestDlpProfiles_Get(t *testing.T) {
 		if r.Method != "GET" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(DlpProfile{ID: "dlp-1", Name: "test-dlp"})
+		_ = json.NewEncoder(w).Encode(DlpProfileListResponse{
+			Items: []DlpProfile{
+				{ID: "dlp-1", Name: "test-dlp"},
+				{ID: "dlp-2", Name: "other"},
+			},
+		})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()

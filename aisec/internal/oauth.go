@@ -168,6 +168,11 @@ func (c *OAuthClient) TokenEndpoint() string {
 	return c.tokenEndpoint
 }
 
+// ClientID returns the configured OAuth client ID.
+func (c *OAuthClient) ClientID() string {
+	return c.clientID
+}
+
 type oauthTokenResponse struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
