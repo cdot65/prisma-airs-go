@@ -538,7 +538,7 @@ func TestDlpReport_JSONFormat(t *testing.T) {
 		DataPatternRule1Verdict: "hit",
 		DataPatternRule2Verdict: "miss",
 		DataPatternDetectionOffsets: []DlpPatternDetections{
-			{Pattern: "SSN", DetectionOffsets: [][]int{{0, 11}}},
+			{DataPatternID: "dp-1", Name: "SSN", HighConfidenceDetections: [][]int{{0, 11}}},
 		},
 	}
 	data, err := json.Marshal(report)
@@ -682,5 +682,131 @@ func TestToolDetected_FullRoundTrip(t *testing.T) {
 	}
 	if decoded.InputDetected == nil || len(decoded.InputDetected.DetectionEntries) != 1 {
 		t.Error("InputDetected should have 1 entry")
+	}
+}
+
+func TestToxicContentDetails_JSON(t *testing.T) {
+	j := `{"toxic_categories":["hate","violence"]}`
+	var tc ToxicContentDetails
+	if err := json.Unmarshal([]byte(j), &tc); err != nil {
+		t.Fatal(err)
+	}
+	if len(tc.ToxicCategories) != 2 || tc.ToxicCategories[0] != "hate" {
+		t.Errorf("ToxicCategories = %v", tc.ToxicCategories)
+	}
+}
+
+func TestDetectionDetails_WithToxicContent(t *testing.T) {
+	j := `{"topic_guardrails_details":{"allowed_topics":["math"]},"toxic_content_details":{"toxic_categories":["hate"]}}`
+	var dd DetectionDetails
+	if err := json.Unmarshal([]byte(j), &dd); err != nil {
+		t.Fatal(err)
+	}
+	if dd.ToxicContentDetails == nil || len(dd.ToxicContentDetails.ToxicCategories) != 1 {
+		t.Error("ToxicContentDetails should have 1 category")
+	}
+}
+
+func TestTcReport_WithToxicCategories(t *testing.T) {
+	j := `{"confidence":"high","verdict":"malicious","toxic_categories":["hate","bias"]}`
+	var tc TcReport
+	if err := json.Unmarshal([]byte(j), &tc); err != nil {
+		t.Fatal(err)
+	}
+	if len(tc.ToxicCategories) != 2 {
+		t.Errorf("ToxicCategories = %v", tc.ToxicCategories)
+	}
+}
+
+func TestDlpPatternDetections_SpecStructure(t *testing.T) {
+	j := `{"data_pattern_id":"dp-123","version":2,"name":"SSN","high_confidence_detections":[[0,9]],"medium_confidence_detections":[[10,19]],"low_confidence_detections":[]}`
+	var dp DlpPatternDetections
+	if err := json.Unmarshal([]byte(j), &dp); err != nil {
+		t.Fatal(err)
+	}
+	if dp.DataPatternID != "dp-123" {
+		t.Errorf("DataPatternID = %q", dp.DataPatternID)
+	}
+	if dp.Version != 2 {
+		t.Errorf("Version = %d", dp.Version)
+	}
+	if dp.Name != "SSN" {
+		t.Errorf("Name = %q", dp.Name)
+	}
+	if len(dp.HighConfidenceDetections) != 1 {
+		t.Errorf("HighConfidenceDetections len = %d", len(dp.HighConfidenceDetections))
+	}
+}
+
+func TestPiReport_JSON(t *testing.T) {
+	j := `{"verdict":"malicious"}`
+	var pi PiReport
+	if err := json.Unmarshal([]byte(j), &pi); err != nil {
+		t.Fatal(err)
+	}
+	if pi.Verdict != "malicious" {
+		t.Errorf("Verdict = %q", pi.Verdict)
+	}
+}
+
+func TestDlpSnippetMeta_JSON(t *testing.T) {
+	j := `{"data_pattern":"SSN","confidence_level":"high","data_pattern_type":"regex","occurrence":3}`
+	var m DlpSnippetMeta
+	if err := json.Unmarshal([]byte(j), &m); err != nil {
+		t.Fatal(err)
+	}
+	if m.DataPattern != "SSN" || m.ConfidenceLevel != "high" || m.Occurrence != 3 {
+		t.Errorf("got %+v", m)
+	}
+}
+
+func TestDlpSnippetObject_JSON(t *testing.T) {
+	j := `{"meta":{"data_pattern":"SSN","confidence_level":"high","occurrence":1},"snippets":["123-45-6789"]}`
+	var s DlpSnippetObject
+	if err := json.Unmarshal([]byte(j), &s); err != nil {
+		t.Fatal(err)
+	}
+	if s.Meta == nil || s.Meta.DataPattern != "SSN" {
+		t.Error("Meta.DataPattern should be SSN")
+	}
+	if len(s.Snippets) != 1 {
+		t.Errorf("Snippets len = %d", len(s.Snippets))
+	}
+}
+
+func TestDSDetailResult_AllFields(t *testing.T) {
+	j := `{
+		"urlf_report":[],
+		"dlp_report":{"dlp_report_id":"r1"},
+		"dlp_snippets":{"meta":{"data_pattern":"SSN","confidence_level":"high","occurrence":1},"snippets":["xxx"]},
+		"dbs_report":[],
+		"dbs_snippets":["snippet1"],
+		"tc_report":{"confidence":"high","verdict":"benign"},
+		"tc_snippets":["toxic snippet"],
+		"mc_report":{"verdict":"benign"},
+		"agent_report":{"model_verdict":"benign"},
+		"topic_guardrails_report":{},
+		"cg_report":{},
+		"pi_report":{"verdict":"benign"},
+		"pi_snippets":["injection attempt"]
+	}`
+	var ds DSDetailResult
+	if err := json.Unmarshal([]byte(j), &ds); err != nil {
+		t.Fatal(err)
+	}
+	if ds.DlpSnippets == nil || ds.DlpSnippets.Meta.DataPattern != "SSN" {
+		t.Error("DlpSnippets should have SSN pattern")
+	}
+	if len(ds.DbsSnippets) != 1 {
+		t.Errorf("DbsSnippets len = %d", len(ds.DbsSnippets))
+	}
+	if len(ds.TcSnippets) != 1 {
+		t.Errorf("TcSnippets len = %d", len(ds.TcSnippets))
+	}
+	if ds.PiReport == nil || ds.PiReport.Verdict != "benign" {
+		t.Error("PiReport should be benign")
+	}
+	if len(ds.PiSnippets) != 1 {
+		t.Errorf("PiSnippets len = %d", len(ds.PiSnippets))
 	}
 }

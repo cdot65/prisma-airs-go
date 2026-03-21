@@ -173,9 +173,15 @@ type TopicGuardRails struct {
 	BlockedTopics []string `json:"blocked_topics,omitempty"`
 }
 
+// ToxicContentDetails holds toxic content detection details.
+type ToxicContentDetails struct {
+	ToxicCategories []string `json:"toxic_categories,omitempty"`
+}
+
 // DetectionDetails holds detection details for prompt/response.
 type DetectionDetails struct {
-	TopicGuardrailsDetails *TopicGuardRails `json:"topic_guardrails_details,omitempty"`
+	TopicGuardrailsDetails *TopicGuardRails     `json:"topic_guardrails_details,omitempty"`
+	ToxicContentDetails    *ToxicContentDetails `json:"toxic_content_details,omitempty"`
 }
 
 // ToolDetectionDetails holds additional detection details.
@@ -253,10 +259,14 @@ type UrlfEntry struct {
 	Categories []string `json:"categories,omitempty"`
 }
 
-// DlpPatternDetections holds pattern detection offsets for DLP.
+// DlpPatternDetections holds per-pattern detection offsets for DLP.
 type DlpPatternDetections struct {
-	Pattern          string  `json:"pattern,omitempty"`
-	DetectionOffsets [][]int `json:"detection_offsets,omitempty"`
+	DataPatternID              string  `json:"data_pattern_id,omitempty"`
+	Version                    int     `json:"version,omitempty"`
+	Name                       string  `json:"name,omitempty"`
+	HighConfidenceDetections   [][]int `json:"high_confidence_detections,omitempty"`
+	MediumConfidenceDetections [][]int `json:"medium_confidence_detections,omitempty"`
+	LowConfidenceDetections    [][]int `json:"low_confidence_detections,omitempty"`
 }
 
 // DlpReport holds DLP detection report details.
@@ -279,8 +289,9 @@ type DbsEntry struct {
 
 // TcReport holds toxic content report details.
 type TcReport struct {
-	Confidence string `json:"confidence,omitempty"`
-	Verdict    string `json:"verdict,omitempty"`
+	Confidence      string   `json:"confidence,omitempty"`
+	Verdict         string   `json:"verdict,omitempty"`
+	ToxicCategories []string `json:"toxic_categories,omitempty"`
 }
 
 // McEntry is a malicious code analysis entry.
@@ -330,6 +341,25 @@ type TgReport struct {
 	BlockedTopics    []string `json:"blockedTopics,omitempty"`
 }
 
+// PiReport holds prompt injection report details.
+type PiReport struct {
+	Verdict string `json:"verdict,omitempty"`
+}
+
+// DlpSnippetMeta holds metadata for a DLP snippet.
+type DlpSnippetMeta struct {
+	DataPattern     string `json:"data_pattern,omitempty"`
+	ConfidenceLevel string `json:"confidence_level,omitempty"`
+	DataPatternType string `json:"data_pattern_type,omitempty"`
+	Occurrence      int64  `json:"occurrence,omitempty"`
+}
+
+// DlpSnippetObject holds DLP snippet data with metadata.
+type DlpSnippetObject struct {
+	Meta     *DlpSnippetMeta `json:"meta,omitempty"`
+	Snippets []string        `json:"snippets,omitempty"`
+}
+
 // CgReport holds contextual grounding report details.
 type CgReport struct {
 	Status      string `json:"status,omitempty"`
@@ -339,14 +369,19 @@ type CgReport struct {
 
 // DSDetailResult holds detailed results from each detection service.
 type DSDetailResult struct {
-	UrlfReport            []UrlfEntry  `json:"urlf_report,omitempty"`
-	DlpReport             *DlpReport   `json:"dlp_report,omitempty"`
-	DbsReport             []DbsEntry   `json:"dbs_report,omitempty"`
-	TcReport              *TcReport    `json:"tc_report,omitempty"`
-	McReport              *McReport    `json:"mc_report,omitempty"`
-	AgentReport           *AgentReport `json:"agent_report,omitempty"`
-	TopicGuardrailsReport *TgReport    `json:"topic_guardrails_report,omitempty"`
-	CgReport              *CgReport    `json:"cg_report,omitempty"`
+	UrlfReport            []UrlfEntry       `json:"urlf_report,omitempty"`
+	DlpReport             *DlpReport        `json:"dlp_report,omitempty"`
+	DlpSnippets           *DlpSnippetObject `json:"dlp_snippets,omitempty"`
+	DbsReport             []DbsEntry        `json:"dbs_report,omitempty"`
+	DbsSnippets           []string          `json:"dbs_snippets,omitempty"`
+	TcReport              *TcReport         `json:"tc_report,omitempty"`
+	TcSnippets            []string          `json:"tc_snippets,omitempty"`
+	McReport              *McReport         `json:"mc_report,omitempty"`
+	AgentReport           *AgentReport      `json:"agent_report,omitempty"`
+	TopicGuardrailsReport *TgReport         `json:"topic_guardrails_report,omitempty"`
+	CgReport              *CgReport         `json:"cg_report,omitempty"`
+	PiReport              *PiReport         `json:"pi_report,omitempty"`
+	PiSnippets            []string          `json:"pi_snippets,omitempty"`
 }
 
 // DetectionServiceResult holds results from a single detection service.
