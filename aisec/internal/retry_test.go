@@ -75,7 +75,7 @@ func TestExtractErrorMessage(t *testing.T) {
 func TestExecuteWithRetry_Success(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		w.Write([]byte(`{"ok":true}`))
+		_, _ = w.Write([]byte(`{"ok":true}`))
 	}))
 	defer server.Close()
 
@@ -100,11 +100,11 @@ func TestExecuteWithRetry_RetriesOn500(t *testing.T) {
 		n := attempts.Add(1)
 		if n < 3 {
 			w.WriteHeader(500)
-			w.Write([]byte(`{"message":"server error"}`))
+			_, _ = w.Write([]byte(`{"message":"server error"}`))
 			return
 		}
 		w.WriteHeader(200)
-		w.Write([]byte(`{"ok":true}`))
+		_, _ = w.Write([]byte(`{"ok":true}`))
 	}))
 	defer server.Close()
 
@@ -126,7 +126,7 @@ func TestExecuteWithRetry_RetriesOn500(t *testing.T) {
 func TestExecuteWithRetry_NonRetryable400(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
-		w.Write([]byte(`{"message":"bad request"}`))
+		_, _ = w.Write([]byte(`{"message":"bad request"}`))
 	}))
 	defer server.Close()
 
@@ -153,7 +153,7 @@ func TestExecuteWithRetry_ExhaustsRetries(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		attempts.Add(1)
 		w.WriteHeader(500)
-		w.Write([]byte(`{"message":"always fails"}`))
+		_, _ = w.Write([]byte(`{"message":"always fails"}`))
 	}))
 	defer server.Close()
 
@@ -178,11 +178,11 @@ func TestExecuteWithRetry_OnRetryableFailure(t *testing.T) {
 		n := attempts.Add(1)
 		if n == 1 {
 			w.WriteHeader(401)
-			w.Write([]byte(`{"message":"unauthorized"}`))
+			_, _ = w.Write([]byte(`{"message":"unauthorized"}`))
 			return
 		}
 		w.WriteHeader(200)
-		w.Write([]byte(`{"ok":true}`))
+		_, _ = w.Write([]byte(`{"ok":true}`))
 	}))
 	defer server.Close()
 
