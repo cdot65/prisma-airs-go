@@ -1,0 +1,38 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Coverage
+coverage/
+*.out
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# MkDocs build output
+site/
+
+# Review documents
+REVIEW-*.md
+
+# Vendor (optional — we use Go modules)
+# vendor/
