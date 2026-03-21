@@ -7,11 +7,14 @@ The Model Security API provides ML model scanning, security group management, an
 Falls back to `PANW_MGMT_*` environment variables if service-specific variables are not set.
 
 ```go
-client := modelsecurity.NewClient(modelsecurity.Opts{
+client, err := modelsecurity.NewClient(modelsecurity.Opts{
     ClientID:     "your-client-id",     // or PANW_MODEL_SEC_CLIENT_ID
     ClientSecret: "your-client-secret", // or PANW_MODEL_SEC_CLIENT_SECRET
     TsgID:        "1234567890",         // or PANW_MODEL_SEC_TSG_ID
 })
+if err != nil {
+    log.Fatal(err)
+}
 ```
 
 ## Architecture

@@ -37,6 +37,7 @@ package main
 import (
     "context"
     "fmt"
+    "log"
 
     "github.com/cdot65/prisma-airs-go/aisec"
     "github.com/cdot65/prisma-airs-go/aisec/scan"
@@ -46,14 +47,17 @@ func main() {
     cfg := aisec.NewConfig(aisec.WithAPIKey("YOUR_API_KEY"))
     scanner := scan.NewScanner(cfg)
 
-    content := scan.NewContent(scan.ContentOpts{
+    content, err := scan.NewContent(scan.ContentOpts{
         Prompt:   "What is the capital of France?",
         Response: "The capital of France is Paris.",
     })
+    if err != nil {
+        log.Fatal(err)
+    }
 
     result, err := scanner.SyncScan(context.Background(), scan.AiProfile{ProfileName: "my-profile"}, content)
     if err != nil {
-        panic(err)
+        log.Fatal(err)
     }
 
     fmt.Println(result.Category) // "benign" | "malicious"
@@ -66,17 +70,17 @@ func main() {
 ```go
 import "github.com/cdot65/prisma-airs-go/aisec/management"
 
-client := management.NewClient(management.Opts{}) // reads PANW_MGMT_* env vars
+client, err := management.NewClient(management.Opts{}) // reads PANW_MGMT_* env vars
 
 // 8 sub-clients available:
-client.Profiles      // AI security profile CRUD
-client.Topics        // Custom detection topic CRUD
-client.ApiKeys       // API key lifecycle (create, list, regenerate, delete)
-client.CustomerApps  // Customer application management
-client.DlpProfiles   // DLP data profile listing
+client.Profiles           // AI security profile CRUD
+client.Topics             // Custom detection topic CRUD
+client.ApiKeys            // API key lifecycle (create, list, regenerate, delete)
+client.CustomerApps       // Customer application management
+client.DlpProfiles        // DLP data profile listing
 client.DeploymentProfiles // Deployment profile listing
-client.ScanLogs      // Scan activity log queries
-client.OAuth         // OAuth token management (get/invalidate)
+client.ScanLogs           // Scan activity log queries
+client.OAuth              // OAuth token management (get/invalidate)
 ```
 
 ### Model Security — ML Model Scanning (OAuth2)
@@ -84,12 +88,13 @@ client.OAuth         // OAuth token management (get/invalidate)
 ```go
 import "github.com/cdot65/prisma-airs-go/aisec/modelsecurity"
 
-client := modelsecurity.NewClient(modelsecurity.Opts{}) // falls back to PANW_MGMT_* env vars
+client, err := modelsecurity.NewClient(modelsecurity.Opts{}) // falls back to PANW_MGMT_* env vars
 
-// 3 sub-clients: Scans, SecurityGroups, SecurityRules
+// 3 sub-clients + GetPyPIAuth convenience method
 scans, _ := client.Scans.List(ctx, modelsecurity.ScanListOpts{Limit: 10})
 groups, _ := client.SecurityGroups.List(ctx, modelsecurity.GroupListOpts{})
 rules, _ := client.SecurityRules.List(ctx, modelsecurity.RuleListOpts{})
+pypi, _ := client.GetPyPIAuth(ctx)
 ```
 
 ### AI Red Teaming — Automated Testing (OAuth2)
@@ -97,12 +102,13 @@ rules, _ := client.SecurityRules.List(ctx, modelsecurity.RuleListOpts{})
 ```go
 import "github.com/cdot65/prisma-airs-go/aisec/redteam"
 
-client := redteam.NewClient(redteam.Opts{}) // falls back to PANW_MGMT_* env vars
+client, err := redteam.NewClient(redteam.Opts{}) // falls back to PANW_MGMT_* env vars
 
-// 5 sub-clients: Scans, Reports, CustomAttackReports, Targets, CustomAttacks
+// 5 sub-clients + 7 convenience methods
 scans, _ := client.Scans.List(ctx, redteam.ScanListOpts{Limit: 5})
 targets, _ := client.Targets.List(ctx, redteam.TargetListOpts{})
 categories, _ := client.Scans.GetCategories(ctx)
+quota, _ := client.GetQuota(ctx) // convenience method
 ```
 
 ## Authentication
