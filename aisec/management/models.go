@@ -6,12 +6,33 @@ type ListOpts struct {
 	Offset int
 }
 
+// --- Action enum types ---
+
+// ProfileAction represents a security profile action value.
+type ProfileAction string
+
+const (
+	ProfileActionAllow    ProfileAction = "allow"
+	ProfileActionBlock    ProfileAction = "block"
+	ProfileActionAlert    ProfileAction = "alert"
+	ProfileActionDisabled ProfileAction = ""
+)
+
+// ToxicContentAction represents a compound action for toxic content categories.
+type ToxicContentAction string
+
+const (
+	ToxicContentHighBlockModerateAllow ToxicContentAction = "high:block, moderate:allow"
+	ToxicContentHighBlockModerateBlock ToxicContentAction = "high:block, moderate:block"
+	ToxicContentHighAllowModerateAllow ToxicContentAction = "high:allow, moderate:allow"
+)
+
 // --- Policy nested types (AIProfileObject.policy) ---
 
 // LatencyConfig holds latency configuration for an AI security profile.
 type LatencyConfig struct {
-	InlineTimeoutAction string `json:"inline-timeout-action,omitempty"`
-	MaxInlineLatency    int32  `json:"max-inline-latency,omitempty"`
+	InlineTimeoutAction ProfileAction `json:"inline-timeout-action,omitempty"`
+	MaxInlineLatency    int32         `json:"max-inline-latency,omitempty"`
 }
 
 // ToxicCategoryConfig holds per-category toxic content configuration.
@@ -29,8 +50,8 @@ type TopicRef struct {
 
 // TopicArrayConfig holds a topic guardrail action + topic list.
 type TopicArrayConfig struct {
-	Action string     `json:"action"`
-	Topic  []TopicRef `json:"topic"`
+	Action ProfileAction `json:"action"`
+	Topic  []TopicRef    `json:"topic"`
 }
 
 // DataLeakMember is a DLP data leak member entry.
@@ -43,7 +64,7 @@ type DataLeakMember struct {
 // DataLeakDetectionConfig holds data leak detection configuration.
 type DataLeakDetectionConfig struct {
 	Member         []DataLeakMember `json:"member"`
-	Action         string           `json:"action"`
+	Action         ProfileAction    `json:"action"`
 	MaskDataInline bool             `json:"mask-data-inline,omitempty"`
 }
 
@@ -67,15 +88,15 @@ type AppProtectionConfig struct {
 // ModelProtectionConfig holds model protection configuration.
 type ModelProtectionConfig struct {
 	Name              string                `json:"name"`
-	Action            string                `json:"action"`
+	Action            ProfileAction         `json:"action"`
 	ToxicCategoryList []ToxicCategoryConfig `json:"toxic-category-list,omitempty"`
 	TopicList         []TopicArrayConfig    `json:"topic-list,omitempty"`
 }
 
 // AgentProtectionConfig holds agent protection configuration.
 type AgentProtectionConfig struct {
-	Name   string `json:"name"`
-	Action string `json:"action"`
+	Name   string        `json:"name"`
+	Action ProfileAction `json:"action"`
 }
 
 // ModelConfiguration holds the model-configuration section of a security profile.
@@ -328,74 +349,74 @@ type DeploymentProfileListResponse struct {
 
 // ScanLog represents a scan activity log entry with all spec-defined fields.
 type ScanLog struct {
-	CspID                 string `json:"csp_id,omitempty"`
-	TsgID                 string `json:"tsg_id,omitempty"`
-	ScanID                string `json:"scan_id,omitempty"`
-	ScanSubReqID          int32  `json:"scan_sub_req_id,omitempty"`
-	TransactionID         string `json:"transaction_id,omitempty"`
-	ApiKeyName            string `json:"api_key_name,omitempty"`
-	ProfileID             string `json:"profile_id,omitempty"`
-	ProfileName           string `json:"profile_name,omitempty"`
-	AppName               string `json:"app_name,omitempty"`
-	ModelName             string `json:"model_name,omitempty"`
-	User                  string `json:"user,omitempty"`
-	Environment           string `json:"environment,omitempty"`
-	CloudProvider         string `json:"cloud_provider,omitempty"`
-	AgentFramework        string `json:"agent_framework,omitempty"`
-	Tokens                int32  `json:"tokens,omitempty"`
-	TextRecords           int32  `json:"text_records,omitempty"`
-	ReportID              string `json:"report_id,omitempty"`
-	ReceivedTS            string `json:"received_ts,omitempty"`
-	CompletedTS           string `json:"completed_ts,omitempty"`
-	Status                string `json:"status,omitempty"`
-	Verdict               string `json:"verdict,omitempty"`
-	Action                string `json:"action,omitempty"`
-	IsPrompt              bool   `json:"is_prompt,omitempty"`
-	IsResponse            bool   `json:"is_response,omitempty"`
-	PIFinalVerdict        string `json:"pi_final_verdict,omitempty"`
-	UFFinalVerdict        string `json:"uf_final_verdict,omitempty"`
-	DLPFinalVerdict       string `json:"dlp_final_verdict,omitempty"`
-	DBSFinalVerdict       string `json:"dbs_final_verdict,omitempty"`
-	TCFinalVerdict        string `json:"tc_final_verdict,omitempty"`
-	MCFinalVerdict        string `json:"mc_final_verdict,omitempty"`
-	AgentFinalVerdict     string `json:"agent_final_verdict,omitempty"`
-	CGFinalVerdict        string `json:"cg_final_verdict,omitempty"`
-	TGFinalVerdict        string `json:"tg_final_verdict,omitempty"`
-	PromptPIVerdict       string `json:"prompt_pi_verdict,omitempty"`
-	PromptUFVerdict       string `json:"prompt_uf_verdict,omitempty"`
-	PromptDLPVerdict      string `json:"prompt_dlp_verdict,omitempty"`
-	PromptTCVerdict       string `json:"prompt_tc_verdict,omitempty"`
-	PromptMCVerdict       string `json:"prompt_mc_verdict,omitempty"`
-	PromptAgentVerdict    string `json:"prompt_agent_verdict,omitempty"`
-	PromptTGVerdict       string `json:"prompt_tg_verdict,omitempty"`
-	PromptVerdict         string `json:"prompt_verdict,omitempty"`
-	PromptPIAction        string `json:"prompt_pi_action,omitempty"`
-	PromptUFAction        string `json:"prompt_uf_action,omitempty"`
-	PromptDLPAction       string `json:"prompt_dlp_action,omitempty"`
-	PromptTCAction        string `json:"prompt_tc_action,omitempty"`
-	PromptMCAction        string `json:"prompt_mc_action,omitempty"`
-	PromptAgentAction     string `json:"prompt_agent_action,omitempty"`
-	PromptTGAction        string `json:"prompt_tg_action,omitempty"`
-	ResponseUFVerdict     string `json:"response_uf_verdict,omitempty"`
-	ResponseDLPVerdict    string `json:"response_dlp_verdict,omitempty"`
-	ResponseDBSVerdict    string `json:"response_dbs_verdict,omitempty"`
-	ResponseTCVerdict     string `json:"response_tc_verdict,omitempty"`
-	ResponseMCVerdict     string `json:"response_mc_verdict,omitempty"`
-	ResponseAgentVerdict  string `json:"response_agent_verdict,omitempty"`
-	ResponseCGVerdict     string `json:"response_cg_verdict,omitempty"`
-	ResponseTGVerdict     string `json:"response_tg_verdict,omitempty"`
-	ResponseUFAction      string `json:"response_uf_action,omitempty"`
-	ResponseDLPAction     string `json:"response_dlp_action,omitempty"`
-	ResponseDBSAction     string `json:"response_dbs_action,omitempty"`
-	ResponseTCAction      string `json:"response_tc_action,omitempty"`
-	ResponseMCAction      string `json:"response_mc_action,omitempty"`
-	ResponseAgentAction   string `json:"response_agent_action,omitempty"`
-	ResponseCGAction      string `json:"response_cg_action,omitempty"`
-	ResponseTGAction      string `json:"response_tg_action,omitempty"`
-	ResponseVerdict       string `json:"response_verdict,omitempty"`
-	DetectionServiceFlags int32  `json:"detection_service_flags,omitempty"`
-	ContentMasked         bool   `json:"content_masked,omitempty"`
-	UserIP                string `json:"user_ip,omitempty"`
+	CspID                 string        `json:"csp_id,omitempty"`
+	TsgID                 string        `json:"tsg_id,omitempty"`
+	ScanID                string        `json:"scan_id,omitempty"`
+	ScanSubReqID          int32         `json:"scan_sub_req_id,omitempty"`
+	TransactionID         string        `json:"transaction_id,omitempty"`
+	ApiKeyName            string        `json:"api_key_name,omitempty"`
+	ProfileID             string        `json:"profile_id,omitempty"`
+	ProfileName           string        `json:"profile_name,omitempty"`
+	AppName               string        `json:"app_name,omitempty"`
+	ModelName             string        `json:"model_name,omitempty"`
+	User                  string        `json:"user,omitempty"`
+	Environment           string        `json:"environment,omitempty"`
+	CloudProvider         string        `json:"cloud_provider,omitempty"`
+	AgentFramework        string        `json:"agent_framework,omitempty"`
+	Tokens                int32         `json:"tokens,omitempty"`
+	TextRecords           int32         `json:"text_records,omitempty"`
+	ReportID              string        `json:"report_id,omitempty"`
+	ReceivedTS            string        `json:"received_ts,omitempty"`
+	CompletedTS           string        `json:"completed_ts,omitempty"`
+	Status                string        `json:"status,omitempty"`
+	Verdict               string        `json:"verdict,omitempty"`
+	Action                ProfileAction `json:"action,omitempty"`
+	IsPrompt              bool          `json:"is_prompt,omitempty"`
+	IsResponse            bool          `json:"is_response,omitempty"`
+	PIFinalVerdict        string        `json:"pi_final_verdict,omitempty"`
+	UFFinalVerdict        string        `json:"uf_final_verdict,omitempty"`
+	DLPFinalVerdict       string        `json:"dlp_final_verdict,omitempty"`
+	DBSFinalVerdict       string        `json:"dbs_final_verdict,omitempty"`
+	TCFinalVerdict        string        `json:"tc_final_verdict,omitempty"`
+	MCFinalVerdict        string        `json:"mc_final_verdict,omitempty"`
+	AgentFinalVerdict     string        `json:"agent_final_verdict,omitempty"`
+	CGFinalVerdict        string        `json:"cg_final_verdict,omitempty"`
+	TGFinalVerdict        string        `json:"tg_final_verdict,omitempty"`
+	PromptPIVerdict       string        `json:"prompt_pi_verdict,omitempty"`
+	PromptUFVerdict       string        `json:"prompt_uf_verdict,omitempty"`
+	PromptDLPVerdict      string        `json:"prompt_dlp_verdict,omitempty"`
+	PromptTCVerdict       string        `json:"prompt_tc_verdict,omitempty"`
+	PromptMCVerdict       string        `json:"prompt_mc_verdict,omitempty"`
+	PromptAgentVerdict    string        `json:"prompt_agent_verdict,omitempty"`
+	PromptTGVerdict       string        `json:"prompt_tg_verdict,omitempty"`
+	PromptVerdict         string        `json:"prompt_verdict,omitempty"`
+	PromptPIAction        ProfileAction `json:"prompt_pi_action,omitempty"`
+	PromptUFAction        ProfileAction `json:"prompt_uf_action,omitempty"`
+	PromptDLPAction       ProfileAction `json:"prompt_dlp_action,omitempty"`
+	PromptTCAction        ProfileAction `json:"prompt_tc_action,omitempty"`
+	PromptMCAction        ProfileAction `json:"prompt_mc_action,omitempty"`
+	PromptAgentAction     ProfileAction `json:"prompt_agent_action,omitempty"`
+	PromptTGAction        ProfileAction `json:"prompt_tg_action,omitempty"`
+	ResponseUFVerdict     string        `json:"response_uf_verdict,omitempty"`
+	ResponseDLPVerdict    string        `json:"response_dlp_verdict,omitempty"`
+	ResponseDBSVerdict    string        `json:"response_dbs_verdict,omitempty"`
+	ResponseTCVerdict     string        `json:"response_tc_verdict,omitempty"`
+	ResponseMCVerdict     string        `json:"response_mc_verdict,omitempty"`
+	ResponseAgentVerdict  string        `json:"response_agent_verdict,omitempty"`
+	ResponseCGVerdict     string        `json:"response_cg_verdict,omitempty"`
+	ResponseTGVerdict     string        `json:"response_tg_verdict,omitempty"`
+	ResponseUFAction      ProfileAction `json:"response_uf_action,omitempty"`
+	ResponseDLPAction     ProfileAction `json:"response_dlp_action,omitempty"`
+	ResponseDBSAction     ProfileAction `json:"response_dbs_action,omitempty"`
+	ResponseTCAction      ProfileAction `json:"response_tc_action,omitempty"`
+	ResponseMCAction      ProfileAction `json:"response_mc_action,omitempty"`
+	ResponseAgentAction   ProfileAction `json:"response_agent_action,omitempty"`
+	ResponseCGAction      ProfileAction `json:"response_cg_action,omitempty"`
+	ResponseTGAction      ProfileAction `json:"response_tg_action,omitempty"`
+	ResponseVerdict       string        `json:"response_verdict,omitempty"`
+	DetectionServiceFlags int32         `json:"detection_service_flags,omitempty"`
+	ContentMasked         bool          `json:"content_masked,omitempty"`
+	UserIP                string        `json:"user_ip,omitempty"`
 }
 
 // ScanLogListOpts are options for listing scan logs (spec: POST /v1/mgmt/scanlogs).

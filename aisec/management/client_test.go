@@ -1131,6 +1131,172 @@ func TestDeleteConflictResponse_JSON(t *testing.T) {
 	}
 }
 
+func TestProfileAction_Constants(t *testing.T) {
+	tests := []struct {
+		name string
+		val  ProfileAction
+		want string
+	}{
+		{"allow", ProfileActionAllow, "allow"},
+		{"block", ProfileActionBlock, "block"},
+		{"alert", ProfileActionAlert, "alert"},
+		{"disabled", ProfileActionDisabled, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if string(tt.val) != tt.want {
+				t.Errorf("ProfileAction %s = %q, want %q", tt.name, tt.val, tt.want)
+			}
+		})
+	}
+}
+
+func TestProfileAction_JSONRoundTrip(t *testing.T) {
+	type wrapper struct {
+		Action ProfileAction `json:"action"`
+	}
+
+	for _, action := range []ProfileAction{ProfileActionAllow, ProfileActionBlock, ProfileActionAlert} {
+		t.Run(string(action), func(t *testing.T) {
+			w := wrapper{Action: action}
+			data, err := json.Marshal(w)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var decoded wrapper
+			if err := json.Unmarshal(data, &decoded); err != nil {
+				t.Fatal(err)
+			}
+			if decoded.Action != action {
+				t.Errorf("got %q, want %q", decoded.Action, action)
+			}
+		})
+	}
+
+	// Disabled (empty) should omit from JSON when omitempty
+	t.Run("disabled-omitempty", func(t *testing.T) {
+		type omitWrapper struct {
+			Action ProfileAction `json:"action,omitempty"`
+		}
+		w := omitWrapper{Action: ProfileActionDisabled}
+		data, err := json.Marshal(w)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if strings.Contains(string(data), "action") {
+			t.Errorf("disabled action should be omitted: %s", data)
+		}
+	})
+}
+
+func TestToxicContentAction_Constants(t *testing.T) {
+	tests := []struct {
+		name string
+		val  ToxicContentAction
+		want string
+	}{
+		{"high-block-moderate-allow", ToxicContentHighBlockModerateAllow, "high:block, moderate:allow"},
+		{"high-block-moderate-block", ToxicContentHighBlockModerateBlock, "high:block, moderate:block"},
+		{"high-allow-moderate-allow", ToxicContentHighAllowModerateAllow, "high:allow, moderate:allow"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if string(tt.val) != tt.want {
+				t.Errorf("ToxicContentAction %s = %q, want %q", tt.name, tt.val, tt.want)
+			}
+		})
+	}
+}
+
+func TestToxicContentAction_JSONRoundTrip(t *testing.T) {
+	type wrapper struct {
+		Action ToxicContentAction `json:"action"`
+	}
+
+	for _, action := range []ToxicContentAction{
+		ToxicContentHighBlockModerateAllow,
+		ToxicContentHighBlockModerateBlock,
+		ToxicContentHighAllowModerateAllow,
+	} {
+		t.Run(string(action), func(t *testing.T) {
+			w := wrapper{Action: action}
+			data, err := json.Marshal(w)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var decoded wrapper
+			if err := json.Unmarshal(data, &decoded); err != nil {
+				t.Fatal(err)
+			}
+			if decoded.Action != action {
+				t.Errorf("got %q, want %q", decoded.Action, action)
+			}
+		})
+	}
+}
+
+func TestProfileAction_InModelConfig(t *testing.T) {
+	cfg := ModelConfiguration{
+		Latency: &LatencyConfig{
+			InlineTimeoutAction: ProfileActionBlock,
+			MaxInlineLatency:    5000,
+		},
+		ModelProtection: []ModelProtectionConfig{
+			{Name: "prompt-injection", Action: ProfileActionBlock},
+		},
+		AgentProtection: []AgentProtectionConfig{
+			{Name: "malicious-agent", Action: ProfileActionBlock},
+		},
+		DataProtection: &DataProtectionConfig{
+			DataLeakDetection: &DataLeakDetectionConfig{
+				Action: ProfileActionAllow,
+				Member: []DataLeakMember{{Text: "ssn"}},
+			},
+		},
+	}
+
+	data, err := json.Marshal(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var decoded ModelConfiguration
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+
+	if decoded.Latency.InlineTimeoutAction != ProfileActionBlock {
+		t.Errorf("InlineTimeoutAction = %q", decoded.Latency.InlineTimeoutAction)
+	}
+	if decoded.ModelProtection[0].Action != ProfileActionBlock {
+		t.Errorf("ModelProtection Action = %q", decoded.ModelProtection[0].Action)
+	}
+	if decoded.AgentProtection[0].Action != ProfileActionBlock {
+		t.Errorf("AgentProtection Action = %q", decoded.AgentProtection[0].Action)
+	}
+	if decoded.DataProtection.DataLeakDetection.Action != ProfileActionAllow {
+		t.Errorf("DataLeakDetection Action = %q", decoded.DataProtection.DataLeakDetection.Action)
+	}
+}
+
+func TestTopicArrayConfig_ActionEnum(t *testing.T) {
+	cfg := TopicArrayConfig{
+		Action: ProfileActionBlock,
+		Topic:  []TopicRef{{TopicName: "test", TopicID: "t1", Revision: 1}},
+	}
+	data, err := json.Marshal(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var decoded TopicArrayConfig
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+	if decoded.Action != ProfileActionBlock {
+		t.Errorf("Action = %q", decoded.Action)
+	}
+}
+
 func TestCustomerAppWithKeyInfo_JSON(t *testing.T) {
 	j := `{"customer_appId":"a1","app_name":"test","tsg_id":"t1","api_keys_dp_info":[{"api_key_name":"k1","dp_name":"dp1","auth_code":"ac1"}]}`
 	var app CustomerAppWithKeyInfo
