@@ -156,7 +156,7 @@ func TestScans_GetCategories(t *testing.T) {
 
 func TestReports_GetStaticReport(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(StaticJobReport{JobID: "job-1"})
+		_ = json.NewEncoder(w).Encode(StaticJobReport{ReportSummary: "job-1"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -166,14 +166,14 @@ func TestReports_GetStaticReport(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if rpt.JobID != "job-1" {
-		t.Errorf("JobID = %q", rpt.JobID)
+	if rpt.ReportSummary != "job-1" {
+		t.Errorf("ReportSummary = %q", rpt.ReportSummary)
 	}
 }
 
 func TestReports_GetDynamicReport(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(DynamicJobReport{JobID: "job-1"})
+		_ = json.NewEncoder(w).Encode(DynamicJobReport{ReportSummary: "job-1", TotalGoals: 5})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -183,8 +183,8 @@ func TestReports_GetDynamicReport(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if rpt.JobID != "job-1" {
-		t.Errorf("JobID = %q", rpt.JobID)
+	if rpt.ReportSummary != "job-1" {
+		t.Errorf("ReportSummary = %q", rpt.ReportSummary)
 	}
 }
 
@@ -211,7 +211,7 @@ func TestReports_ListAttacks(t *testing.T) {
 func TestReports_ListGoals(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(GoalListResponse{
-			Items:      []Goal{{ID: "goal-1"}},
+			Items:      []Goal{{UUID: "goal-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -512,7 +512,7 @@ func TestCustomAttacks_GetPropertyNames(t *testing.T) {
 
 func TestGetScanStatistics(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(ScanStatisticsResponse{Stats: map[string]any{"total": 10}})
+		_ = json.NewEncoder(w).Encode(ScanStatisticsResponse{TotalScans: 10, TargetsScanned: 5})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -522,14 +522,14 @@ func TestGetScanStatistics(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if stats.Stats["total"] == nil {
-		t.Error("missing stats")
+	if stats.TotalScans != 10 {
+		t.Errorf("TotalScans = %d", stats.TotalScans)
 	}
 }
 
 func TestGetQuota(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(QuotaSummary{Details: map[string]any{"used": 5}})
+		_ = json.NewEncoder(w).Encode(QuotaSummary{StaticQuota: 100, StaticUsed: 50})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -539,8 +539,8 @@ func TestGetQuota(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if quota.Details["used"] == nil {
-		t.Error("missing quota details")
+	if quota.StaticQuota != 100 {
+		t.Errorf("StaticQuota = %d", quota.StaticQuota)
 	}
 }
 
@@ -653,7 +653,7 @@ func TestReports_GetAttackDetail(t *testing.T) {
 		if r.Method != "GET" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(AttackDetailResponse{ID: "a-1", Category: "injection"})
+		_ = json.NewEncoder(w).Encode(AttackDetailResponse{UUID: "a-1", Category: "injection"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -663,14 +663,14 @@ func TestReports_GetAttackDetail(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.ID != "a-1" {
-		t.Errorf("ID = %q", resp.ID)
+	if resp.UUID != "a-1" {
+		t.Errorf("UUID = %q", resp.UUID)
 	}
 }
 
 func TestReports_GetMultiTurnAttackDetail(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(AttackMultiTurnDetailResponse{ID: "a-1", Category: "injection"})
+		_ = json.NewEncoder(w).Encode(AttackMultiTurnDetailResponse{UUID: "a-1"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -680,8 +680,8 @@ func TestReports_GetMultiTurnAttackDetail(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.ID != "a-1" {
-		t.Errorf("ID = %q", resp.ID)
+	if resp.UUID != "a-1" {
+		t.Errorf("UUID = %q", resp.UUID)
 	}
 }
 
@@ -933,7 +933,7 @@ func TestCustomAttackReports_GetPropertyStats(t *testing.T) {
 
 func TestGetScoreTrend(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(ScoreTrendResponse{TargetID: "t-1"})
+		_ = json.NewEncoder(w).Encode(ScoreTrendResponse{Labels: []string{"2025-01"}})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -943,15 +943,15 @@ func TestGetScoreTrend(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.TargetID != "t-1" {
-		t.Errorf("TargetID = %q", resp.TargetID)
+	if len(resp.Labels) != 1 {
+		t.Errorf("Labels = %v", resp.Labels)
 	}
 }
 
 func TestGetErrorLogs(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(ErrorLogListResponse{
-			Items:      []map[string]any{{"id": "e-1"}},
+			Items:      []ErrorLog{{JobID: "e-1"}},
 			Pagination: RedTeamPagination{Total: 1},
 		})
 	})
@@ -1451,7 +1451,7 @@ func TestCustomPromptResponse_JSON(t *testing.T) {
 		"prompt_set_id": "ps-1",
 		"prompt": "test",
 		"goal": "a goal",
-		"user_defined_goal": "user goal",
+		"user_defined_goal": true,
 		"detector_category": "security",
 		"severity": "HIGH",
 		"active": true
@@ -1472,8 +1472,8 @@ func TestCustomPromptResponse_JSON(t *testing.T) {
 	if resp.Goal != "a goal" {
 		t.Errorf("Goal = %q", resp.Goal)
 	}
-	if resp.UserDefinedGoal != "user goal" {
-		t.Errorf("UserDefinedGoal = %q", resp.UserDefinedGoal)
+	if !resp.UserDefinedGoal {
+		t.Error("UserDefinedGoal should be true")
 	}
 	if resp.DetectorCategory != "security" {
 		t.Errorf("DetectorCategory = %q", resp.DetectorCategory)
