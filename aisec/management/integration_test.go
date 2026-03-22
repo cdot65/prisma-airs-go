@@ -277,7 +277,7 @@ func TestIntegration_Profiles_CRUD(t *testing.T) {
 							{Name: "prompt-injection", Action: ProfileActionBlock},
 						},
 						AgentProtection: []AgentProtectionConfig{
-							{Name: "agent-security", Action: ProfileActionAlert},
+							{Name: "agent-security", Action: ProfileActionBlock},
 						},
 					},
 				},

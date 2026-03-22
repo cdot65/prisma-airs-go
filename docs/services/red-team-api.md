@@ -70,13 +70,19 @@ attacks, err := client.Reports.ListAttacks(ctx, "job-id", redteam.AttackListOpts
 // Get attack detail
 detail, err := client.Reports.GetAttackDetail(ctx, "job-id", "attack-id")
 
-// Get remediation and runtime policy
+// Get remediation and runtime policy (static and dynamic)
 remediation, err := client.Reports.GetStaticRemediation(ctx, "job-id")
 policy, err := client.Reports.GetStaticRuntimePolicy(ctx, "job-id")
+dynRemediation, err := client.Reports.GetDynamicRemediation(ctx, "job-id")
+dynPolicy, err := client.Reports.GetDynamicRuntimePolicy(ctx, "job-id")
+
+// Get multi-turn attack detail
+multiTurn, err := client.Reports.GetMultiTurnAttackDetail(ctx, "job-id", "attack-id")
 
 // List goals and streams
 goals, err := client.Reports.ListGoals(ctx, "job-id", redteam.GoalListOpts{})
 streams, err := client.Reports.ListGoalStreams(ctx, "job-id", "goal-id", redteam.ListOpts{})
+streamDetail, err := client.Reports.GetStreamDetail(ctx, "stream-id")
 
 // Download report as CSV, JSON, or ALL
 data, err := client.Reports.DownloadReport(ctx, "job-id", redteam.FileFormatCSV)
@@ -158,6 +164,10 @@ archived, err := client.CustomAttacks.ArchivePromptSet(ctx, "prompt-set-uuid",
 
 // List active prompt sets
 active, err := client.CustomAttacks.ListActivePromptSets(ctx)
+
+// Get prompt set reference and version info
+ref, err := client.CustomAttacks.GetPromptSetReference(ctx, "prompt-set-uuid")
+versionInfo, err := client.CustomAttacks.GetPromptSetVersionInfo(ctx, "prompt-set-uuid")
 ```
 
 ### Prompts
@@ -181,6 +191,7 @@ resp, err := client.CustomAttacks.DeletePrompt(ctx, "prompt-set-id", "prompt-id"
 names, err := client.CustomAttacks.GetPropertyNames(ctx)
 resp, err := client.CustomAttacks.CreatePropertyName(ctx, redteam.PropertyNameCreateRequest{...})
 values, err := client.CustomAttacks.GetPropertyValues(ctx, "property-name")
+multiValues, err := client.CustomAttacks.GetPropertyValuesMultiple(ctx, []string{"name1", "name2"})
 resp, err := client.CustomAttacks.CreatePropertyValue(ctx, redteam.PropertyValueCreateRequest{...})
 ```
 

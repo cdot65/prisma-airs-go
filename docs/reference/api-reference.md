@@ -14,6 +14,7 @@ func NewConfig(opts ...ConfigOption) *Config
 func WithAPIKey(key string) ConfigOption
 func WithAPIToken(token string) ConfigOption
 func WithEndpoint(endpoint string) ConfigOption
+func WithNumRetries(n int) ConfigOption
 ```
 
 ### Error Types
