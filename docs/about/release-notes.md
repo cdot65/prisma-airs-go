@@ -1,5 +1,14 @@
 # Release Notes
 
+## v0.3.1
+
+- **fix**: customer apps `List` endpoint changed from `/v1/mgmt/customerapp/tsg/{id}` to `/v1/mgmt/customerapps` per OpenAPI spec — resolves timeout
+- **fix**: add missing `AgentApp`, `AiSecProfileName`, `ApiKeysDPInfo` fields to `CustomerApp` struct
+- **breaking**: remove `Create` method from `CustomerAppsClient` (not in OpenAPI spec)
+- **breaking**: remove redundant `CustomerAppWithKeyInfo` type (fields merged into `CustomerApp`)
+- **docs**: add `CustomerApp`, `APIKeyDPInfo` type definitions to API reference
+- **docs**: fix README service domain count
+
 ## v0.3.0
 
 - **docs**: comprehensive runtime scanning examples — SyncScan, AsyncScan, QueryByScanIDs, QueryByReportIDs, tool event scanning, code scanning
