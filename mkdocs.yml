@@ -79,7 +79,10 @@ nav:
       - Model Security API: services/model-security-api.md
       - Red Team API: services/red-team-api.md
   - Examples:
+      - Runtime Scanning: examples/runtime-scanning.md
       - Security Profile CRUD: examples/profile-crud.md
+      - Custom Topics CRUD: examples/topic-crud.md
+      - Red Team Scanning: examples/red-team-scanning.md
       - API Key Rotation: examples/api-key-rotation.md
   - Reference:
       - API Reference: reference/api-reference.md
