@@ -187,6 +187,7 @@ func (c *ProfilesClient) Create(ctx context.Context, req CreateProfileRequest) (
 func (c *ProfilesClient) List(ctx context.Context, opts ListOpts) (*SecurityProfileListResponse, error)
 func (c *ProfilesClient) Update(ctx context.Context, profileID string, req UpdateProfileRequest) (*SecurityProfile, error)
 func (c *ProfilesClient) Delete(ctx context.Context, profileID string) (*DeleteProfileResponse, error)
+func (c *ProfilesClient) ForceDelete(ctx context.Context, profileID string, updatedBy string) (*DeleteProfileResponse, error)
 func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityProfile, error)
 ```
 
@@ -197,7 +198,7 @@ func (c *TopicsClient) Create(ctx context.Context, req CreateTopicRequest) (*Cus
 func (c *TopicsClient) List(ctx context.Context, opts ListOpts) (*CustomTopicListResponse, error)
 func (c *TopicsClient) Update(ctx context.Context, topicID string, req UpdateTopicRequest) (*CustomTopic, error)
 func (c *TopicsClient) Delete(ctx context.Context, topicID string) (*DeleteTopicResponse, error)
-func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string) (*DeleteTopicResponse, error)
+func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string, updatedBy string) (*DeleteTopicResponse, error)
 ```
 
 ### ApiKeysClient
@@ -329,6 +330,7 @@ func (c *Client) GetDashboardOverview(ctx context.Context) (*DashboardOverviewRe
 const (
     VerdictBenign    = "benign"
     VerdictMalicious = "malicious"
+    VerdictUnknown   = "unknown"
 )
 
 // Action
@@ -340,11 +342,9 @@ const (
 
 // Category
 const (
-    CategoryPromptInjection = "prompt_injection"
-    CategoryJailbreak       = "jailbreak"
-    CategorySQLInjection    = "sql_injection"
-    CategoryXSS             = "xss"
-    // ... (see source for complete list)
+    CategoryBenign    = "benign"
+    CategoryMalicious = "malicious"
+    CategoryUnknown   = "unknown"
 )
 ```
 

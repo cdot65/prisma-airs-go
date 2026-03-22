@@ -54,6 +54,9 @@ updated, err := client.Profiles.Update(ctx, "profile-id", management.UpdateProfi
 
 // Delete
 resp, err := client.Profiles.Delete(ctx, "profile-id")
+
+// Force delete (requires updatedBy)
+resp, err = client.Profiles.ForceDelete(ctx, "profile-id", "admin@example.com")
 ```
 
 ### Topics — Custom Detection Topics
@@ -70,7 +73,7 @@ topic, err := client.Topics.Create(ctx, management.CreateTopicRequest{
 topics, err := client.Topics.List(ctx, management.ListOpts{})
 updated, err := client.Topics.Update(ctx, "topic-id", management.UpdateTopicRequest{...})
 resp, err := client.Topics.Delete(ctx, "topic-id")
-resp, err := client.Topics.ForceDelete(ctx, "topic-id")
+resp, err = client.Topics.ForceDelete(ctx, "topic-id", "admin@example.com")
 ```
 
 ### ApiKeys — API Key Lifecycle

@@ -34,8 +34,8 @@ graph TD
 ```go
 // Create a scan job
 job, err := client.Scans.Create(ctx, redteam.JobCreateRequest{
-    Name:     "security-audit",
-    TargetID: "target-uuid",
+    Name:   "security-audit",
+    Target: redteam.TargetJobRequest{UUID: "target-uuid"},
     // ...
 })
 
@@ -78,8 +78,8 @@ policy, err := client.Reports.GetStaticRuntimePolicy(ctx, "job-id")
 goals, err := client.Reports.ListGoals(ctx, "job-id", redteam.GoalListOpts{})
 streams, err := client.Reports.ListGoalStreams(ctx, "job-id", "goal-id", redteam.ListOpts{})
 
-// Download report as PDF or CSV
-data, err := client.Reports.DownloadReport(ctx, "job-id", redteam.FileFormatPDF)
+// Download report as CSV, JSON, or ALL
+data, err := client.Reports.DownloadReport(ctx, "job-id", redteam.FileFormatCSV)
 ```
 
 ## Custom Attack Reports (Data Plane)
