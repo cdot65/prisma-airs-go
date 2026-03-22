@@ -508,6 +508,100 @@ func TestProfiles_GetByName(t *testing.T) {
 	}
 }
 
+func TestProfiles_GetByName_HighestRevision(t *testing.T) {
+	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(SecurityProfileListResponse{
+			Items: []SecurityProfile{
+				{ProfileID: "p-1", ProfileName: "my-profile", Revision: 1},
+				{ProfileID: "p-2", ProfileName: "my-profile", Revision: 3},
+				{ProfileID: "p-3", ProfileName: "my-profile", Revision: 2},
+			},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
+	p, err := client.Profiles.GetByName(context.Background(), "my-profile")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if p.ProfileID != "p-2" {
+		t.Errorf("expected highest revision (p-2), got %q", p.ProfileID)
+	}
+	if p.Revision != 3 {
+		t.Errorf("expected revision 3, got %d", p.Revision)
+	}
+}
+
+func TestProfiles_GetByName_NotFound(t *testing.T) {
+	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(SecurityProfileListResponse{
+			Items: []SecurityProfile{
+				{ProfileID: "p-1", ProfileName: "other"},
+			},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
+	_, err := client.Profiles.GetByName(context.Background(), "nonexistent")
+	if err == nil {
+		t.Fatal("expected error for nonexistent profile")
+	}
+	if !strings.Contains(err.Error(), "profile not found") {
+		t.Errorf("error = %q, want 'profile not found'", err.Error())
+	}
+}
+
+func TestProfiles_GetByID(t *testing.T) {
+	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(SecurityProfileListResponse{
+			Items: []SecurityProfile{
+				{ProfileID: "p-1", ProfileName: "first"},
+				{ProfileID: "p-2", ProfileName: "target"},
+				{ProfileID: "p-3", ProfileName: "third"},
+			},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
+	p, err := client.Profiles.GetByID(context.Background(), "p-2")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if p.ProfileID != "p-2" {
+		t.Errorf("ProfileID = %q, want p-2", p.ProfileID)
+	}
+	if p.ProfileName != "target" {
+		t.Errorf("ProfileName = %q, want target", p.ProfileName)
+	}
+}
+
+func TestProfiles_GetByID_NotFound(t *testing.T) {
+	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewEncoder(w).Encode(SecurityProfileListResponse{
+			Items: []SecurityProfile{
+				{ProfileID: "p-1", ProfileName: "first"},
+			},
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
+	_, err := client.Profiles.GetByID(context.Background(), "nonexistent-id")
+	if err == nil {
+		t.Fatal("expected error for nonexistent profile ID")
+	}
+	if !strings.Contains(err.Error(), "profile not found") {
+		t.Errorf("error = %q, want 'profile not found'", err.Error())
+	}
+}
+
 func TestTopics_List(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {

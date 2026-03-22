@@ -122,19 +122,42 @@ func (c *ProfilesClient) Delete(ctx context.Context, profileID string) (*DeleteP
 	return &resp.Data, nil
 }
 
-func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityProfile, error) {
-	// No dedicated get-by-name endpoint in the API spec.
-	// List all profiles and filter client-side.
+// GetByID retrieves a single profile by UUID. No dedicated API endpoint exists,
+// so this lists all profiles and filters client-side.
+func (c *ProfilesClient) GetByID(ctx context.Context, profileID string) (*SecurityProfile, error) {
 	resp, err := c.List(ctx, ListOpts{Limit: 1000})
 	if err != nil {
 		return nil, err
 	}
 	for _, p := range resp.Items {
-		if p.ProfileName == name {
+		if p.ProfileID == profileID {
 			return &p, nil
 		}
 	}
-	return nil, aisec.NewAISecSDKError("profile not found: "+name, aisec.ClientSideError)
+	return nil, aisec.NewAISecSDKError("profile not found: "+profileID, aisec.ClientSideError)
+}
+
+// GetByName retrieves a profile by name. When multiple revisions exist for the
+// same name, the one with the highest revision is returned. No dedicated API
+// endpoint exists, so this lists all profiles and filters client-side.
+func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityProfile, error) {
+	resp, err := c.List(ctx, ListOpts{Limit: 1000})
+	if err != nil {
+		return nil, err
+	}
+	var best *SecurityProfile
+	for _, p := range resp.Items {
+		if p.ProfileName == name {
+			if best == nil || p.Revision > best.Revision {
+				match := p
+				best = &match
+			}
+		}
+	}
+	if best == nil {
+		return nil, aisec.NewAISecSDKError("profile not found: "+name, aisec.ClientSideError)
+	}
+	return best, nil
 }
 
 // ForceDelete force-deletes a profile: DELETE /v1/mgmt/profile/{profile_id}/force?updated_by=

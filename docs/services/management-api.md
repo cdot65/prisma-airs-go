@@ -46,7 +46,10 @@ profile, err := client.Profiles.Create(ctx, management.CreateProfileRequest{
 // List with pagination
 profiles, err := client.Profiles.List(ctx, management.ListOpts{Limit: 10, Offset: 0})
 
-// Get by name
+// Get by ID (client-side filter over List)
+profile, err := client.Profiles.GetByID(ctx, "profile-uuid")
+
+// Get by name (returns highest revision; client-side filter over List)
 profile, err := client.Profiles.GetByName(ctx, "my-profile")
 
 // Update

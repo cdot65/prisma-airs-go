@@ -185,10 +185,11 @@ type Client struct {
 ```go
 func (c *ProfilesClient) Create(ctx context.Context, req CreateProfileRequest) (*SecurityProfile, error)
 func (c *ProfilesClient) List(ctx context.Context, opts ListOpts) (*SecurityProfileListResponse, error)
+func (c *ProfilesClient) GetByID(ctx context.Context, profileID string) (*SecurityProfile, error)
+func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityProfile, error)
 func (c *ProfilesClient) Update(ctx context.Context, profileID string, req UpdateProfileRequest) (*SecurityProfile, error)
 func (c *ProfilesClient) Delete(ctx context.Context, profileID string) (*DeleteProfileResponse, error)
 func (c *ProfilesClient) ForceDelete(ctx context.Context, profileID string, updatedBy string) (*DeleteProfileResponse, error)
-func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityProfile, error)
 ```
 
 ### TopicsClient
