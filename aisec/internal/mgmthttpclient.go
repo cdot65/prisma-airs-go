@@ -92,6 +92,11 @@ func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts 
 	var data T
 	if len(respBody) > 0 {
 		if err := json.Unmarshal(respBody, &data); err != nil {
+			// Some endpoints (e.g. ForceDelete) return non-JSON on success.
+			// Tolerate parse failures for 2xx responses; return zero-value T.
+			if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+				return &Response[T]{Status: resp.StatusCode, Data: data}, nil
+			}
 			return nil, aisec.WrapError("failed to parse response JSON", aisec.AISecSDKInternalError, err)
 		}
 	}
