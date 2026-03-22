@@ -285,19 +285,9 @@ type CustomerAppsClient struct {
 	tsgID  string
 }
 
-func (c *CustomerAppsClient) Create(ctx context.Context, req CreateAppRequest) (*CustomerApp, error) {
-	resp, err := internal.DoMgmtRequest[CustomerApp](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.MgmtCustomerAppPath, Body: req,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
 func (c *CustomerAppsClient) List(ctx context.Context, opts ListOpts) (*CustomerAppListResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomerAppListResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.MgmtCustomerAppsTsgPath + "/" + c.tsgID, Params: buildListParams(opts),
+		Method: http.MethodGet, Path: aisec.MgmtCustomerAppsPath, Params: buildListParams(opts),
 	})
 	if err != nil {
 		return nil, err

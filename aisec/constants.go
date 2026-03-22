@@ -137,7 +137,7 @@ const (
 	MgmtDeploymentProfilesPath = "/v1/mgmt/deploymentprofiles"
 	MgmtScanLogsPath           = "/v1/mgmt/scanlogs"
 	MgmtCustomerAppPath        = "/v1/mgmt/customerapp"
-	MgmtCustomerAppsTsgPath    = "/v1/mgmt/customerapp/tsg"
+	MgmtCustomerAppsPath       = "/v1/mgmt/customerapps"
 	MgmtOAuthInvalidatePath    = "/v1/mgmt/oauth/invalidateToken"
 	MgmtOAuthTokenPath         = "/v1/mgmt/oauth/client_credential/accesstoken"
 )

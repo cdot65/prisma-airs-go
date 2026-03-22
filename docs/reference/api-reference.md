@@ -215,7 +215,6 @@ func (c *ApiKeysClient) Regenerate(ctx context.Context, keyID string, req Regene
 ### CustomerAppsClient
 
 ```go
-func (c *CustomerAppsClient) Create(ctx context.Context, req CreateAppRequest) (*CustomerApp, error)
 func (c *CustomerAppsClient) List(ctx context.Context, opts ListOpts) (*CustomerAppListResponse, error)
 func (c *CustomerAppsClient) Get(ctx context.Context, appName string) (*CustomerApp, error)
 func (c *CustomerAppsClient) Update(ctx context.Context, appID string, req UpdateAppRequest) (*CustomerApp, error)
