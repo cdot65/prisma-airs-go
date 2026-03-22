@@ -66,7 +66,7 @@ func main() {
 						AgentProtection: []management.AgentProtectionConfig{
 							{
 								Name:   "agent-security",
-								Action: management.ProfileActionAlert,
+								Action: management.ProfileActionBlock,
 							},
 						},
 					},

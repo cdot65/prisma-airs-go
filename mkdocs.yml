@@ -79,6 +79,7 @@ nav:
       - Model Security API: services/model-security-api.md
       - Red Team API: services/red-team-api.md
   - Examples:
+      - Security Profile CRUD: examples/profile-crud.md
       - API Key Rotation: examples/api-key-rotation.md
   - Reference:
       - API Reference: reference/api-reference.md
