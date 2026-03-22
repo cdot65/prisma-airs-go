@@ -1,5 +1,19 @@
 # Release Notes
 
+## v0.2.1
+
+- **fix**: `ForceDelete` no longer errors when the API returns non-JSON on success — `DoMgmtRequest` tolerates non-JSON 2xx responses
+- **docs**: add `docs/examples/profile-crud.md` with full end-to-end CRUD walkthrough and real API responses
+- **docs**: add 7 missing Red Team methods to `docs/services/red-team-api.md`
+- **docs**: document ForceDelete non-JSON response behavior
+
+## v0.2.0
+
+- **feat**: `Profiles.GetByID` — client-side filter over List (no dedicated API endpoint)
+- **feat**: `Profiles.GetByName` — returns highest revision when multiple revisions share the same name
+- **feat**: `ProfileAction` and `ToxicContentAction` typed enums for security profile actions
+- **docs**: full documentation alignment with current codebase
+
 ## v0.1.1
 
 - **Red Team targets**: align all target models with OpenAPI spec (`TargetCreateRequest`, `TargetUpdateRequest`, `TargetContextUpdate`, `TargetProfileResponse`, `TargetListItem`)
