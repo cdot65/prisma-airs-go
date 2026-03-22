@@ -2,7 +2,7 @@ package aisec
 
 // Version and user agent.
 const (
-	Version   = "0.1.0"
+	Version   = "0.2.1"
 	UserAgent = "PAN-AIRS/" + Version + "-go-sdk"
 )
 
