@@ -209,7 +209,15 @@ updated, err := client.Profiles.Update(ctx, created.ProfileID, management.Update
 
 ```go
 resp, err := client.Profiles.ForceDelete(ctx, created.ProfileID, "sdk-example")
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println("Deleted successfully")
 ```
+
+!!! note "ForceDelete response"
+    The API returns a non-JSON response for successful deletes. The SDK handles this
+    gracefully — `err` will be `nil` on success, but `resp.Message` may be empty.
 
 ## Valid Protection Names
 
