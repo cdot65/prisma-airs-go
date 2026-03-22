@@ -132,7 +132,7 @@ if err != nil {
 
 - **Retries:** Up to 5 retries with exponential backoff and full jitter
 - **Retryable status codes:** 500, 502, 503, 504
-- **User-Agent:** `PAN-AIRS/0.1.0-go-sdk`
+- **User-Agent:** `PAN-AIRS/{version}-go-sdk`
 
 ## Response Types
 

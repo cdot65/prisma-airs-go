@@ -145,6 +145,23 @@ if err != nil {
 
 Error types: `ServerSideError`, `ClientSideError`, `UserRequestPayloadError`, `MissingVariableError`, `AISecSDKInternalError`, `OAuthError`.
 
+## Examples
+
+| Example | Description |
+|---------|-------------|
+| [Runtime Scanning](https://cdot65.github.io/prisma-airs-go/examples/runtime-scanning/) | SyncScan, AsyncScan, query results, tool event scanning, code scanning |
+| [Security Profile CRUD](https://cdot65.github.io/prisma-airs-go/examples/profile-crud/) | Create, List, GetByID, GetByName, Update, ForceDelete profiles |
+| [Custom Topics CRUD](https://cdot65.github.io/prisma-airs-go/examples/topic-crud/) | Topic lifecycle + integration with profile topic-guardrails |
+| [Red Team Scanning](https://cdot65.github.io/prisma-airs-go/examples/red-team-scanning/) | Target create, launch scan, reports, attacks, remediation |
+| [API Key Rotation](https://cdot65.github.io/prisma-airs-go/examples/api-key-rotation/) | List, identify expiring, regenerate API keys |
+
+Runnable examples in [`examples/`](examples/):
+
+```bash
+go run ./examples/basic-scan/      # requires PANW_AI_SEC_API_KEY
+go run ./examples/profile-crud/    # requires PANW_MGMT_* env vars
+```
+
 ## Documentation
 
 Full documentation at **[cdot65.github.io/prisma-airs-go](https://cdot65.github.io/prisma-airs-go/)** — includes API reference, service guides, OAuth lifecycle docs, and examples.
