@@ -6,7 +6,7 @@
 [![Go 1.22+](https://img.shields.io/badge/go-%3E%3D1.22-00ADD8)](https://go.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Go SDK for Palo Alto Networks **Prisma AIRS** — covering the full lifecycle from configuration management to operational scanning across all three service domains: **AI Runtime Security**, **AI Red Teaming**, and **Model Security**.
+Go SDK for Palo Alto Networks **Prisma AIRS** — covering the full lifecycle from configuration management to operational scanning across all four service domains: **AI Runtime Security**, **Management**, **Model Security**, and **AI Red Teaming**.
 
 ## Installation
 

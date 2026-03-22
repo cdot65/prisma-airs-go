@@ -41,7 +41,7 @@ const (
 ### Constants
 
 ```go
-const Version = "0.3.0"
+const Version = "0.3.1"
 
 // Content limits
 const (
@@ -219,6 +219,44 @@ func (c *CustomerAppsClient) List(ctx context.Context, opts ListOpts) (*Customer
 func (c *CustomerAppsClient) Get(ctx context.Context, appName string) (*CustomerApp, error)
 func (c *CustomerAppsClient) Update(ctx context.Context, appID string, req UpdateAppRequest) (*CustomerApp, error)
 func (c *CustomerAppsClient) Delete(ctx context.Context, appName string, updatedBy string) (*DeleteAppResponse, error)
+```
+
+### CustomerApp Types
+
+```go
+type CustomerApp struct {
+    CustomerAppID    string         `json:"customer_appId,omitempty"`
+    AppName          string         `json:"app_name,omitempty"`
+    TsgID            string         `json:"tsg_id,omitempty"`
+    ModelName        string         `json:"model_name,omitempty"`
+    CloudProvider    string         `json:"cloud_provider,omitempty"`
+    Environment      string         `json:"environment,omitempty"`
+    Status           string         `json:"status,omitempty"`
+    CreatedBy        string         `json:"created_by,omitempty"`
+    UpdatedBy        string         `json:"updated_by,omitempty"`
+    AgentApp         bool           `json:"agent_app,omitempty"`
+    AiAgentFramework string         `json:"ai_agent_framework,omitempty"`
+    AiSecProfileName string         `json:"ai_sec_profile_name,omitempty"`
+    ApiKeysDPInfo    []APIKeyDPInfo `json:"api_keys_dp_info,omitempty"`
+}
+
+type CustomerAppListResponse struct {
+    Items      []CustomerApp `json:"customer_apps"`
+    NextOffset int           `json:"next_offset,omitempty"`
+}
+
+type UpdateAppRequest struct {
+    AppName       string `json:"app_name,omitempty"`
+    ModelName     string `json:"model_name,omitempty"`
+    CloudProvider string `json:"cloud_provider,omitempty"`
+    Environment   string `json:"environment,omitempty"`
+}
+
+type APIKeyDPInfo struct {
+    ApiKeyName string `json:"api_key_name"`
+    DpName     string `json:"dp_name"`
+    AuthCode   string `json:"auth_code"`
+}
 ```
 
 ### ScanLogsClient
