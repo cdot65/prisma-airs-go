@@ -1,5 +1,15 @@
 # Release Notes
 
+## v0.3.0
+
+- **docs**: comprehensive runtime scanning examples — SyncScan, AsyncScan, QueryByScanIDs, QueryByReportIDs, tool event scanning, code scanning
+- **docs**: full custom topics CRUD examples with profile topic-guardrails integration
+- **docs**: end-to-end red team scanning workflow — target create, launch scan, reports, attacks, remediation, custom attacks
+- **docs**: replace stub `examples/basic-scan/main.go` with working 5-step example
+- **docs**: add Examples section to README with links to all example pages
+- **docs**: fix stale User-Agent version string in scan-api.md
+- **chore**: bump SDK version to 0.3.0
+
 ## v0.2.1
 
 - **fix**: `ForceDelete` no longer errors when the API returns non-JSON on success — `DoMgmtRequest` tolerates non-JSON 2xx responses
