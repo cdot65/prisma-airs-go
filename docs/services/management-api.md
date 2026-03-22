@@ -91,7 +91,6 @@ newKey, err := client.ApiKeys.Regenerate(ctx, "key-id", management.RegenerateKey
 ### CustomerApps — Customer Application Management
 
 ```go
-app, err := client.CustomerApps.Create(ctx, management.CreateAppRequest{...})
 apps, err := client.CustomerApps.List(ctx, management.ListOpts{})
 app, err := client.CustomerApps.Get(ctx, "app-name")
 updated, err := client.CustomerApps.Update(ctx, "app-id", management.UpdateAppRequest{...})

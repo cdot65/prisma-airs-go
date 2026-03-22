@@ -273,30 +273,25 @@ type ApiKeyDeleteResponse struct {
 
 // CustomerApp represents a customer application.
 type CustomerApp struct {
-	CustomerAppID    string `json:"customer_appId,omitempty"`
-	AppName          string `json:"app_name,omitempty"`
-	TsgID            string `json:"tsg_id,omitempty"`
-	ModelName        string `json:"model_name,omitempty"`
-	CloudProvider    string `json:"cloud_provider,omitempty"`
-	Environment      string `json:"environment,omitempty"`
-	Status           string `json:"status,omitempty"`
-	CreatedBy        string `json:"created_by,omitempty"`
-	UpdatedBy        string `json:"updated_by,omitempty"`
-	AiAgentFramework string `json:"ai_agent_framework,omitempty"`
+	CustomerAppID    string         `json:"customer_appId,omitempty"`
+	AppName          string         `json:"app_name,omitempty"`
+	TsgID            string         `json:"tsg_id,omitempty"`
+	ModelName        string         `json:"model_name,omitempty"`
+	CloudProvider    string         `json:"cloud_provider,omitempty"`
+	Environment      string         `json:"environment,omitempty"`
+	Status           string         `json:"status,omitempty"`
+	CreatedBy        string         `json:"created_by,omitempty"`
+	UpdatedBy        string         `json:"updated_by,omitempty"`
+	AgentApp         bool           `json:"agent_app,omitempty"`
+	AiAgentFramework string         `json:"ai_agent_framework,omitempty"`
+	AiSecProfileName string         `json:"ai_sec_profile_name,omitempty"`
+	ApiKeysDPInfo    []APIKeyDPInfo `json:"api_keys_dp_info,omitempty"`
 }
 
 // CustomerAppListResponse is the list response for customer apps.
 type CustomerAppListResponse struct {
 	Items      []CustomerApp `json:"customer_apps"`
 	NextOffset int           `json:"next_offset,omitempty"`
-}
-
-// CreateAppRequest is the request to create a customer app.
-type CreateAppRequest struct {
-	AppName       string `json:"app_name"`
-	TsgID         string `json:"tsg_id"`
-	CloudProvider string `json:"cloud_provider"`
-	Environment   string `json:"environment"`
 }
 
 // UpdateAppRequest is the request to update a customer app.
@@ -481,21 +476,6 @@ type APIKeyDPInfo struct {
 	ApiKeyName string `json:"api_key_name"`
 	DpName     string `json:"dp_name"`
 	AuthCode   string `json:"auth_code"`
-}
-
-// CustomerAppWithKeyInfo extends CustomerApp with associated API key/DP info.
-type CustomerAppWithKeyInfo struct {
-	CustomerAppID    string         `json:"customer_appId,omitempty"`
-	AppName          string         `json:"app_name,omitempty"`
-	TsgID            string         `json:"tsg_id,omitempty"`
-	ModelName        string         `json:"model_name,omitempty"`
-	CloudProvider    string         `json:"cloud_provider,omitempty"`
-	Environment      string         `json:"environment,omitempty"`
-	Status           string         `json:"status,omitempty"`
-	CreatedBy        string         `json:"created_by,omitempty"`
-	UpdatedBy        string         `json:"updated_by,omitempty"`
-	AiAgentFramework string         `json:"ai_agent_framework,omitempty"`
-	ApiKeysDPInfo    []APIKeyDPInfo `json:"api_keys_dp_info,omitempty"`
 }
 
 // InvalidateTokenResponse is the response from invalidating a token.

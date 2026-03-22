@@ -230,7 +230,7 @@ func TestApiKeys_Create(t *testing.T) {
 	}
 }
 
-func TestCustomerApps_CRUD(t *testing.T) {
+func TestCustomerApps_GetAndUpdate(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(CustomerApp{CustomerAppID: "a-1", AppName: "test-app"})
 	})
@@ -238,14 +238,6 @@ func TestCustomerApps_CRUD(t *testing.T) {
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
-
-	app, err := client.CustomerApps.Create(context.Background(), CreateAppRequest{AppName: "test-app", TsgID: "123", CloudProvider: "aws", Environment: "prod"})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if app.CustomerAppID != "a-1" {
-		t.Errorf("CustomerAppID = %q", app.CustomerAppID)
-	}
 
 	got, err := client.CustomerApps.Get(context.Background(), "test-app")
 	if err != nil {
@@ -800,8 +792,15 @@ func TestCustomerApps_List(t *testing.T) {
 		if r.Method != "GET" {
 			t.Errorf("method = %s", r.Method)
 		}
+		// Spec endpoint is /v1/mgmt/customerapps (no TSG in path).
+		if strings.Contains(r.URL.Path, "/tsg/") {
+			t.Errorf("path should not contain /tsg/: %s", r.URL.Path)
+		}
+		if !strings.HasSuffix(r.URL.Path, "/customerapps") {
+			t.Errorf("path should end with /customerapps: %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(CustomerAppListResponse{
-			Items: []CustomerApp{{CustomerAppID: "a-1"}},
+			Items: []CustomerApp{{CustomerAppID: "a-1", AgentApp: true, AiSecProfileName: "prof-1"}},
 		})
 	})
 	defer tokenSrv.Close()
@@ -814,6 +813,12 @@ func TestCustomerApps_List(t *testing.T) {
 	}
 	if len(resp.Items) != 1 {
 		t.Errorf("items = %d", len(resp.Items))
+	}
+	if !resp.Items[0].AgentApp {
+		t.Error("AgentApp should be true")
+	}
+	if resp.Items[0].AiSecProfileName != "prof-1" {
+		t.Errorf("AiSecProfileName = %q", resp.Items[0].AiSecProfileName)
 	}
 }
 
@@ -1428,9 +1433,62 @@ func TestTopicArrayConfig_ActionEnum(t *testing.T) {
 	}
 }
 
-func TestCustomerAppWithKeyInfo_JSON(t *testing.T) {
+func TestCustomerApp_AllFields_JSON(t *testing.T) {
+	j := `{
+		"customer_appId": "c8c8822e-817b-447b-b321-3efb8e3f5528",
+		"app_name": "insomnia-client",
+		"tsg_id": "1533764915",
+		"model_name": "default",
+		"cloud_provider": "other",
+		"environment": "dev",
+		"agent_app": true,
+		"ai_agent_framework": "AWS_Agent_Builder",
+		"ai_sec_profile_name": "AI-Firewall-High-Security-Profile",
+		"api_keys_dp_info": [
+			{"api_key_name": "insomnia-api-key", "auth_code": "D6970665", "dp_name": "cdot65-ai-runtime"}
+		]
+	}`
+	var app CustomerApp
+	if err := json.Unmarshal([]byte(j), &app); err != nil {
+		t.Fatal(err)
+	}
+	if !app.AgentApp {
+		t.Error("AgentApp should be true")
+	}
+	if app.AiSecProfileName != "AI-Firewall-High-Security-Profile" {
+		t.Errorf("AiSecProfileName = %q", app.AiSecProfileName)
+	}
+	if len(app.ApiKeysDPInfo) != 1 {
+		t.Fatalf("ApiKeysDPInfo len = %d", len(app.ApiKeysDPInfo))
+	}
+	if app.ApiKeysDPInfo[0].ApiKeyName != "insomnia-api-key" {
+		t.Errorf("ApiKeyName = %q", app.ApiKeysDPInfo[0].ApiKeyName)
+	}
+	if app.ApiKeysDPInfo[0].AuthCode != "D6970665" {
+		t.Errorf("AuthCode = %q", app.ApiKeysDPInfo[0].AuthCode)
+	}
+
+	// Round-trip: verify new fields serialize correctly.
+	data, err := json.Marshal(app)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var raw map[string]any
+	_ = json.Unmarshal(data, &raw)
+	if _, ok := raw["agent_app"]; !ok {
+		t.Error("missing agent_app in JSON")
+	}
+	if _, ok := raw["ai_sec_profile_name"]; !ok {
+		t.Error("missing ai_sec_profile_name in JSON")
+	}
+	if _, ok := raw["api_keys_dp_info"]; !ok {
+		t.Error("missing api_keys_dp_info in JSON")
+	}
+}
+
+func TestCustomerApp_ApiKeysDPInfo_JSON(t *testing.T) {
 	j := `{"customer_appId":"a1","app_name":"test","tsg_id":"t1","api_keys_dp_info":[{"api_key_name":"k1","dp_name":"dp1","auth_code":"ac1"}]}`
-	var app CustomerAppWithKeyInfo
+	var app CustomerApp
 	if err := json.Unmarshal([]byte(j), &app); err != nil {
 		t.Fatal(err)
 	}
