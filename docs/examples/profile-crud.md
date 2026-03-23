@@ -238,6 +238,17 @@ Based on the live API, these are the valid names for each protection type:
 |------|-------------|
 | `agent-security` | `block` |
 
+### app-protection
+
+| Field | Type / Valid Values |
+|-------|-------------------|
+| `default-url-category` | `URLCategoryMember` — default URL categories (e.g., `["malicious"]`) |
+| `url-detected-action` | `block`, `""` (disabled) |
+| `malicious-code-protection` | object with `name` (`"malicious-code"`) and `action` (`"block"`) |
+| `alert-url-category` | `URLCategoryMember` — URL categories for alerts |
+| `block-url-category` | `URLCategoryMember` — URL categories to block |
+| `allow-url-category` | `URLCategoryMember` — URL categories to allow |
+
 ### latency
 
 | Field | Valid Values |
