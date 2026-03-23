@@ -157,14 +157,14 @@ type ContentError struct {
 
 // ToolDetectionFlags holds boolean detection flags per service.
 type ToolDetectionFlags struct {
-	Injection      bool `json:"injection,omitempty"`
-	URLCats        bool `json:"url_cats,omitempty"`
-	DLP            bool `json:"dlp,omitempty"`
-	DBSecurity     bool `json:"db_security,omitempty"`
-	ToxicContent   bool `json:"toxic_content,omitempty"`
-	MaliciousCode  bool `json:"malicious_code,omitempty"`
-	Agent          bool `json:"agent,omitempty"`
-	TopicViolation bool `json:"topic_violation,omitempty"`
+	Injection      bool `json:"injection"`
+	URLCats        bool `json:"url_cats"`
+	DLP            bool `json:"dlp"`
+	DBSecurity     bool `json:"db_security"`
+	ToxicContent   bool `json:"toxic_content"`
+	MaliciousCode  bool `json:"malicious_code"`
+	Agent          bool `json:"agent"`
+	TopicViolation bool `json:"topic_violation"`
 }
 
 // TopicGuardRails holds topic guardrail details.

@@ -65,7 +65,7 @@ type DataLeakMember struct {
 type DataLeakDetectionConfig struct {
 	Member         []DataLeakMember `json:"member"`
 	Action         ProfileAction    `json:"action"`
-	MaskDataInline bool             `json:"mask-data-inline,omitempty"`
+	MaskDataInline bool             `json:"mask-data-inline"`
 }
 
 // DatabaseSecurityConfig holds a database security CRUD action entry.
@@ -117,7 +117,7 @@ type AgentProtectionConfig struct {
 
 // ModelConfiguration holds the model-configuration section of a security profile.
 type ModelConfiguration struct {
-	MaskDataInStorage bool                    `json:"mask-data-in-storage,omitempty"`
+	MaskDataInStorage bool                    `json:"mask-data-in-storage"`
 	Latency           *LatencyConfig          `json:"latency,omitempty"`
 	DataProtection    *DataProtectionConfig   `json:"data-protection,omitempty"`
 	AppProtection     *AppProtectionConfig    `json:"app-protection,omitempty"`
@@ -156,7 +156,7 @@ type SecurityProfile struct {
 	ProfileID      string         `json:"profile_id,omitempty"`
 	ProfileName    string         `json:"profile_name,omitempty"`
 	Revision       int32          `json:"revision,omitempty"`
-	Active         bool           `json:"active,omitempty"`
+	Active         bool           `json:"active"`
 	Policy         *ProfilePolicy `json:"policy,omitempty"`
 	CreatedBy      string         `json:"created_by,omitempty"`
 	UpdatedBy      string         `json:"updated_by,omitempty"`
@@ -191,7 +191,7 @@ type CustomTopic struct {
 	TopicID        string   `json:"topic_id,omitempty"`
 	TopicName      string   `json:"topic_name,omitempty"`
 	Revision       int64    `json:"revision,omitempty"`
-	Active         bool     `json:"active,omitempty"`
+	Active         bool     `json:"active"`
 	Description    string   `json:"description,omitempty"`
 	Examples       []string `json:"examples,omitempty"`
 	CreatedBy      string   `json:"created_by,omitempty"`
@@ -234,7 +234,7 @@ type ApiKey struct {
 	CspID                string `json:"csp_id,omitempty"`
 	TsgID                string `json:"tsg_id,omitempty"`
 	Expiration           string `json:"expiration,omitempty"`
-	Revoked              bool   `json:"revoked,omitempty"`
+	Revoked              bool   `json:"revoked"`
 	RevokeReason         string `json:"revoke_reason,omitempty"`
 	CustApp              string `json:"cust_app,omitempty"`
 	CustEnv              string `json:"cust_env,omitempty"`
@@ -298,7 +298,7 @@ type CustomerApp struct {
 	Status           string         `json:"status,omitempty"`
 	CreatedBy        string         `json:"created_by,omitempty"`
 	UpdatedBy        string         `json:"updated_by,omitempty"`
-	AgentApp         bool           `json:"agent_app,omitempty"`
+	AgentApp         bool           `json:"agent_app"`
 	AiAgentFramework string         `json:"ai_agent_framework,omitempty"`
 	AiSecProfileName string         `json:"ai_sec_profile_name,omitempty"`
 	ApiKeysDPInfo    []APIKeyDPInfo `json:"api_keys_dp_info,omitempty"`
@@ -382,8 +382,8 @@ type ScanLog struct {
 	Status                string        `json:"status,omitempty"`
 	Verdict               string        `json:"verdict,omitempty"`
 	Action                ProfileAction `json:"action,omitempty"`
-	IsPrompt              bool          `json:"is_prompt,omitempty"`
-	IsResponse            bool          `json:"is_response,omitempty"`
+	IsPrompt              bool          `json:"is_prompt"`
+	IsResponse            bool          `json:"is_response"`
 	PIFinalVerdict        string        `json:"pi_final_verdict,omitempty"`
 	UFFinalVerdict        string        `json:"uf_final_verdict,omitempty"`
 	DLPFinalVerdict       string        `json:"dlp_final_verdict,omitempty"`
@@ -426,7 +426,7 @@ type ScanLog struct {
 	ResponseTGAction      ProfileAction `json:"response_tg_action,omitempty"`
 	ResponseVerdict       string        `json:"response_verdict,omitempty"`
 	DetectionServiceFlags int32         `json:"detection_service_flags,omitempty"`
-	ContentMasked         bool          `json:"content_masked,omitempty"`
+	ContentMasked         bool          `json:"content_masked"`
 	UserIP                string        `json:"user_ip,omitempty"`
 }
 
