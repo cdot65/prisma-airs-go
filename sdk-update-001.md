@@ -1,6 +1,6 @@
 # SDK Update 001: Missing Management Model Fields
 
-**SDK:** `prisma-airs-go` v0.3.1 → v0.3.2 (pending version bump)
+**SDK:** `prisma-airs-go` v0.3.1 → v0.4.0
 **PRs:** #82, #83
 **Package:** `github.com/cdot65/prisma-airs-go/aisec/runtime`
 **File:** `aisec/runtime/models.go`
