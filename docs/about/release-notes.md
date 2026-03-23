@@ -1,5 +1,9 @@
 # Release Notes
 
+## v0.4.1
+
+- **fix**: remove `omitempty` from 33 plain `bool` JSON struct tags — `false` was silently dropped during marshaling, causing Terraform state drift
+
 ## v0.4.0
 
 - **breaking**: consolidate `aisec/management` and `aisec/scan` into unified `aisec/runtime` package — all import paths change
