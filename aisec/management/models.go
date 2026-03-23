@@ -68,9 +68,16 @@ type DataLeakDetectionConfig struct {
 	MaskDataInline bool             `json:"mask-data-inline,omitempty"`
 }
 
+// DatabaseSecurityConfig holds a database security CRUD action entry.
+type DatabaseSecurityConfig struct {
+	Name   string `json:"name"`
+	Action string `json:"action"`
+}
+
 // DataProtectionConfig holds data protection configuration.
 type DataProtectionConfig struct {
 	DataLeakDetection *DataLeakDetectionConfig `json:"data-leak-detection,omitempty"`
+	DatabaseSecurity  []DatabaseSecurityConfig `json:"database-security,omitempty"`
 }
 
 // URLCategoryMember holds URL category member list.
