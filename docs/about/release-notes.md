@@ -1,5 +1,27 @@
 # Release Notes
 
+## v0.4.0
+
+- **breaking**: consolidate `aisec/management` and `aisec/scan` into unified `aisec/runtime` package — all import paths change
+- **feat**: add `DefaultURLCategory`, `UrlDetectedAction`, `MaliciousCodeProtection` fields to `AppProtectionConfig`
+- **feat**: add `DatabaseSecurity` field to `DataProtectionConfig` with `DatabaseSecurityConfig` type
+- **refactor**: package structure now mirrors functional domains: `runtime`, `modelsecurity`, `redteam`
+- **docs**: rename `management-api.md` to `runtime-api.md`, update all documentation
+
+### Migration
+
+```diff
+- import "github.com/cdot65/prisma-airs-go/aisec/management"
+- import "github.com/cdot65/prisma-airs-go/aisec/scan"
++ import "github.com/cdot65/prisma-airs-go/aisec/runtime"
+
+- client, err := management.NewClient(management.Opts{...})
++ client, err := runtime.NewClient(runtime.Opts{...})
+
+- scanner := scan.NewScanner(cfg)
++ scanner := runtime.NewScanner(cfg)
+```
+
 ## v0.3.1
 
 - **fix**: customer apps `List` endpoint changed from `/v1/mgmt/customerapp/tsg/{id}` to `/v1/mgmt/customerapps` per OpenAPI spec — resolves timeout
