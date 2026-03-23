@@ -86,12 +86,12 @@ type MaliciousCodeProtectionConfig struct {
 
 // AppProtectionConfig holds app protection URL category configuration.
 type AppProtectionConfig struct {
-	AlertURLCategory        *URLCategoryMember              `json:"alert-url-category,omitempty"`
-	BlockURLCategory        *URLCategoryMember              `json:"block-url-category,omitempty"`
-	AllowURLCategory        *URLCategoryMember              `json:"allow-url-category,omitempty"`
-	DefaultURLCategory      *URLCategoryMember              `json:"default-url-category,omitempty"`
-	UrlDetectedAction       string                          `json:"url-detected-action,omitempty"`
-	MaliciousCodeProtection *MaliciousCodeProtectionConfig  `json:"malicious-code-protection,omitempty"`
+	AlertURLCategory        *URLCategoryMember             `json:"alert-url-category,omitempty"`
+	BlockURLCategory        *URLCategoryMember             `json:"block-url-category,omitempty"`
+	AllowURLCategory        *URLCategoryMember             `json:"allow-url-category,omitempty"`
+	DefaultURLCategory      *URLCategoryMember             `json:"default-url-category,omitempty"`
+	UrlDetectedAction       string                         `json:"url-detected-action,omitempty"`
+	MaliciousCodeProtection *MaliciousCodeProtectionConfig `json:"malicious-code-protection,omitempty"`
 }
 
 // ModelProtectionConfig holds model protection configuration.
