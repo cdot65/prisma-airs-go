@@ -945,3 +945,72 @@ func TestCategoryModel_RequiredFieldsSerialized(t *testing.T) {
 		}
 	}
 }
+
+// TestRedTeam_BoolFalse_NotOmitted verifies that false on plain bool fields
+// is serialized into JSON (not silently dropped by omitempty).
+func TestRedTeam_BoolFalse_NotOmitted(t *testing.T) {
+	tests := []struct {
+		name string
+		val  any
+		keys []string
+	}{
+		{
+			name: "TargetCreateRequest.SessionSupported=false",
+			val:  &TargetCreateRequest{Name: "t", SessionSupported: false},
+			keys: []string{"session_supported"},
+		},
+		{
+			name: "TargetUpdateRequest.SessionSupported=false",
+			val:  &TargetUpdateRequest{Name: "t", SessionSupported: false},
+			keys: []string{"session_supported"},
+		},
+		{
+			name: "TargetMetadata.MultiTurn+RateLimitEnabled+ContentFilterEnabled=false",
+			val:  &TargetMetadata{MultiTurn: false, RateLimitEnabled: false, ContentFilterEnabled: false},
+			keys: []string{"multi_turn", "rate_limit_enabled", "content_filter_enabled"},
+		},
+		{
+			name: "AttackDetailResponse.MultiTurn=false",
+			val:  &AttackDetailResponse{MultiTurn: false},
+			keys: []string{"multi_turn"},
+		},
+		{
+			name: "Goal.CustomGoal=false",
+			val:  &Goal{CustomGoal: false},
+			keys: []string{"custom_goal"},
+		},
+		{
+			name: "CustomPromptSetResponse.Active+Archive=false",
+			val:  &CustomPromptSetResponse{UUID: "x", Active: false, Archive: false},
+			keys: []string{"active", "archive"},
+		},
+		{
+			name: "CustomPromptResponse.UserDefinedGoal+Active=false",
+			val:  &CustomPromptResponse{UUID: "x", UserDefinedGoal: false, Active: false},
+			keys: []string{"user_defined_goal", "active"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			data, err := json.Marshal(tt.val)
+			if err != nil {
+				t.Fatalf("marshal: %v", err)
+			}
+			m := make(map[string]any)
+			if err := json.Unmarshal(data, &m); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			for _, key := range tt.keys {
+				v, ok := m[key]
+				if !ok {
+					t.Errorf("bool field %q omitted from JSON when false", key)
+					continue
+				}
+				if v != false {
+					t.Errorf("bool field %q = %v, want false", key, v)
+				}
+			}
+		})
+	}
+}
