@@ -15,8 +15,7 @@ go get github.com/cdot65/prisma-airs-go
 ```go
 import (
     "github.com/cdot65/prisma-airs-go/aisec"
-    "github.com/cdot65/prisma-airs-go/aisec/scan"
-    "github.com/cdot65/prisma-airs-go/aisec/management"
+    "github.com/cdot65/prisma-airs-go/aisec/runtime"
     "github.com/cdot65/prisma-airs-go/aisec/modelsecurity"
     "github.com/cdot65/prisma-airs-go/aisec/redteam"
 )

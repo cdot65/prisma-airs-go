@@ -1,4 +1,4 @@
-package scan
+package runtime
 
 import (
 	"encoding/json"

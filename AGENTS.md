@@ -12,7 +12,7 @@ Go SDK for Palo Alto Networks Prisma AIRS. Port of TypeScript `@cdot65/prisma-ai
 make check          # fmt + vet + lint + test — run before every commit
 make test           # go test -race ./...
 make lint           # golangci-lint run ./...
-go test -v ./aisec/scan/ -run TestSyncScan   # single test
+go test -v ./aisec/runtime/ -run TestSyncScan   # single test
 ```
 
 ## Repository Layout
@@ -20,8 +20,7 @@ go test -v ./aisec/scan/ -run TestSyncScan   # single test
 ```
 aisec/                      # Core package: constants, config, errors, utils
   internal/                 # Private: HTTP client, retry, OAuth client
-  scan/                     # Scan API (API key HMAC-SHA256 auth)
-  management/               # Management API — 8 sub-clients (OAuth2)
+  runtime/                  # Runtime API — Scanner (API key) + Client with 8 sub-clients (OAuth2)
   modelsecurity/            # Model Security API — 3 sub-clients, dual endpoint (OAuth2)
   redteam/                  # Red Team API — 5 sub-clients, dual endpoint (OAuth2)
 docs/                       # MkDocs Material source
@@ -31,12 +30,12 @@ examples/                   # Usage examples
 
 ## Architecture
 
-Four service domains, two auth methods:
+Three service domains, two auth methods:
 
 | Domain | Package | Auth | Entry Point |
 |--------|---------|------|-------------|
-| AI Runtime Security | `aisec/scan` | API Key (HMAC-SHA256) | `scan.NewScanner(cfg)` |
-| Management | `aisec/management` | OAuth2 client_credentials | `management.NewClient(opts)` |
+| AI Runtime Security (scan) | `aisec/runtime` | API Key (HMAC-SHA256) | `runtime.NewScanner(cfg)` |
+| AI Runtime Security (mgmt) | `aisec/runtime` | OAuth2 client_credentials | `runtime.NewClient(opts)` |
 | Model Security | `aisec/modelsecurity` | OAuth2 client_credentials | `modelsecurity.NewClient(opts)` |
 | Red Team | `aisec/redteam` | OAuth2 client_credentials | `redteam.NewClient(opts)` |
 
@@ -66,8 +65,8 @@ Credentials resolve in order: constructor options → service-specific env → f
 
 | Prefix | Service | Fallback |
 |--------|---------|----------|
-| `PANW_AI_SEC_` | Scan API | — |
-| `PANW_MGMT_` | Management API | — |
+| `PANW_AI_SEC_` | Runtime scan API | — |
+| `PANW_MGMT_` | Runtime management API | — |
 | `PANW_MODEL_SEC_` | Model Security | `PANW_MGMT_` |
 | `PANW_RED_TEAM_` | Red Team | `PANW_MGMT_` |
 
@@ -100,9 +99,9 @@ Scan API tests use a single mock server with API key validation.
 
 ### Adding a new API method
 
-1. Add the model types to `models.go` in the appropriate package
-2. Write a failing test in `client_test.go` (RED)
-3. Implement the method in `client.go` (GREEN)
+1. Add the model types to `models.go` (or `scan_models.go` for scan types) in `aisec/runtime/`
+2. Write a failing test in `client_test.go` or `scanner_test.go` (RED)
+3. Implement the method in `client.go` or `scanner.go` (GREEN)
 4. Run `make check` — must pass before committing
 5. Update docs if the method is user-facing
 

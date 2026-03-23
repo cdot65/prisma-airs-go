@@ -52,15 +52,15 @@ profile, err := client.Profiles.GetByName(ctx, "my-profile")
 
 ```go
 // ProfileAction for model-protection, agent-protection, latency, data-protection
-management.ProfileActionAllow    // "allow"
-management.ProfileActionBlock    // "block"
-management.ProfileActionAlert    // "alert"
-management.ProfileActionDisabled // "" (disabled)
+runtime.ProfileActionAllow    // "allow"
+runtime.ProfileActionBlock    // "block"
+runtime.ProfileActionAlert    // "alert"
+runtime.ProfileActionDisabled // "" (disabled)
 
 // ToxicContentAction for toxic-content model-protection (compound values)
-management.ToxicContentHighBlockModerateAllow // "high:block, moderate:allow"
-management.ToxicContentHighBlockModerateBlock // "high:block, moderate:block"
-management.ToxicContentHighAllowModerateAllow // "high:allow, moderate:allow"
+runtime.ToxicContentHighBlockModerateAllow // "high:block, moderate:allow"
+runtime.ToxicContentHighBlockModerateBlock // "high:block, moderate:block"
+runtime.ToxicContentHighAllowModerateAllow // "high:allow, moderate:allow"
 ```
 
 ## Valid Protection Names (from live API)

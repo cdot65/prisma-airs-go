@@ -2,7 +2,7 @@
 
 All clients can be configured via environment variables, constructor options, or a combination of both. Constructor options take precedence over environment variables.
 
-## Scan API (API Key Auth)
+## Runtime API — Scanning (API Key Auth)
 
 | Variable | Description | Required |
 |----------|-------------|----------|
@@ -21,7 +21,7 @@ cfg := aisec.NewConfig(
 )
 ```
 
-## Management API (OAuth2)
+## Runtime API — Management (OAuth2)
 
 | Variable | Description | Required |
 |----------|-------------|----------|
@@ -33,10 +33,10 @@ cfg := aisec.NewConfig(
 
 ```go
 // From environment variables
-client, err := management.NewClient(management.Opts{})
+client, err := runtime.NewClient(runtime.Opts{})
 
 // Explicit configuration
-client, err := management.NewClient(management.Opts{
+client, err := runtime.NewClient(runtime.Opts{
     ClientID:     "your-client-id",
     ClientSecret: "your-client-secret",
     TsgID:        "1234567890",
@@ -80,6 +80,6 @@ Falls back to `PANW_MGMT_*` variables if service-specific variables are not set.
 | India | `https://service-in.api.aisecurity.paloaltonetworks.com` |
 | Singapore | `https://service-sg.api.aisecurity.paloaltonetworks.com` |
 
-### Management / Model Security / Red Team
+### Runtime (Management) / Model Security / Red Team
 
 All OAuth2-based APIs share the same base domains. Override using the endpoint environment variables above.

@@ -26,7 +26,7 @@ go run ./examples/profile-crud/
 ### Step 1: Initialize Client
 
 ```go
-client, err := management.NewClient(management.Opts{
+client, err := runtime.NewClient(runtime.Opts{
     ClientID:     os.Getenv("PANW_MGMT_CLIENT_ID"),
     ClientSecret: os.Getenv("PANW_MGMT_CLIENT_SECRET"),
     TsgID:        os.Getenv("PANW_MGMT_TSG_ID"),
@@ -38,23 +38,23 @@ client, err := management.NewClient(management.Opts{
 Creates a profile with prompt-injection blocking and agent security.
 
 ```go
-created, err := client.Profiles.Create(ctx, management.CreateProfileRequest{
+created, err := client.Profiles.Create(ctx, runtime.CreateProfileRequest{
     ProfileName: profileName,
-    Policy: &management.ProfilePolicy{
-        AiSecurityProfiles: []management.AiSecurityProfileConfig{
+    Policy: &runtime.ProfilePolicy{
+        AiSecurityProfiles: []runtime.AiSecurityProfileConfig{
             {
                 ModelType: "default",
-                ModelConfiguration: &management.ModelConfiguration{
+                ModelConfiguration: &runtime.ModelConfiguration{
                     MaskDataInStorage: false,
-                    Latency: &management.LatencyConfig{
-                        InlineTimeoutAction: management.ProfileActionBlock,
+                    Latency: &runtime.LatencyConfig{
+                        InlineTimeoutAction: runtime.ProfileActionBlock,
                         MaxInlineLatency:    5,
                     },
-                    ModelProtection: []management.ModelProtectionConfig{
-                        {Name: "prompt-injection", Action: management.ProfileActionBlock},
+                    ModelProtection: []runtime.ModelProtectionConfig{
+                        {Name: "prompt-injection", Action: runtime.ProfileActionBlock},
                     },
-                    AgentProtection: []management.AgentProtectionConfig{
-                        {Name: "agent-security", Action: management.ProfileActionBlock},
+                    AgentProtection: []runtime.AgentProtectionConfig{
+                        {Name: "agent-security", Action: runtime.ProfileActionBlock},
                     },
                 },
             },
@@ -99,7 +99,7 @@ created, err := client.Profiles.Create(ctx, management.CreateProfileRequest{
 ### Step 3: List Profiles
 
 ```go
-listResp, err := client.Profiles.List(ctx, management.ListOpts{Limit: 100})
+listResp, err := client.Profiles.List(ctx, runtime.ListOpts{Limit: 100})
 ```
 
 **Response (abbreviated):**
@@ -137,28 +137,28 @@ byName, err := client.Profiles.GetByName(ctx, profileName)
 Adds `contextual-grounding` and `toxic-content` protections, increases latency timeout to 10 seconds, upgrades agent-security to block.
 
 ```go
-updated, err := client.Profiles.Update(ctx, created.ProfileID, management.UpdateProfileRequest{
+updated, err := client.Profiles.Update(ctx, created.ProfileID, runtime.UpdateProfileRequest{
     ProfileName: profileName,
-    Policy: &management.ProfilePolicy{
-        AiSecurityProfiles: []management.AiSecurityProfileConfig{
+    Policy: &runtime.ProfilePolicy{
+        AiSecurityProfiles: []runtime.AiSecurityProfileConfig{
             {
                 ModelType: "default",
-                ModelConfiguration: &management.ModelConfiguration{
+                ModelConfiguration: &runtime.ModelConfiguration{
                     MaskDataInStorage: false,
-                    Latency: &management.LatencyConfig{
-                        InlineTimeoutAction: management.ProfileActionBlock,
+                    Latency: &runtime.LatencyConfig{
+                        InlineTimeoutAction: runtime.ProfileActionBlock,
                         MaxInlineLatency:    10,
                     },
-                    ModelProtection: []management.ModelProtectionConfig{
-                        {Name: "prompt-injection", Action: management.ProfileActionBlock},
-                        {Name: "contextual-grounding", Action: management.ProfileActionBlock},
+                    ModelProtection: []runtime.ModelProtectionConfig{
+                        {Name: "prompt-injection", Action: runtime.ProfileActionBlock},
+                        {Name: "contextual-grounding", Action: runtime.ProfileActionBlock},
                         {
                             Name:   "toxic-content",
-                            Action: management.ProfileAction(management.ToxicContentHighBlockModerateAllow),
+                            Action: runtime.ProfileAction(runtime.ToxicContentHighBlockModerateAllow),
                         },
                     },
-                    AgentProtection: []management.AgentProtectionConfig{
-                        {Name: "agent-security", Action: management.ProfileActionBlock},
+                    AgentProtection: []runtime.AgentProtectionConfig{
+                        {Name: "agent-security", Action: runtime.ProfileActionBlock},
                     },
                 },
             },

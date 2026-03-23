@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Go SDK for Palo Alto Networks Prisma AIRS — covers the full lifecycle across all four service domains (AI Runtime Security, Management, Model Security, AI Red Teaming). Port of the TypeScript `@cdot65/prisma-airs-sdk`. Zero external dependencies (stdlib only). Foundation for a Terraform provider.
+Go SDK for Palo Alto Networks Prisma AIRS — covers the full lifecycle across three service domains (AI Runtime Security, Model Security, AI Red Teaming). Port of the TypeScript `@cdot65/prisma-airs-sdk`. Zero external dependencies (stdlib only). Foundation for a Terraform provider.
 
 ## Commands
 
@@ -21,16 +21,16 @@ make check          # fmt + vet + lint + test (CI equivalent)
 Run a single test:
 
 ```bash
-go test -v ./aisec/scan/ -run TestSyncScan
+go test -v ./aisec/runtime/ -run TestSyncScan
 go test -v ./... -run "TestName"
 ```
 
 ## Architecture
 
-**4 service domains**, 2 auth methods:
+**3 service domains**, 2 auth methods:
 
-- **Scan API** (API Key): `scan.NewScanner(cfg)` → SyncScan, AsyncScan, QueryByScanIDs, QueryByReportIDs
-- **Management API** (OAuth2): `management.NewClient(opts)` → 8 sub-clients (profiles, topics, apikeys, apps, dlp, deployment, scanlogs, oauth)
+- **Runtime API — Scan** (API Key): `runtime.NewScanner(cfg)` → SyncScan, AsyncScan, QueryByScanIDs, QueryByReportIDs
+- **Runtime API — Management** (OAuth2): `runtime.NewClient(opts)` → 8 sub-clients (profiles, topics, apikeys, apps, dlp, deployment, scanlogs, oauth)
 - **Model Security API** (OAuth2): `modelsecurity.NewClient(opts)` → 3 sub-clients (scans, groups, rules) + GetPyPIAuth, dual endpoint
 - **Red Team API** (OAuth2): `redteam.NewClient(opts)` → 5 sub-clients (scans, reports, customAttackReports, targets, customAttacks) + 7 convenience methods, dual endpoint
 
@@ -38,8 +38,7 @@ Key packages:
 
 - `aisec/` — constants, config (functional options), errors (`AISecSDKError`), utils (UUID, HMAC)
 - `aisec/internal/` — `DoRequest[T]`, `DoMgmtRequest[T]`, `ExecuteWithRetry`, `OAuthClient`, `ResolveOAuthConfig`
-- `aisec/scan/` — Scanner, Content with byte-length validation
-- `aisec/management/` — Client + 8 sub-clients
+- `aisec/runtime/` — Scanner + Content (data plane) and Client + 8 sub-clients (management plane)
 - `aisec/modelsecurity/` — Client + 3 sub-clients, data plane / mgmt plane split
 - `aisec/redteam/` — Client + 5 sub-clients + 7 convenience methods, data plane / mgmt plane split
 

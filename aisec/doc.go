@@ -2,8 +2,8 @@
 //
 // The SDK covers four service domains:
 //
-//   - Scan API (API key auth): real-time content scanning
-//   - Management API (OAuth2): security profile and topic CRUD
+//   - Runtime API — Scan (API key auth): real-time content scanning
+//   - Runtime API — Management (OAuth2): security profile and topic CRUD
 //   - Model Security API (OAuth2): ML model scanning and security rules
 //   - Red Team API (OAuth2): automated attack testing and reporting
 //
@@ -13,18 +13,18 @@
 //
 //	import (
 //	    "github.com/cdot65/prisma-airs-go/aisec"
-//	    "github.com/cdot65/prisma-airs-go/aisec/scan"
+//	    "github.com/cdot65/prisma-airs-go/aisec/runtime"
 //	)
 //
 //	cfg := aisec.NewConfig(aisec.WithAPIKey("your-api-key"))
-//	scanner := scan.NewScanner(cfg)
+//	scanner := runtime.NewScanner(cfg)
 //	resp, err := scanner.SyncScan(ctx, profile, content)
 //
 // Management API with OAuth2:
 //
-//	import "github.com/cdot65/prisma-airs-go/aisec/management"
+//	import "github.com/cdot65/prisma-airs-go/aisec/runtime"
 //
-//	client, err := management.NewClient(management.Opts{
+//	client, err := runtime.NewClient(runtime.Opts{
 //	    ClientID:     "id",
 //	    ClientSecret: "secret",
 //	    TsgID:        "tsg-id",

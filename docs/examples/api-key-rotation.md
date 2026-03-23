@@ -1,6 +1,6 @@
 # API Key Rotation
 
-This example demonstrates end-to-end API key management using the Management API.
+This example demonstrates end-to-end API key management using the Runtime API.
 
 ## Prerequisites
 
@@ -21,18 +21,18 @@ import (
     "log"
     "time"
 
-    "github.com/cdot65/prisma-airs-go/aisec/management"
+    "github.com/cdot65/prisma-airs-go/aisec/runtime"
 )
 
 func main() {
     ctx := context.Background()
-    client, err := management.NewClient(management.Opts{})
+    client, err := runtime.NewClient(runtime.Opts{})
     if err != nil {
         log.Fatal(err)
     }
 
     // 1. List existing keys
-    keys, err := client.ApiKeys.List(ctx, management.ListOpts{Limit: 100})
+    keys, err := client.ApiKeys.List(ctx, runtime.ListOpts{Limit: 100})
     if err != nil {
         log.Fatal("Failed to list keys:", err)
     }
@@ -47,7 +47,7 @@ func main() {
                 key.ApiKeyName, key.Expiration)
 
             // 3. Regenerate the key
-            newKey, err := client.ApiKeys.Regenerate(ctx, key.ApiKeyID, management.RegenerateKeyRequest{
+            newKey, err := client.ApiKeys.Regenerate(ctx, key.ApiKeyID, runtime.RegenerateKeyRequest{
                 UpdatedBy: "rotation-script",
             })
             if err != nil {

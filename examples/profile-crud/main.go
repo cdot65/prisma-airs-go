@@ -1,4 +1,4 @@
-// Example: full CRUD lifecycle for security profiles using the management API.
+// Example: full CRUD lifecycle for security profiles using the runtime API.
 //
 // Requires environment variables:
 //
@@ -18,16 +18,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/cdot65/prisma-airs-go/aisec/management"
+	"github.com/cdot65/prisma-airs-go/aisec/runtime"
 )
 
 func main() {
 	// ── 1. Initialize client ──────────────────────────────────────────────
 	fmt.Println("═══ Security Profile CRUD Example ═══")
 	fmt.Println()
-	fmt.Println("── Step 1: Initialize management client")
+	fmt.Println("── Step 1: Initialize runtime client")
 
-	client, err := management.NewClient(management.Opts{
+	client, err := runtime.NewClient(runtime.Opts{
 		ClientID:     os.Getenv("PANW_MGMT_CLIENT_ID"),
 		ClientSecret: os.Getenv("PANW_MGMT_CLIENT_SECRET"),
 		TsgID:        os.Getenv("PANW_MGMT_TSG_ID"),
@@ -45,28 +45,28 @@ func main() {
 
 	// ── 2. Create ─────────────────────────────────────────────────────────
 	fmt.Println("── Step 2: Create profile")
-	created, err := client.Profiles.Create(ctx, management.CreateProfileRequest{
+	created, err := client.Profiles.Create(ctx, runtime.CreateProfileRequest{
 		ProfileName: profileName,
-		Policy: &management.ProfilePolicy{
-			AiSecurityProfiles: []management.AiSecurityProfileConfig{
+		Policy: &runtime.ProfilePolicy{
+			AiSecurityProfiles: []runtime.AiSecurityProfileConfig{
 				{
 					ModelType: "default",
-					ModelConfiguration: &management.ModelConfiguration{
+					ModelConfiguration: &runtime.ModelConfiguration{
 						MaskDataInStorage: false,
-						Latency: &management.LatencyConfig{
-							InlineTimeoutAction: management.ProfileActionBlock,
+						Latency: &runtime.LatencyConfig{
+							InlineTimeoutAction: runtime.ProfileActionBlock,
 							MaxInlineLatency:    5,
 						},
-						ModelProtection: []management.ModelProtectionConfig{
+						ModelProtection: []runtime.ModelProtectionConfig{
 							{
 								Name:   "prompt-injection",
-								Action: management.ProfileActionBlock,
+								Action: runtime.ProfileActionBlock,
 							},
 						},
-						AgentProtection: []management.AgentProtectionConfig{
+						AgentProtection: []runtime.AgentProtectionConfig{
 							{
 								Name:   "agent-security",
-								Action: management.ProfileActionBlock,
+								Action: runtime.ProfileActionBlock,
 							},
 						},
 					},
@@ -95,7 +95,7 @@ func main() {
 
 	// ── 3. List ───────────────────────────────────────────────────────────
 	fmt.Println("── Step 3: List profiles")
-	listResp, err := client.Profiles.List(ctx, management.ListOpts{Limit: 100})
+	listResp, err := client.Profiles.List(ctx, runtime.ListOpts{Limit: 100})
 	if err != nil {
 		log.Fatalf("Profiles.List: %v", err)
 	}
@@ -126,36 +126,36 @@ func main() {
 
 	// ── 6. Update ─────────────────────────────────────────────────────────
 	fmt.Println("── Step 6: Update profile")
-	updated, err := client.Profiles.Update(ctx, created.ProfileID, management.UpdateProfileRequest{
+	updated, err := client.Profiles.Update(ctx, created.ProfileID, runtime.UpdateProfileRequest{
 		ProfileName: profileName,
-		Policy: &management.ProfilePolicy{
-			AiSecurityProfiles: []management.AiSecurityProfileConfig{
+		Policy: &runtime.ProfilePolicy{
+			AiSecurityProfiles: []runtime.AiSecurityProfileConfig{
 				{
 					ModelType: "default",
-					ModelConfiguration: &management.ModelConfiguration{
+					ModelConfiguration: &runtime.ModelConfiguration{
 						MaskDataInStorage: false,
-						Latency: &management.LatencyConfig{
-							InlineTimeoutAction: management.ProfileActionBlock,
+						Latency: &runtime.LatencyConfig{
+							InlineTimeoutAction: runtime.ProfileActionBlock,
 							MaxInlineLatency:    10,
 						},
-						ModelProtection: []management.ModelProtectionConfig{
+						ModelProtection: []runtime.ModelProtectionConfig{
 							{
 								Name:   "prompt-injection",
-								Action: management.ProfileActionBlock,
+								Action: runtime.ProfileActionBlock,
 							},
 							{
 								Name:   "contextual-grounding",
-								Action: management.ProfileActionBlock,
+								Action: runtime.ProfileActionBlock,
 							},
 							{
 								Name:   "toxic-content",
-								Action: management.ProfileAction(management.ToxicContentHighBlockModerateAllow),
+								Action: runtime.ProfileAction(runtime.ToxicContentHighBlockModerateAllow),
 							},
 						},
-						AgentProtection: []management.AgentProtectionConfig{
+						AgentProtection: []runtime.AgentProtectionConfig{
 							{
 								Name:   "agent-security",
-								Action: management.ProfileActionBlock,
+								Action: runtime.ProfileActionBlock,
 							},
 						},
 					},

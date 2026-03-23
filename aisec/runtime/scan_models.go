@@ -1,4 +1,4 @@
-package scan
+package runtime
 
 // AiProfile identifies the security profile for scanning.
 type AiProfile struct {
