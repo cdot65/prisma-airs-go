@@ -75,6 +75,33 @@ func TestDlpSnippetMeta_RequiredFieldsSerialized(t *testing.T) {
 	}
 }
 
+// TestToolDetectionFlags_BoolFalse_NotOmitted verifies that false detection
+// flags are serialized (not dropped by omitempty).
+func TestToolDetectionFlags_BoolFalse_NotOmitted(t *testing.T) {
+	flags := ToolDetectionFlags{} // all false
+	data, err := json.Marshal(flags)
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	m := make(map[string]any)
+	if err := json.Unmarshal(data, &m); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	for _, key := range []string{
+		"injection", "url_cats", "dlp", "db_security",
+		"toxic_content", "malicious_code", "agent", "topic_violation",
+	} {
+		v, ok := m[key]
+		if !ok {
+			t.Errorf("bool field %q omitted from JSON when false", key)
+			continue
+		}
+		if v != false {
+			t.Errorf("bool field %q = %v, want false", key, v)
+		}
+	}
+}
+
 func TestDlpSnippetObject_RequiredFieldsSerialized(t *testing.T) {
 	resp := DlpSnippetObject{}
 	data, err := json.Marshal(resp)

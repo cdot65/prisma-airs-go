@@ -431,7 +431,7 @@ type AttackDetailResponse struct {
 	MarkedSafe             *bool            `json:"marked_safe,omitempty"`
 	Threat                 *bool            `json:"threat,omitempty"`
 	AttackType             string           `json:"attack_type,omitempty"`
-	MultiTurn              bool             `json:"multi_turn,omitempty"`
+	MultiTurn              bool             `json:"multi_turn"`
 	ASR                    *float64         `json:"asr,omitempty"`
 	Version                *int             `json:"version,omitempty"`
 	PromptMappingID        string           `json:"prompt_mapping_id,omitempty"`
@@ -459,7 +459,7 @@ type AttackMultiTurnDetailResponse struct {
 	MarkedSafe *bool  `json:"marked_safe,omitempty"`
 	Turn       int    `json:"turn,omitempty"`
 	Generation int    `json:"generation,omitempty"`
-	MultiTurn  bool   `json:"multi_turn,omitempty"`
+	MultiTurn  bool   `json:"multi_turn"`
 }
 
 // RemediationResponse is the remediation advice response.
@@ -489,7 +489,7 @@ type Goal struct {
 	SafeResponse       string         `json:"safe_response,omitempty"`
 	JailbrokenResponse string         `json:"jailbroken_response,omitempty"`
 	GoalMetadata       map[string]any `json:"goal_metadata,omitempty"`
-	CustomGoal         bool           `json:"custom_goal,omitempty"`
+	CustomGoal         bool           `json:"custom_goal"`
 	TsgID              string         `json:"tsg_id,omitempty"`
 	JobID              string         `json:"job_id,omitempty"`
 	GoalToShow         string         `json:"goal_to_show,omitempty"`
@@ -574,7 +574,7 @@ type TargetCreateRequest struct {
 	APIEndpointType          APIEndpointType          `json:"api_endpoint_type,omitempty"`
 	NetworkBrokerChannelUUID string                   `json:"network_broker_channel_uuid,omitempty"`
 	ResponseMode             string                   `json:"response_mode,omitempty"`
-	SessionSupported         bool                     `json:"session_supported,omitempty"`
+	SessionSupported         bool                     `json:"session_supported"`
 	ExtraInfo                map[string]any           `json:"extra_info,omitempty"`
 	TargetMeta               *TargetMetadata          `json:"target_metadata,omitempty"`
 	TargetBackground         *TargetBackground        `json:"target_background,omitempty"`
@@ -591,7 +591,7 @@ type TargetUpdateRequest struct {
 	APIEndpointType          APIEndpointType          `json:"api_endpoint_type,omitempty"`
 	NetworkBrokerChannelUUID string                   `json:"network_broker_channel_uuid,omitempty"`
 	ResponseMode             ResponseMode             `json:"response_mode,omitempty"`
-	SessionSupported         bool                     `json:"session_supported,omitempty"`
+	SessionSupported         bool                     `json:"session_supported"`
 	ExtraInfo                map[string]any           `json:"extra_info,omitempty"`
 	TargetMeta               *TargetMetadata          `json:"target_metadata,omitempty"`
 	TargetBackground         *TargetBackground        `json:"target_background,omitempty"`
@@ -616,7 +616,7 @@ type TargetResponse struct {
 	ConnectionParams map[string]any           `json:"connection_params,omitempty"`
 	APIEndpointType  APIEndpointType          `json:"api_endpoint_type,omitempty"`
 	ResponseMode     string                   `json:"response_mode,omitempty"`
-	SessionSupported bool                     `json:"session_supported,omitempty"`
+	SessionSupported bool                     `json:"session_supported"`
 	ExtraInfo        map[string]any           `json:"extra_info,omitempty"`
 	Active           bool                     `json:"active"`
 	Validated        bool                     `json:"validated"`
@@ -642,7 +642,7 @@ type TargetListItem struct {
 	ConnectionType   TargetConnectionType `json:"connection_type,omitempty"`
 	APIEndpointType  APIEndpointType      `json:"api_endpoint_type,omitempty"`
 	ResponseMode     string               `json:"response_mode,omitempty"`
-	SessionSupported bool                 `json:"session_supported,omitempty"`
+	SessionSupported bool                 `json:"session_supported"`
 	ExtraInfo        map[string]any       `json:"extra_info,omitempty"`
 	Status           TargetStatus         `json:"status"`
 	Active           bool                 `json:"active"`
@@ -669,7 +669,7 @@ type TargetProbeRequest struct {
 	ConnectionType           TargetConnectionType `json:"connection_type,omitempty"`
 	APIEndpointType          APIEndpointType      `json:"api_endpoint_type,omitempty"`
 	ResponseMode             ResponseMode         `json:"response_mode,omitempty"`
-	SessionSupported         *bool                `json:"session_supported,omitempty"`
+	SessionSupported         *bool                `json:"session_supported"`
 	ConnectionParams         map[string]any       `json:"connection_params,omitempty"`
 	NetworkBrokerChannelUUID string               `json:"network_broker_channel_uuid,omitempty"`
 	ExtraInfo                map[string]any       `json:"extra_info,omitempty"`
@@ -725,8 +725,8 @@ type CustomPromptSetResponse struct {
 	Description     string         `json:"description,omitempty"`
 	Version         string         `json:"version,omitempty"`
 	Status          string         `json:"status,omitempty"`
-	Active          bool           `json:"active,omitempty"`
-	Archive         bool           `json:"archive,omitempty"`
+	Active          bool           `json:"active"`
+	Archive         bool           `json:"archive"`
 	Stats           map[string]any `json:"stats,omitempty"`
 	ExtraInfo       map[string]any `json:"extra_info,omitempty"`
 	PropertyNames   []string       `json:"property_names,omitempty"`
@@ -753,7 +753,7 @@ type CustomPromptSetReference struct {
 	Name      string `json:"name,omitempty"`
 	Version   string `json:"version,omitempty"`
 	Status    string `json:"status,omitempty"`
-	Active    bool   `json:"active,omitempty"`
+	Active    bool   `json:"active"`
 	TsgID     string `json:"tsg_id,omitempty"`
 	CreatedAt string `json:"created_at,omitempty"`
 	UpdatedAt string `json:"updated_at,omitempty"`
@@ -786,12 +786,12 @@ type CustomPromptResponse struct {
 	PromptSetID         string               `json:"prompt_set_id,omitempty"`
 	Prompt              string               `json:"prompt,omitempty"`
 	Goal                string               `json:"goal,omitempty"`
-	UserDefinedGoal     bool                 `json:"user_defined_goal,omitempty"`
+	UserDefinedGoal     bool                 `json:"user_defined_goal"`
 	DetectorCategory    string               `json:"detector_category,omitempty"`
 	Severity            string               `json:"severity,omitempty"`
 	Properties          map[string]any       `json:"properties,omitempty"`
 	PropertyAssignments []PropertyAssignment `json:"property_assignments,omitempty"`
-	Active              bool                 `json:"active,omitempty"`
+	Active              bool                 `json:"active"`
 	Status              string               `json:"status,omitempty"`
 	ExtraInfo           map[string]any       `json:"extra_info,omitempty"`
 	CreatedAt           string               `json:"created_at,omitempty"`
@@ -834,14 +834,14 @@ type PropertyValuesMultipleResponse struct {
 
 // TargetMetadata holds target metadata for probing/profiling.
 type TargetMetadata struct {
-	MultiTurn                 bool           `json:"multi_turn,omitempty"`
+	MultiTurn                 bool           `json:"multi_turn"`
 	MultiTurnErrorMessage     string         `json:"multi_turn_error_message,omitempty"`
 	RateLimit                 *int           `json:"rate_limit,omitempty"`
-	RateLimitEnabled          bool           `json:"rate_limit_enabled,omitempty"`
+	RateLimitEnabled          bool           `json:"rate_limit_enabled"`
 	RateLimitErrorCode        *int           `json:"rate_limit_error_code,omitempty"`
 	RateLimitErrorJSON        map[string]any `json:"rate_limit_error_json,omitempty"`
 	RateLimitErrorMessage     string         `json:"rate_limit_error_message,omitempty"`
-	ContentFilterEnabled      bool           `json:"content_filter_enabled,omitempty"`
+	ContentFilterEnabled      bool           `json:"content_filter_enabled"`
 	ContentFilterErrorCode    *int           `json:"content_filter_error_code,omitempty"`
 	ContentFilterErrorJSON    map[string]any `json:"content_filter_error_json,omitempty"`
 	ContentFilterErrorMessage string         `json:"content_filter_error_message,omitempty"`

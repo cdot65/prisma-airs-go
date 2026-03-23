@@ -212,6 +212,75 @@ func TestDataProtectionConfig_DatabaseSecurityNull(t *testing.T) {
 	}
 }
 
+// TestBoolFalse_NotOmitted verifies that explicit false on plain bool fields
+// is serialized into JSON (not silently dropped by omitempty).
+func TestBoolFalse_NotOmitted(t *testing.T) {
+	tests := []struct {
+		name string
+		val  any
+		keys []string
+	}{
+		{
+			name: "ModelConfiguration.MaskDataInStorage=false",
+			val:  &ModelConfiguration{MaskDataInStorage: false},
+			keys: []string{"mask-data-in-storage"},
+		},
+		{
+			name: "DataLeakDetectionConfig.MaskDataInline=false",
+			val:  &DataLeakDetectionConfig{MaskDataInline: false},
+			keys: []string{"mask-data-inline"},
+		},
+		{
+			name: "SecurityProfile.Active=false",
+			val:  &SecurityProfile{Active: false},
+			keys: []string{"active"},
+		},
+		{
+			name: "CustomTopic.Active=false",
+			val:  &CustomTopic{Active: false},
+			keys: []string{"active"},
+		},
+		{
+			name: "ApiKey.Revoked=false",
+			val:  &ApiKey{Revoked: false},
+			keys: []string{"revoked"},
+		},
+		{
+			name: "CustomerApp.AgentApp=false",
+			val:  &CustomerApp{AgentApp: false},
+			keys: []string{"agent_app"},
+		},
+		{
+			name: "ScanLog.IsPrompt+IsResponse+ContentMasked=false",
+			val:  &ScanLog{IsPrompt: false, IsResponse: false, ContentMasked: false},
+			keys: []string{"is_prompt", "is_response", "content_masked"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			data, err := json.Marshal(tt.val)
+			if err != nil {
+				t.Fatalf("marshal: %v", err)
+			}
+			m := make(map[string]any)
+			if err := json.Unmarshal(data, &m); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			for _, key := range tt.keys {
+				v, ok := m[key]
+				if !ok {
+					t.Errorf("bool field %q omitted from JSON when false", key)
+					continue
+				}
+				if v != false {
+					t.Errorf("bool field %q = %v, want false", key, v)
+				}
+			}
+		})
+	}
+}
+
 func TestDataProtectionConfig_DatabaseSecurityAbsent(t *testing.T) {
 	input := `{
 		"data-leak-detection": {"action": "block", "member": null}
