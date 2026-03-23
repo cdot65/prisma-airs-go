@@ -6,7 +6,7 @@
 [![Go 1.22+](https://img.shields.io/badge/go-%3E%3D1.22-00ADD8)](https://go.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Go SDK for Palo Alto Networks **Prisma AIRS** — covering the full lifecycle from configuration management to operational scanning across all four service domains: **AI Runtime Security**, **Management**, **Model Security**, and **AI Red Teaming**.
+Go SDK for Palo Alto Networks **Prisma AIRS** — covering the full lifecycle from configuration management to operational scanning across three service domains: **AI Runtime Security**, **Model Security**, and **AI Red Teaming**.
 
 ## Installation
 
@@ -18,12 +18,12 @@ Requires Go 1.22+. Zero external dependencies (stdlib only).
 
 ## What's Included
 
-| Service                 | Client                  | Auth    | Capabilities                                               |
-| ----------------------- | ----------------------- | ------- | ---------------------------------------------------------- |
-| **AI Runtime Security** | `scan.Scanner`          | API Key | Sync/async content scanning, prompt injection detection    |
-| **Management**          | `management.Client`     | OAuth2  | Profiles, topics, API keys, apps, DLP, deployment, logs    |
-| **Model Security**      | `modelsecurity.Client`  | OAuth2  | ML model scanning, security groups, rule management        |
-| **AI Red Teaming**      | `redteam.Client`        | OAuth2  | Automated red team scans, reports, targets, custom attacks |
+| Service                 | Client                  | Auth           | Capabilities                                               |
+| ----------------------- | ----------------------- | -------------- | ---------------------------------------------------------- |
+| **AI Runtime Security** | `runtime.Scanner`       | API Key        | Sync/async content scanning, prompt injection detection    |
+| **AI Runtime Security** | `runtime.Client`        | OAuth2         | Profiles, topics, API keys, apps, DLP, deployment, logs    |
+| **Model Security**      | `modelsecurity.Client`  | OAuth2         | ML model scanning, security groups, rule management        |
+| **AI Red Teaming**      | `redteam.Client`        | OAuth2         | Automated red team scans, reports, targets, custom attacks |
 
 All OAuth2 services share credentials and handle token lifecycle automatically (caching, proactive refresh, 401/403 auto-retry).
 
@@ -40,14 +40,14 @@ import (
     "log"
 
     "github.com/cdot65/prisma-airs-go/aisec"
-    "github.com/cdot65/prisma-airs-go/aisec/scan"
+    "github.com/cdot65/prisma-airs-go/aisec/runtime"
 )
 
 func main() {
     cfg := aisec.NewConfig(aisec.WithAPIKey("YOUR_API_KEY"))
-    scanner := scan.NewScanner(cfg)
+    scanner := runtime.NewScanner(cfg)
 
-    content, err := scan.NewContent(scan.ContentOpts{
+    content, err := runtime.NewContent(runtime.ContentOpts{
         Prompt:   "What is the capital of France?",
         Response: "The capital of France is Paris.",
     })
@@ -55,7 +55,7 @@ func main() {
         log.Fatal(err)
     }
 
-    result, err := scanner.SyncScan(context.Background(), scan.AiProfile{ProfileName: "my-profile"}, content)
+    result, err := scanner.SyncScan(context.Background(), runtime.AiProfile{ProfileName: "my-profile"}, content)
     if err != nil {
         log.Fatal(err)
     }
@@ -65,12 +65,12 @@ func main() {
 }
 ```
 
-### Management — Configuration CRUD (OAuth2)
+### AI Runtime Security — Management CRUD (OAuth2)
 
 ```go
-import "github.com/cdot65/prisma-airs-go/aisec/management"
+import "github.com/cdot65/prisma-airs-go/aisec/runtime"
 
-client, err := management.NewClient(management.Opts{}) // reads PANW_MGMT_* env vars
+client, err := runtime.NewClient(runtime.Opts{}) // reads PANW_MGMT_* env vars
 
 // 8 sub-clients available:
 client.Profiles           // AI security profile CRUD

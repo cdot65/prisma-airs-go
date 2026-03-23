@@ -21,7 +21,7 @@ go run ./examples/topic-crud/
 ### Step 1: Initialize Client
 
 ```go
-client, err := management.NewClient(management.Opts{
+client, err := runtime.NewClient(runtime.Opts{
     ClientID:     os.Getenv("PANW_MGMT_CLIENT_ID"),
     ClientSecret: os.Getenv("PANW_MGMT_CLIENT_SECRET"),
     TsgID:        os.Getenv("PANW_MGMT_TSG_ID"),
@@ -33,7 +33,7 @@ client, err := management.NewClient(management.Opts{
 Define a custom topic with example phrases that the detection engine uses for classification.
 
 ```go
-created, err := client.Topics.Create(ctx, management.CreateTopicRequest{
+created, err := client.Topics.Create(ctx, runtime.CreateTopicRequest{
     TopicName:   "company-financials",
     Description: "Detect discussions about internal financial data",
     Examples: []string{
@@ -66,7 +66,7 @@ created, err := client.Topics.Create(ctx, management.CreateTopicRequest{
 ### Step 3: List Topics
 
 ```go
-listResp, err := client.Topics.List(ctx, management.ListOpts{Limit: 100})
+listResp, err := client.Topics.List(ctx, runtime.ListOpts{Limit: 100})
 
 fmt.Printf("Total topics: %d\n", len(listResp.Items))
 for _, t := range listResp.Items {
@@ -79,7 +79,7 @@ for _, t := range listResp.Items {
 Add more examples and refine the description. The `TopicName` field is required by the API even on update.
 
 ```go
-updated, err := client.Topics.Update(ctx, created.TopicID, management.UpdateTopicRequest{
+updated, err := client.Topics.Update(ctx, created.TopicID, runtime.UpdateTopicRequest{
     TopicName:   "company-financials",
     Description: "Detect discussions about internal financial data and forecasts",
     Examples: []string{
@@ -133,21 +133,21 @@ resp, err := client.Topics.ForceDelete(ctx, created.TopicID, "admin@example.com"
 Once a topic exists, reference it in a security profile's `topic-guardrails` model protection:
 
 ```go
-created, err := client.Profiles.Create(ctx, management.CreateProfileRequest{
+created, err := client.Profiles.Create(ctx, runtime.CreateProfileRequest{
     ProfileName: "financial-guardrails",
-    Policy: &management.ProfilePolicy{
-        AiSecurityProfiles: []management.AiSecurityProfileConfig{
+    Policy: &runtime.ProfilePolicy{
+        AiSecurityProfiles: []runtime.AiSecurityProfileConfig{
             {
                 ModelType: "default",
-                ModelConfiguration: &management.ModelConfiguration{
-                    ModelProtection: []management.ModelProtectionConfig{
+                ModelConfiguration: &runtime.ModelConfiguration{
+                    ModelProtection: []runtime.ModelProtectionConfig{
                         {
                             Name:   "topic-guardrails",
-                            Action: management.ProfileActionBlock,
-                            TopicList: []management.TopicArrayConfig{
+                            Action: runtime.ProfileActionBlock,
+                            TopicList: []runtime.TopicArrayConfig{
                                 {
-                                    Action: management.ProfileActionBlock,
-                                    Topic: []management.TopicRef{
+                                    Action: runtime.ProfileActionBlock,
+                                    Topic: []runtime.TopicRef{
                                         {TopicName: "company-financials"},
                                     },
                                 },

@@ -64,7 +64,7 @@ var HTTPForceRetryStatusCodes = []int{500, 502, 503, 504}
 
 ---
 
-## Package `scan`
+## Package `runtime`
 
 ### Scanner
 
@@ -150,10 +150,6 @@ type ToolEventMetadata struct {
     ToolInvoked string `json:"tool_invoked,omitempty"`
 }
 ```
-
----
-
-## Package `management`
 
 ### Client
 

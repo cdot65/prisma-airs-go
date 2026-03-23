@@ -74,7 +74,7 @@ nav:
       - Quick Start: getting-started/quick-start.md
   - Services:
       - Scan API: services/scan-api.md
-      - Management API: services/management-api.md
+      - Runtime API: services/runtime-api.md
       - OAuth Lifecycle: services/oauth-lifecycle.md
       - Model Security API: services/model-security-api.md
       - Red Team API: services/red-team-api.md

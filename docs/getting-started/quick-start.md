@@ -4,8 +4,8 @@
 
 | Auth Method | Used By | Credentials |
 |-------------|---------|-------------|
-| **API Key** (HMAC-SHA256) | Scan API | `PANW_AI_SEC_API_KEY` |
-| **OAuth2** (client_credentials) | Management, Model Security, Red Team | `PANW_MGMT_CLIENT_ID`, `PANW_MGMT_CLIENT_SECRET`, `PANW_MGMT_TSG_ID` |
+| **API Key** (HMAC-SHA256) | Runtime API (scanning) | `PANW_AI_SEC_API_KEY` |
+| **OAuth2** (client_credentials) | Runtime (management), Model Security, Red Team | `PANW_MGMT_CLIENT_ID`, `PANW_MGMT_CLIENT_SECRET`, `PANW_MGMT_TSG_ID` |
 
 ## AI Runtime Security — Content Scanning
 
@@ -18,14 +18,14 @@ import (
     "log"
 
     "github.com/cdot65/prisma-airs-go/aisec"
-    "github.com/cdot65/prisma-airs-go/aisec/scan"
+    "github.com/cdot65/prisma-airs-go/aisec/runtime"
 )
 
 func main() {
     cfg := aisec.NewConfig(aisec.WithAPIKey("YOUR_API_KEY"))
-    scanner := scan.NewScanner(cfg)
+    scanner := runtime.NewScanner(cfg)
 
-    content, err := scan.NewContent(scan.ContentOpts{
+    content, err := runtime.NewContent(runtime.ContentOpts{
         Prompt:   "What is the capital of France?",
         Response: "The capital of France is Paris.",
     })
@@ -35,7 +35,7 @@ func main() {
 
     result, err := scanner.SyncScan(
         context.Background(),
-        scan.AiProfile{ProfileName: "my-profile"},
+        runtime.AiProfile{ProfileName: "my-profile"},
         content,
     )
     if err != nil {
@@ -48,7 +48,7 @@ func main() {
 }
 ```
 
-## Management API — Profile CRUD
+## Runtime API — Profile CRUD
 
 ```go
 package main
@@ -58,11 +58,11 @@ import (
     "fmt"
     "log"
 
-    "github.com/cdot65/prisma-airs-go/aisec/management"
+    "github.com/cdot65/prisma-airs-go/aisec/runtime"
 )
 
 func main() {
-    client, err := management.NewClient(management.Opts{
+    client, err := runtime.NewClient(runtime.Opts{
         ClientID:     "your-client-id",
         ClientSecret: "your-client-secret",
         TsgID:        "1234567890",
@@ -72,7 +72,7 @@ func main() {
     }
 
     // List security profiles
-    profiles, err := client.Profiles.List(context.Background(), management.ListOpts{
+    profiles, err := client.Profiles.List(context.Background(), runtime.ListOpts{
         Limit: 10,
     })
     if err != nil {

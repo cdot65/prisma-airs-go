@@ -1,6 +1,6 @@
 # OAuth Lifecycle
 
-All OAuth2-based clients (Management, Model Security, Red Team) share a common token lifecycle implementation. The SDK handles token caching, proactive refresh, and automatic retry on auth failures.
+All OAuth2-based clients (Runtime, Model Security, Red Team) share a common token lifecycle implementation. The SDK handles token caching, proactive refresh, and automatic retry on auth failures.
 
 ## Token States
 
@@ -40,7 +40,7 @@ fmt.Printf("Expires in: %v\n", info.ExpiresIn)
 The SDK refreshes tokens **before** they expire. The default buffer is 30 seconds — if a request happens within 30s of expiry, the SDK fetches a new token proactively.
 
 ```go
-client := management.NewClient(management.Opts{
+client := runtime.NewClient(runtime.Opts{
     TokenBufferMs: 60000, // refresh 60s before expiry
 })
 ```

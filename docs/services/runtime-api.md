@@ -1,11 +1,11 @@
-# Management API
+# Runtime API
 
-The Management API provides CRUD operations for AIRS configuration — security profiles, custom topics, API keys, customer apps, and more. It uses OAuth2 client_credentials for authentication.
+The Runtime API provides CRUD operations for AIRS configuration — security profiles, custom topics, API keys, customer apps, and more — as well as real-time content scanning for prompts, responses, and tool events. It uses OAuth2 client_credentials for authentication (management operations) and API Key HMAC-SHA256 for scanning operations.
 
 ## Authentication
 
 ```go
-client, err := management.NewClient(management.Opts{
+client, err := runtime.NewClient(runtime.Opts{
     ClientID:     "your-client-id",
     ClientSecret: "your-client-secret",
     TsgID:        "1234567890",
@@ -24,7 +24,7 @@ export PANW_MGMT_TSG_ID=1234567890
 ```
 
 ```go
-client, err := management.NewClient(management.Opts{})
+client, err := runtime.NewClient(runtime.Opts{})
 if err != nil {
     log.Fatal(err)
 }
@@ -32,19 +32,19 @@ if err != nil {
 
 ## Sub-Clients
 
-The `ManagementClient` exposes 8 sub-clients:
+The `RuntimeClient` exposes 8 sub-clients:
 
 ### Profiles — Security Profile CRUD
 
 ```go
 // Create
-profile, err := client.Profiles.Create(ctx, management.CreateProfileRequest{
+profile, err := client.Profiles.Create(ctx, runtime.CreateProfileRequest{
     ProfileName: "my-profile",
     // ... policy configuration
 })
 
 // List with pagination
-profiles, err := client.Profiles.List(ctx, management.ListOpts{Limit: 10, Offset: 0})
+profiles, err := client.Profiles.List(ctx, runtime.ListOpts{Limit: 10, Offset: 0})
 
 // Get by ID (client-side filter over List)
 profile, err := client.Profiles.GetByID(ctx, "profile-uuid")
@@ -53,7 +53,7 @@ profile, err := client.Profiles.GetByID(ctx, "profile-uuid")
 profile, err := client.Profiles.GetByName(ctx, "my-profile")
 
 // Update
-updated, err := client.Profiles.Update(ctx, "profile-id", management.UpdateProfileRequest{...})
+updated, err := client.Profiles.Update(ctx, "profile-id", runtime.UpdateProfileRequest{...})
 
 // Delete
 resp, err := client.Profiles.Delete(ctx, "profile-id")
@@ -66,15 +66,15 @@ resp, err = client.Profiles.ForceDelete(ctx, "profile-id", "admin@example.com")
 
 ```go
 // Create
-topic, err := client.Topics.Create(ctx, management.CreateTopicRequest{
+topic, err := client.Topics.Create(ctx, runtime.CreateTopicRequest{
     TopicName:   "company-secrets",
     Description: "Detect company confidential information",
     Examples:    []string{"revenue figures", "strategic plans"},
 })
 
 // List, Update, Delete, ForceDelete
-topics, err := client.Topics.List(ctx, management.ListOpts{})
-updated, err := client.Topics.Update(ctx, "topic-id", management.UpdateTopicRequest{...})
+topics, err := client.Topics.List(ctx, runtime.ListOpts{})
+updated, err := client.Topics.Update(ctx, "topic-id", runtime.UpdateTopicRequest{...})
 resp, err := client.Topics.Delete(ctx, "topic-id")
 resp, err = client.Topics.ForceDelete(ctx, "topic-id", "admin@example.com") // resp.Message may be empty
 ```
@@ -82,39 +82,39 @@ resp, err = client.Topics.ForceDelete(ctx, "topic-id", "admin@example.com") // r
 ### ApiKeys — API Key Lifecycle
 
 ```go
-key, err := client.ApiKeys.Create(ctx, management.CreateApiKeyRequest{...})
-keys, err := client.ApiKeys.List(ctx, management.ListOpts{})
+key, err := client.ApiKeys.Create(ctx, runtime.CreateApiKeyRequest{...})
+keys, err := client.ApiKeys.List(ctx, runtime.ListOpts{})
 resp, err := client.ApiKeys.Delete(ctx, "key-name", "admin@example.com")
-newKey, err := client.ApiKeys.Regenerate(ctx, "key-id", management.RegenerateKeyRequest{...})
+newKey, err := client.ApiKeys.Regenerate(ctx, "key-id", runtime.RegenerateKeyRequest{...})
 ```
 
 ### CustomerApps — Customer Application Management
 
 ```go
-apps, err := client.CustomerApps.List(ctx, management.ListOpts{})
+apps, err := client.CustomerApps.List(ctx, runtime.ListOpts{})
 app, err := client.CustomerApps.Get(ctx, "app-name")
-updated, err := client.CustomerApps.Update(ctx, "app-id", management.UpdateAppRequest{...})
+updated, err := client.CustomerApps.Update(ctx, "app-id", runtime.UpdateAppRequest{...})
 resp, err := client.CustomerApps.Delete(ctx, "app-name", "admin@example.com")
 ```
 
 ### DlpProfiles — DLP Data Profiles (Read-Only)
 
 ```go
-profiles, err := client.DlpProfiles.List(ctx, management.ListOpts{})
+profiles, err := client.DlpProfiles.List(ctx, runtime.ListOpts{})
 profile, err := client.DlpProfiles.Get(ctx, "profile-id")
 ```
 
 ### DeploymentProfiles — Deployment Profiles (Read-Only)
 
 ```go
-profiles, err := client.DeploymentProfiles.List(ctx, management.ListOpts{})
+profiles, err := client.DeploymentProfiles.List(ctx, runtime.ListOpts{})
 profile, err := client.DeploymentProfiles.Get(ctx, "profile-id")
 ```
 
 ### ScanLogs — Scan Activity Logs (Read-Only)
 
 ```go
-logs, err := client.ScanLogs.List(ctx, management.ScanLogListOpts{
+logs, err := client.ScanLogs.List(ctx, runtime.ScanLogListOpts{
     TimeInterval: 24,
     TimeUnit:     "hour",
     PageNumber:   1,
@@ -126,7 +126,7 @@ logs, err := client.ScanLogs.List(ctx, management.ScanLogListOpts{
 ### OAuth — Token Management
 
 ```go
-token, err := client.OAuth.GetToken(ctx, management.OAuthTokenRequest{
+token, err := client.OAuth.GetToken(ctx, runtime.OAuthTokenRequest{
     ClientID: "your-client-id",
 })
 resp, err := client.OAuth.InvalidateToken(ctx)
@@ -141,18 +141,18 @@ Security profile action fields use typed enums instead of bare strings.
 Used on all action fields across profile configs (latency, model-protection, agent-protection, data-leak-detection, topic-list) and scan log action fields.
 
 ```go
-management.ProfileActionAllow    // "allow"
-management.ProfileActionBlock    // "block"
-management.ProfileActionAlert    // "alert"
-management.ProfileActionDisabled // "" (empty — disabled/unset)
+runtime.ProfileActionAllow    // "allow"
+runtime.ProfileActionBlock    // "block"
+runtime.ProfileActionAlert    // "alert"
+runtime.ProfileActionDisabled // "" (empty — disabled/unset)
 ```
 
 Example:
 
 ```go
-cfg := management.ModelProtectionConfig{
+cfg := runtime.ModelProtectionConfig{
     Name:   "prompt-injection",
-    Action: management.ProfileActionBlock,
+    Action: runtime.ProfileActionBlock,
 }
 ```
 
@@ -161,9 +161,9 @@ cfg := management.ModelProtectionConfig{
 Compound action for toxic content categories — encodes severity-level thresholds.
 
 ```go
-management.ToxicContentHighBlockModerateAllow // "high:block, moderate:allow"
-management.ToxicContentHighBlockModerateBlock // "high:block, moderate:block"
-management.ToxicContentHighAllowModerateAllow // "high:allow, moderate:allow"
+runtime.ToxicContentHighBlockModerateAllow // "high:block, moderate:allow"
+runtime.ToxicContentHighBlockModerateBlock // "high:block, moderate:block"
+runtime.ToxicContentHighAllowModerateAllow // "high:allow, moderate:allow"
 ```
 
 Note: `ToxicCategoryConfig.Action` remains `string` since it accepts both simple (`ProfileAction`) and compound (`ToxicContentAction`) values.
