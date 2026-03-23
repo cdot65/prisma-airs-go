@@ -1,4 +1,4 @@
-package scan
+package runtime
 
 import (
 	"github.com/cdot65/prisma-airs-go/aisec"

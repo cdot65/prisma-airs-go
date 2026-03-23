@@ -1,6 +1,6 @@
 //go:build integration
 
-package management
+package runtime
 
 import (
 	"context"
