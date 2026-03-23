@@ -157,3 +157,71 @@ func TestAppProtectionConfig_FullRealResponse(t *testing.T) {
 		t.Errorf("UrlDetectedAction = %q, want %q", cfg.UrlDetectedAction, "block")
 	}
 }
+
+func TestDataProtectionConfig_DatabaseSecurity(t *testing.T) {
+	input := `{
+		"data-leak-detection": {"action": "block", "member": [{"text": "IP Addresses", "id": "11995029", "version": "1"}]},
+		"database-security": [
+			{"name": "database-security-create", "action": "block"},
+			{"name": "database-security-read", "action": "allow"},
+			{"name": "database-security-update", "action": "block"},
+			{"name": "database-security-delete", "action": "block"}
+		]
+	}`
+
+	var cfg DataProtectionConfig
+	if err := json.Unmarshal([]byte(input), &cfg); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if len(cfg.DatabaseSecurity) != 4 {
+		t.Fatalf("DatabaseSecurity len = %d, want 4", len(cfg.DatabaseSecurity))
+	}
+	if cfg.DatabaseSecurity[0].Name != "database-security-create" {
+		t.Errorf("DatabaseSecurity[0].Name = %q, want %q", cfg.DatabaseSecurity[0].Name, "database-security-create")
+	}
+	if cfg.DatabaseSecurity[1].Action != "allow" {
+		t.Errorf("DatabaseSecurity[1].Action = %q, want %q", cfg.DatabaseSecurity[1].Action, "allow")
+	}
+
+	// round-trip
+	data, err := json.Marshal(cfg)
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	var rt DataProtectionConfig
+	if err := json.Unmarshal(data, &rt); err != nil {
+		t.Fatalf("round-trip unmarshal: %v", err)
+	}
+	if !reflect.DeepEqual(cfg, rt) {
+		t.Error("round-trip mismatch")
+	}
+}
+
+func TestDataProtectionConfig_DatabaseSecurityNull(t *testing.T) {
+	input := `{
+		"data-leak-detection": {"action": "", "member": null},
+		"database-security": null
+	}`
+
+	var cfg DataProtectionConfig
+	if err := json.Unmarshal([]byte(input), &cfg); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if cfg.DatabaseSecurity != nil {
+		t.Errorf("DatabaseSecurity should be nil, got %v", cfg.DatabaseSecurity)
+	}
+}
+
+func TestDataProtectionConfig_DatabaseSecurityAbsent(t *testing.T) {
+	input := `{
+		"data-leak-detection": {"action": "block", "member": null}
+	}`
+
+	var cfg DataProtectionConfig
+	if err := json.Unmarshal([]byte(input), &cfg); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if cfg.DatabaseSecurity != nil {
+		t.Errorf("DatabaseSecurity should be nil when absent, got %v", cfg.DatabaseSecurity)
+	}
+}
