@@ -695,6 +695,7 @@ type TargetProfileResponse struct {
 // BaseResponse is a generic base response.
 type BaseResponse struct {
 	Message string `json:"message,omitempty"`
+	Status  int    `json:"status,omitempty"`
 }
 
 // --- Custom Attack types ---
@@ -956,7 +957,8 @@ type SentimentResponse struct {
 
 // DashboardOverviewResponse is the dashboard overview.
 type DashboardOverviewResponse struct {
-	Overview map[string]any `json:"overview,omitempty"`
+	TotalTargets  int           `json:"total_targets"`
+	TargetsByType []CountByName `json:"targets_by_type,omitempty"`
 }
 
 // --- List Options ---

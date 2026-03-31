@@ -1014,3 +1014,34 @@ func TestRedTeam_BoolFalse_NotOmitted(t *testing.T) {
 		})
 	}
 }
+
+func TestDashboardOverviewResponse_JSON(t *testing.T) {
+	raw := `{"total_targets":5,"targets_by_type":[{"name":"APPLICATION","count":3},{"name":"MODEL","count":2}]}`
+	var resp DashboardOverviewResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.TotalTargets != 5 {
+		t.Errorf("TotalTargets = %d, want 5", resp.TotalTargets)
+	}
+	if len(resp.TargetsByType) != 2 {
+		t.Errorf("TargetsByType len = %d, want 2", len(resp.TargetsByType))
+	}
+	if resp.TargetsByType[0].Name != "APPLICATION" {
+		t.Errorf("TargetsByType[0].Name = %q", resp.TargetsByType[0].Name)
+	}
+}
+
+func TestBaseResponse_JSON(t *testing.T) {
+	raw := `{"message":"ok","status":200}`
+	var resp BaseResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.Message != "ok" {
+		t.Errorf("Message = %q", resp.Message)
+	}
+	if resp.Status != 200 {
+		t.Errorf("Status = %d, want 200", resp.Status)
+	}
+}

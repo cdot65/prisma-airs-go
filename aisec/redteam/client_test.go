@@ -567,7 +567,10 @@ func TestGetSentiment(t *testing.T) {
 
 func TestGetDashboardOverview(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(DashboardOverviewResponse{Overview: map[string]any{"risk": "low"}})
+		_ = json.NewEncoder(w).Encode(DashboardOverviewResponse{
+			TotalTargets:  5,
+			TargetsByType: []CountByName{{Name: "APPLICATION", Count: 3}},
+		})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
@@ -577,8 +580,8 @@ func TestGetDashboardOverview(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.Overview["risk"] == nil {
-		t.Error("missing overview")
+	if resp.TotalTargets != 5 {
+		t.Errorf("TotalTargets = %d", resp.TotalTargets)
 	}
 }
 
