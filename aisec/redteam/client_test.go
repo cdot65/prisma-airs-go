@@ -1340,13 +1340,21 @@ func TestCustomAttacks_CreatePropertyValue(t *testing.T) {
 		if r.Method != "POST" {
 			t.Errorf("method = %s", r.Method)
 		}
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/property-values") {
+			t.Errorf("path = %s, want suffix /v1/custom-attack/property-values", r.URL.Path)
+		}
+		if strings.HasSuffix(r.URL.Path, "/create") {
+			t.Errorf("path should not end with /create: %s", r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(BaseResponse{Message: "created"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	resp, err := client.CustomAttacks.CreatePropertyValue(context.Background(), PropertyValueCreateRequest{})
+	resp, err := client.CustomAttacks.CreatePropertyValue(context.Background(), PropertyValueCreateRequest{
+		PropertyName: "category", Value: "security",
+	})
 	if err != nil {
 		t.Fatal(err)
 	}

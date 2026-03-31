@@ -752,7 +752,7 @@ func (c *CustomAttacksClient) GetPropertyValuesMultiple(ctx context.Context, pro
 
 func (c *CustomAttacksClient) CreatePropertyValue(ctx context.Context, req PropertyValueCreateRequest) (*BaseResponse, error) {
 	resp, err := internal.DoMgmtRequest[BaseResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.RedTeamCustomAttackPath + "/property-values/create", Body: req,
+		Method: http.MethodPost, Path: aisec.RedTeamCustomAttackPath + "/property-values", Body: req,
 	})
 	if err != nil {
 		return nil, err
