@@ -1166,8 +1166,8 @@ func TestTargetCreateRequest_AuthConfig_JSON(t *testing.T) {
 	}
 	var m map[string]any
 	_ = json.Unmarshal(b, &m)
-	if m["auth_type"] != "HEADERS" {
-		t.Errorf("auth_type = %v", m["auth_type"])
+	if m["auth_config_type"] != "HEADERS" {
+		t.Errorf("auth_config_type = %v", m["auth_config_type"])
 	}
 	if m["auth_config"] == nil {
 		t.Error("auth_config is nil")
@@ -1188,7 +1188,7 @@ func TestTargetResponse_NetworkBrokerField(t *testing.T) {
 func TestTargetProbeRequest_TypedFields(t *testing.T) {
 	req := TargetProbeRequest{
 		Name: "probe",
-		TargetMeta: &TargetMetadata{
+		TargetMetadata: &TargetMetadata{
 			MultiTurn:    true,
 			ProbeMessage: "hello",
 		},
