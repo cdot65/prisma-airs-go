@@ -47,6 +47,8 @@ func newTestClient(t *testing.T, tokenURL, dataURL, mgmtURL string) *Client {
 	return client
 }
 
+func boolPtr(b bool) *bool { return &b }
+
 // --- Scans ---
 
 func TestScans_Create(t *testing.T) {
@@ -612,6 +614,9 @@ func TestSubClients_AllPresent(t *testing.T) {
 	}
 	if client.CustomAttacks == nil {
 		t.Error("CustomAttacks is nil")
+	}
+	if client.Instances == nil {
+		t.Error("Instances is nil")
 	}
 }
 
@@ -1649,5 +1654,124 @@ func TestJobCreateRequest_NewFields_JSON(t *testing.T) {
 	}
 	if decoded.ExtraInfo["k"] != "v" {
 		t.Errorf("ExtraInfo = %v", decoded.ExtraInfo)
+	}
+}
+
+// --- Instances ---
+
+func TestInstances_Create(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		if !strings.HasSuffix(r.URL.Path, "/v1/instances") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		w.WriteHeader(201)
+		_ = json.NewEncoder(w).Encode(InstanceResponse{TsgID: "tsg-1", IsSuccess: boolPtr(true)})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Instances.Create(context.Background(), InstanceRequest{
+		TsgID: "tsg-1", TenantID: "t-1", AppID: "app-1", Region: "us-east-1",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.TsgID != "tsg-1" {
+		t.Errorf("TsgID = %q", resp.TsgID)
+	}
+}
+
+func TestInstances_Get(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/instances/t-1") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(InstanceGetResponse{
+			TsgID: "tsg-1", TenantID: "t-1", AppID: "app-1", Region: "us-east-1",
+		})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Instances.Get(context.Background(), "t-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.TenantID != "t-1" {
+		t.Errorf("TenantID = %q", resp.TenantID)
+	}
+}
+
+func TestInstances_Delete(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "DELETE" {
+			t.Errorf("method = %s", r.Method)
+		}
+		_ = json.NewEncoder(w).Encode(InstanceResponse{TsgID: "tsg-1", IsSuccess: boolPtr(true)})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Instances.Delete(context.Background(), "t-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if *resp.IsSuccess != true {
+		t.Error("expected IsSuccess=true")
+	}
+}
+
+func TestInstances_CreateDevice(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		if !strings.HasSuffix(r.URL.Path, "/v1/instances/t-1/devices") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(DeviceResponse{Status: "created"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Instances.CreateDevice(context.Background(), "t-1", DeviceRequest{
+		Instance: DeviceInstance{AppID: "app-1", Region: "us-east-1", TenantID: "t-1", TsgID: "tsg-1"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Status != "created" {
+		t.Errorf("Status = %q", resp.Status)
+	}
+}
+
+func TestInstances_DeleteDevice(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "DELETE" {
+			t.Errorf("method = %s", r.Method)
+		}
+		sn := r.URL.Query().Get("serial_numbers")
+		if sn != "SN-001,SN-002" {
+			t.Errorf("serial_numbers = %q", sn)
+		}
+		_ = json.NewEncoder(w).Encode(DeviceResponse{Status: "deleted"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Instances.DeleteDevice(context.Background(), "t-1", "SN-001,SN-002")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Status != "deleted" {
+		t.Errorf("Status = %q", resp.Status)
 	}
 }

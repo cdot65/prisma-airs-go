@@ -183,4 +183,7 @@ const (
 
 	// Report download (data plane).
 	RedTeamReportDownloadPath = "/v1/report"
+
+	// Instances/Licensing (management plane).
+	RedTeamInstancesPath = "/v1/instances"
 )
