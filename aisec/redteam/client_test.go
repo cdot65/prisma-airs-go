@@ -443,6 +443,38 @@ func TestTargets_GetProfile(t *testing.T) {
 	}
 }
 
+func TestTargets_ValidateAuth(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		if !strings.HasSuffix(r.URL.Path, "/v1/target/validate-auth") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		var req TargetAuthValidationRequest
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		if req.AuthType != AuthConfigTypeHeaders {
+			t.Errorf("AuthType = %q", req.AuthType)
+		}
+		w.WriteHeader(201)
+		_ = json.NewEncoder(w).Encode(TargetAuthValidationResponse{Validated: true})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Targets.ValidateAuth(context.Background(), TargetAuthValidationRequest{
+		AuthType:   AuthConfigTypeHeaders,
+		AuthConfig: HeadersAuthConfig{AuthHeader: map[string]string{"X-Key": "val"}},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !resp.Validated {
+		t.Error("expected Validated=true")
+	}
+}
+
 // --- Custom Attacks ---
 
 func TestCustomAttacks_CreatePromptSet(t *testing.T) {
@@ -585,6 +617,69 @@ func TestGetDashboardOverview(t *testing.T) {
 	}
 }
 
+func TestGetRegistryCredentials(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		if !strings.HasSuffix(r.URL.Path, "/v1/registry-credentials") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(RegistryCredentials{Token: "tok-123", Expiry: "2026-04-01T00:00:00Z"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.GetRegistryCredentials(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Token != "tok-123" {
+		t.Errorf("Token = %q", resp.Token)
+	}
+}
+
+func TestGetTargetMetadata(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/template/target-metadata") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{"industries": []string{"finance", "healthcare"}})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.GetTargetMetadata(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp == nil {
+		t.Error("response is nil")
+	}
+}
+
+func TestGetTargetTemplates(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/template/target-templates") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{"OPENAI": map[string]any{"name": "OpenAI"}})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.GetTargetTemplates(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp == nil {
+		t.Error("response is nil")
+	}
+}
+
 // --- Client validation ---
 
 func TestNewClient_MissingCredentials(t *testing.T) {
@@ -615,6 +710,9 @@ func TestSubClients_AllPresent(t *testing.T) {
 	}
 	if client.CustomAttacks == nil {
 		t.Error("CustomAttacks is nil")
+	}
+	if client.Eula == nil {
+		t.Error("Eula is nil")
 	}
 }
 
@@ -1690,5 +1788,70 @@ func TestJobCreateRequest_NewFields_JSON(t *testing.T) {
 	}
 	if decoded.ExtraInfo["k"] != "v" {
 		t.Errorf("ExtraInfo = %v", decoded.ExtraInfo)
+	}
+}
+
+// --- EULA ---
+
+func TestEula_GetContent(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/eula/content") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(EulaContentResponse{Content: "EULA text here"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Eula.GetContent(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Content != "EULA text here" {
+		t.Errorf("Content = %q", resp.Content)
+	}
+}
+
+func TestEula_GetStatus(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/eula/status") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(EulaResponse{IsAccepted: true})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Eula.GetStatus(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !resp.IsAccepted {
+		t.Error("expected IsAccepted=true")
+	}
+}
+
+func TestEula_Accept(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		if !strings.HasSuffix(r.URL.Path, "/v1/eula/accept") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(EulaResponse{IsAccepted: true, AcceptedAt: "2026-03-30T00:00:00Z"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.Eula.Accept(context.Background(), EulaAcceptRequest{EulaContent: "EULA text"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !resp.IsAccepted {
+		t.Error("expected IsAccepted=true")
 	}
 }

@@ -743,10 +743,46 @@ type TargetProfileResponse struct {
 	ProfilingStatus   ProfilingStatus          `json:"profiling_status,omitempty"`
 }
 
+// TargetAuthValidationRequest is the request to validate target auth config.
+type TargetAuthValidationRequest struct {
+	AuthType                 AuthConfigType `json:"auth_type"`
+	AuthConfig               any            `json:"auth_config"`
+	TargetID                 string         `json:"target_id,omitempty"`
+	NetworkBrokerChannelUUID string         `json:"network_broker_channel_uuid,omitempty"`
+}
+
+// TargetAuthValidationResponse is the response from auth validation.
+type TargetAuthValidationResponse struct {
+	Validated    bool   `json:"validated"`
+	TokenPreview string `json:"token_preview,omitempty"`
+	ExpiresIn    *int   `json:"expires_in,omitempty"`
+}
+
 // BaseResponse is a generic base response.
 type BaseResponse struct {
 	Message string `json:"message,omitempty"`
 	Status  int    `json:"status,omitempty"`
+}
+
+// --- EULA types ---
+
+// EulaContentResponse is the EULA content response.
+type EulaContentResponse struct {
+	Content string `json:"content"`
+}
+
+// EulaResponse is the EULA status response.
+type EulaResponse struct {
+	UUID             string `json:"uuid,omitempty"`
+	IsAccepted       bool   `json:"is_accepted"`
+	AcceptedAt       string `json:"accepted_at,omitempty"`
+	AcceptedByUserID string `json:"accepted_by_user_id,omitempty"`
+}
+
+// EulaAcceptRequest is the request to accept the EULA.
+type EulaAcceptRequest struct {
+	EulaContent string `json:"eula_content"`
+	AcceptedAt  string `json:"accepted_at,omitempty"`
 }
 
 // --- Custom Attack types ---
@@ -1018,6 +1054,12 @@ type SentimentRequest struct {
 type SentimentResponse struct {
 	JobID     string `json:"job_id,omitempty"`
 	Sentiment string `json:"sentiment,omitempty"`
+}
+
+// RegistryCredentials is the response from the registry credentials endpoint.
+type RegistryCredentials struct {
+	Token  string `json:"token"`
+	Expiry string `json:"expiry"`
 }
 
 // DashboardOverviewResponse is the dashboard overview.

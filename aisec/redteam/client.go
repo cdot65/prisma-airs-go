@@ -31,6 +31,7 @@ type Client struct {
 	CustomAttackReports *CustomAttackReportsClient
 	Targets             *TargetsClient
 	CustomAttacks       *CustomAttacksClient
+	Eula                *EulaClient
 
 	dataCfg *internal.OAuthServiceConfig
 	mgmtCfg *internal.OAuthServiceConfig
@@ -74,6 +75,7 @@ func NewClient(opts Opts) (*Client, error) {
 	c.CustomAttackReports = &CustomAttackReportsClient{dataCfg: dataCfg}
 	c.Targets = &TargetsClient{mgmtCfg: mgmtCfg}
 	c.CustomAttacks = &CustomAttacksClient{mgmtCfg: mgmtCfg}
+	c.Eula = &EulaClient{mgmtCfg: mgmtCfg}
 
 	return c, nil
 }
@@ -146,6 +148,17 @@ func (c *Client) GetSentiment(ctx context.Context, jobID string) (*SentimentResp
 	return &resp.Data, nil
 }
 
+// GetRegistryCredentials gets or creates registry credentials from the mgmt plane.
+func (c *Client) GetRegistryCredentials(ctx context.Context) (*RegistryCredentials, error) {
+	resp, err := internal.DoMgmtRequest[RegistryCredentials](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamRegistryCredentialsPath,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
 // GetDashboardOverview gets the dashboard overview from the mgmt plane.
 func (c *Client) GetDashboardOverview(ctx context.Context) (*DashboardOverviewResponse, error) {
 	resp, err := internal.DoMgmtRequest[DashboardOverviewResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
@@ -155,6 +168,28 @@ func (c *Client) GetDashboardOverview(ctx context.Context) (*DashboardOverviewRe
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+// GetTargetMetadata gets scan metadata for target configuration from the mgmt plane.
+func (c *Client) GetTargetMetadata(ctx context.Context) (map[string]any, error) {
+	resp, err := internal.DoMgmtRequest[map[string]any](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamTemplatePath + "/target-metadata",
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp.Data, nil
+}
+
+// GetTargetTemplates gets target templates from the mgmt plane.
+func (c *Client) GetTargetTemplates(ctx context.Context) (map[string]any, error) {
+	resp, err := internal.DoMgmtRequest[map[string]any](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamTemplatePath + "/target-templates",
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp.Data, nil
 }
 
 // --- Scans Client (data plane) ---
@@ -558,6 +593,57 @@ func (c *TargetsClient) GetProfile(ctx context.Context, uuid string) (*TargetPro
 func (c *TargetsClient) UpdateProfile(ctx context.Context, uuid string, req TargetContextUpdate) (*TargetResponse, error) {
 	resp, err := internal.DoMgmtRequest[TargetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
 		Method: http.MethodPut, Path: aisec.RedTeamTargetPath + "/" + uuid + "/profile", Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// ValidateAuth validates target authentication configuration.
+func (c *TargetsClient) ValidateAuth(ctx context.Context, req TargetAuthValidationRequest) (*TargetAuthValidationResponse, error) {
+	resp, err := internal.DoMgmtRequest[TargetAuthValidationResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamTargetValidateAuthPath, Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// --- EULA Client (mgmt plane) ---
+
+// EulaClient provides EULA management operations.
+type EulaClient struct {
+	mgmtCfg *internal.OAuthServiceConfig
+}
+
+// GetContent retrieves the EULA content.
+func (c *EulaClient) GetContent(ctx context.Context) (*EulaContentResponse, error) {
+	resp, err := internal.DoMgmtRequest[EulaContentResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamEulaPath + "/content",
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// GetStatus retrieves the EULA acceptance status.
+func (c *EulaClient) GetStatus(ctx context.Context) (*EulaResponse, error) {
+	resp, err := internal.DoMgmtRequest[EulaResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamEulaPath + "/status",
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// Accept accepts the EULA.
+func (c *EulaClient) Accept(ctx context.Context, req EulaAcceptRequest) (*EulaResponse, error) {
+	resp, err := internal.DoMgmtRequest[EulaResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamEulaPath + "/accept", Body: req,
 	})
 	if err != nil {
 		return nil, err
