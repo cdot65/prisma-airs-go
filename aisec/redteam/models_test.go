@@ -1173,3 +1173,43 @@ func TestTargetCreateRequest_AuthConfig_JSON(t *testing.T) {
 		t.Error("auth_config is nil")
 	}
 }
+
+func TestTargetResponse_NetworkBrokerField(t *testing.T) {
+	raw := `{"uuid":"t-1","tsg_id":"123","name":"test","status":"ACTIVE","active":true,"validated":true,"created_at":"2026-01-01","updated_at":"2026-01-01","network_broker_channel_uuid":"nb-1"}`
+	var resp TargetResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.NetworkBrokerChannelUUID != "nb-1" {
+		t.Errorf("NetworkBrokerChannelUUID = %q", resp.NetworkBrokerChannelUUID)
+	}
+}
+
+func TestTargetProbeRequest_TypedFields(t *testing.T) {
+	req := TargetProbeRequest{
+		Name: "probe",
+		TargetMeta: &TargetMetadata{
+			MultiTurn:    true,
+			ProbeMessage: "hello",
+		},
+		TargetBackground: &TargetBackground{
+			Industry: "finance",
+		},
+		AdditionalContext: &TargetAdditionalContext{
+			BaseModel: "gpt-4",
+		},
+	}
+	b, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var m map[string]any
+	_ = json.Unmarshal(b, &m)
+	tm, ok := m["target_metadata"].(map[string]any)
+	if !ok {
+		t.Fatal("target_metadata not a map")
+	}
+	if tm["multi_turn"] != true {
+		t.Errorf("multi_turn = %v", tm["multi_turn"])
+	}
+}

@@ -650,33 +650,35 @@ type TargetContextUpdate struct {
 }
 
 // TargetResponse represents a target.
+// Note: GET /v1/target/{id} returns redacted secrets (auth keys, connection passwords masked by the server).
 type TargetResponse struct {
-	UUID             string                   `json:"uuid"`
-	TsgID            string                   `json:"tsg_id"`
-	Name             string                   `json:"name"`
-	Description      string                   `json:"description,omitempty"`
-	TargetType       TargetType               `json:"target_type,omitempty"`
-	Status           TargetStatus             `json:"status"`
-	ConnectionType   TargetConnectionType     `json:"connection_type,omitempty"`
-	ConnectionParams map[string]any           `json:"connection_params,omitempty"`
-	APIEndpointType  APIEndpointType          `json:"api_endpoint_type,omitempty"`
-	ResponseMode     string                   `json:"response_mode,omitempty"`
-	SessionSupported bool                     `json:"session_supported"`
-	ExtraInfo        map[string]any           `json:"extra_info,omitempty"`
-	Active           bool                     `json:"active"`
-	Validated        bool                     `json:"validated"`
-	Version          int                      `json:"version,omitempty"`
-	SecretVersion    string                   `json:"secret_version,omitempty"`
-	CreatedByUserID  string                   `json:"created_by_user_id,omitempty"`
-	UpdatedByUserID  string                   `json:"updated_by_user_id,omitempty"`
-	CreatedAt        string                   `json:"created_at"`
-	UpdatedAt        string                   `json:"updated_at"`
-	TargetMeta       *TargetMetadata          `json:"target_metadata,omitempty"`
-	TargetBackground *TargetBackground        `json:"target_background,omitempty"`
-	ProfilingStatus  ProfilingStatus          `json:"profiling_status,omitempty"`
-	AdditionalCtx    *TargetAdditionalContext `json:"additional_context,omitempty"`
-	AuthConfigType   AuthConfigType           `json:"auth_type,omitempty"`
-	AuthConfig       any                      `json:"auth_config,omitempty"`
+	UUID                     string                   `json:"uuid"`
+	TsgID                    string                   `json:"tsg_id"`
+	Name                     string                   `json:"name"`
+	Description              string                   `json:"description,omitempty"`
+	TargetType               TargetType               `json:"target_type,omitempty"`
+	Status                   TargetStatus             `json:"status"`
+	ConnectionType           TargetConnectionType     `json:"connection_type,omitempty"`
+	ConnectionParams         map[string]any           `json:"connection_params,omitempty"`
+	APIEndpointType          APIEndpointType          `json:"api_endpoint_type,omitempty"`
+	ResponseMode             string                   `json:"response_mode,omitempty"`
+	SessionSupported         bool                     `json:"session_supported"`
+	ExtraInfo                map[string]any           `json:"extra_info,omitempty"`
+	NetworkBrokerChannelUUID string                   `json:"network_broker_channel_uuid,omitempty"`
+	Active                   bool                     `json:"active"`
+	Validated                bool                     `json:"validated"`
+	Version                  int                      `json:"version,omitempty"`
+	SecretVersion            string                   `json:"secret_version,omitempty"`
+	CreatedByUserID          string                   `json:"created_by_user_id,omitempty"`
+	UpdatedByUserID          string                   `json:"updated_by_user_id,omitempty"`
+	CreatedAt                string                   `json:"created_at"`
+	UpdatedAt                string                   `json:"updated_at"`
+	TargetMeta               *TargetMetadata          `json:"target_metadata,omitempty"`
+	TargetBackground         *TargetBackground        `json:"target_background,omitempty"`
+	ProfilingStatus          ProfilingStatus          `json:"profiling_status,omitempty"`
+	AdditionalCtx            *TargetAdditionalContext `json:"additional_context,omitempty"`
+	AuthConfigType           AuthConfigType           `json:"auth_type,omitempty"`
+	AuthConfig               any                      `json:"auth_config,omitempty"`
 }
 
 // TargetListItem represents a target in a list response (TargetListItemSchema).
@@ -710,21 +712,23 @@ type TargetList struct {
 
 // TargetProbeRequest is the request to probe a target.
 type TargetProbeRequest struct {
-	Name                     string               `json:"name"`
-	Description              string               `json:"description,omitempty"`
-	TargetType               TargetType           `json:"target_type,omitempty"`
-	ConnectionType           TargetConnectionType `json:"connection_type,omitempty"`
-	APIEndpointType          APIEndpointType      `json:"api_endpoint_type,omitempty"`
-	ResponseMode             ResponseMode         `json:"response_mode,omitempty"`
-	SessionSupported         *bool                `json:"session_supported"`
-	ConnectionParams         map[string]any       `json:"connection_params,omitempty"`
-	NetworkBrokerChannelUUID string               `json:"network_broker_channel_uuid,omitempty"`
-	ExtraInfo                map[string]any       `json:"extra_info,omitempty"`
-	TargetMetadata           map[string]any       `json:"target_metadata,omitempty"`
-	TargetBackground         map[string]any       `json:"target_background,omitempty"`
-	AdditionalContext        map[string]any       `json:"additional_context,omitempty"`
-	UUID                     string               `json:"uuid,omitempty"`
-	ProbeFields              []string             `json:"probe_fields,omitempty"`
+	Name                     string                   `json:"name"`
+	Description              string                   `json:"description,omitempty"`
+	TargetType               TargetType               `json:"target_type,omitempty"`
+	ConnectionType           TargetConnectionType     `json:"connection_type,omitempty"`
+	APIEndpointType          APIEndpointType          `json:"api_endpoint_type,omitempty"`
+	ResponseMode             ResponseMode             `json:"response_mode,omitempty"`
+	SessionSupported         *bool                    `json:"session_supported,omitempty"`
+	ConnectionParams         map[string]any           `json:"connection_params,omitempty"`
+	NetworkBrokerChannelUUID string                   `json:"network_broker_channel_uuid,omitempty"`
+	ExtraInfo                map[string]any           `json:"extra_info,omitempty"`
+	TargetMeta               *TargetMetadata          `json:"target_metadata,omitempty"`
+	TargetBackground         *TargetBackground        `json:"target_background,omitempty"`
+	AdditionalContext        *TargetAdditionalContext `json:"additional_context,omitempty"`
+	AuthConfigType           AuthConfigType           `json:"auth_type,omitempty"`
+	AuthConfig               any                      `json:"auth_config,omitempty"`
+	UUID                     string                   `json:"uuid,omitempty"`
+	ProbeFields              []string                 `json:"probe_fields,omitempty"`
 }
 
 // TargetProfileResponse is the target profile response.
