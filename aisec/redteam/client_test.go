@@ -999,17 +999,20 @@ func TestTargets_UpdateProfile(t *testing.T) {
 		if r.Method != "PUT" {
 			t.Errorf("method = %s", r.Method)
 		}
-		_ = json.NewEncoder(w).Encode(TargetResponse{UUID: "t-1", Name: "updated"})
+		if !strings.HasSuffix(r.URL.Path, "/v1/target/tgt-1/profile") {
+			t.Errorf("path = %s, want suffix /v1/target/tgt-1/profile", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(TargetResponse{UUID: "tgt-1"})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	resp, err := client.Targets.UpdateProfile(context.Background(), "t-1", TargetContextUpdate{})
+	resp, err := client.Targets.UpdateProfile(context.Background(), "tgt-1", TargetContextUpdate{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if resp.UUID != "t-1" {
+	if resp.UUID != "tgt-1" {
 		t.Errorf("UUID = %q", resp.UUID)
 	}
 }

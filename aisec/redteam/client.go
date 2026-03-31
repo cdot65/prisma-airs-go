@@ -556,7 +556,7 @@ func (c *TargetsClient) GetProfile(ctx context.Context, uuid string) (*TargetPro
 
 func (c *TargetsClient) UpdateProfile(ctx context.Context, uuid string, req TargetContextUpdate) (*TargetResponse, error) {
 	resp, err := internal.DoMgmtRequest[TargetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamTargetPath + "/" + uuid + "/context", Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamTargetPath + "/" + uuid + "/profile", Body: req,
 	})
 	if err != nil {
 		return nil, err
