@@ -183,6 +183,10 @@ const (
 	RedTeamListCustomPromptSetsPath   = "/v1/custom-attack/list-custom-prompt-sets"
 	RedTeamActiveCustomPromptSetsPath = "/v1/custom-attack/active-custom-prompt-sets"
 
+	// CSV upload/download (management plane).
+	RedTeamUploadPromptsCsvPath = "/v1/custom-attack/upload-custom-prompts-csv"
+	RedTeamDownloadTemplatePath = "/v1/custom-attack/download-template"
+
 	// Report download (data plane).
 	RedTeamReportDownloadPath = "/v1/report"
 
