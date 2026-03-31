@@ -3,8 +3,10 @@ package redteam
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 
@@ -757,6 +759,120 @@ func (c *CustomAttacksClient) CreatePropertyValue(ctx context.Context, req Prope
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+// UploadPromptsCsv uploads a CSV file of custom prompts for the given prompt set.
+func (c *CustomAttacksClient) UploadPromptsCsv(ctx context.Context, promptSetUUID string, file io.Reader, filename string) (*BaseResponse, error) {
+	svcCfg := c.mgmtCfg
+
+	u, err := url.Parse(svcCfg.BaseURL + aisec.RedTeamUploadPromptsCsvPath)
+	if err != nil {
+		return nil, fmt.Errorf("invalid URL: %w", err)
+	}
+	q := u.Query()
+	q.Set("prompt_set_uuid", promptSetUUID)
+	u.RawQuery = q.Encode()
+
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	part, err := writer.CreateFormFile("file", filename)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create form file: %w", err)
+	}
+	if _, err := io.Copy(part, file); err != nil {
+		return nil, fmt.Errorf("failed to copy file data: %w", err)
+	}
+	if err := writer.Close(); err != nil {
+		return nil, fmt.Errorf("failed to close multipart writer: %w", err)
+	}
+
+	resp, err := internal.ExecuteWithRetry(internal.RetryOptions{
+		MaxRetries: svcCfg.NumRetries,
+		Execute: func(attempt int) (*http.Response, error) {
+			token, tokenErr := svcCfg.OAuth.GetToken()
+			if tokenErr != nil {
+				return nil, tokenErr
+			}
+			req, reqErr := http.NewRequestWithContext(ctx, http.MethodPost, u.String(), bytes.NewReader(body.Bytes()))
+			if reqErr != nil {
+				return nil, reqErr
+			}
+			req.Header.Set("Content-Type", writer.FormDataContentType())
+			req.Header.Set("User-Agent", aisec.UserAgent)
+			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
+			return http.DefaultClient.Do(req)
+		},
+		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
+			if resp.StatusCode == 401 || resp.StatusCode == 403 {
+				_, _ = io.Copy(io.Discard, resp.Body)
+				_ = resp.Body.Close()
+				svcCfg.OAuth.ClearToken()
+				return true, nil
+			}
+			return false, nil
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body: %w", err)
+	}
+	var result BaseResponse
+	if len(respBody) > 0 {
+		_ = json.Unmarshal(respBody, &result)
+	}
+	return &result, nil
+}
+
+// DownloadTemplate downloads a CSV template for the given prompt set.
+func (c *CustomAttacksClient) DownloadTemplate(ctx context.Context, promptSetUUID string) ([]byte, error) {
+	svcCfg := c.mgmtCfg
+	path := aisec.RedTeamDownloadTemplatePath + "/" + promptSetUUID
+
+	u, err := url.Parse(svcCfg.BaseURL + path)
+	if err != nil {
+		return nil, fmt.Errorf("invalid URL: %s%s: %w", svcCfg.BaseURL, path, err)
+	}
+
+	resp, err := internal.ExecuteWithRetry(internal.RetryOptions{
+		MaxRetries: svcCfg.NumRetries,
+		Execute: func(attempt int) (*http.Response, error) {
+			token, tokenErr := svcCfg.OAuth.GetToken()
+			if tokenErr != nil {
+				return nil, tokenErr
+			}
+			req, reqErr := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
+			if reqErr != nil {
+				return nil, reqErr
+			}
+			req.Header.Set("User-Agent", aisec.UserAgent)
+			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
+			return http.DefaultClient.Do(req)
+		},
+		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
+			if resp.StatusCode == 401 || resp.StatusCode == 403 {
+				_, _ = io.Copy(io.Discard, resp.Body)
+				_ = resp.Body.Close()
+				svcCfg.OAuth.ClearToken()
+				return true, nil
+			}
+			return false, nil
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var buf bytes.Buffer
+	if _, err := io.Copy(&buf, resp.Body); err != nil {
+		return nil, fmt.Errorf("failed to read template body: %w", err)
+	}
+	return buf.Bytes(), nil
 }
 
 // --- Param builders ---

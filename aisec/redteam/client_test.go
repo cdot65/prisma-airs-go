@@ -1651,3 +1651,57 @@ func TestJobCreateRequest_NewFields_JSON(t *testing.T) {
 		t.Errorf("ExtraInfo = %v", decoded.ExtraInfo)
 	}
 }
+
+// --- CSV Upload/Download ---
+
+func TestCustomAttacks_UploadPromptsCsv(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			t.Errorf("method = %s", r.Method)
+		}
+		if !strings.Contains(r.URL.Path, "/v1/custom-attack/upload-custom-prompts-csv") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		if r.URL.Query().Get("prompt_set_uuid") != "ps-1" {
+			t.Errorf("prompt_set_uuid = %q", r.URL.Query().Get("prompt_set_uuid"))
+		}
+		ct := r.Header.Get("Content-Type")
+		if !strings.HasPrefix(ct, "multipart/form-data") {
+			t.Errorf("Content-Type = %q, want multipart/form-data", ct)
+		}
+		_ = json.NewEncoder(w).Encode(BaseResponse{Message: "uploaded"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	csvData := strings.NewReader("prompt,goal\nhello,test\n")
+	resp, err := client.CustomAttacks.UploadPromptsCsv(context.Background(), "ps-1", csvData, "prompts.csv")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Message != "uploaded" {
+		t.Errorf("Message = %q", resp.Message)
+	}
+}
+
+func TestCustomAttacks_DownloadTemplate(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.Contains(r.URL.Path, "/v1/custom-attack/download-template/ps-1") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		w.Header().Set("Content-Type", "text/csv")
+		_, _ = w.Write([]byte("prompt,goal\n"))
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	data, err := client.CustomAttacks.DownloadTemplate(context.Background(), "ps-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != "prompt,goal\n" {
+		t.Errorf("data = %q", string(data))
+	}
+}
