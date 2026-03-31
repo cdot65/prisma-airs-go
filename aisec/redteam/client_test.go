@@ -1117,12 +1117,35 @@ func TestCustomAttacks_GetPromptSetVersionInfo(t *testing.T) {
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	resp, err := client.CustomAttacks.GetPromptSetVersionInfo(context.Background(), "ps-1")
+	resp, err := client.CustomAttacks.GetPromptSetVersionInfo(context.Background(), "ps-1", "")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if resp.UUID != "ps-1" {
 		t.Errorf("UUID = %q", resp.UUID)
+	}
+}
+
+func TestCustomAttacks_GetPromptSetVersionInfoWithVersion(t *testing.T) {
+	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if !strings.HasSuffix(r.URL.Path, "/v1/custom-attack/custom-prompt-set/ps-1/version-info") {
+			t.Errorf("path = %s", r.URL.Path)
+		}
+		if r.URL.Query().Get("version") != "2" {
+			t.Errorf("version query param = %q", r.URL.Query().Get("version"))
+		}
+		_ = json.NewEncoder(w).Encode(CustomPromptSetVersionInfo{UUID: "ps-1", Version: "2"})
+	})
+	defer tokenSrv.Close()
+	defer apiSrv.Close()
+
+	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
+	resp, err := client.CustomAttacks.GetPromptSetVersionInfo(context.Background(), "ps-1", "2")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.Version != "2" {
+		t.Errorf("Version = %q", resp.Version)
 	}
 }
 

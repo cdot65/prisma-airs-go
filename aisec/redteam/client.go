@@ -634,9 +634,14 @@ func (c *CustomAttacksClient) GetPromptSetReference(ctx context.Context, uuid st
 	return &resp.Data, nil
 }
 
-func (c *CustomAttacksClient) GetPromptSetVersionInfo(ctx context.Context, uuid string) (*CustomPromptSetVersionInfo, error) {
+func (c *CustomAttacksClient) GetPromptSetVersionInfo(ctx context.Context, uuid string, version string) (*CustomPromptSetVersionInfo, error) {
+	var params map[string]string
+	if version != "" {
+		params = map[string]string{"version": version}
+	}
 	resp, err := internal.DoMgmtRequest[CustomPromptSetVersionInfo](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
 		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid + "/version-info",
+		Params: params,
 	})
 	if err != nil {
 		return nil, err
