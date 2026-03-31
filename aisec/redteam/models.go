@@ -144,6 +144,45 @@ const (
 	AuthTypeAccessToken AuthType = "ACCESS_TOKEN"
 )
 
+// AuthConfigType represents the auth config type for target endpoints.
+// Named AuthConfigType to avoid collision with AuthType (Databricks OAUTH/ACCESS_TOKEN).
+type AuthConfigType string
+
+const (
+	AuthConfigTypeHeaders   AuthConfigType = "HEADERS"
+	AuthConfigTypeBasicAuth AuthConfigType = "BASIC_AUTH"
+	AuthConfigTypeOAuth2    AuthConfigType = "OAUTH2"
+)
+
+// BasicAuthLocation represents where basic auth credentials are sent.
+type BasicAuthLocation string
+
+const (
+	BasicAuthLocationHeader  BasicAuthLocation = "HEADER"
+	BasicAuthLocationPayload BasicAuthLocation = "PAYLOAD"
+)
+
+// HeadersAuthConfig is auth config using custom headers.
+type HeadersAuthConfig struct {
+	AuthHeader map[string]string `json:"auth_header"`
+}
+
+// BasicAuthAuthConfig is auth config using basic authentication.
+type BasicAuthAuthConfig struct {
+	BasicAuthLocation BasicAuthLocation `json:"basic_auth_location,omitempty"`
+	BasicAuthHeader   map[string]string `json:"basic_auth_header,omitempty"`
+}
+
+// OAuth2AuthConfig is auth config using OAuth2 client credentials.
+type OAuth2AuthConfig struct {
+	OAuth2TokenURL         string            `json:"oauth2_token_url"`
+	OAuth2ExpiryMinutes    int               `json:"oauth2_expiry_minutes,omitempty"`
+	OAuth2Headers          map[string]string `json:"oauth2_headers,omitempty"`
+	OAuth2BodyParams       map[string]string `json:"oauth2_body_params,omitempty"`
+	OAuth2TokenResponseKey string            `json:"oauth2_token_response_key,omitempty"`
+	OAuth2InjectHeader     map[string]string `json:"oauth2_inject_header"`
+}
+
 // BrandSubCategory represents brand attack sub-categories.
 type BrandSubCategory string
 
@@ -581,6 +620,8 @@ type TargetCreateRequest struct {
 	TargetMeta               *TargetMetadata          `json:"target_metadata,omitempty"`
 	TargetBackground         *TargetBackground        `json:"target_background,omitempty"`
 	AdditionalContext        *TargetAdditionalContext `json:"additional_context,omitempty"`
+	AuthConfigType           AuthConfigType           `json:"auth_type,omitempty"`
+	AuthConfig               any                      `json:"auth_config,omitempty"`
 }
 
 // TargetUpdateRequest is the request to update a target.
@@ -598,6 +639,8 @@ type TargetUpdateRequest struct {
 	TargetMeta               *TargetMetadata          `json:"target_metadata,omitempty"`
 	TargetBackground         *TargetBackground        `json:"target_background,omitempty"`
 	AdditionalContext        *TargetAdditionalContext `json:"additional_context,omitempty"`
+	AuthConfigType           AuthConfigType           `json:"auth_type,omitempty"`
+	AuthConfig               any                      `json:"auth_config,omitempty"`
 }
 
 // TargetContextUpdate is the request to update a target's context.
@@ -632,6 +675,8 @@ type TargetResponse struct {
 	TargetBackground *TargetBackground        `json:"target_background,omitempty"`
 	ProfilingStatus  ProfilingStatus          `json:"profiling_status,omitempty"`
 	AdditionalCtx    *TargetAdditionalContext `json:"additional_context,omitempty"`
+	AuthConfigType   AuthConfigType           `json:"auth_type,omitempty"`
+	AuthConfig       any                      `json:"auth_config,omitempty"`
 }
 
 // TargetListItem represents a target in a list response (TargetListItemSchema).

@@ -1096,3 +1096,80 @@ func TestCustomPromptSetVersionInfo_JSON(t *testing.T) {
 		t.Errorf("TotalPrompts = %d", info.Stats.TotalPrompts)
 	}
 }
+
+func TestAuthConfigType_Values(t *testing.T) {
+	vals := []AuthConfigType{AuthConfigTypeHeaders, AuthConfigTypeBasicAuth, AuthConfigTypeOAuth2}
+	expected := []string{"HEADERS", "BASIC_AUTH", "OAUTH2"}
+	for i, v := range vals {
+		if string(v) != expected[i] {
+			t.Errorf("AuthConfigType[%d] = %q, want %q", i, v, expected[i])
+		}
+	}
+}
+
+func TestBasicAuthLocation_Values(t *testing.T) {
+	vals := []BasicAuthLocation{BasicAuthLocationHeader, BasicAuthLocationPayload}
+	expected := []string{"HEADER", "PAYLOAD"}
+	for i, v := range vals {
+		if string(v) != expected[i] {
+			t.Errorf("BasicAuthLocation[%d] = %q, want %q", i, v, expected[i])
+		}
+	}
+}
+
+func TestHeadersAuthConfig_JSON(t *testing.T) {
+	cfg := HeadersAuthConfig{AuthHeader: map[string]string{"Authorization": "Bearer tok"}}
+	b, err := json.Marshal(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var out HeadersAuthConfig
+	if err := json.Unmarshal(b, &out); err != nil {
+		t.Fatal(err)
+	}
+	if out.AuthHeader["Authorization"] != "Bearer tok" {
+		t.Errorf("AuthHeader = %v", out.AuthHeader)
+	}
+}
+
+func TestOAuth2AuthConfig_JSON(t *testing.T) {
+	cfg := OAuth2AuthConfig{
+		OAuth2TokenURL:      "https://auth.example.com/token",
+		OAuth2ExpiryMinutes: 30,
+		OAuth2InjectHeader:  map[string]string{"Authorization": "Bearer {TOKEN}"},
+	}
+	b, err := json.Marshal(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var out OAuth2AuthConfig
+	if err := json.Unmarshal(b, &out); err != nil {
+		t.Fatal(err)
+	}
+	if out.OAuth2TokenURL != "https://auth.example.com/token" {
+		t.Errorf("OAuth2TokenURL = %q", out.OAuth2TokenURL)
+	}
+	if out.OAuth2ExpiryMinutes != 30 {
+		t.Errorf("OAuth2ExpiryMinutes = %d", out.OAuth2ExpiryMinutes)
+	}
+}
+
+func TestTargetCreateRequest_AuthConfig_JSON(t *testing.T) {
+	req := TargetCreateRequest{
+		Name:           "test",
+		AuthConfigType: AuthConfigTypeHeaders,
+		AuthConfig:     HeadersAuthConfig{AuthHeader: map[string]string{"X-Key": "val"}},
+	}
+	b, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var m map[string]any
+	_ = json.Unmarshal(b, &m)
+	if m["auth_type"] != "HEADERS" {
+		t.Errorf("auth_type = %v", m["auth_type"])
+	}
+	if m["auth_config"] == nil {
+		t.Error("auth_config is nil")
+	}
+}
