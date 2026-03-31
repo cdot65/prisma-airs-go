@@ -57,6 +57,7 @@ const (
 	TargetConnectionTypeCustom      TargetConnectionType = "CUSTOM"
 	TargetConnectionTypeRest        TargetConnectionType = "REST"
 	TargetConnectionTypeStreaming   TargetConnectionType = "STREAMING"
+	TargetConnectionTypeWebSocket   TargetConnectionType = "WEBSOCKET"
 )
 
 // APIEndpointType represents the API endpoint type for a target.
@@ -94,6 +95,7 @@ type ResponseMode string
 const (
 	ResponseModeRest      ResponseMode = "REST"
 	ResponseModeStreaming ResponseMode = "STREAMING"
+	ResponseModeWebSocket ResponseMode = "WEBSOCKET"
 )
 
 // GoalType represents a dynamic red team goal type.
@@ -702,16 +704,17 @@ type BaseResponse struct {
 
 // CustomPromptSetCreateRequest is the request to create a prompt set.
 type CustomPromptSetCreateRequest struct {
-	Name        string         `json:"name"`
-	Description string         `json:"description,omitempty"`
-	Properties  map[string]any `json:"properties,omitempty"`
+	Name          string   `json:"name"`
+	Description   string   `json:"description,omitempty"`
+	PropertyNames []string `json:"property_names,omitempty"`
 }
 
 // CustomPromptSetUpdateRequest is the request to update a prompt set.
 type CustomPromptSetUpdateRequest struct {
-	Name        string         `json:"name,omitempty"`
-	Description string         `json:"description,omitempty"`
-	Properties  map[string]any `json:"properties,omitempty"`
+	Name          string   `json:"name,omitempty"`
+	Description   string   `json:"description,omitempty"`
+	Archive       *bool    `json:"archive,omitempty"`
+	PropertyNames []string `json:"property_names,omitempty"`
 }
 
 // CustomPromptSetArchiveRequest is the request to archive a prompt set.
@@ -721,20 +724,20 @@ type CustomPromptSetArchiveRequest struct {
 
 // CustomPromptSetResponse represents a custom prompt set.
 type CustomPromptSetResponse struct {
-	UUID            string         `json:"uuid"`
-	Name            string         `json:"name,omitempty"`
-	Description     string         `json:"description,omitempty"`
-	Version         string         `json:"version,omitempty"`
-	Status          string         `json:"status,omitempty"`
-	Active          bool           `json:"active"`
-	Archive         bool           `json:"archive"`
-	Stats           map[string]any `json:"stats,omitempty"`
-	ExtraInfo       map[string]any `json:"extra_info,omitempty"`
-	PropertyNames   []string       `json:"property_names,omitempty"`
-	CreatedAt       string         `json:"created_at,omitempty"`
-	UpdatedAt       string         `json:"updated_at,omitempty"`
-	CreatedByUserID string         `json:"created_by_user_id,omitempty"`
-	UpdatedByUserID string         `json:"updated_by_user_id,omitempty"`
+	UUID            string          `json:"uuid"`
+	Name            string          `json:"name,omitempty"`
+	Description     string          `json:"description,omitempty"`
+	Version         string          `json:"version,omitempty"`
+	Status          string          `json:"status,omitempty"`
+	Active          bool            `json:"active"`
+	Archive         bool            `json:"archive"`
+	Stats           *PromptSetStats `json:"stats,omitempty"`
+	ExtraInfo       map[string]any  `json:"extra_info,omitempty"`
+	PropertyNames   []string        `json:"property_names,omitempty"`
+	CreatedAt       string          `json:"created_at,omitempty"`
+	UpdatedAt       string          `json:"updated_at,omitempty"`
+	CreatedByUserID string          `json:"created_by_user_id,omitempty"`
+	UpdatedByUserID string          `json:"updated_by_user_id,omitempty"`
 }
 
 // CustomPromptSetList is the paginated list of prompt sets.
@@ -762,8 +765,21 @@ type CustomPromptSetReference struct {
 
 // CustomPromptSetVersionInfo is the version info for a prompt set.
 type CustomPromptSetVersionInfo struct {
-	UUID    string         `json:"uuid,omitempty"`
-	Version map[string]any `json:"version,omitempty"`
+	UUID              string          `json:"uuid,omitempty"`
+	Version           string          `json:"version,omitempty"`
+	Status            string          `json:"status,omitempty"`
+	Stats             *PromptSetStats `json:"stats,omitempty"`
+	SnapshotCreatedAt string          `json:"snapshot_created_at,omitempty"`
+	IsLatest          bool            `json:"is_latest"`
+}
+
+// PromptSetStats holds counts of prompts in a prompt set.
+type PromptSetStats struct {
+	TotalPrompts      int `json:"total_prompts"`
+	ActivePrompts     int `json:"active_prompts"`
+	FailedPrompts     int `json:"failed_prompts,omitempty"`
+	ValidationPrompts int `json:"validation_prompts,omitempty"`
+	InactivePrompts   int `json:"inactive_prompts"`
 }
 
 // CustomPromptCreateRequest is the request to create a prompt.

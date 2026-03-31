@@ -206,6 +206,15 @@ func TestCountedQuotaEnum_Values(t *testing.T) {
 	}
 }
 
+func TestWebSocketEnumValues(t *testing.T) {
+	if string(TargetConnectionTypeWebSocket) != "WEBSOCKET" {
+		t.Errorf("TargetConnectionTypeWebSocket = %q", TargetConnectionTypeWebSocket)
+	}
+	if string(ResponseModeWebSocket) != "WEBSOCKET" {
+		t.Errorf("ResponseModeWebSocket = %q", ResponseModeWebSocket)
+	}
+}
+
 // --- Struct tests ---
 
 func TestCustomPromptResponse_UserDefinedGoalBool(t *testing.T) {
@@ -1043,5 +1052,47 @@ func TestBaseResponse_JSON(t *testing.T) {
 	}
 	if resp.Status != 200 {
 		t.Errorf("Status = %d, want 200", resp.Status)
+	}
+}
+
+func TestCustomPromptSetCreateRequest_JSON(t *testing.T) {
+	req := CustomPromptSetCreateRequest{
+		Name:          "test-set",
+		PropertyNames: []string{"category", "severity"},
+	}
+	b, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var m map[string]any
+	_ = json.Unmarshal(b, &m)
+	if _, ok := m["property_names"]; !ok {
+		t.Error("expected property_names key in JSON, got properties or missing")
+	}
+	if _, ok := m["properties"]; ok {
+		t.Error("should not have properties key in JSON")
+	}
+}
+
+func TestCustomPromptSetVersionInfo_JSON(t *testing.T) {
+	raw := `{"uuid":"v-1","version":"2","status":"active","is_latest":true,"stats":{"total_prompts":10,"active_prompts":8,"inactive_prompts":2}}`
+	var info CustomPromptSetVersionInfo
+	if err := json.Unmarshal([]byte(raw), &info); err != nil {
+		t.Fatal(err)
+	}
+	if info.UUID != "v-1" {
+		t.Errorf("UUID = %q", info.UUID)
+	}
+	if info.Version != "2" {
+		t.Errorf("Version = %q", info.Version)
+	}
+	if !info.IsLatest {
+		t.Error("IsLatest should be true")
+	}
+	if info.Stats == nil {
+		t.Fatal("Stats should not be nil")
+	}
+	if info.Stats.TotalPrompts != 10 {
+		t.Errorf("TotalPrompts = %d", info.Stats.TotalPrompts)
 	}
 }
