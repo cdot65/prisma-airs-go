@@ -1311,23 +1311,27 @@ func TestCustomAttacks_GetPropertyValues(t *testing.T) {
 
 func TestCustomAttacks_GetPropertyValuesMultiple(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "POST" {
-			t.Errorf("method = %s", r.Method)
+		if r.Method != "GET" {
+			t.Errorf("method = %s, want GET", r.Method)
+		}
+		got := r.URL.Query().Get("property_names")
+		if got != "category,severity" {
+			t.Errorf("property_names = %q, want %q", got, "category,severity")
 		}
 		_ = json.NewEncoder(w).Encode(PropertyValuesMultipleResponse{
-			Data: map[string][]string{"cat": {"v1"}},
+			Data: map[string][]string{"category": {"security"}},
 		})
 	})
 	defer tokenSrv.Close()
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-	resp, err := client.CustomAttacks.GetPropertyValuesMultiple(context.Background(), []string{"cat"})
+	resp, err := client.CustomAttacks.GetPropertyValuesMultiple(context.Background(), []string{"category", "severity"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(resp.Data) != 1 {
-		t.Errorf("data = %d", len(resp.Data))
+	if len(resp.Data["category"]) != 1 {
+		t.Errorf("category values = %d", len(resp.Data["category"]))
 	}
 }
 

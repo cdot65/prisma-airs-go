@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/cdot65/prisma-airs-go/aisec"
 	"github.com/cdot65/prisma-airs-go/aisec/internal"
@@ -740,8 +741,8 @@ func (c *CustomAttacksClient) GetPropertyValues(ctx context.Context, propertyNam
 
 func (c *CustomAttacksClient) GetPropertyValuesMultiple(ctx context.Context, propertyNames []string) (*PropertyValuesMultipleResponse, error) {
 	resp, err := internal.DoMgmtRequest[PropertyValuesMultipleResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.RedTeamCustomAttackPath + "/property-values",
-		Body: map[string][]string{"property_names": propertyNames},
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/property-values",
+		Params: map[string]string{"property_names": strings.Join(propertyNames, ",")},
 	})
 	if err != nil {
 		return nil, err
