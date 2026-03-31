@@ -191,4 +191,7 @@ const (
 
 	// EULA (management plane).
 	RedTeamEulaPath = "/v1/eula"
+
+	// Instances/Licensing (management plane).
+	RedTeamInstancesPath = "/v1/instances"
 )

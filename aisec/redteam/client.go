@@ -32,6 +32,7 @@ type Client struct {
 	Targets             *TargetsClient
 	CustomAttacks       *CustomAttacksClient
 	Eula                *EulaClient
+	Instances           *InstancesClient
 
 	dataCfg *internal.OAuthServiceConfig
 	mgmtCfg *internal.OAuthServiceConfig
@@ -76,6 +77,7 @@ func NewClient(opts Opts) (*Client, error) {
 	c.Targets = &TargetsClient{mgmtCfg: mgmtCfg}
 	c.CustomAttacks = &CustomAttacksClient{mgmtCfg: mgmtCfg}
 	c.Eula = &EulaClient{mgmtCfg: mgmtCfg}
+	c.Instances = &InstancesClient{mgmtCfg: mgmtCfg}
 
 	return c, nil
 }
@@ -1034,4 +1036,89 @@ func buildCustomAttacksReportListParams(opts CustomAttacksReportListOpts) map[st
 		params["property_value"] = opts.PropertyValue
 	}
 	return params
+}
+
+// --- Instances Client (mgmt plane) ---
+
+// InstancesClient provides methods for instance/licensing management.
+type InstancesClient struct {
+	mgmtCfg *internal.OAuthServiceConfig
+}
+
+// Create creates a new instance.
+func (c *InstancesClient) Create(ctx context.Context, req InstanceRequest) (*InstanceResponse, error) {
+	resp, err := internal.DoMgmtRequest[InstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamInstancesPath, Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// Get retrieves an instance by tenant ID.
+func (c *InstancesClient) Get(ctx context.Context, tenantID string) (*InstanceGetResponse, error) {
+	resp, err := internal.DoMgmtRequest[InstanceGetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamInstancesPath + "/" + tenantID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// Update updates an existing instance.
+func (c *InstancesClient) Update(ctx context.Context, tenantID string, req InstanceRequest) (*InstanceResponse, error) {
+	resp, err := internal.DoMgmtRequest[InstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPut, Path: aisec.RedTeamInstancesPath + "/" + tenantID, Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// Delete deletes an instance by tenant ID.
+func (c *InstancesClient) Delete(ctx context.Context, tenantID string) (*InstanceResponse, error) {
+	resp, err := internal.DoMgmtRequest[InstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodDelete, Path: aisec.RedTeamInstancesPath + "/" + tenantID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// CreateDevice creates devices for an instance.
+func (c *InstancesClient) CreateDevice(ctx context.Context, tenantID string, req DeviceRequest) (*DeviceResponse, error) {
+	resp, err := internal.DoMgmtRequest[DeviceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamInstancesPath + "/" + tenantID + "/devices", Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// UpdateDevice updates devices for an instance.
+func (c *InstancesClient) UpdateDevice(ctx context.Context, tenantID string, req DeviceRequest) (*DeviceResponse, error) {
+	resp, err := internal.DoMgmtRequest[DeviceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPatch, Path: aisec.RedTeamInstancesPath + "/" + tenantID + "/devices", Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// DeleteDevice deletes devices from an instance by serial numbers.
+func (c *InstancesClient) DeleteDevice(ctx context.Context, tenantID string, serialNumbers string) (*DeviceResponse, error) {
+	resp, err := internal.DoMgmtRequest[DeviceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodDelete, Path: aisec.RedTeamInstancesPath + "/" + tenantID + "/devices",
+		Params: map[string]string{"serial_numbers": serialNumbers},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
 }
