@@ -26,7 +26,9 @@ graph TD
     A --> D[CustomAttackReports<br/>Data Plane]
     A --> E[Targets<br/>Mgmt Plane]
     A --> F[CustomAttacks<br/>Mgmt Plane]
-    A --> G[Convenience Methods]
+    A --> G[Eula<br/>Mgmt Plane]
+    A --> H[Instances<br/>Mgmt Plane]
+    A --> I[Convenience Methods]
 ```
 
 ## Scans (Data Plane)
@@ -142,6 +144,12 @@ profile, err := client.Targets.GetProfile(ctx, "target-uuid")
 updated, err = client.Targets.UpdateProfile(ctx, "target-uuid", redteam.TargetContextUpdate{
     TargetBackground: &redteam.TargetBackground{Industry: "Healthcare"},
 })
+
+// Validate target auth configuration
+validation, err := client.Targets.ValidateAuth(ctx, redteam.TargetAuthValidationRequest{
+    AuthType:   redteam.AuthConfigTypeHeaders,
+    AuthConfig: redteam.HeadersAuthConfig{AuthHeader: map[string]string{"X-API-Key": "key"}},
+})
 ```
 
 ## Custom Attacks (Management Plane)
@@ -167,7 +175,9 @@ active, err := client.CustomAttacks.ListActivePromptSets(ctx)
 
 // Get prompt set reference and version info
 ref, err := client.CustomAttacks.GetPromptSetReference(ctx, "prompt-set-uuid")
-versionInfo, err := client.CustomAttacks.GetPromptSetVersionInfo(ctx, "prompt-set-uuid")
+versionInfo, err := client.CustomAttacks.GetPromptSetVersionInfo(ctx, "prompt-set-uuid", "")
+// With specific version:
+versionInfo, err = client.CustomAttacks.GetPromptSetVersionInfo(ctx, "prompt-set-uuid", "2")
 ```
 
 ### Prompts
@@ -195,6 +205,51 @@ multiValues, err := client.CustomAttacks.GetPropertyValuesMultiple(ctx, []string
 resp, err := client.CustomAttacks.CreatePropertyValue(ctx, redteam.PropertyValueCreateRequest{...})
 ```
 
+### CSV Upload/Download
+
+```go
+// Upload prompts from CSV
+csvFile, _ := os.Open("prompts.csv")
+resp, err := client.CustomAttacks.UploadPromptsCsv(ctx, "prompt-set-uuid", csvFile, "prompts.csv")
+
+// Download CSV template for a prompt set
+data, err := client.CustomAttacks.DownloadTemplate(ctx, "prompt-set-uuid")
+```
+
+## EULA (Management Plane)
+
+```go
+// Get EULA content
+content, err := client.Eula.GetContent(ctx)
+
+// Check EULA acceptance status
+status, err := client.Eula.GetStatus(ctx)
+
+// Accept EULA
+resp, err := client.Eula.Accept(ctx, redteam.EulaAcceptRequest{
+    EulaContent: content.Content,
+})
+```
+
+## Instances (Management Plane)
+
+```go
+// Create an instance
+inst, err := client.Instances.Create(ctx, redteam.InstanceRequest{
+    TsgID: "tsg-1", TenantID: "t-1", AppID: "app-1", Region: "us-east-1",
+})
+
+// Get, update, delete instances
+inst, err := client.Instances.Get(ctx, "tenant-id")
+updated, err := client.Instances.Update(ctx, "tenant-id", redteam.InstanceRequest{...})
+resp, err := client.Instances.Delete(ctx, "tenant-id")
+
+// Device management
+deviceResp, err := client.Instances.CreateDevice(ctx, "tenant-id", redteam.DeviceRequest{...})
+deviceResp, err = client.Instances.UpdateDevice(ctx, "tenant-id", redteam.DeviceRequest{...})
+deviceResp, err = client.Instances.DeleteDevice(ctx, "tenant-id", "SN-001,SN-002")
+```
+
 ## Convenience Methods
 
 These are available directly on the `RedTeamClient`:
@@ -218,4 +273,11 @@ sentiment, err := client.GetSentiment(ctx, "job-uuid")
 
 // Management dashboard overview
 overview, err := client.GetDashboardOverview(ctx)
+
+// Target metadata and templates
+metadata, err := client.GetTargetMetadata(ctx)
+templates, err := client.GetTargetTemplates(ctx)
+
+// Registry credentials
+creds, err := client.GetRegistryCredentials(ctx)
 ```

@@ -1,5 +1,26 @@
 # Release Notes
 
+## v0.5.0
+
+- **feat**: add `EulaClient` sub-client with `GetContent`, `GetStatus`, `Accept` methods
+- **feat**: add `InstancesClient` sub-client with 7 methods — `Create`, `Get`, `Update`, `Delete`, `CreateDevice`, `UpdateDevice`, `DeleteDevice`
+- **feat**: add `ValidateAuth` method on `TargetsClient` for auth configuration validation
+- **feat**: add `GetTargetMetadata`, `GetTargetTemplates`, `GetRegistryCredentials` convenience methods
+- **feat**: add `UploadPromptsCsv` and `DownloadTemplate` methods on `CustomAttacksClient`
+- **feat**: add typed auth config structs — `HeadersAuthConfig`, `BasicAuthAuthConfig`, `OAuth2AuthConfig` with `AuthConfigType` enum
+- **feat**: add `WEBSOCKET` to `TargetConnectionType` and `ResponseMode` enums
+- **fix**: `UpdateProfile` path corrected from `/context` to `/profile`
+- **fix**: `GetPropertyValuesMultiple` changed from POST with body to GET with query param
+- **fix**: `CreatePropertyValue` path removed erroneous `/create` suffix
+- **fix**: `DashboardOverviewResponse` typed with `TotalTargets` + `TargetsByType` (was `map[string]any`)
+- **fix**: `CustomPromptSetCreateRequest`/`UpdateRequest` `Properties` field renamed to `PropertyNames []string`
+- **fix**: `CustomPromptSetVersionInfo` fully typed (was `map[string]any`)
+- **fix**: `TargetProbeRequest` metadata fields typed as `*TargetMetadata`, `*TargetBackground`, `*TargetAdditionalContext`
+- **fix**: `TargetResponse` now includes `NetworkBrokerChannelUUID`, `AuthConfigType`, `AuthConfig` fields
+- **refactor**: split `models.go` into 7 domain files (`models_enums.go`, `models_target.go`, `models_scan.go`, `models_custom_attack.go`, `models_dashboard.go`, `models_eula.go`, `models_instance.go`)
+- **chore**: update red team mgmt-plane spec to latest OpenAPI JSON
+- **docs**: update red team API docs with all new endpoints and sub-clients
+
 ## v0.4.1
 
 - **fix**: remove `omitempty` from 33 plain `bool` JSON struct tags — `false` was silently dropped during marshaling, causing Terraform state drift

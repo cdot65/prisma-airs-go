@@ -104,7 +104,7 @@ import "github.com/cdot65/prisma-airs-go/aisec/redteam"
 
 client, err := redteam.NewClient(redteam.Opts{}) // falls back to PANW_MGMT_* env vars
 
-// 5 sub-clients + 7 convenience methods
+// 7 sub-clients + 10 convenience methods
 scans, _ := client.Scans.List(ctx, redteam.ScanListOpts{Limit: 5})
 targets, _ := client.Targets.List(ctx, redteam.TargetListOpts{})
 categories, _ := client.Scans.GetCategories(ctx)
