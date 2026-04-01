@@ -3,10 +3,13 @@ package redteam
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/cdot65/prisma-airs-go/aisec"
 	"github.com/cdot65/prisma-airs-go/aisec/internal"
@@ -30,6 +33,8 @@ type Client struct {
 	CustomAttackReports *CustomAttackReportsClient
 	Targets             *TargetsClient
 	CustomAttacks       *CustomAttacksClient
+	Eula                *EulaClient
+	Instances           *InstancesClient
 
 	dataCfg *internal.OAuthServiceConfig
 	mgmtCfg *internal.OAuthServiceConfig
@@ -73,6 +78,8 @@ func NewClient(opts Opts) (*Client, error) {
 	c.CustomAttackReports = &CustomAttackReportsClient{dataCfg: dataCfg}
 	c.Targets = &TargetsClient{mgmtCfg: mgmtCfg}
 	c.CustomAttacks = &CustomAttacksClient{mgmtCfg: mgmtCfg}
+	c.Eula = &EulaClient{mgmtCfg: mgmtCfg}
+	c.Instances = &InstancesClient{mgmtCfg: mgmtCfg}
 
 	return c, nil
 }
@@ -145,6 +152,17 @@ func (c *Client) GetSentiment(ctx context.Context, jobID string) (*SentimentResp
 	return &resp.Data, nil
 }
 
+// GetRegistryCredentials gets or creates registry credentials from the mgmt plane.
+func (c *Client) GetRegistryCredentials(ctx context.Context) (*RegistryCredentials, error) {
+	resp, err := internal.DoMgmtRequest[RegistryCredentials](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamRegistryCredentialsPath,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
 // GetDashboardOverview gets the dashboard overview from the mgmt plane.
 func (c *Client) GetDashboardOverview(ctx context.Context) (*DashboardOverviewResponse, error) {
 	resp, err := internal.DoMgmtRequest[DashboardOverviewResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
@@ -154,6 +172,28 @@ func (c *Client) GetDashboardOverview(ctx context.Context) (*DashboardOverviewRe
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+// GetTargetMetadata gets scan metadata for target configuration from the mgmt plane.
+func (c *Client) GetTargetMetadata(ctx context.Context) (map[string]any, error) {
+	resp, err := internal.DoMgmtRequest[map[string]any](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamTemplatePath + "/target-metadata",
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp.Data, nil
+}
+
+// GetTargetTemplates gets target templates from the mgmt plane.
+func (c *Client) GetTargetTemplates(ctx context.Context) (map[string]any, error) {
+	resp, err := internal.DoMgmtRequest[map[string]any](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamTemplatePath + "/target-templates",
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp.Data, nil
 }
 
 // --- Scans Client (data plane) ---
@@ -556,7 +596,58 @@ func (c *TargetsClient) GetProfile(ctx context.Context, uuid string) (*TargetPro
 
 func (c *TargetsClient) UpdateProfile(ctx context.Context, uuid string, req TargetContextUpdate) (*TargetResponse, error) {
 	resp, err := internal.DoMgmtRequest[TargetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamTargetPath + "/" + uuid + "/context", Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamTargetPath + "/" + uuid + "/profile", Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// ValidateAuth validates target authentication configuration.
+func (c *TargetsClient) ValidateAuth(ctx context.Context, req TargetAuthValidationRequest) (*TargetAuthValidationResponse, error) {
+	resp, err := internal.DoMgmtRequest[TargetAuthValidationResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamTargetValidateAuthPath, Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// --- EULA Client (mgmt plane) ---
+
+// EulaClient provides EULA management operations.
+type EulaClient struct {
+	mgmtCfg *internal.OAuthServiceConfig
+}
+
+// GetContent retrieves the EULA content.
+func (c *EulaClient) GetContent(ctx context.Context) (*EulaContentResponse, error) {
+	resp, err := internal.DoMgmtRequest[EulaContentResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamEulaPath + "/content",
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// GetStatus retrieves the EULA acceptance status.
+func (c *EulaClient) GetStatus(ctx context.Context) (*EulaResponse, error) {
+	resp, err := internal.DoMgmtRequest[EulaResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamEulaPath + "/status",
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// Accept accepts the EULA.
+func (c *EulaClient) Accept(ctx context.Context, req EulaAcceptRequest) (*EulaResponse, error) {
+	resp, err := internal.DoMgmtRequest[EulaResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamEulaPath + "/accept", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -633,9 +724,14 @@ func (c *CustomAttacksClient) GetPromptSetReference(ctx context.Context, uuid st
 	return &resp.Data, nil
 }
 
-func (c *CustomAttacksClient) GetPromptSetVersionInfo(ctx context.Context, uuid string) (*CustomPromptSetVersionInfo, error) {
+func (c *CustomAttacksClient) GetPromptSetVersionInfo(ctx context.Context, uuid string, version string) (*CustomPromptSetVersionInfo, error) {
+	var params map[string]string
+	if version != "" {
+		params = map[string]string{"version": version}
+	}
 	resp, err := internal.DoMgmtRequest[CustomPromptSetVersionInfo](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
 		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid + "/version-info",
+		Params: params,
 	})
 	if err != nil {
 		return nil, err
@@ -740,8 +836,8 @@ func (c *CustomAttacksClient) GetPropertyValues(ctx context.Context, propertyNam
 
 func (c *CustomAttacksClient) GetPropertyValuesMultiple(ctx context.Context, propertyNames []string) (*PropertyValuesMultipleResponse, error) {
 	resp, err := internal.DoMgmtRequest[PropertyValuesMultipleResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.RedTeamCustomAttackPath + "/property-values",
-		Body: map[string][]string{"property_names": propertyNames},
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/property-values",
+		Params: map[string]string{"property_names": strings.Join(propertyNames, ",")},
 	})
 	if err != nil {
 		return nil, err
@@ -751,12 +847,126 @@ func (c *CustomAttacksClient) GetPropertyValuesMultiple(ctx context.Context, pro
 
 func (c *CustomAttacksClient) CreatePropertyValue(ctx context.Context, req PropertyValueCreateRequest) (*BaseResponse, error) {
 	resp, err := internal.DoMgmtRequest[BaseResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.RedTeamCustomAttackPath + "/property-values/create", Body: req,
+		Method: http.MethodPost, Path: aisec.RedTeamCustomAttackPath + "/property-values", Body: req,
 	})
 	if err != nil {
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+// UploadPromptsCsv uploads a CSV file of custom prompts for the given prompt set.
+func (c *CustomAttacksClient) UploadPromptsCsv(ctx context.Context, promptSetUUID string, file io.Reader, filename string) (*BaseResponse, error) {
+	svcCfg := c.mgmtCfg
+
+	u, err := url.Parse(svcCfg.BaseURL + aisec.RedTeamUploadPromptsCsvPath)
+	if err != nil {
+		return nil, fmt.Errorf("invalid URL: %w", err)
+	}
+	q := u.Query()
+	q.Set("prompt_set_uuid", promptSetUUID)
+	u.RawQuery = q.Encode()
+
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	part, err := writer.CreateFormFile("file", filename)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create form file: %w", err)
+	}
+	if _, err := io.Copy(part, file); err != nil {
+		return nil, fmt.Errorf("failed to copy file data: %w", err)
+	}
+	if err := writer.Close(); err != nil {
+		return nil, fmt.Errorf("failed to close multipart writer: %w", err)
+	}
+
+	resp, err := internal.ExecuteWithRetry(internal.RetryOptions{
+		MaxRetries: svcCfg.NumRetries,
+		Execute: func(attempt int) (*http.Response, error) {
+			token, tokenErr := svcCfg.OAuth.GetToken()
+			if tokenErr != nil {
+				return nil, tokenErr
+			}
+			req, reqErr := http.NewRequestWithContext(ctx, http.MethodPost, u.String(), bytes.NewReader(body.Bytes()))
+			if reqErr != nil {
+				return nil, reqErr
+			}
+			req.Header.Set("Content-Type", writer.FormDataContentType())
+			req.Header.Set("User-Agent", aisec.UserAgent)
+			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
+			return http.DefaultClient.Do(req)
+		},
+		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
+			if resp.StatusCode == 401 || resp.StatusCode == 403 {
+				_, _ = io.Copy(io.Discard, resp.Body)
+				_ = resp.Body.Close()
+				svcCfg.OAuth.ClearToken()
+				return true, nil
+			}
+			return false, nil
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body: %w", err)
+	}
+	var result BaseResponse
+	if len(respBody) > 0 {
+		_ = json.Unmarshal(respBody, &result)
+	}
+	return &result, nil
+}
+
+// DownloadTemplate downloads a CSV template for the given prompt set.
+func (c *CustomAttacksClient) DownloadTemplate(ctx context.Context, promptSetUUID string) ([]byte, error) {
+	svcCfg := c.mgmtCfg
+	path := aisec.RedTeamDownloadTemplatePath + "/" + promptSetUUID
+
+	u, err := url.Parse(svcCfg.BaseURL + path)
+	if err != nil {
+		return nil, fmt.Errorf("invalid URL: %s%s: %w", svcCfg.BaseURL, path, err)
+	}
+
+	resp, err := internal.ExecuteWithRetry(internal.RetryOptions{
+		MaxRetries: svcCfg.NumRetries,
+		Execute: func(attempt int) (*http.Response, error) {
+			token, tokenErr := svcCfg.OAuth.GetToken()
+			if tokenErr != nil {
+				return nil, tokenErr
+			}
+			req, reqErr := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
+			if reqErr != nil {
+				return nil, reqErr
+			}
+			req.Header.Set("User-Agent", aisec.UserAgent)
+			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
+			return http.DefaultClient.Do(req)
+		},
+		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
+			if resp.StatusCode == 401 || resp.StatusCode == 403 {
+				_, _ = io.Copy(io.Discard, resp.Body)
+				_ = resp.Body.Close()
+				svcCfg.OAuth.ClearToken()
+				return true, nil
+			}
+			return false, nil
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	var buf bytes.Buffer
+	if _, err := io.Copy(&buf, resp.Body); err != nil {
+		return nil, fmt.Errorf("failed to read template body: %w", err)
+	}
+	return buf.Bytes(), nil
 }
 
 // --- Param builders ---
@@ -942,4 +1152,89 @@ func buildCustomAttacksReportListParams(opts CustomAttacksReportListOpts) map[st
 		params["property_value"] = opts.PropertyValue
 	}
 	return params
+}
+
+// --- Instances Client (mgmt plane) ---
+
+// InstancesClient provides methods for instance/licensing management.
+type InstancesClient struct {
+	mgmtCfg *internal.OAuthServiceConfig
+}
+
+// Create creates a new instance.
+func (c *InstancesClient) Create(ctx context.Context, req InstanceRequest) (*InstanceResponse, error) {
+	resp, err := internal.DoMgmtRequest[InstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamInstancesPath, Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// Get retrieves an instance by tenant ID.
+func (c *InstancesClient) Get(ctx context.Context, tenantID string) (*InstanceGetResponse, error) {
+	resp, err := internal.DoMgmtRequest[InstanceGetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodGet, Path: aisec.RedTeamInstancesPath + "/" + tenantID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// Update updates an existing instance.
+func (c *InstancesClient) Update(ctx context.Context, tenantID string, req InstanceRequest) (*InstanceResponse, error) {
+	resp, err := internal.DoMgmtRequest[InstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPut, Path: aisec.RedTeamInstancesPath + "/" + tenantID, Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// Delete deletes an instance by tenant ID.
+func (c *InstancesClient) Delete(ctx context.Context, tenantID string) (*InstanceResponse, error) {
+	resp, err := internal.DoMgmtRequest[InstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodDelete, Path: aisec.RedTeamInstancesPath + "/" + tenantID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// CreateDevice creates devices for an instance.
+func (c *InstancesClient) CreateDevice(ctx context.Context, tenantID string, req DeviceRequest) (*DeviceResponse, error) {
+	resp, err := internal.DoMgmtRequest[DeviceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost, Path: aisec.RedTeamInstancesPath + "/" + tenantID + "/devices", Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// UpdateDevice updates devices for an instance.
+func (c *InstancesClient) UpdateDevice(ctx context.Context, tenantID string, req DeviceRequest) (*DeviceResponse, error) {
+	resp, err := internal.DoMgmtRequest[DeviceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPatch, Path: aisec.RedTeamInstancesPath + "/" + tenantID + "/devices", Body: req,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+// DeleteDevice deletes devices from an instance by serial numbers.
+func (c *InstancesClient) DeleteDevice(ctx context.Context, tenantID string, serialNumbers string) (*DeviceResponse, error) {
+	resp, err := internal.DoMgmtRequest[DeviceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
+		Method: http.MethodDelete, Path: aisec.RedTeamInstancesPath + "/" + tenantID + "/devices",
+		Params: map[string]string{"serial_numbers": serialNumbers},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
 }

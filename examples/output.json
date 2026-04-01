@@ -1,0 +1,1097 @@
+{
+	"ai_profiles": [
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [
+								{
+									"action": "block",
+									"name": "agent-security"
+								}
+							],
+							"app-protection": {
+								"allow-url-category": {
+									"member": [
+										"dynamic-dns",
+										"grayware",
+										"abused-drugs",
+										"adult",
+										"encrypted-dns",
+										"high-risk",
+										"phishing",
+										"sports"
+									]
+								},
+								"block-url-category": {
+									"member": []
+								},
+								"default-url-category": {
+									"member": null
+								},
+								"malicious-code-protection": {
+									"action": "block",
+									"name": "malicious-code"
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "block",
+									"member": [
+										{
+											"id": "11995029",
+											"text": "IP Addresses",
+											"version": "1"
+										}
+									]
+								},
+								"database-security": [
+									{
+										"action": "block",
+										"name": "database-security-create"
+									},
+									{
+										"action": "block",
+										"name": "database-security-read"
+									},
+									{
+										"action": "block",
+										"name": "database-security-update"
+									},
+									{
+										"action": "block",
+										"name": "database-security-delete"
+									}
+								]
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 1
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "block",
+									"name": "contextual-grounding"
+								},
+								{
+									"action": "high:block, moderate:block",
+									"name": "toxic-content"
+								},
+								{
+									"action": "allow",
+									"name": "topic-guardrails",
+									"options": [],
+									"topic-list": [
+										{
+											"action": "allow",
+											"topic": []
+										},
+										{
+											"action": "block",
+											"topic": [
+												{
+													"revision": 8,
+													"topic_id": "0da5a502-619e-48ce-89dd-4866fa32f4b7",
+													"topic_name": "Deletion and Destruction of Cloud Infrastructure"
+												},
+												{
+													"revision": 3,
+													"topic_id": "7bdc3036-391e-4153-962f-79aae518892f",
+													"topic_name": "Tax Evasion Techniques"
+												},
+												{
+													"revision": 6,
+													"topic_id": "f67ba767-7d31-4de0-825b-ebfb45422103",
+													"topic_name": "Illegal Weapons Manufacturing and Procurement"
+												},
+												{
+													"revision": 9,
+													"topic_id": "17e8a094-d46c-4b7d-bb44-3c9ac9db8730",
+													"topic_name": "Home Manufacturing of Illegal Drugs"
+												},
+												{
+													"revision": 10,
+													"topic_id": "34490eba-f528-4a71-876e-cdf2d1a50a86",
+													"topic_name": "Star Wars vs Star Trek Superiority Claims"
+												},
+												{
+													"revision": 1,
+													"topic_id": "fb55fe62-5804-4377-a1de-ddf846d7dfc0",
+													"topic_name": "ASCII Art Generation"
+												},
+												{
+													"revision": 136,
+													"topic_id": "18fc8912-143c-4d45-a2bd-e52ac3200c27",
+													"topic_name": "Weapons Manufacturing and Procurement"
+												},
+												{
+													"revision": 1,
+													"topic_id": "7e6f4580-34a8-4d24-bb4a-58f738714b7d",
+													"topic_name": "Building Explosives"
+												},
+												{
+													"revision": 20,
+													"topic_id": "223658f7-5420-46ee-981b-07e06de679ee",
+													"topic_name": "Tax Guidance and Recommendations"
+												},
+												{
+													"revision": 5,
+													"topic_id": "6b627c72-e140-4bdf-ad7e-2ae312b1af97",
+													"topic_name": "Explosives and Bomb-Making Discussions"
+												},
+												{
+													"revision": 10,
+													"topic_id": "a0564440-2086-4f7b-9f61-09ee0310011e",
+													"topic_name": "Offensive Military Operation Planning Against Iran"
+												},
+												{
+													"revision": 5,
+													"topic_id": "97efc19e-702b-4ac8-adf9-433d0f76df75",
+													"topic_name": "Retail Black Friday Sale"
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": [
+					{
+						"description": "",
+						"file-based": "",
+						"id": "11995029",
+						"log-severity": "low",
+						"name": "IP Addresses",
+						"non-file-based": "",
+						"rule1": {
+							"action": "alert"
+						},
+						"rule2": {
+							"action": ""
+						},
+						"uuid": "",
+						"version": "1"
+					}
+				]
+			},
+			"profile_id": "6794c21b-4a96-45f0-9d47-3677e814442d",
+			"profile_name": "AI-Firewall-High-Security-Profile",
+			"revision": 4,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [
+								{
+									"action": "block",
+									"name": "agent-security"
+								}
+							],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "",
+									"member": null
+								},
+								"database-security": null
+							},
+							"latency": {
+								"inline-timeout-action": "allow",
+								"max-inline-latency": 5
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "block",
+									"name": "contextual-grounding"
+								},
+								{
+									"action": "high:block, moderate:block",
+									"name": "toxic-content"
+								},
+								{
+									"action": "allow",
+									"name": "topic-guardrails",
+									"options": [],
+									"topic-list": [
+										{
+											"action": "allow",
+											"topic": [
+												{
+													"revision": 8,
+													"topic_id": "1df8473d-ce11-4136-8b56-1868efc6ee1d",
+													"topic_name": "Recipe Recommendations and Creation"
+												}
+											]
+										},
+										{
+											"action": "block",
+											"topic": []
+										}
+									]
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "0a1b7b46-178e-4a70-9a4d-a56e135049c3",
+			"profile_name": "Recipe Extractor AWS Agent",
+			"revision": 2,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [
+								{
+									"action": "block",
+									"name": "agent-security"
+								}
+							],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "block",
+									"mask-data-inline": true,
+									"member": [
+										{
+											"id": "",
+											"text": "sensitive content",
+											"version": "2"
+										}
+									]
+								},
+								"database-security": [
+									{
+										"action": "allow",
+										"name": "database-security-create"
+									},
+									{
+										"action": "allow",
+										"name": "database-security-read"
+									},
+									{
+										"action": "allow",
+										"name": "database-security-update"
+									},
+									{
+										"action": "block",
+										"name": "database-security-delete"
+									}
+								]
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 25
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "high:block, moderate:allow",
+									"name": "toxic-content"
+								},
+								{
+									"action": "allow",
+									"name": "topic-guardrails",
+									"options": [],
+									"topic-list": [
+										{
+											"action": "allow",
+											"topic": [
+												{
+													"revision": 55,
+													"topic_id": "9caefd2a-9500-41e0-ae1e-4bfb67651c6a",
+													"topic_name": "Recipe Generation"
+												}
+											]
+										},
+										{
+											"action": "block",
+											"topic": [
+												{
+													"revision": 1,
+													"topic_id": "fb55fe62-5804-4377-a1de-ddf846d7dfc0",
+													"topic_name": "ASCII Art Generation"
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "aeda326a-c72c-45cc-a35c-0314eb5da7d7",
+			"profile_name": "Truffles Agent",
+			"revision": 2,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [
+								{
+									"action": "block",
+									"name": "agent-security"
+								}
+							],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"malicious-code-protection": {
+									"action": "block",
+									"name": "malicious-code"
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "block",
+									"member": [
+										{
+											"id": "",
+											"text": "sensitive content",
+											"version": "2"
+										}
+									]
+								},
+								"database-security": [
+									{
+										"action": "allow",
+										"name": "database-security-create"
+									},
+									{
+										"action": "allow",
+										"name": "database-security-read"
+									},
+									{
+										"action": "block",
+										"name": "database-security-update"
+									},
+									{
+										"action": "block",
+										"name": "database-security-delete"
+									}
+								]
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 25
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "high:block, moderate:block",
+									"name": "toxic-content"
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "a6416aa9-3891-48bc-b85c-9fdd906515c1",
+			"profile_name": "Cursor IDE - Hooks",
+			"revision": 4,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "",
+									"member": null
+								},
+								"database-security": null
+							},
+							"latency": {
+								"inline-timeout-action": "allow",
+								"max-inline-latency": 5
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "68bc3a50-69e2-40aa-9ff5-8cff8d5ae6a2",
+			"profile_name": "OpenClaw - Slack Moderation",
+			"revision": 2,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "test@test.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"model-protection": [
+								{
+									"action": "alert",
+									"name": "prompt-injection"
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				]
+			},
+			"profile_id": "76a1cad8-8279-499a-94fb-bd29af70188d",
+			"profile_name": "tf-test-60nazhgi",
+			"revision": 1,
+			"tsg_id": "1533764915",
+			"updated_by": "test@test.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [],
+							"app-protection": {
+								"default-url-category": {
+									"member": null
+								},
+								"url-detected-action": ""
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "",
+									"member": null
+								},
+								"database-security": null
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 5
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "block",
+									"name": "topic-guardrails",
+									"options": [],
+									"topic-list": [
+										{
+											"action": "allow",
+											"topic": [
+												{
+													"revision": 8,
+													"topic_id": "1df8473d-ce11-4136-8b56-1868efc6ee1d",
+													"topic_name": "Recipe Recommendations and Creation"
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "27e467fb-7735-4135-8ad1-7cd8a30986e6",
+			"profile_name": "Custom Topics Test",
+			"revision": 162,
+			"tsg_id": "1533764915",
+			"updated_by": "none"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [
+								{
+									"action": "block",
+									"name": "agent-security"
+								}
+							],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"malicious-code-protection": {
+									"action": "block",
+									"name": "malicious-code"
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "block",
+									"member": [
+										{
+											"id": "",
+											"text": "sensitive content",
+											"version": "2"
+										}
+									]
+								},
+								"database-security": null
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 5
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "high:block, moderate:block",
+									"name": "toxic-content"
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "25f7e804-98a6-4adf-960c-f49360cdc71d",
+			"profile_name": "Cursor IDE - Hooks",
+			"revision": 3,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [
+								{
+									"action": "block",
+									"name": "agent-security"
+								}
+							],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"malicious-code-protection": {
+									"action": "block",
+									"name": "malicious-code"
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "block",
+									"mask-data-inline": true,
+									"member": [
+										{
+											"id": "",
+											"text": "sensitive content",
+											"version": "2"
+										}
+									]
+								},
+								"database-security": [
+									{
+										"action": "block",
+										"name": "database-security-create"
+									},
+									{
+										"action": "block",
+										"name": "database-security-read"
+									},
+									{
+										"action": "block",
+										"name": "database-security-update"
+									},
+									{
+										"action": "block",
+										"name": "database-security-delete"
+									}
+								]
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 5
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "high:block, moderate:allow",
+									"name": "toxic-content"
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "03e9d2aa-64e0-4734-a21e-de85c7d0d728",
+			"profile_name": "AI-Firewall-High-Security-Profile",
+			"revision": 3,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [
+								{
+									"action": "block",
+									"name": "agent-security"
+								}
+							],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "block",
+									"member": [
+										{
+											"id": "11995010",
+											"text": "HIPAA",
+											"version": "1"
+										}
+									]
+								},
+								"database-security": [
+									{
+										"action": "block",
+										"name": "database-security-create"
+									},
+									{
+										"action": "allow",
+										"name": "database-security-read"
+									},
+									{
+										"action": "block",
+										"name": "database-security-update"
+									},
+									{
+										"action": "block",
+										"name": "database-security-delete"
+									}
+								]
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 5
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "high:block, moderate:allow",
+									"name": "toxic-content"
+								},
+								{
+									"action": "allow",
+									"name": "topic-guardrails",
+									"options": [],
+									"topic-list": [
+										{
+											"action": "allow",
+											"topic": [
+												{
+													"revision": 10,
+													"topic_id": "34490eba-f528-4a71-876e-cdf2d1a50a86",
+													"topic_name": "Star Wars vs Star Trek Superiority Claims"
+												}
+											]
+										},
+										{
+											"action": "block",
+											"topic": []
+										}
+									]
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": [
+					{
+						"description": "Health information such as diagnoses, treatment information, medical test results, and prescription information are considered protected health information under HIPAA, as are national identification numbers and demographic information such as birth dates, gender, ethnicity, and contact and emergency contact",
+						"file-based": "",
+						"id": "11995010",
+						"log-severity": "low",
+						"name": "HIPAA",
+						"non-file-based": "",
+						"rule1": {
+							"action": "alert"
+						},
+						"rule2": {
+							"action": ""
+						},
+						"uuid": "",
+						"version": "1"
+					}
+				]
+			},
+			"profile_id": "4c35b84e-f874-452d-ac11-7cbcabd47a21",
+			"profile_name": "OpenClaw AI Agent Security Nightmare",
+			"revision": 1,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [
+								{
+									"action": "block",
+									"name": "agent-security"
+								}
+							],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "",
+									"member": null
+								},
+								"database-security": null
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 5
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "high:block, moderate:block",
+									"name": "toxic-content"
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "2225ece2-0cc3-4235-affe-78f9433a3da3",
+			"profile_name": "Recipe Extractor AWS Agent",
+			"revision": 1,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [
+								{
+									"action": "block",
+									"name": "agent-security"
+								}
+							],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "block",
+									"member": [
+										{
+											"id": "",
+											"text": "sensitive content",
+											"version": "2"
+										}
+									]
+								},
+								"database-security": [
+									{
+										"action": "allow",
+										"name": "database-security-create"
+									},
+									{
+										"action": "allow",
+										"name": "database-security-read"
+									},
+									{
+										"action": "allow",
+										"name": "database-security-update"
+									},
+									{
+										"action": "block",
+										"name": "database-security-delete"
+									}
+								]
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 5
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								},
+								{
+									"action": "high:block, moderate:allow",
+									"name": "toxic-content"
+								},
+								{
+									"action": "allow",
+									"name": "topic-guardrails",
+									"topic-list": [
+										{
+											"action": "allow",
+											"topic": [
+												{
+													"revision": 55,
+													"topic_id": "9caefd2a-9500-41e0-ae1e-4bfb67651c6a",
+													"topic_name": "Recipe Generation"
+												}
+											]
+										},
+										{
+											"action": "block",
+											"topic": [
+												{
+													"revision": 1,
+													"topic_id": "fb55fe62-5804-4377-a1de-ddf846d7dfc0",
+													"topic_name": "ASCII Art Generation"
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "50ee614f-061d-49e4-8b28-192b36c0f636",
+			"profile_name": "Truffles Agent",
+			"revision": 1,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		},
+		{
+			"active": true,
+			"created_by": "cremsburg@paloaltonetworks.com",
+			"csp_id": "436622",
+			"policy": {
+				"ai-security-profiles": [
+					{
+						"model-configuration": {
+							"agent-protection": [],
+							"app-protection": {
+								"allow-url-category": {},
+								"block-url-category": {},
+								"default-url-category": {
+									"member": [
+										"malicious"
+									]
+								},
+								"url-detected-action": "block"
+							},
+							"data-protection": {
+								"data-leak-detection": {
+									"action": "",
+									"member": null
+								},
+								"database-security": null
+							},
+							"latency": {
+								"inline-timeout-action": "block",
+								"max-inline-latency": 5
+							},
+							"mask-data-in-storage": false,
+							"model-protection": [
+								{
+									"action": "block",
+									"name": "prompt-injection"
+								}
+							]
+						},
+						"model-type": "default"
+					}
+				],
+				"dlp-data-profiles": []
+			},
+			"profile_id": "a6ad74c4-a776-4842-a9d9-10400539d7a5",
+			"profile_name": "OpenClaw - Slack Moderation",
+			"revision": 1,
+			"tsg_id": "1533764915",
+			"updated_by": "cremsburg@paloaltonetworks.com"
+		}
+	]
+}

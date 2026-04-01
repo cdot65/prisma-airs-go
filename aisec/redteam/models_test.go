@@ -206,6 +206,15 @@ func TestCountedQuotaEnum_Values(t *testing.T) {
 	}
 }
 
+func TestWebSocketEnumValues(t *testing.T) {
+	if string(TargetConnectionTypeWebSocket) != "WEBSOCKET" {
+		t.Errorf("TargetConnectionTypeWebSocket = %q", TargetConnectionTypeWebSocket)
+	}
+	if string(ResponseModeWebSocket) != "WEBSOCKET" {
+		t.Errorf("ResponseModeWebSocket = %q", ResponseModeWebSocket)
+	}
+}
+
 // --- Struct tests ---
 
 func TestCustomPromptResponse_UserDefinedGoalBool(t *testing.T) {
@@ -1012,5 +1021,195 @@ func TestRedTeam_BoolFalse_NotOmitted(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestDashboardOverviewResponse_JSON(t *testing.T) {
+	raw := `{"total_targets":5,"targets_by_type":[{"name":"APPLICATION","count":3},{"name":"MODEL","count":2}]}`
+	var resp DashboardOverviewResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.TotalTargets != 5 {
+		t.Errorf("TotalTargets = %d, want 5", resp.TotalTargets)
+	}
+	if len(resp.TargetsByType) != 2 {
+		t.Errorf("TargetsByType len = %d, want 2", len(resp.TargetsByType))
+	}
+	if resp.TargetsByType[0].Name != "APPLICATION" {
+		t.Errorf("TargetsByType[0].Name = %q", resp.TargetsByType[0].Name)
+	}
+}
+
+func TestBaseResponse_JSON(t *testing.T) {
+	raw := `{"message":"ok","status":200}`
+	var resp BaseResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.Message != "ok" {
+		t.Errorf("Message = %q", resp.Message)
+	}
+	if resp.Status != 200 {
+		t.Errorf("Status = %d, want 200", resp.Status)
+	}
+}
+
+func TestCustomPromptSetCreateRequest_JSON(t *testing.T) {
+	req := CustomPromptSetCreateRequest{
+		Name:          "test-set",
+		PropertyNames: []string{"category", "severity"},
+	}
+	b, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var m map[string]any
+	_ = json.Unmarshal(b, &m)
+	if _, ok := m["property_names"]; !ok {
+		t.Error("expected property_names key in JSON, got properties or missing")
+	}
+	if _, ok := m["properties"]; ok {
+		t.Error("should not have properties key in JSON")
+	}
+}
+
+func TestCustomPromptSetVersionInfo_JSON(t *testing.T) {
+	raw := `{"uuid":"v-1","version":"2","status":"active","is_latest":true,"stats":{"total_prompts":10,"active_prompts":8,"inactive_prompts":2}}`
+	var info CustomPromptSetVersionInfo
+	if err := json.Unmarshal([]byte(raw), &info); err != nil {
+		t.Fatal(err)
+	}
+	if info.UUID != "v-1" {
+		t.Errorf("UUID = %q", info.UUID)
+	}
+	if info.Version != "2" {
+		t.Errorf("Version = %q", info.Version)
+	}
+	if !info.IsLatest {
+		t.Error("IsLatest should be true")
+	}
+	if info.Stats == nil {
+		t.Fatal("Stats should not be nil")
+	}
+	if info.Stats.TotalPrompts != 10 {
+		t.Errorf("TotalPrompts = %d", info.Stats.TotalPrompts)
+	}
+}
+
+func TestAuthConfigType_Values(t *testing.T) {
+	vals := []AuthConfigType{AuthConfigTypeHeaders, AuthConfigTypeBasicAuth, AuthConfigTypeOAuth2}
+	expected := []string{"HEADERS", "BASIC_AUTH", "OAUTH2"}
+	for i, v := range vals {
+		if string(v) != expected[i] {
+			t.Errorf("AuthConfigType[%d] = %q, want %q", i, v, expected[i])
+		}
+	}
+}
+
+func TestBasicAuthLocation_Values(t *testing.T) {
+	vals := []BasicAuthLocation{BasicAuthLocationHeader, BasicAuthLocationPayload}
+	expected := []string{"HEADER", "PAYLOAD"}
+	for i, v := range vals {
+		if string(v) != expected[i] {
+			t.Errorf("BasicAuthLocation[%d] = %q, want %q", i, v, expected[i])
+		}
+	}
+}
+
+func TestHeadersAuthConfig_JSON(t *testing.T) {
+	cfg := HeadersAuthConfig{AuthHeader: map[string]string{"Authorization": "Bearer tok"}}
+	b, err := json.Marshal(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var out HeadersAuthConfig
+	if err := json.Unmarshal(b, &out); err != nil {
+		t.Fatal(err)
+	}
+	if out.AuthHeader["Authorization"] != "Bearer tok" {
+		t.Errorf("AuthHeader = %v", out.AuthHeader)
+	}
+}
+
+func TestOAuth2AuthConfig_JSON(t *testing.T) {
+	cfg := OAuth2AuthConfig{
+		OAuth2TokenURL:      "https://auth.example.com/token",
+		OAuth2ExpiryMinutes: 30,
+		OAuth2InjectHeader:  map[string]string{"Authorization": "Bearer {TOKEN}"},
+	}
+	b, err := json.Marshal(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var out OAuth2AuthConfig
+	if err := json.Unmarshal(b, &out); err != nil {
+		t.Fatal(err)
+	}
+	if out.OAuth2TokenURL != "https://auth.example.com/token" {
+		t.Errorf("OAuth2TokenURL = %q", out.OAuth2TokenURL)
+	}
+	if out.OAuth2ExpiryMinutes != 30 {
+		t.Errorf("OAuth2ExpiryMinutes = %d", out.OAuth2ExpiryMinutes)
+	}
+}
+
+func TestTargetCreateRequest_AuthConfig_JSON(t *testing.T) {
+	req := TargetCreateRequest{
+		Name:           "test",
+		AuthConfigType: AuthConfigTypeHeaders,
+		AuthConfig:     HeadersAuthConfig{AuthHeader: map[string]string{"X-Key": "val"}},
+	}
+	b, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var m map[string]any
+	_ = json.Unmarshal(b, &m)
+	if m["auth_config_type"] != "HEADERS" {
+		t.Errorf("auth_config_type = %v", m["auth_config_type"])
+	}
+	if m["auth_config"] == nil {
+		t.Error("auth_config is nil")
+	}
+}
+
+func TestTargetResponse_NetworkBrokerField(t *testing.T) {
+	raw := `{"uuid":"t-1","tsg_id":"123","name":"test","status":"ACTIVE","active":true,"validated":true,"created_at":"2026-01-01","updated_at":"2026-01-01","network_broker_channel_uuid":"nb-1"}`
+	var resp TargetResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.NetworkBrokerChannelUUID != "nb-1" {
+		t.Errorf("NetworkBrokerChannelUUID = %q", resp.NetworkBrokerChannelUUID)
+	}
+}
+
+func TestTargetProbeRequest_TypedFields(t *testing.T) {
+	req := TargetProbeRequest{
+		Name: "probe",
+		TargetMetadata: &TargetMetadata{
+			MultiTurn:    true,
+			ProbeMessage: "hello",
+		},
+		TargetBackground: &TargetBackground{
+			Industry: "finance",
+		},
+		AdditionalContext: &TargetAdditionalContext{
+			BaseModel: "gpt-4",
+		},
+	}
+	b, err := json.Marshal(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var m map[string]any
+	_ = json.Unmarshal(b, &m)
+	tm, ok := m["target_metadata"].(map[string]any)
+	if !ok {
+		t.Fatal("target_metadata not a map")
+	}
+	if tm["multi_turn"] != true {
+		t.Errorf("multi_turn = %v", tm["multi_turn"])
 	}
 }

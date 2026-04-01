@@ -172,15 +172,30 @@ const (
 
 // API paths — Red Team management plane.
 const (
-	RedTeamTargetPath        = "/v1/target"
-	RedTeamCustomAttackPath  = "/v1/custom-attack"
-	RedTeamMgmtDashboardPath = "/v1/dashboard/overview"
+	RedTeamTargetPath             = "/v1/target"
+	RedTeamTargetValidateAuthPath = "/v1/target/validate-auth"
+	RedTeamCustomAttackPath       = "/v1/custom-attack"
+	RedTeamMgmtDashboardPath      = "/v1/dashboard/overview"
+	RedTeamTemplatePath           = "/v1/template"
 
 	// Custom attack prompt set sub-paths (management plane).
 	RedTeamCustomPromptSetPath        = "/v1/custom-attack/custom-prompt-set"
 	RedTeamListCustomPromptSetsPath   = "/v1/custom-attack/list-custom-prompt-sets"
 	RedTeamActiveCustomPromptSetsPath = "/v1/custom-attack/active-custom-prompt-sets"
 
+	// CSV upload/download (management plane).
+	RedTeamUploadPromptsCsvPath = "/v1/custom-attack/upload-custom-prompts-csv"
+	RedTeamDownloadTemplatePath = "/v1/custom-attack/download-template"
+
 	// Report download (data plane).
 	RedTeamReportDownloadPath = "/v1/report"
+
+	// Registry credentials (management plane).
+	RedTeamRegistryCredentialsPath = "/v1/registry-credentials"
+
+	// EULA (management plane).
+	RedTeamEulaPath = "/v1/eula"
+
+	// Instances/Licensing (management plane).
+	RedTeamInstancesPath = "/v1/instances"
 )
