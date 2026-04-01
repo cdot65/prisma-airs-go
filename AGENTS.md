@@ -22,7 +22,7 @@ aisec/                      # Core package: constants, config, errors, utils
   internal/                 # Private: HTTP client, retry, OAuth client
   runtime/                  # Runtime API — Scanner (API key) + Client with 8 sub-clients (OAuth2)
   modelsecurity/            # Model Security API — 3 sub-clients, dual endpoint (OAuth2)
-  redteam/                  # Red Team API — 5 sub-clients, dual endpoint (OAuth2)
+  redteam/                  # Red Team API — 7 sub-clients, dual endpoint (OAuth2)
 docs/                       # MkDocs Material source
 .github/workflows/          # CI (lint/test), test matrix (Go 1.22-1.24), mkdocs deploy, release
 examples/                   # Usage examples

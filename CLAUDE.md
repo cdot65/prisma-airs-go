@@ -32,7 +32,7 @@ go test -v ./... -run "TestName"
 - **Runtime API — Scan** (API Key): `runtime.NewScanner(cfg)` → SyncScan, AsyncScan, QueryByScanIDs, QueryByReportIDs
 - **Runtime API — Management** (OAuth2): `runtime.NewClient(opts)` → 8 sub-clients (profiles, topics, apikeys, apps, dlp, deployment, scanlogs, oauth)
 - **Model Security API** (OAuth2): `modelsecurity.NewClient(opts)` → 3 sub-clients (scans, groups, rules) + GetPyPIAuth, dual endpoint
-- **Red Team API** (OAuth2): `redteam.NewClient(opts)` → 5 sub-clients (scans, reports, customAttackReports, targets, customAttacks) + 7 convenience methods, dual endpoint
+- **Red Team API** (OAuth2): `redteam.NewClient(opts)` → 7 sub-clients (scans, reports, customAttackReports, targets, customAttacks, eula, instances) + 10 convenience methods, dual endpoint
 
 Key packages:
 
@@ -40,7 +40,7 @@ Key packages:
 - `aisec/internal/` — `DoRequest[T]`, `DoMgmtRequest[T]`, `ExecuteWithRetry`, `OAuthClient`, `ResolveOAuthConfig`
 - `aisec/runtime/` — Scanner + Content (data plane) and Client + 8 sub-clients (management plane)
 - `aisec/modelsecurity/` — Client + 3 sub-clients, data plane / mgmt plane split
-- `aisec/redteam/` — Client + 5 sub-clients + 7 convenience methods, data plane / mgmt plane split
+- `aisec/redteam/` — Client + 7 sub-clients + 10 convenience methods, data plane / mgmt plane split
 
 **Auth:** API key (HMAC-SHA256) for scans. OAuth2 client_credentials (with token caching, proactive refresh, concurrent dedup, 401/403 auto-retry) for everything else.
 
