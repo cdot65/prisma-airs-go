@@ -116,13 +116,14 @@ func (c *ProfilesClient) Update(ctx context.Context, profileID string, req Updat
 }
 
 func (c *ProfilesClient) Delete(ctx context.Context, profileID string) (*DeleteProfileResponse, error) {
-	resp, err := internal.DoMgmtRequest[DeleteProfileResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+	// Live 2026-10-01: JSON string rather than the documented message object.
+	resp, err := internal.DoMgmtRequest[deleteMessageResponse[PolicyPayload]](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: aisec.MgmtProfilePath + "/" + seg(profileID),
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+	return &DeleteProfileResponse{Message: resp.Data.Message, Payload: resp.Data.Payload}, nil
 }
 
 // lookupPageSize is the page size used by the client-side lookups below.
@@ -222,7 +223,7 @@ func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityP
 
 // ForceDelete force-deletes a profile: DELETE /v1/mgmt/profile/{profile_id}/force?updated_by=
 func (c *ProfilesClient) ForceDelete(ctx context.Context, profileID string, updatedBy string) (*DeleteProfileResponse, error) {
-	resp, err := internal.DoMgmtRequest[deleteMessageResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+	resp, err := internal.DoMgmtRequest[deleteMessageResponse[PolicyPayload]](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete,
 		Path:   aisec.MgmtProfileForcePath + "/" + seg(profileID) + "/force",
 		Params: map[string]string{"updated_by": updatedBy},
@@ -232,7 +233,7 @@ func (c *ProfilesClient) ForceDelete(ctx context.Context, profileID string, upda
 	if err != nil {
 		return nil, err
 	}
-	result := DeleteProfileResponse(resp.Data)
+	result := DeleteProfileResponse{Message: resp.Data.Message, Payload: resp.Data.Payload}
 	return &result, nil
 }
 
@@ -274,21 +275,22 @@ func (c *TopicsClient) Update(ctx context.Context, topicID string, req UpdateTop
 
 // deleteMessageResponse adapts a JSON string or message object for runtime
 // deletions without changing their public response types.
-type deleteMessageResponse struct {
+type deleteMessageResponse[T any] struct {
 	Message string `json:"message,omitempty"`
+	Payload []T    `json:"payload,omitempty"`
 }
 
-func (r *deleteMessageResponse) UnmarshalJSON(data []byte) error {
+func (r *deleteMessageResponse[T]) UnmarshalJSON(data []byte) error {
 	if len(data) > 0 && data[0] == '"' {
 		return json.Unmarshal(data, &r.Message)
 	}
 	// The local type has no UnmarshalJSON method, avoiding recursive decoding.
-	type messageObject deleteMessageResponse
+	type messageObject deleteMessageResponse[T]
 	return json.Unmarshal(data, (*messageObject)(r))
 }
 
 func (c *TopicsClient) Delete(ctx context.Context, topicID string) (*DeleteTopicResponse, error) {
-	resp, err := internal.DoMgmtRequest[deleteMessageResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+	resp, err := internal.DoMgmtRequest[deleteMessageResponse[ProfilePayload]](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: aisec.MgmtTopicPath + "/" + seg(topicID),
 		// Preserve the legacy non-JSON success exception; API_ISSUES.md records
 		// a parse failure but does not establish the original body's format.
@@ -297,22 +299,22 @@ func (c *TopicsClient) Delete(ctx context.Context, topicID string) (*DeleteTopic
 	if err != nil {
 		return nil, err
 	}
-	result := DeleteTopicResponse(resp.Data)
+	result := DeleteTopicResponse{Message: resp.Data.Message, Payload: resp.Data.Payload}
 	return &result, nil
 }
 
-// ForceDelete force-deletes a topic: DELETE /v1/mgmt/topic/force/{topic_id}?updated_by=
+// ForceDelete force-deletes a topic: DELETE /v1/mgmt/topic/{topic_id}/force?updated_by=
 func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string, updatedBy string) (*DeleteTopicResponse, error) {
-	resp, err := internal.DoMgmtRequest[deleteMessageResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+	resp, err := internal.DoMgmtRequest[deleteMessageResponse[ProfilePayload]](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method:         http.MethodDelete,
-		Path:           aisec.MgmtTopicForcePath + "/force/" + seg(topicID),
+		Path:           aisec.MgmtTopicForcePath + "/" + seg(topicID) + "/force",
 		Params:         map[string]string{"updated_by": updatedBy},
 		ResponsePolicy: internal.AllowTextOrEmpty,
 	})
 	if err != nil {
 		return nil, err
 	}
-	result := DeleteTopicResponse(resp.Data)
+	result := DeleteTopicResponse{Message: resp.Data.Message, Payload: resp.Data.Payload}
 	return &result, nil
 }
 
@@ -343,19 +345,20 @@ func (c *ApiKeysClient) List(ctx context.Context, opts ListOpts) (*ApiKeyListRes
 }
 
 func (c *ApiKeysClient) Delete(ctx context.Context, keyName, updatedBy string) (*ApiKeyDeleteResponse, error) {
-	resp, err := internal.DoMgmtRequest[ApiKeyDeleteResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+	// Live 2026-10-01: JSON string, despite the spec's message object.
+	resp, err := internal.DoMgmtRequest[deleteMessageResponse[json.RawMessage]](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: aisec.MgmtAPIKeyPath + "/delete/" + seg(keyName),
 		Params: map[string]string{"updated_by": updatedBy},
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+	return &ApiKeyDeleteResponse{Message: resp.Data.Message}, nil
 }
 
 func (c *ApiKeysClient) Regenerate(ctx context.Context, keyID string, req RegenerateKeyRequest) (*ApiKey, error) {
 	resp, err := internal.DoMgmtRequest[ApiKey](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.MgmtAPIKeyPath + "/" + seg(keyID) + "/regenerate", Body: req,
+		Method: http.MethodPost, Path: aisec.MgmtAPIKeyPath + "/regenerate/" + seg(keyID), Body: req,
 	})
 	if err != nil {
 		return nil, err

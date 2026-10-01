@@ -181,7 +181,7 @@ func TestPathSegmentsAreEscaped(t *testing.T) {
 		t.Errorf("path = %q, want %q", path, want)
 	}
 	_, _ = client.Topics.ForceDelete(context.Background(), "a/b", "me")
-	if want := "/v1/mgmt/topic/force/a%2Fb"; path != want {
+	if want := "/v1/mgmt/topic/a%2Fb/force"; path != want {
 		t.Errorf("path = %q, want %q", path, want)
 	}
 }

@@ -661,8 +661,8 @@ func TestTopics_ForceDelete(t *testing.T) {
 		if r.Method != "DELETE" {
 			t.Errorf("method = %s", r.Method)
 		}
-		if !strings.Contains(r.URL.Path, "/topic/force/t-1") {
-			t.Errorf("path = %q, want /topic/force/t-1", r.URL.Path)
+		if r.URL.Path != "/v1/mgmt/topic/t-1/force" {
+			t.Errorf("path = %q, want /v1/mgmt/topic/t-1/force", r.URL.Path)
 		}
 		if r.URL.Query().Get("updated_by") != "admin@example.com" {
 			t.Errorf("updated_by = %q", r.URL.Query().Get("updated_by"))

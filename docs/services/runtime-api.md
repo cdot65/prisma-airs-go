@@ -1,5 +1,31 @@
 # Runtime API
 
+The October 2026 alignment adds `Profiles.ListWithOptions` (`latest`),
+`DeploymentProfiles.ListWithOptions` (`unactivated`), and
+`OAuth.GetTokenWithTTL`. Boolean query pointers preserve explicit false.
+`Topics.UpdateFields` preserves explicit empty descriptions/example lists and
+false/zero values; nil pointers omit fields. Existing methods remain available.
+Profile/topic requests now expose revision, active, and audit metadata. Delete
+responses retain policy/profile payloads where supplied. Key rotation uses
+`/v1/mgmt/apikey/regenerate/{id}` and may return a replacement key ID. Topic force
+deletion uses `/v1/mgmt/topic/{id}/force`, verified live on 2026-10-01.
+
+```go
+latest := false
+revisions, err := client.Profiles.ListWithOptions(ctx, runtime.ProfileListOpts{
+    ListOpts: runtime.ListOpts{Limit: 100}, Latest: &latest,
+})
+_ = revisions
+_ = err
+
+empty := ""
+examples := []string{}
+updated, err := client.Topics.UpdateFields(ctx, "topic-id", runtime.UpdateTopicFieldsRequest{
+    TopicName: &topicName, Description: &empty, Examples: &examples,
+})
+_ = updated
+```
+
 The Runtime API provides CRUD operations for AIRS configuration — security profiles, custom topics, API keys, customer apps, and more — as well as real-time content scanning for prompts, responses, and tool events. It uses OAuth2 client_credentials for authentication (management operations) and API Key HMAC-SHA256 for scanning operations.
 
 ## Authentication

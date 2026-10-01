@@ -1,5 +1,18 @@
 # API Issues Discovered During E2E Testing
 
+## Live recheck — 2026-10-01
+
+The October alignment rechecked temporary topic/profile CRUD and API-key
+creation, regeneration, and deletion. Topics/profile/API-key deletes return JSON
+strings under application/json. Ordinary profile/API-key deletion now uses the
+same string-or-object adapter while still requiring JSON; force/profile/topic
+text exceptions remain explicit. The topic force route is
+`/v1/mgmt/topic/{id}/force`; `/topic/force/{id}` returned 403. Key regeneration
+uses `/v1/mgmt/apikey/regenerate/{id}` and returns a replacement key ID. Existing
+TSG-qualified and new unqualified profile/topic/key listing routes both returned
+200. See `docs/developer/live-verification.md` for evidence; the historical entries
+below retain their original dates and have not all been rechecked.
+
 Issues found while running integration tests against the live AIRS API (2026-03-21).
 These are API-side behaviors, not SDK bugs.
 
