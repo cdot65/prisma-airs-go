@@ -70,3 +70,24 @@ test channel. A connected broker and target fixture are required for executing
 an adapter validation. The final focused race-enabled live run passed in 11.003
 seconds. Earlier description assertions failed before the service's null
 canonicalization was recorded and accommodated in the test.
+
+### Red Team current-schema reads and disposable CRUD (2026-10-01)
+
+Languages on both planes, goal categories, report status, ASR, v2 download
+receipt, raw job error-log download and target-profile error-log reads passed.
+The documented `/v1/scan/scan-metadata` returned HTTP 422 with
+`code=validation_error`, `message=Request validation failed`. No undocumented
+alias was found: `/v1/scan-metadata` and the trailing-slash form returned 403;
+`/v1/scan/metadata` returned 422. No body details identifying a required parameter
+were returned. The SDK retains the published path and surfaces the failure;
+the metadata integration assertion remains strict and currently fails live.
+
+The precise-model live suite passed quota, scan statistics, dashboard overview,
+categories, target listing, prompt-set and active-set listing, property names,
+job listing/detail, error logs, and available completed static/dynamic/custom
+report and list reads. Disposable DRAFT target create/get/update/delete and
+prompt-set create/get, prompt create/get/list/delete also passed. Cleanup archived
+the disposable prompt set because no delete endpoint exists. These strict tests
+passed with the race detector in 51.193 seconds. Regeneration, overrides,
+profiling execution and Copilot consent flows were not performed against existing
+resources. Every pinned operation has mock request/payload/response/error coverage.

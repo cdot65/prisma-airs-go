@@ -143,3 +143,16 @@ func TestConstants_AdaptersAndNetworkBroker(t *testing.T) {
 		}
 	}
 }
+
+func TestConstants_CurrentRedTeamReports(t *testing.T) {
+	for _, tc := range []struct{ name, got, want string }{
+		{"RedTeamLanguagesPath", RedTeamLanguagesPath, "/v1/languages"},
+		{"RedTeamGoalCategoriesPath", RedTeamGoalCategoriesPath, "/v1/goal-categories"},
+		{"RedTeamReportV2Path", RedTeamReportV2Path, "/v2/report"},
+		{"RedTeamTargetProfileErrorLogPath", RedTeamTargetProfileErrorLogPath, "/v1/error-log/target-profile"},
+	} {
+		if tc.got != tc.want {
+			t.Errorf("%s=%q;want %q", tc.name, tc.got, tc.want)
+		}
+	}
+}

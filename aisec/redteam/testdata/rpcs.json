@@ -1,0 +1,319 @@
+{
+  "Client.GetLanguages": {
+    "query": "",
+    "response": {
+      "multilingual_enabled": false,
+      "supported_job_types": [
+        "test"
+      ],
+      "languages": [
+        {
+          "code": "test",
+          "name": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "Client.GetGoalCategories": {
+    "query": "",
+    "response": {
+      "target_type": "test",
+      "categories": [
+        {
+          "category": "test",
+          "display_name": "test",
+          "description": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "ScansClient.GetMetadata": {
+    "query": "",
+    "response": {
+      "version": "1",
+      "flags": [
+        true,
+        false
+      ],
+      "limits": {
+        "count": 0
+      }
+    },
+    "status": 200
+  },
+  "ScansClient.SetRuntimeProfile": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "tsg_id": "test",
+      "name": "test",
+      "target": {
+        "uuid": "test",
+        "tsg_id": "test",
+        "name": "test",
+        "status": "DRAFT",
+        "active": false,
+        "validated": false,
+        "created_at": "test",
+        "updated_at": "test"
+      },
+      "job_type": "STATIC",
+      "job_metadata": {
+        "categories": {}
+      },
+      "target_id": "test",
+      "target_type": "test"
+    },
+    "status": 200,
+    "request": {
+      "runtime_profile_id": "test"
+    }
+  },
+  "ReportsClient.GetStaticASR": {
+    "query": "",
+    "response": {
+      "job_id": "test",
+      "job_type": "STATIC",
+      "asr": 0.0
+    },
+    "status": 200
+  },
+  "ReportsClient.GetDynamicASR": {
+    "query": "",
+    "response": {
+      "job_id": "test",
+      "job_type": "STATIC",
+      "asr": 0.0
+    },
+    "status": 200
+  },
+  "ReportsClient.GetStatus": {
+    "query": "",
+    "response": {
+      "report_state": "ACTIVE"
+    },
+    "status": 200
+  },
+  "ReportsClient.Regenerate": {
+    "query": "",
+    "response": {
+      "background_job_id": "test",
+      "status": "INIT"
+    },
+    "status": 202
+  },
+  "ReportsClient.GetDownload": {
+    "query": "file_format=JSON",
+    "response": {
+      "filename": "test",
+      "download_url": "test"
+    },
+    "status": 200
+  },
+  "ReportsClient.OverrideAttackThreat": {
+    "query": "",
+    "response": {
+      "parent_id": "test",
+      "parent_effective_threat": null,
+      "updated_count": 3
+    },
+    "status": 200,
+    "request": {
+      "overrides": [
+        {
+          "output_id": "true-leaf",
+          "threat_override": true
+        },
+        {
+          "output_id": "false-leaf",
+          "threat_override": false
+        },
+        {
+          "output_id": "clear-leaf",
+          "threat_override": null
+        }
+      ]
+    }
+  },
+  "ReportsClient.OverrideMultiTurnThreat": {
+    "query": "",
+    "response": {
+      "parent_id": "test",
+      "parent_effective_threat": null,
+      "updated_count": 3
+    },
+    "status": 200,
+    "request": {
+      "overrides": [
+        {
+          "output_id": "true-leaf",
+          "threat_override": true
+        },
+        {
+          "output_id": "false-leaf",
+          "threat_override": false
+        },
+        {
+          "output_id": "clear-leaf",
+          "threat_override": null
+        }
+      ]
+    }
+  },
+  "ReportsClient.OverrideStreamThreat": {
+    "query": "",
+    "response": {
+      "parent_id": "test",
+      "parent_effective_threat": null,
+      "updated_count": 3
+    },
+    "status": 200,
+    "request": {
+      "overrides": [
+        {
+          "output_id": "true-leaf",
+          "threat_override": true
+        },
+        {
+          "output_id": "false-leaf",
+          "threat_override": false
+        },
+        {
+          "output_id": "clear-leaf",
+          "threat_override": null
+        }
+      ]
+    }
+  },
+  "CustomAttackReportsClient.OverrideThreat": {
+    "query": "",
+    "response": {
+      "parent_id": "test",
+      "parent_effective_threat": null,
+      "updated_count": 3
+    },
+    "status": 200,
+    "request": {
+      "overrides": [
+        {
+          "output_id": "true-leaf",
+          "threat_override": true
+        },
+        {
+          "output_id": "false-leaf",
+          "threat_override": false
+        },
+        {
+          "output_id": "clear-leaf",
+          "threat_override": null
+        }
+      ]
+    }
+  },
+  "Client.DownloadErrorLogs": {
+    "query": "",
+    "response": null,
+    "status": 200
+  },
+  "Client.GetTargetProfileErrorLogs": {
+    "query": "limit=5",
+    "response": {
+      "pagination": {},
+      "data": [
+        {
+          "created_at": "test",
+          "updated_at": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "TargetsClient.GetLanguages": {
+    "query": "",
+    "response": {
+      "multilingual_enabled": false,
+      "supported_job_types": [
+        "test"
+      ],
+      "languages": [
+        {
+          "code": "test",
+          "name": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "TargetsClient.StartProfiling": {
+    "query": "",
+    "response": {
+      "message": "test"
+    },
+    "status": 200
+  },
+  "TargetsClient.GetCopilotAuthURL": {
+    "query": "",
+    "response": {
+      "auth_url": "test",
+      "token_json_uuid": "test",
+      "state": "test"
+    },
+    "status": 200,
+    "request": {
+      "client_id": "test",
+      "client_secret": "test",
+      "tenant_id": "test",
+      "target_uuid": null
+    }
+  },
+  "TargetsClient.ExchangeCopilotToken": {
+    "query": "",
+    "response": {
+      "token_json_uuid": "test"
+    },
+    "status": 200,
+    "request": {
+      "auth_response": {},
+      "token_json_uuid": "test",
+      "client_id": "test",
+      "client_secret": "test",
+      "tenant_id": "test",
+      "target_uuid": null
+    }
+  },
+  "TargetsClient.DeleteCopilotToken": {
+    "query": "",
+    "response": null,
+    "status": 204
+  },
+  "ReportsClient.DownloadReport": {
+    "query": "file_format=JSON",
+    "response": null,
+    "status": 200
+  },
+  "TargetsClient.Delete": {
+    "query": "",
+    "response": null,
+    "status": 204
+  },
+  "CustomAttacksClient.DeletePrompt": {
+    "query": "",
+    "response": null,
+    "status": 204
+  },
+  "CustomAttacksClient.UploadPromptsCsv": {
+    "query": "prompt_set_uuid=id%2Fpart",
+    "response": {
+      "message": "uploaded",
+      "status": 200
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.DownloadTemplate": {
+    "query": "",
+    "response": null,
+    "status": 200
+  }
+}

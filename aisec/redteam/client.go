@@ -28,7 +28,7 @@ type Opts struct {
 	HTTPClient *http.Client
 }
 
-// Client is the Red Team API client with dual-endpoint routing.
+// Client routes Red Team management, data, and Network Broker operations.
 type Client struct {
 	Scans               *ScansClient
 	Adapters            *AdaptersClient
@@ -970,6 +970,15 @@ func buildAttackListParams(opts AttackListOpts) map[string]string {
 	if opts.Threat != nil {
 		params["threat"] = fmt.Sprintf("%t", *opts.Threat)
 	}
+	if opts.AttackStatus != "" {
+		params["attack_status"] = opts.AttackStatus
+	}
+	if opts.Compliance != "" {
+		params["compliance"] = opts.Compliance
+	}
+	if opts.AttackModality != "" {
+		params["attack_modality"] = opts.AttackModality
+	}
 	return params
 }
 
@@ -993,6 +1002,9 @@ func buildGoalListParams(opts GoalListOpts) map[string]string {
 	if opts.Count != nil {
 		params["count"] = fmt.Sprintf("%t", *opts.Count)
 	}
+	if opts.GoalCategory != "" {
+		params["goal_category"] = opts.GoalCategory
+	}
 	return params
 }
 
@@ -1012,6 +1024,12 @@ func buildTargetListParams(opts TargetListOpts) map[string]string {
 	}
 	if opts.Status != "" {
 		params["status"] = opts.Status
+	}
+	if opts.ProfilingStatus != "" {
+		params["profiling_status"] = opts.ProfilingStatus
+	}
+	if opts.AdapterUUID != "" {
+		params["adapter_uuid"] = opts.AdapterUUID
 	}
 	return params
 }
@@ -1036,6 +1054,9 @@ func buildPromptSetListParams(opts PromptSetListOpts) map[string]string {
 	if opts.Archive != nil {
 		params["archive"] = fmt.Sprintf("%t", *opts.Archive)
 	}
+	if opts.Language != "" {
+		params["language"] = opts.Language
+	}
 	return params
 }
 
@@ -1052,6 +1073,9 @@ func buildPromptListParams(opts PromptListOpts) map[string]string {
 	}
 	if opts.Active != nil {
 		params["active"] = fmt.Sprintf("%t", *opts.Active)
+	}
+	if opts.Status != "" {
+		params["status"] = opts.Status
 	}
 	return params
 }
@@ -1092,6 +1116,9 @@ func buildCustomAttacksReportListParams(opts CustomAttacksReportListOpts) map[st
 	}
 	if opts.PropertyValue != "" {
 		params["property_value"] = opts.PropertyValue
+	}
+	if opts.Status != "" {
+		params["status"] = opts.Status
 	}
 	return params
 }

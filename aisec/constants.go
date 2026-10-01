@@ -214,3 +214,11 @@ const (
 	DefaultRedTeamBrokerEndpoint = "https://api.sase.paloaltonetworks.com/ai-red-teaming/data-plane/network-broker"
 	EnvRedTeamBrokerEndpoint     = "PANW_RED_TEAM_BROKER_ENDPOINT"
 )
+
+// Additional Red Team metadata, report receipts and profiling logs.
+const (
+	RedTeamLanguagesPath             = "/v1/languages"
+	RedTeamGoalCategoriesPath        = "/v1/goal-categories"
+	RedTeamReportV2Path              = "/v2/report"
+	RedTeamTargetProfileErrorLogPath = "/v1/error-log/target-profile"
+)

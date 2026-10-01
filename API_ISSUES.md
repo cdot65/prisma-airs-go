@@ -71,3 +71,15 @@ No issues found — all CRUD operations work correctly.
 ## Scan API
 
 No issues found — sync scan, async scan, query by scan/report IDs all work correctly.
+
+## October 2026: Red Team scan metadata route returns validation error
+
+Pinned data-plane specification documents `GET /v1/scan/scan-metadata` with no
+parameters and a free-form JSON object response. On 2026-10-01 the selected
+production tenant returned HTTP 422 (`code: validation_error`,
+`message: Request validation failed`) with no parameter details. The alternative
+`/v1/scan-metadata` and trailing-slash route returned 403, and
+`/v1/scan/metadata` returned 422. A generic job route shadowing the static route
+is a possibility, not a confirmed cause. Keep the documented path, expose the
+typed error, and retain a strict live assertion until the service is corrected.
+No successful live metadata response has been recorded.

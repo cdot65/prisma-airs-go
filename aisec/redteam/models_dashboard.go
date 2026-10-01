@@ -116,25 +116,29 @@ type ScanListOpts struct {
 
 // AttackListOpts are options for listing attacks.
 type AttackListOpts struct {
-	Skip        int
-	Limit       int
-	Search      string
-	Status      string
-	Severity    string
-	Category    string
-	SubCategory string
-	AttackType  string
-	Threat      *bool
+	AttackStatus   string
+	Compliance     string
+	AttackModality string
+	Skip           int
+	Limit          int
+	Search         string
+	Status         string
+	Severity       string
+	Category       string
+	SubCategory    string
+	AttackType     string
+	Threat         *bool
 }
 
 // GoalListOpts are options for listing goals.
 type GoalListOpts struct {
-	Skip     int
-	Limit    int
-	Search   string
-	GoalType string
-	Status   string
-	Count    *bool
+	GoalCategory string
+	Skip         int
+	Limit        int
+	Search       string
+	GoalType     string
+	Status       string
+	Count        *bool
 }
 
 // ScoreTrendOpts narrows the score trend to a date range. Set DateRange, or
@@ -147,25 +151,29 @@ type ScoreTrendOpts struct {
 
 // TargetListOpts are options for listing targets.
 type TargetListOpts struct {
-	Skip       int
-	Limit      int
-	Search     string
-	TargetType string
-	Status     string
+	ProfilingStatus string
+	AdapterUUID     string
+	Skip            int
+	Limit           int
+	Search          string
+	TargetType      string
+	Status          string
 }
 
 // PromptSetListOpts are options for listing prompt sets.
 type PromptSetListOpts struct {
-	Skip    int
-	Limit   int
-	Search  string
-	Status  string
-	Active  *bool
-	Archive *bool
+	Language string
+	Skip     int
+	Limit    int
+	Search   string
+	Status   string
+	Active   *bool
+	Archive  *bool
 }
 
 // PromptListOpts are options for listing prompts.
 type PromptListOpts struct {
+	Status string
 	Skip   int
 	Limit  int
 	Search string
@@ -182,10 +190,18 @@ type PromptsBySetListOpts struct {
 
 // CustomAttacksReportListOpts are options for listing custom attacks in a report.
 type CustomAttacksReportListOpts struct {
+	Status        string
 	Skip          int
 	Limit         int
 	Search        string
 	Threat        *bool
 	PromptSetID   string
 	PropertyValue string
+}
+
+// PromptSetsReportOpts exposes report pagination and property/threat filters.
+type PromptSetsReportOpts struct {
+	Skip, Limit     int
+	PropertyFilters string
+	IsThreat        *bool
 }
