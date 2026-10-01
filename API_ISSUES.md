@@ -3,6 +3,8 @@
 Issues found while running integration tests against the live AIRS API (2026-03-21).
 These are API-side behaviors, not SDK bugs.
 
+> **Status note (2026-10-01):** this file records the 2026-03-21 run and has not been re-verified since. Some items predate SDK fixes (for example `OAuth.GetToken` is now a POST per the spec, and `CustomerApps.List` moved to `/v1/mgmt/customerapps`). Re-test before relying on a specific timeout claim.
+
 ## Management API
 
 ### 1. Single-resource GET endpoints timeout (30s+)

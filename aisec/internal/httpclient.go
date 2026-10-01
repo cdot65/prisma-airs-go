@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/cdot65/prisma-airs-go/aisec"
 )
@@ -51,7 +52,13 @@ func DoRequest[T any](ctx context.Context, cfg *aisec.Config, opts RequestOption
 		}
 	}
 
+	hc := cfg.HTTPClient()
+	if hc == nil {
+		hc = DefaultHTTPClient()
+	}
+
 	resp, err := ExecuteWithRetry(RetryOptions{
+		Ctx:        ctx,
 		MaxRetries: cfg.NumRetries(),
 		Execute: func(attempt int) (*http.Response, error) {
 			var bodyReader io.Reader
@@ -77,7 +84,7 @@ func DoRequest[T any](ctx context.Context, cfg *aisec.Config, opts RequestOption
 				}
 			}
 
-			return http.DefaultClient.Do(req)
+			return hc.Do(req)
 		},
 	})
 	if err != nil {
@@ -98,4 +105,33 @@ func DoRequest[T any](ctx context.Context, cfg *aisec.Config, opts RequestOption
 	}
 
 	return &Response[T]{Status: resp.StatusCode, Data: data}, nil
+}
+
+// DefaultResponseHeaderTimeout is how long the default client waits for response headers.
+var DefaultResponseHeaderTimeout = 5 * time.Minute
+
+// DefaultHTTPClient returns the HTTP client used when the caller does not
+// supply one. It has no overall Timeout (callers bound requests with their
+// context), but its transport keeps up to aisec.MaxConnectionPoolSize idle
+// connections per host and applies connection-establishment timeouts so a dead
+// endpoint cannot hang a request indefinitely.
+func DefaultHTTPClient() *http.Client {
+	return defaultHTTPClient
+}
+
+var defaultHTTPClient = &http.Client{Transport: newDefaultTransport()}
+
+func newDefaultTransport() http.RoundTripper {
+	base, ok := http.DefaultTransport.(*http.Transport)
+	if !ok {
+		return http.DefaultTransport
+	}
+	t := base.Clone()
+	t.MaxIdleConnsPerHost = aisec.MaxConnectionPoolSize
+	t.MaxIdleConns = aisec.MaxConnectionPoolSize
+	// A server that accepts the connection but never answers would otherwise
+	// hang any call whose context has no deadline. Slow-but-alive endpoints
+	// still get five minutes; supply Opts.HTTPClient to change this.
+	t.ResponseHeaderTimeout = DefaultResponseHeaderTimeout
+	return t
 }

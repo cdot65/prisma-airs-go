@@ -1,6 +1,7 @@
 package aisec
 
 import (
+	"net/http"
 	"os"
 	"strings"
 )
@@ -11,6 +12,7 @@ type Config struct {
 	apiToken   string
 	endpoint   string
 	numRetries int
+	httpClient *http.Client
 }
 
 // ConfigOption is a functional option for NewConfig.
@@ -34,6 +36,12 @@ func WithEndpoint(endpoint string) ConfigOption {
 // WithNumRetries sets the max retry count (clamped to 0–MaxNumberOfRetries).
 func WithNumRetries(n int) ConfigOption {
 	return func(c *Config) { c.numRetries = n }
+}
+
+// WithHTTPClient sets the HTTP client used for scan requests (custom timeouts,
+// transports, proxies, tracing). When unset the SDK uses its own default client.
+func WithHTTPClient(client *http.Client) ConfigOption {
+	return func(c *Config) { c.httpClient = client }
 }
 
 // NewConfig creates a Config, reading environment variables as fallbacks.
@@ -85,3 +93,6 @@ func (c *Config) Endpoint() string { return c.endpoint }
 
 // NumRetries returns the max retry count.
 func (c *Config) NumRetries() int { return c.numRetries }
+
+// HTTPClient returns the configured HTTP client, or nil to use the SDK default.
+func (c *Config) HTTPClient() *http.Client { return c.httpClient }

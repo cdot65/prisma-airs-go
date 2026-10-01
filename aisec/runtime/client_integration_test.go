@@ -303,11 +303,25 @@ func TestIntegration_Profiles_CRUD(t *testing.T) {
 	t.Cleanup(func() {
 		delCtx, delCancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer delCancel()
-		_, err := client.Profiles.ForceDelete(delCtx, created.ProfileID, "integration-test")
-		if err != nil {
-			t.Logf("WARNING: cleanup ForceDelete %s: %v", created.ProfileID, err)
+		// Update creates a new revision with its own profile ID, so deleting only
+		// the original ID leaks the later revisions. Delete every revision that
+		// carries this test's unique name.
+		ids := map[string]bool{created.ProfileID: true}
+		if list, err := client.Profiles.List(delCtx, ListOpts{Limit: 1000}); err == nil {
+			for _, p := range list.Items {
+				if p.ProfileName == profileName {
+					ids[p.ProfileID] = true
+				}
+			}
 		} else {
-			t.Logf("Cleanup: force-deleted %s", created.ProfileID)
+			t.Logf("WARNING: cleanup could not list profiles, deleting known ID only: %v", err)
+		}
+		for id := range ids {
+			if _, err := client.Profiles.ForceDelete(delCtx, id, "integration-test"); err != nil {
+				t.Logf("WARNING: cleanup ForceDelete %s: %v", id, err)
+			} else {
+				t.Logf("Cleanup: force-deleted %s", id)
+			}
 		}
 	})
 

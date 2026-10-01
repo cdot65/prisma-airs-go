@@ -5,6 +5,7 @@ package modelsecurity
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"testing"
 	"time"
 
@@ -224,7 +225,8 @@ func TestIntegration_PyPIAuth(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetPyPIAuth: %v", err)
 	}
-	t.Logf("PyPI auth URL: %s", resp.URL)
+	// The URL embeds a live access token; never log it. Log the host only.
+	t.Logf("PyPI auth URL host: %s", redactedHost(resp.URL))
 	t.Logf("PyPI auth ExpiresAt: %s", resp.ExpiresAt)
 
 	if resp.URL == "" {
@@ -309,4 +311,13 @@ func TestIntegration_Labels_CRUD(t *testing.T) {
 
 	// 5. Delete labels is handled by t.Cleanup
 	t.Log("Labels CRUD complete (delete via cleanup)")
+}
+
+// redactedHost returns only the host of a URL that may embed credentials.
+func redactedHost(raw string) string {
+	u, err := url.Parse(raw)
+	if err != nil || u.Host == "" {
+		return "<unparseable>"
+	}
+	return u.Hostname()
 }

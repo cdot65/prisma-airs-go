@@ -1,14 +1,17 @@
 package internal
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/cdot65/prisma-airs-go/aisec"
@@ -33,6 +36,8 @@ type OAuthClientOpts struct {
 	TsgID         string
 	TokenEndpoint string
 	TokenBufferMs int
+	// HTTPClient is used for token requests. Defaults to DefaultHTTPClient().
+	HTTPClient *http.Client
 }
 
 // OAuthClient manages OAuth2 client_credentials tokens with caching and proactive refresh.
@@ -42,12 +47,21 @@ type OAuthClient struct {
 	tsgID         string
 	tokenEndpoint string
 	tokenBuffer   time.Duration
+	httpClient    *http.Client
 
 	mu          sync.Mutex
 	accessToken string
 	expiresAt   time.Time
-	fetching    bool
-	fetchCh     chan struct{} // closed when fetch completes
+	inflight    *tokenFetch // non-nil while a fetch is in progress
+	waiters     int32       // callers currently parked on an in-flight fetch (observed by tests)
+}
+
+// tokenFetch is the outcome of one fetch. Each fetch gets its own value so a
+// waiter can never read the result of a different, later fetch.
+type tokenFetch struct {
+	done  chan struct{} // closed when the fetch finishes
+	token string
+	err   error
 }
 
 // NewOAuthClient creates a new OAuth2 client.
@@ -61,7 +75,13 @@ func NewOAuthClient(opts OAuthClientOpts) *OAuthClient {
 		bufferMs = defaultTokenBufferMs
 	}
 
+	hc := opts.HTTPClient
+	if hc == nil {
+		hc = DefaultHTTPClient()
+	}
+
 	return &OAuthClient{
+		httpClient:    hc,
 		clientID:      opts.ClientID,
 		clientSecret:  opts.ClientSecret,
 		tsgID:         opts.TsgID,
@@ -71,44 +91,118 @@ func NewOAuthClient(opts OAuthClientOpts) *OAuthClient {
 }
 
 // GetToken returns a valid access token, fetching/refreshing as needed.
-// Concurrent calls are deduplicated — only one fetch happens at a time.
+// It is GetTokenContext with context.Background().
 func (c *OAuthClient) GetToken() (string, error) {
+	return c.GetTokenContext(context.Background())
+}
+
+// tokenFetchTimeout bounds a token request when the caller's context has no deadline.
+const tokenFetchTimeout = 30 * time.Second
+
+// tokenFetchTimeoutOverride lets tests shorten the bound; zero means tokenFetchTimeout.
+var tokenFetchTimeoutOverride time.Duration
+
+func fetchTimeout() time.Duration {
+	if tokenFetchTimeoutOverride > 0 {
+		return tokenFetchTimeoutOverride
+	}
+	return tokenFetchTimeout
+}
+
+// GetTokenContext returns a valid access token, fetching/refreshing as needed.
+// Concurrent calls are deduplicated — only one fetch happens at a time — and
+// waiters receive the leader's error rather than a generic one. The caller's
+// context cancels both the fetch and any wait for another goroutine's fetch.
+func (c *OAuthClient) GetTokenContext(ctx context.Context) (string, error) {
+	for {
+		token, err, retry := c.getTokenOnce(ctx)
+		if !retry {
+			return token, err
+		}
+	}
+}
+
+// getTokenOnce makes one attempt. retry is true when this call waited on
+// another goroutine's fetch that failed only because *that* goroutine's context
+// ended; the caller's own context is still live, so it should fetch for itself.
+func (c *OAuthClient) getTokenOnce(ctx context.Context) (token string, err error, retry bool) {
 	c.mu.Lock()
 
 	// Return cached token if valid
 	if c.accessToken != "" && time.Now().Before(c.expiresAt.Add(-c.tokenBuffer)) {
-		token := c.accessToken
+		token = c.accessToken
 		c.mu.Unlock()
-		return token, nil
+		return token, nil, false
 	}
 
-	// If another goroutine is already fetching, wait for it
-	if c.fetching {
-		ch := c.fetchCh
+	// If another goroutine is already fetching, wait for that fetch's result.
+	if f := c.inflight; f != nil {
+		atomic.AddInt32(&c.waiters, 1)
 		c.mu.Unlock()
-		<-ch
-		c.mu.Lock()
-		token := c.accessToken
-		c.mu.Unlock()
-		if token == "" {
-			return "", aisec.NewAISecSDKError("token fetch failed", aisec.OAuthError)
+		defer atomic.AddInt32(&c.waiters, -1)
+		select {
+		case <-f.done:
+		case <-ctx.Done():
+			return "", aisec.WrapError("token wait cancelled: "+ctx.Err().Error(), aisec.OAuthError, ctx.Err()), false
 		}
-		return token, nil
+		if f.err != nil {
+			if (errors.Is(f.err, context.Canceled) || errors.Is(f.err, context.DeadlineExceeded)) && ctx.Err() == nil {
+				return "", nil, true
+			}
+			return "", f.err, false
+		}
+		return f.token, nil, false
 	}
 
-	// Start fetch
-	c.fetching = true
-	c.fetchCh = make(chan struct{})
+	// Start fetch. The deferred block runs even if fetchToken panics, so a
+	// panic can never leave callers parked on a fetch that will not finish.
+	f := &tokenFetch{done: make(chan struct{})}
+	c.inflight = f
 	c.mu.Unlock()
 
-	token, err := c.fetchToken()
+	f.err = aisec.NewAISecSDKError("token fetch aborted", aisec.OAuthError)
+	defer func() {
+		c.mu.Lock()
+		c.inflight = nil
+		close(f.done)
+		c.mu.Unlock()
+	}()
 
-	c.mu.Lock()
-	c.fetching = false
-	close(c.fetchCh)
-	c.mu.Unlock()
+	f.token, f.err = c.fetchTokenWithRetry(ctx)
+	return f.token, f.err, false
+}
 
-	return token, err
+// tokenFetchAttempts bounds retries of transient token-endpoint failures.
+const tokenFetchAttempts = 3
+
+// fetchTokenWithRetry retries the token request on network errors, 429 and
+// 5xx with the same jittered backoff the API requests use. Credential errors
+// (400/401/403) are returned immediately.
+func (c *OAuthClient) fetchTokenWithRetry(ctx context.Context) (string, error) {
+	var lastErr error
+	for attempt := 0; attempt < tokenFetchAttempts; attempt++ {
+		token, err := c.fetchToken(ctx)
+		if err == nil {
+			return token, nil
+		}
+		lastErr = err
+		var sdkErr *aisec.AISecSDKError
+		transient := false
+		if errors.As(err, &sdkErr) {
+			// Transient: retryable HTTP statuses, or a transport-level failure
+			// (*url.Error). Malformed URLs and unparseable bodies are not.
+			var netErr *url.Error
+			transient = IsRetryableStatus(sdkErr.StatusCode) ||
+				(sdkErr.StatusCode == 0 && ctx.Err() == nil && errors.As(sdkErr.Err, &netErr))
+		}
+		if !transient || attempt == tokenFetchAttempts-1 || ctx.Err() != nil {
+			break
+		}
+		if sleepErr := sleepCtx(ctx, time.Duration(BackoffDelay(attempt))*time.Millisecond); sleepErr != nil {
+			break
+		}
+	}
+	return "", lastErr
 }
 
 // ClearToken invalidates the cached token.
@@ -179,7 +273,14 @@ type oauthTokenResponse struct {
 	TokenType   string `json:"token_type"`
 }
 
-func (c *OAuthClient) fetchToken() (string, error) {
+func (c *OAuthClient) fetchToken(ctx context.Context) (string, error) {
+	parent := ctx
+	if _, hasDeadline := ctx.Deadline(); !hasDeadline {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, fetchTimeout())
+		defer cancel()
+	}
+
 	credentials := base64.StdEncoding.EncodeToString(
 		[]byte(c.clientID + ":" + c.clientSecret),
 	)
@@ -189,15 +290,21 @@ func (c *OAuthClient) fetchToken() (string, error) {
 		"scope":      {fmt.Sprintf("tsg_id:%s", c.tsgID)},
 	}
 
-	req, err := http.NewRequest("POST", c.tokenEndpoint, strings.NewReader(form.Encode()))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.tokenEndpoint, strings.NewReader(form.Encode()))
 	if err != nil {
 		return "", aisec.WrapError("failed to create token request", aisec.OAuthError, err)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Authorization", "Basic "+credentials)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
+		// Our own fetch timeout is not the caller's context ending. Report it
+		// without wrapping the context error so waiters with live contexts do
+		// not mistake it for the leader being cancelled and re-fetch serially.
+		if parent.Err() == nil && errors.Is(err, context.DeadlineExceeded) {
+			return "", aisec.NewAISecSDKError(fmt.Sprintf("token request timed out after %s", fetchTimeout()), aisec.OAuthError)
+		}
 		return "", aisec.WrapError(fmt.Sprintf("token request failed: %s", err.Error()), aisec.OAuthError, err)
 	}
 	defer func() { _ = resp.Body.Close() }()
@@ -214,7 +321,7 @@ func (c *OAuthClient) fetchToken() (string, error) {
 				msg = errStr
 			}
 		}
-		return "", aisec.NewAISecSDKError(msg, aisec.OAuthError)
+		return "", aisec.NewHTTPError(msg, aisec.OAuthError, resp.StatusCode)
 	}
 
 	var tokenResp oauthTokenResponse

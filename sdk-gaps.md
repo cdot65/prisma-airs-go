@@ -1,5 +1,7 @@
 # SDK Gaps: prisma-airs-go v0.3.1
 
+> **Resolved in v0.4.0.** `default-url-category`, `url-detected-action`, `database-security` and `malicious-code-protection` were added to `aisec/runtime` (see `sdk-update-001.md`). This file is kept as history; it refers to the `management` package, which no longer exists.
+
 Fields present in the AIRS Management API spec (`specs/mgmt_service_docs.yaml`) but missing from the Go SDK (`AppProtectionConfig`, `DataProtectionConfig`, `ModelConfiguration`).
 
 ## AppProtectionObject

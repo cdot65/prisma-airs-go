@@ -20,42 +20,74 @@ type MgmtRequestOptions struct {
 	Params map[string]string
 }
 
-// DoMgmtRequest performs an OAuth-authenticated HTTP request with retry.
-func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts MgmtRequestOptions) (*Response[T], error) {
-	baseURL := svcCfg.BaseURL
+// RawMgmtRequestOptions describes an OAuth-authenticated request whose body or
+// response is not plain JSON (multipart uploads, file downloads).
+type RawMgmtRequestOptions struct {
+	Method string
+	Path   string
+	Params map[string]string
+	// Body is sent verbatim. When nil, no body is sent.
+	Body []byte
+	// ContentType defaults to application/json.
+	ContentType string
+}
 
-	u, err := url.Parse(baseURL + opts.Path)
-	if err != nil {
-		return nil, aisec.WrapError(fmt.Sprintf("invalid URL: %s%s", baseURL, opts.Path), aisec.AISecSDKInternalError, err)
+// RawResponse is a fully-read successful (2xx) HTTP response.
+type RawResponse struct {
+	Status int
+	Header http.Header
+	Body   []byte
+}
+
+func (c *OAuthServiceConfig) client() *http.Client {
+	if c.HTTPClient != nil {
+		return c.HTTPClient
 	}
+	return DefaultHTTPClient()
+}
 
-	if opts.Params != nil {
+func buildURL(baseURL, path string, params map[string]string) (*url.URL, error) {
+	u, err := url.Parse(baseURL + path)
+	if err != nil {
+		return nil, aisec.WrapError(fmt.Sprintf("invalid URL: %s%s", baseURL, path), aisec.AISecSDKInternalError, err)
+	}
+	if params != nil {
 		q := u.Query()
-		for k, v := range opts.Params {
+		for k, v := range params {
 			q.Set(k, v)
 		}
 		u.RawQuery = q.Encode()
 	}
+	return u, nil
+}
 
-	var bodyBytes []byte
-	if opts.Body != nil {
-		bodyBytes, err = json.Marshal(opts.Body)
-		if err != nil {
-			return nil, aisec.WrapError("failed to marshal request body", aisec.AISecSDKInternalError, err)
-		}
+// DoMgmtRaw performs an OAuth-authenticated HTTP request with retry and returns
+// the raw response body. It is the single place the OAuth request pipeline —
+// token injection, bounded 401/403 refresh, retry/backoff, error mapping —
+// lives; DoMgmtRequest and the binary red team endpoints are built on it.
+func DoMgmtRaw(ctx context.Context, svcCfg *OAuthServiceConfig, opts RawMgmtRequestOptions) (*RawResponse, error) {
+	u, err := buildURL(svcCfg.BaseURL, opts.Path, opts.Params)
+	if err != nil {
+		return nil, err
+	}
+	contentType := opts.ContentType
+	if contentType == "" {
+		contentType = "application/json"
 	}
 
 	resp, err := ExecuteWithRetry(RetryOptions{
-		MaxRetries: svcCfg.NumRetries,
+		Ctx:                ctx,
+		MaxRetries:         svcCfg.NumRetries,
+		OnRetryableFailure: NewAuthRefreshHandler(svcCfg.OAuth),
 		Execute: func(attempt int) (*http.Response, error) {
-			token, err := svcCfg.OAuth.GetToken()
+			token, err := svcCfg.OAuth.GetTokenContext(ctx)
 			if err != nil {
 				return nil, err
 			}
 
 			var bodyReader io.Reader
-			if bodyBytes != nil {
-				bodyReader = bytes.NewReader(bodyBytes)
+			if opts.Body != nil {
+				bodyReader = bytes.NewReader(opts.Body)
 			}
 
 			req, err := http.NewRequestWithContext(ctx, opts.Method, u.String(), bodyReader)
@@ -63,20 +95,11 @@ func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts 
 				return nil, err
 			}
 
-			req.Header.Set("Content-Type", "application/json")
+			req.Header.Set("Content-Type", contentType)
 			req.Header.Set("User-Agent", aisec.UserAgent)
 			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
 
-			return http.DefaultClient.Do(req)
-		},
-		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
-			if resp.StatusCode == 401 || resp.StatusCode == 403 {
-				_, _ = io.Copy(io.Discard, resp.Body)
-				_ = resp.Body.Close()
-				svcCfg.OAuth.ClearToken()
-				return true, nil // retry without consuming budget
-			}
-			return false, nil
+			return svcCfg.client().Do(req)
 		},
 	})
 	if err != nil {
@@ -88,18 +111,41 @@ func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts 
 	if err != nil {
 		return nil, aisec.WrapError("failed to read response body", aisec.AISecSDKInternalError, err)
 	}
+	return &RawResponse{Status: resp.StatusCode, Header: resp.Header, Body: respBody}, nil
+}
+
+// DoMgmtRequest performs an OAuth-authenticated JSON request with retry.
+func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts MgmtRequestOptions) (*Response[T], error) {
+	var bodyBytes []byte
+	if opts.Body != nil {
+		var err error
+		bodyBytes, err = json.Marshal(opts.Body)
+		if err != nil {
+			return nil, aisec.WrapError("failed to marshal request body", aisec.AISecSDKInternalError, err)
+		}
+	}
+
+	raw, err := DoMgmtRaw(ctx, svcCfg, RawMgmtRequestOptions{
+		Method: opts.Method,
+		Path:   opts.Path,
+		Params: opts.Params,
+		Body:   bodyBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
 
 	var data T
-	if len(respBody) > 0 {
-		if err := json.Unmarshal(respBody, &data); err != nil {
+	if len(raw.Body) > 0 {
+		if err := json.Unmarshal(raw.Body, &data); err != nil {
 			// Some endpoints (e.g. ForceDelete) return non-JSON on success.
 			// Tolerate parse failures for 2xx responses; return zero-value T.
-			if resp.StatusCode >= 200 && resp.StatusCode < 300 {
-				return &Response[T]{Status: resp.StatusCode, Data: data}, nil
+			if raw.Status >= 200 && raw.Status < 300 {
+				return &Response[T]{Status: raw.Status, Data: data}, nil
 			}
 			return nil, aisec.WrapError("failed to parse response JSON", aisec.AISecSDKInternalError, err)
 		}
 	}
 
-	return &Response[T]{Status: resp.StatusCode, Data: data}, nil
+	return &Response[T]{Status: raw.Status, Data: data}, nil
 }

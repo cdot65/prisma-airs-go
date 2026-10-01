@@ -17,6 +17,9 @@ type Opts struct {
 	APIEndpoint   string
 	TokenEndpoint string
 	NumRetries    int
+	// HTTPClient overrides the HTTP client used for API and token requests
+	// (timeouts, proxies, transports, tracing). Defaults to the SDK client.
+	HTTPClient *http.Client
 }
 
 // Client is the Management API client with 8 sub-clients.
@@ -35,10 +38,8 @@ type Client struct {
 
 // NewClient creates a new Management API client.
 func NewClient(opts Opts) (*Client, error) {
-	endpoint := opts.APIEndpoint
-	if endpoint == "" {
-		endpoint = aisec.DefaultMgmtEndpoint
-	}
+	// Base URL: option -> PANW_MGMT_ENDPOINT -> default.
+	endpoint := internal.ResolveEndpoint(opts.APIEndpoint, aisec.EnvMgmtEndpoint, aisec.DefaultMgmtEndpoint)
 
 	svcCfg, err := internal.ResolveOAuthConfig(internal.ResolveOAuthConfigOpts{
 		ClientID:         opts.ClientID,
@@ -48,6 +49,7 @@ func NewClient(opts Opts) (*Client, error) {
 		NumRetries:       opts.NumRetries,
 		TokenEndpoint:    opts.TokenEndpoint,
 		PrimaryEnvPrefix: "PANW_MGMT",
+		HTTPClient:       opts.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
@@ -104,7 +106,7 @@ func (c *ProfilesClient) List(ctx context.Context, opts ListOpts) (*SecurityProf
 
 func (c *ProfilesClient) Update(ctx context.Context, profileID string, req UpdateProfileRequest) (*SecurityProfile, error) {
 	resp, err := internal.DoMgmtRequest[SecurityProfile](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.MgmtProfilePath + "/uuid/" + profileID, Body: req,
+		Method: http.MethodPut, Path: aisec.MgmtProfilePath + "/uuid/" + seg(profileID), Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -114,7 +116,7 @@ func (c *ProfilesClient) Update(ctx context.Context, profileID string, req Updat
 
 func (c *ProfilesClient) Delete(ctx context.Context, profileID string) (*DeleteProfileResponse, error) {
 	resp, err := internal.DoMgmtRequest[DeleteProfileResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.MgmtProfilePath + "/" + profileID,
+		Method: http.MethodDelete, Path: aisec.MgmtProfilePath + "/" + seg(profileID),
 	})
 	if err != nil {
 		return nil, err
@@ -122,40 +124,97 @@ func (c *ProfilesClient) Delete(ctx context.Context, profileID string) (*DeleteP
 	return &resp.Data, nil
 }
 
+// lookupPageSize is the page size used by the client-side lookups below.
+const lookupPageSize = 1000
+
+// maxLookupPages bounds client-side lookups so a misbehaving server that never
+// ends its pagination cannot loop forever.
+const maxLookupPages = 1000
+
+// paginate walks a list endpoint page by page, calling visit for every item
+// until visit returns true or the pages run out. fetch returns the page items
+// and the server's next offset (0 when it does not provide one).
+func paginate[T any](fetch func(opts ListOpts) ([]T, int, error), visit func(T) (stop bool)) error {
+	offset := 0
+	for page := 0; page < maxLookupPages; page++ {
+		items, next, err := fetch(ListOpts{Limit: lookupPageSize, Offset: offset})
+		if err != nil {
+			return err
+		}
+		for _, item := range items {
+			if visit(item) {
+				return nil
+			}
+		}
+		switch {
+		case next > offset:
+			offset = next
+		case len(items) >= lookupPageSize:
+			offset += len(items)
+		default:
+			return nil
+		}
+	}
+	return nil
+}
+
+// notFound builds a client-side "not found" error. It carries HTTP 404 so that
+// errors.Is(err, aisec.ErrNotFound) behaves the same as for a server 404.
+func notFound(what, key string) error {
+	return aisec.NewHTTPError(what+" not found: "+key, aisec.ClientSideError, http.StatusNotFound)
+}
+
 // GetByID retrieves a single profile by UUID. No dedicated API endpoint exists,
-// so this lists all profiles and filters client-side.
+// so this pages through the profile list and filters client-side.
 func (c *ProfilesClient) GetByID(ctx context.Context, profileID string) (*SecurityProfile, error) {
-	resp, err := c.List(ctx, ListOpts{Limit: 1000})
+	var found *SecurityProfile
+	err := paginate(func(o ListOpts) ([]SecurityProfile, int, error) {
+		resp, err := c.List(ctx, o)
+		if err != nil {
+			return nil, 0, err
+		}
+		return resp.Items, resp.NextOffset, nil
+	}, func(p SecurityProfile) bool {
+		if p.ProfileID == profileID {
+			match := p
+			found = &match
+			return true
+		}
+		return false
+	})
 	if err != nil {
 		return nil, err
 	}
-	for _, p := range resp.Items {
-		if p.ProfileID == profileID {
-			return &p, nil
-		}
+	if found == nil {
+		return nil, notFound("profile", profileID)
 	}
-	return nil, aisec.NewAISecSDKError("profile not found: "+profileID, aisec.ClientSideError)
+	return found, nil
 }
 
 // GetByName retrieves a profile by name. When multiple revisions exist for the
 // same name, the one with the highest revision is returned. No dedicated API
-// endpoint exists, so this lists all profiles and filters client-side.
+// endpoint exists, so this pages through the whole profile list and filters
+// client-side.
 func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityProfile, error) {
-	resp, err := c.List(ctx, ListOpts{Limit: 1000})
+	var best *SecurityProfile
+	err := paginate(func(o ListOpts) ([]SecurityProfile, int, error) {
+		resp, err := c.List(ctx, o)
+		if err != nil {
+			return nil, 0, err
+		}
+		return resp.Items, resp.NextOffset, nil
+	}, func(p SecurityProfile) bool {
+		if p.ProfileName == name && (best == nil || p.Revision > best.Revision) {
+			match := p
+			best = &match
+		}
+		return false
+	})
 	if err != nil {
 		return nil, err
 	}
-	var best *SecurityProfile
-	for _, p := range resp.Items {
-		if p.ProfileName == name {
-			if best == nil || p.Revision > best.Revision {
-				match := p
-				best = &match
-			}
-		}
-	}
 	if best == nil {
-		return nil, aisec.NewAISecSDKError("profile not found: "+name, aisec.ClientSideError)
+		return nil, notFound("profile", name)
 	}
 	return best, nil
 }
@@ -164,7 +223,7 @@ func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityP
 func (c *ProfilesClient) ForceDelete(ctx context.Context, profileID string, updatedBy string) (*DeleteProfileResponse, error) {
 	resp, err := internal.DoMgmtRequest[DeleteProfileResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete,
-		Path:   aisec.MgmtProfileForcePath + "/" + profileID + "/force",
+		Path:   aisec.MgmtProfileForcePath + "/" + seg(profileID) + "/force",
 		Params: map[string]string{"updated_by": updatedBy},
 	})
 	if err != nil {
@@ -201,7 +260,7 @@ func (c *TopicsClient) List(ctx context.Context, opts ListOpts) (*CustomTopicLis
 
 func (c *TopicsClient) Update(ctx context.Context, topicID string, req UpdateTopicRequest) (*CustomTopic, error) {
 	resp, err := internal.DoMgmtRequest[CustomTopic](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.MgmtTopicPath + "/uuid/" + topicID, Body: req,
+		Method: http.MethodPut, Path: aisec.MgmtTopicPath + "/uuid/" + seg(topicID), Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -211,7 +270,7 @@ func (c *TopicsClient) Update(ctx context.Context, topicID string, req UpdateTop
 
 func (c *TopicsClient) Delete(ctx context.Context, topicID string) (*DeleteTopicResponse, error) {
 	resp, err := internal.DoMgmtRequest[string](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.MgmtTopicPath + "/" + topicID,
+		Method: http.MethodDelete, Path: aisec.MgmtTopicPath + "/" + seg(topicID),
 	})
 	if err != nil {
 		return nil, err
@@ -223,7 +282,7 @@ func (c *TopicsClient) Delete(ctx context.Context, topicID string) (*DeleteTopic
 func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string, updatedBy string) (*DeleteTopicResponse, error) {
 	resp, err := internal.DoMgmtRequest[string](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete,
-		Path:   aisec.MgmtTopicForcePath + "/force/" + topicID,
+		Path:   aisec.MgmtTopicForcePath + "/force/" + seg(topicID),
 		Params: map[string]string{"updated_by": updatedBy},
 	})
 	if err != nil {
@@ -260,7 +319,7 @@ func (c *ApiKeysClient) List(ctx context.Context, opts ListOpts) (*ApiKeyListRes
 
 func (c *ApiKeysClient) Delete(ctx context.Context, keyName, updatedBy string) (*ApiKeyDeleteResponse, error) {
 	resp, err := internal.DoMgmtRequest[ApiKeyDeleteResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.MgmtAPIKeyPath + "/delete/" + keyName,
+		Method: http.MethodDelete, Path: aisec.MgmtAPIKeyPath + "/delete/" + seg(keyName),
 		Params: map[string]string{"updated_by": updatedBy},
 	})
 	if err != nil {
@@ -271,7 +330,7 @@ func (c *ApiKeysClient) Delete(ctx context.Context, keyName, updatedBy string) (
 
 func (c *ApiKeysClient) Regenerate(ctx context.Context, keyID string, req RegenerateKeyRequest) (*ApiKey, error) {
 	resp, err := internal.DoMgmtRequest[ApiKey](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.MgmtAPIKeyPath + "/" + keyID + "/regenerate", Body: req,
+		Method: http.MethodPost, Path: aisec.MgmtAPIKeyPath + "/" + seg(keyID) + "/regenerate", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -349,8 +408,9 @@ func (c *DlpProfilesClient) List(ctx context.Context, opts ListOpts) (*DlpProfil
 
 func (c *DlpProfilesClient) Get(ctx context.Context, profileID string) (*DlpProfile, error) {
 	// No dedicated get-by-ID endpoint in the API spec.
-	// List all DLP profiles and filter client-side.
-	resp, err := c.List(ctx, ListOpts{Limit: 1000})
+	// The list endpoint takes no pagination parameters in the spec (it returns
+	// every profile), so one call is enough; filter client-side.
+	resp, err := c.List(ctx, ListOpts{})
 	if err != nil {
 		return nil, err
 	}
@@ -359,7 +419,7 @@ func (c *DlpProfilesClient) Get(ctx context.Context, profileID string) (*DlpProf
 			return &p, nil
 		}
 	}
-	return nil, aisec.NewAISecSDKError("DLP profile not found: "+profileID, aisec.ClientSideError)
+	return nil, notFound("DLP profile", profileID)
 }
 
 // DeploymentProfilesClient provides read-only access to deployment profiles.
@@ -379,7 +439,7 @@ func (c *DeploymentProfilesClient) List(ctx context.Context, opts ListOpts) (*De
 
 func (c *DeploymentProfilesClient) Get(ctx context.Context, profileID string) (*DeploymentProfile, error) {
 	resp, err := internal.DoMgmtRequest[DeploymentProfile](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.MgmtDeploymentProfilesPath + "/" + profileID,
+		Method: http.MethodGet, Path: aisec.MgmtDeploymentProfilesPath + "/" + seg(profileID),
 	})
 	if err != nil {
 		return nil, err
@@ -441,3 +501,6 @@ func (c *OAuthManagementClient) InvalidateToken(ctx context.Context) (*Invalidat
 	}
 	return &resp.Data, nil
 }
+
+// seg escapes a caller-supplied identifier for use as a single URL path segment.
+func seg(s string) string { return internal.PathSeg(s) }

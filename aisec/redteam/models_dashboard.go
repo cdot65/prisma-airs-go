@@ -129,9 +129,20 @@ type AttackListOpts struct {
 
 // GoalListOpts are options for listing goals.
 type GoalListOpts struct {
+	Skip     int
+	Limit    int
+	Search   string
 	GoalType string
 	Status   string
 	Count    *bool
+}
+
+// ScoreTrendOpts narrows the score trend to a date range. Set DateRange, or
+// StartDate and EndDate (format per the API, e.g. 2006-01-02).
+type ScoreTrendOpts struct {
+	DateRange DateRangeFilter
+	StartDate string
+	EndDate   string
 }
 
 // TargetListOpts are options for listing targets.

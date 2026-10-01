@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 )
 
@@ -780,5 +781,35 @@ func TestSortByFileField_Values(t *testing.T) {
 	}
 	if SortByFileFieldType != SortByFileField("type") {
 		t.Errorf("SortByFileFieldType = %q", SortByFileFieldType)
+	}
+}
+
+func TestNewClient_EndpointsFromEnvironment(t *testing.T) {
+	var dataHits, mgmtHits int32
+	tok := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write([]byte(`{"access_token":"t","expires_in":3600}`))
+	}))
+	data := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		atomic.AddInt32(&dataHits, 1)
+		_, _ = w.Write([]byte(`{}`))
+	}))
+	mgmt := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		atomic.AddInt32(&mgmtHits, 1)
+		_, _ = w.Write([]byte(`{}`))
+	}))
+	defer tok.Close()
+	defer data.Close()
+	defer mgmt.Close()
+	t.Setenv("PANW_MODEL_SEC_DATA_ENDPOINT", data.URL)
+	t.Setenv("PANW_MODEL_SEC_MGMT_ENDPOINT", mgmt.URL+"/")
+
+	client, err := NewClient(Opts{ClientID: "a", ClientSecret: "b", TsgID: "1", TokenEndpoint: tok.URL})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _ = client.Scans.List(context.Background(), ScanListOpts{})
+	_, _ = client.SecurityRules.List(context.Background(), RuleListOpts{})
+	if atomic.LoadInt32(&dataHits) != 1 || atomic.LoadInt32(&mgmtHits) != 1 {
+		t.Errorf("data hits = %d, mgmt hits = %d; want 1 and 1", dataHits, mgmtHits)
 	}
 }

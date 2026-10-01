@@ -2,7 +2,7 @@ package aisec
 
 // Version and user agent.
 const (
-	Version   = "0.5.0"
+	Version   = "0.5.1"
 	UserAgent = "PAN-AIRS/" + Version + "-go-sdk"
 )
 
@@ -113,7 +113,7 @@ const (
 )
 
 // HTTPForceRetryStatusCodes are HTTP status codes that trigger automatic retry.
-var HTTPForceRetryStatusCodes = []int{500, 502, 503, 504}
+var HTTPForceRetryStatusCodes = []int{429, 500, 502, 503, 504}
 
 // API paths — Scan.
 const (
