@@ -8,7 +8,8 @@ import (
 )
 
 // ResponsePolicy describes the successful bodies an endpoint accepts.
-// All policies reject JSON null, malformed JSON, and incompatible JSON types.
+// All policies reject JSON null and incompatible JSON types. Text exceptions
+// still reject malformed objects, arrays, quoted strings, and markup.
 type ResponsePolicy int
 
 const (
@@ -51,6 +52,12 @@ func DecodeMgmtResponse[T any](raw *RawResponse, policy ResponsePolicy) (*Respon
 // plain text as JSON. Valid JSON, broken objects/arrays/quoted strings, and markup
 // must still pass JSON decoding rather than silently succeeding as text.
 func plainTextResponse(body []byte) bool {
+	// Inspect past an optional UTF-8 BOM so a proxy page cannot masquerade as
+	// text. Preserve the actual body for decoding: a BOM is not valid JSON.
+	body = bytes.TrimSpace(bytes.TrimPrefix(body, []byte{0xef, 0xbb, 0xbf}))
+	if len(body) == 0 {
+		return false
+	}
 	if json.Valid(body) {
 		return false
 	}

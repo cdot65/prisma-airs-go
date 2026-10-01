@@ -105,6 +105,7 @@ func TestDeleteResponseExpectations(t *testing.T) {
 		{"profile force JSON header", "deleted", "application/json", func(c *Client) error { _, err := c.Profiles.ForceDelete(context.Background(), "p", "me"); return err }, false},
 		{"profile force JSON suffix", "deleted", "application/vnd.airs+json; charset=utf-8", func(c *Client) error { _, err := c.Profiles.ForceDelete(context.Background(), "p", "me"); return err }, false},
 		{"profile force HTML", "<html>Proxy error</html>", "text/html", func(c *Client) error { _, err := c.Profiles.ForceDelete(context.Background(), "p", "me"); return err }, true},
+		{"profile force HTML with BOM", "\ufeff  <html>Proxy error</html>", "text/html", func(c *Client) error { _, err := c.Profiles.ForceDelete(context.Background(), "p", "me"); return err }, true},
 		{"profile force JSON scalar", "42", "text/plain", func(c *Client) error { _, err := c.Profiles.ForceDelete(context.Background(), "p", "me"); return err }, true},
 		{"ordinary profile delete text", "deleted", "", func(c *Client) error { _, err := c.Profiles.Delete(context.Background(), "p"); return err }, true},
 		{"ordinary profile delete empty", "", "", func(c *Client) error { _, err := c.Profiles.Delete(context.Background(), "p"); return err }, true},
