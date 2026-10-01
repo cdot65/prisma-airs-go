@@ -1,0 +1,204 @@
+{
+  "adapter_create": {
+    "query": "validate=false",
+    "response": {
+      "name": "adapter",
+      "script_b64": "cHJpbnQoIm9rIik=",
+      "uuid": "id/part",
+      "tsg_id": "tenant",
+      "status": "DRAFT",
+      "description": null,
+      "network_broker_channel_uuid": null,
+      "variables": [
+        {
+          "key": "api_key",
+          "type": "SECRET",
+          "value": null,
+          "is_redacted": true
+        }
+      ],
+      "target_count": 0
+    },
+    "status": 201,
+    "request": {
+      "name": "adapter",
+      "script_b64": "cHJpbnQoIm9rIik=",
+      "prompt": "test",
+      "description": null,
+      "network_broker_channel_uuid": null,
+      "variables": [
+        {
+          "key": "api_key",
+          "type": "SECRET",
+          "value": null
+        }
+      ]
+    }
+  },
+  "adapter_list": {
+    "query": "limit=5&skip=2&search=test&status=DRAFT&include_target_count=false",
+    "response": {
+      "pagination": {
+        "total_items": 1
+      },
+      "data": [
+        {
+          "uuid": "id/part",
+          "name": "adapter",
+          "status": "DRAFT",
+          "target_count": 0,
+          "created_at": "now",
+          "updated_at": "now"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "adapter_get": {
+    "query": "",
+    "response": {
+      "name": "adapter",
+      "script_b64": "cHJpbnQoIm9rIik=",
+      "uuid": "id/part",
+      "tsg_id": "tenant",
+      "status": "DRAFT",
+      "description": null,
+      "network_broker_channel_uuid": null,
+      "variables": [],
+      "target_count": 0
+    },
+    "status": 200
+  },
+  "adapter_update": {
+    "query": "validate=false",
+    "response": {
+      "name": "adapter",
+      "script_b64": "cHJpbnQoIm9rIik=",
+      "uuid": "id/part",
+      "tsg_id": "tenant",
+      "status": "DRAFT",
+      "description": null,
+      "network_broker_channel_uuid": null,
+      "variables": [
+        {
+          "key": "api_key",
+          "type": "SECRET",
+          "value": null,
+          "is_redacted": true
+        }
+      ],
+      "target_count": 0
+    },
+    "status": 200,
+    "request": {
+      "name": "adapter",
+      "script_b64": "cHJpbnQoIm9rIik=",
+      "prompt": "test",
+      "description": null,
+      "network_broker_channel_uuid": null,
+      "variables": [
+        {
+          "key": "api_key",
+          "type": "SECRET",
+          "value": null
+        }
+      ]
+    }
+  },
+  "adapter_delete": {
+    "query": "",
+    "response": null,
+    "status": 204
+  },
+  "adapter_config": {
+    "query": "",
+    "response": {
+      "default_script_b64": "cHJpbnQoIm9rIik=",
+      "default_test_prompt": "test"
+    },
+    "status": 200
+  },
+  "adapter_validate": {
+    "query": "",
+    "response": {
+      "validated": false,
+      "stdout": null,
+      "stderr": "invalid",
+      "traceback": null
+    },
+    "status": 200,
+    "request": {
+      "script_b64": "cHJpbnQoIm9rIik=",
+      "network_broker_channel_uuid": "channel",
+      "prompt": "test",
+      "adapter_uuid": null,
+      "variables": []
+    }
+  },
+  "broker_list": {
+    "query": "limit=5&skip=2&status=OFFLINE&status=ONLINE&search=test&include_all_if_empty=false",
+    "response": {
+      "pagination": {
+        "total_items": 1
+      },
+      "data": [
+        {
+          "uuid": "id/part",
+          "name": "channel",
+          "description": "test",
+          "status": "OFFLINE"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "broker_create": {
+    "query": "",
+    "response": {
+      "uuid": "id/part",
+      "name": "channel",
+      "description": "test",
+      "status": "OFFLINE"
+    },
+    "status": 200,
+    "request": {
+      "name": "channel",
+      "description": ""
+    }
+  },
+  "broker_get": {
+    "query": "",
+    "response": {
+      "uuid": "id/part",
+      "name": "channel",
+      "description": "test",
+      "status": "OFFLINE"
+    },
+    "status": 200
+  },
+  "broker_update": {
+    "query": "",
+    "response": {
+      "uuid": "id/part",
+      "name": "channel",
+      "description": "test",
+      "status": "OFFLINE"
+    },
+    "status": 200,
+    "request": {
+      "description": ""
+    }
+  },
+  "broker_stats": {
+    "query": "",
+    "response": {
+      "online_channels": 0,
+      "total_channels": 1,
+      "docker_registry": "registry.example.test",
+      "helm_chart": "chart",
+      "docker_image": "image",
+      "network_channels_server_domain": "broker.example.test"
+    },
+    "status": 200
+  }
+}

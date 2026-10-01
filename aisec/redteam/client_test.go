@@ -701,6 +701,9 @@ func TestSubClients_AllPresent(t *testing.T) {
 	defer tokenSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, "https://data.example.com", "https://mgmt.example.com")
+	if client.Adapters == nil || client.NetworkBroker == nil {
+		t.Error("adapter/broker sub-clients missing")
+	}
 	if client.Scans == nil {
 		t.Error("Scans is nil")
 	}

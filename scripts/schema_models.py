@@ -15,6 +15,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 DOMAINS = {"modelsecurity": ["model-data", "model-mgmt"],
            "redteam": ["redteam-data", "redteam-mgmt", "redteam-broker"]}
+INLINE_RESPONSES = {"redteam-broker": [("ChannelListResponse", "/v1/channels", "get", "200")]}
 INITIALISMS = {x: x.upper() for x in ["id", "uuid", "api", "url", "uri", "http", "https", "json", "csv", "tsg", "sdk", "asr", "mcp", "sha256", "pypi", "aws", "gcp", "ms", "llm", "dp", "ip", "kb"]}
 
 
@@ -34,7 +35,10 @@ class Generator:
         self.names = {}
         for label in labels:
             document = json.loads((ROOT / "specs/contracts" / (label + ".json")).read_text())
-            for key, schema in document["components"]["schemas"].items():
+            components = dict(document["components"]["schemas"])
+            for key, path, method, status in INLINE_RESPONSES.get(label, []):
+                components[key] = document["paths"][path][method]["responses"][status]["content"]["application/json"]["schema"]
+            for key, schema in components.items():
                 if key in self.schemas and self.schemas[key] != schema:
                     raise ValueError("Conflicting component: " + key)
                 self.schemas[key] = schema
@@ -83,6 +87,11 @@ class Generator:
     def flatten(self, schema):
         if "allOf" not in schema:
             return schema
+        if len(schema["allOf"]) == 1 and not schema.get("properties"):
+            item = schema["allOf"][0]
+            resolved = self.schemas[item["$ref"].rsplit("/",1)[-1]] if "$ref" in item else item
+            if resolved.get("type") != "object" and not resolved.get("properties"):
+                return {**{k:v for k,v in schema.items() if k != "allOf"}, **resolved}
         properties = dict(schema.get("properties", {}))
         required = set(schema.get("required", []))
         for item in schema["allOf"]:
@@ -100,6 +109,8 @@ class Generator:
         schema, nullable = self.nullable(schema)
         if "$ref" in schema:
             return self.names[schema["$ref"].rsplit("/", 1)[-1]], nullable
+        if len(schema.get("allOf", [])) == 1 and not schema.get("properties") and "$ref" in schema["allOf"][0]:
+            return self.type(schema["allOf"][0], hint)
         schema = self.flatten(schema)
         if "oneOf" in schema or "anyOf" in schema or schema.get("properties"):
             return self.register(hint, schema), nullable
@@ -150,7 +161,14 @@ class Generator:
                     for field, prop in target.get("properties", {}).items():
                         constant = prop.get("const", prop.get("enum", [None])[0] if len(prop.get("enum", [])) == 1 else None)
                         if isinstance(constant,str):
-                            guard += f'if value.{name(field)} != {json.dumps(constant)} {{ return nil, fmt.Errorf("expected {typename} {field}=%s", {json.dumps(constant)}) }}; '
+                            _, field_nullable = self.nullable(prop)
+                            if field not in required and field_nullable:
+                                comparison = f'actual,ok:=value.{name(field)}.Get();ok && actual != {json.dumps(constant)}'
+                            elif field not in required or field_nullable:
+                                comparison = f'value.{name(field)} != nil && *value.{name(field)} != {json.dumps(constant)}'
+                            else:
+                                comparison = f'value.{name(field)} != {json.dumps(constant)}'
+                            guard += f'if {comparison} {{ return nil, fmt.Errorf("expected {typename} {field}=%s", {json.dumps(constant)}) }}; '
                 lines.extend([
                     f"// As{suffix} decodes this union as {typ}; tagged variants verify their tag.",
                     f"func (x {typename}) As{suffix}() (*{typ},error) {{ if bytes.Equal(bytes.TrimSpace(x),[]byte(\"null\")) {{return nil,fmt.Errorf(\"null {typename} alternative\")}}; var value {typ}; if err:=json.Unmarshal(x,&value);err!=nil {{ return nil,err }}; {guard}return &value,nil }}",

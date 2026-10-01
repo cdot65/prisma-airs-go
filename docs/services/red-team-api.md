@@ -284,3 +284,47 @@ templates, err := client.GetTargetTemplates(ctx)
 // Registry credentials
 creds, err := client.GetRegistryCredentials(ctx)
 ```
+
+## Adapters and Network Broker
+
+`client.Adapters` exposes `Create`, `List`, `Get`, `Update`, `Delete`, `GetConfig`,
+and `Validate`. Current request/response models live in
+`github.com/cdot65/prisma-airs-go/aisec/redteam/schema` and preserve omitted,
+null, false, zero, and empty values. They are generated from the pinned contracts
+with `python3 scripts/schema_models.py redteam` (`--check` verifies regeneration).
+Existing Red Team types and methods remain available.
+
+```go
+inactive := false
+adapter, err := client.Adapters.Create(ctx,
+    schema.CustomTargetAdapterCreateRequest{
+        Name: "My adapter", ScriptB64: encodedScript, Prompt: "test prompt",
+    }, redteam.AdapterWriteOpts{Validate: &inactive})
+```
+
+An omitted `Validate` lets the server use its default (true). Explicit false
+saves a draft without executing the adapter. `Validate` returns diagnostic
+fields; `Validated == false` can be a successful HTTP response with a failed
+validation outcome. The caller interprets that outcome.
+
+Adapter PUT is a full replacement: supply name, script, and test prompt. Its
+variable list defines the complete desired key set. Providing a value sets it;
+null keeps a stored value (including a redacted secret); omitting a key deletes
+that variable. Do not replace stored secrets with read-time redaction markers.
+The production service returned a cleared empty description as JSON null during
+live testing; the SDK returns the observed value without normalizing it.
+
+`client.NetworkBroker` exposes `List`, `Create`, `Get`, `Update` (PATCH), and
+`GetStats`. It shares the OAuth token and configured HTTP transport but routes to
+the separate Network Broker base URL. Override it with `Opts.BrokerEndpoint` or
+`PANW_RED_TEAM_BROKER_ENDPOINT`. `ChannelListOpts.Status` emits repeated query
+keys; `IncludeAllIfEmpty` is a pointer so explicit false is retained.
+
+The broker contract has **no DELETE endpoint**. Channel creation has no matching
+SDK delete helper, and updating a channel changes its name/description. The SDK
+does not manufacture a deletion operation or install broker infrastructure.
+Channel status uses the referenced string enum, including future string values.
+
+Current job models preserve nullable progress/count/score fields and expose typed
+standard/agentic progress alternatives. Tagged accessors reject a mismatched
+alternative; use explicit tag values when constructing progress data.

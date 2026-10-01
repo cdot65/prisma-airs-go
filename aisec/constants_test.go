@@ -130,3 +130,16 @@ func TestConstants_ModelInventoryAndCustomRules(t *testing.T) {
 		}
 	}
 }
+
+func TestConstants_AdaptersAndNetworkBroker(t *testing.T) {
+	for _, tc := range []struct{ name, got, want string }{
+		{"RedTeamAdaptersPath", RedTeamAdaptersPath, "/v1/adapters"},
+		{"RedTeamChannelsPath", RedTeamChannelsPath, "/v1/channels"},
+		{"DefaultRedTeamBrokerEndpoint", DefaultRedTeamBrokerEndpoint, "https://api.sase.paloaltonetworks.com/ai-red-teaming/data-plane/network-broker"},
+		{"EnvRedTeamBrokerEndpoint", EnvRedTeamBrokerEndpoint, "PANW_RED_TEAM_BROKER_ENDPOINT"},
+	} {
+		if tc.got != tc.want {
+			t.Errorf("%s=%q;want %q", tc.name, tc.got, tc.want)
+		}
+	}
+}

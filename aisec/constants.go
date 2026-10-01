@@ -206,3 +206,11 @@ const (
 	ModelSecModelVersionsPath = "/v1/model-versions"
 	ModelSecCustomRulesPath   = "/v1/custom-rules"
 )
+
+// Red Team adapter management and Network Broker routing.
+const (
+	RedTeamAdaptersPath          = "/v1/adapters"
+	RedTeamChannelsPath          = "/v1/channels"
+	DefaultRedTeamBrokerEndpoint = "https://api.sase.paloaltonetworks.com/ai-red-teaming/data-plane/network-broker"
+	EnvRedTeamBrokerEndpoint     = "PANW_RED_TEAM_BROKER_ENDPOINT"
+)

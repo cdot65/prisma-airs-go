@@ -15,13 +15,14 @@ import (
 
 // Opts are options for creating a RedTeamClient.
 type Opts struct {
-	ClientID      string
-	ClientSecret  string
-	TsgID         string
-	DataEndpoint  string
-	MgmtEndpoint  string
-	TokenEndpoint string
-	NumRetries    int
+	ClientID       string
+	ClientSecret   string
+	TsgID          string
+	DataEndpoint   string
+	MgmtEndpoint   string
+	BrokerEndpoint string
+	TokenEndpoint  string
+	NumRetries     int
 	// HTTPClient overrides the HTTP client used for API and token requests
 	// (timeouts, proxies, transports, tracing). Defaults to the SDK client.
 	HTTPClient *http.Client
@@ -30,6 +31,8 @@ type Opts struct {
 // Client is the Red Team API client with dual-endpoint routing.
 type Client struct {
 	Scans               *ScansClient
+	Adapters            *AdaptersClient
+	NetworkBroker       *NetworkBrokerClient
 	Reports             *ReportsClient
 	CustomAttackReports *CustomAttackReportsClient
 	Targets             *TargetsClient
@@ -70,7 +73,11 @@ func NewClient(opts Opts) (*Client, error) {
 		HTTPClient: mgmtCfg.HTTPClient,
 	}
 
+	brokerCfg := *dataCfg
+	brokerCfg.BaseURL = internal.ResolveEndpoint(opts.BrokerEndpoint, aisec.EnvRedTeamBrokerEndpoint, aisec.DefaultRedTeamBrokerEndpoint)
 	c := &Client{dataCfg: dataCfg, mgmtCfg: mgmtCfg}
+	c.Adapters = &AdaptersClient{mgmtCfg: mgmtCfg}
+	c.NetworkBroker = &NetworkBrokerClient{brokerCfg: &brokerCfg}
 	c.Scans = &ScansClient{dataCfg: dataCfg}
 	c.Reports = &ReportsClient{dataCfg: dataCfg}
 	c.CustomAttackReports = &CustomAttackReportsClient{dataCfg: dataCfg}

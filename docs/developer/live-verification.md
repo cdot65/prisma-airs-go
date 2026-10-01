@@ -54,3 +54,19 @@ rule-instance history, assignment removal, archive and unarchive. Cleanup
 archived the disposable custom rule (there is no delete endpoint) and deleted
 the disposable security group. No existing policies or rules were modified.
 The race-enabled live run completed successfully in 5.858 seconds.
+
+### Red Team adapters and Network Broker (2026-10-01)
+
+On the selected production CLI tenant, adapter config and disposable DRAFT
+create/get/search/update/delete passed, including an explicit description clear
+and a subsequent read. The service returns JSON null for an empty description;
+the SDK preserves that null. Every draft created during the probes was deleted.
+
+Network Broker stats/list/get passed on its separate OAuth service base. No
+existing channel was changed. Channel create/PATCH and adapter active execution
+validation have public-client mock coverage; they were not exercised live. The
+broker has no delete/archive endpoint, so this probe did not create a permanent
+test channel. A connected broker and target fixture are required for executing
+an adapter validation. The final focused race-enabled live run passed in 11.003
+seconds. Earlier description assertions failed before the service's null
+canonicalization was recorded and accommodated in the test.
