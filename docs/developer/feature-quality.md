@@ -27,7 +27,6 @@ Scores are review judgement, not production guarantees; consult
 | Gateway secret references | 9.3/10 | 9/10 | Independent fixed review `6f493c8...f1512e9`; public HTTP contracts and operation-specific live evidence |
 | Gateway deployments | 9.3/10 | 9/10 | Independent fixed review `6f493c8...f1512e9`; public HTTP contracts and operation-specific live evidence |
 | Legacy prompt-set Properties compatibility | 9.5/10 | 9/10 | Independent fixed review `6f493c8...f1512e9`; public HTTP contracts and operation-specific live evidence |
-
 | Release preparation and example artifacts | 9.2/10 | 9/10 | Independent review of version, six-platform builder, flags, provenance, normalized Go environment, CI, and docs |
 
 Each integration feature group must reach at least 9/10 on both review axes.

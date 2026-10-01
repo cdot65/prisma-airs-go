@@ -140,3 +140,12 @@ a provider binary build against the temporary modfile. The provider working tree
 remained clean. Final SDK checks passed on Go 1.24.6 and uncached Go 1.22.12 race
 tests, including integration-tag compilation/linting without live calls, snapshot
 and model freshness checks, and strict MkDocs rendering.
+
+### Release artifact verification
+
+The clean v0.6.0 candidate produced all 18 example executables across six
+platforms. All nine checksum entries matched. Each binary's Go build metadata
+confirmed its OS, architecture, CGO-disabled setting, clean VCS state, and source
+commit; all three host executables passed `-version` and `-help` without API
+calls. Final published artifacts must also be downloaded and checked before the
+release is considered complete.
