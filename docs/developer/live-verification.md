@@ -149,3 +149,27 @@ confirmed its OS, architecture, CGO-disabled setting, clean VCS state, and sourc
 commit; all three host executables passed `-version` and `-help` without API
 calls. Final published artifacts must also be downloaded and checked before the
 release is considered complete.
+
+### Published v0.6.0 verification
+
+[Release v0.6.0](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.6.0)
+was published on 2026-10-01 at commit
+`c1f0604e02d0c1fd7907bbb9c18bf972fcd16ebe`.
+[Release CI](https://github.com/cdot65/prisma-airs-go/actions/runs/36927173564)
+passed validation and artifact upload. All ten published files were downloaded
+after CI completed; nine checksum entries and eighteen binary OS/architecture,
+CGO, clean-VCS, and commit records passed inspection. Host version/help flags
+passed without API requests.
+
+The published Go module downloaded successfully, and a fresh consumer without
+a local replacement compiled all four domains on Go 1.22. The deployed Gateway
+guide, feature score table, and v0.6.0 release notes were fetched and verified.
+Two candidate builds with different ambient Go flags produced identical asset
+checksums after normalization. A worktree build lacked automatic Go VCS metadata
+and was rejected by final verification; the published assets were built from
+standard checkouts and verified.
+
+The required provider handoff is
+[sdk-update-005.md](https://github.com/cdot65/prisma-airs-go/blob/main/sdk-update-005.md).
+The upstream Red Team metadata HTTP 422 and mock-only helper limits above remain
+unchanged by successful release publication.
