@@ -34,3 +34,23 @@ temporary resources are mutated, with cleanup assertions.
 Mock contracts establish request construction, decoding, errors, and compatibility
 against pinned inputs. Recorded tenant evidence and new live checks are separate:
 an operation is not live-verified merely because another in its family succeeded.
+
+### Model Security current-contract probe (2026-10-01)
+
+The selected CLI production tenant authenticated but returned **No active
+license found** for model inventory, custom-rule listing, custom-rule snapshot
+history, and security-rule snapshot history. These live assertions failed; they
+are not successful endpoint verification. No Model Security resources were
+created or changed. An enabled tenant is needed to exercise live custom-rule
+lifecycle/assignment and inventory details. The public-client mock matrix covers
+all 41 pinned operations plus seven alternatives for precise nullable models.
+
+The user supplied a second CLI tenant with Model Security enabled. On that
+account the focused live suite passed: model list/get, model version list/get,
+version file list, custom-rule list, custom-rule and PANW-rule snapshot histories,
+plus disposable security-group creation/deletion and custom-rule create/get,
+update, assignment (HTTP 207), assigned-instance read, assigned-group list,
+rule-instance history, assignment removal, archive and unarchive. Cleanup
+archived the disposable custom rule (there is no delete endpoint) and deleted
+the disposable security group. No existing policies or rules were modified.
+The race-enabled live run completed successfully in 5.858 seconds.

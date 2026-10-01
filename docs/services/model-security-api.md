@@ -155,3 +155,81 @@ fmt.Println(auth.URL, auth.ExpiresAt)
 ## Error Handling
 
 All methods return `error` as the second return value. Errors are typed as `*aisec.AISecSDKError` when they originate from the SDK or API.
+
+## Current inventory and custom rules
+
+The current pinned contracts add `Models` and `ModelVersions` on the data plane,
+and `CustomRules` on the management plane. Existing request/response types remain
+source compatible. New methods use `aisec/modelsecurity/schema`, generated from
+the pinned contract snapshots with `python3 scripts/schema_models.py modelsecurity`.
+Run the same command with `--check` to detect stale models.
+
+| Client | Methods |
+|---|---|
+| `Models` | `List`, `Get`, `ListVersions` |
+| `ModelVersions` | `Get`, `ListFiles` |
+| `CustomRules` | `List`, `Get`, `Create`, `Update`, `Archive`, `Unarchive`, `ListSecurityGroups`, `AssignSecurityGroups`, `RemoveAssignment`, `ListVersions` |
+| `SecurityRules` | `ListVersions` |
+| `SecurityGroups` | `ListRuleInstanceVersions` |
+
+Model inventory and custom-rule array filters use repeated query keys. Scan and
+group lists now also encode their array filters this way, as required by OpenAPI
+form/explode semantics. `ScanListOpts.ModelVersionUUID`, `FileListOpts.Recursive`,
+`RuleInstanceListOpts.IsCustom`/`Generation`, and `RuleListOpts.Generation` expose
+new filters. Pointer options preserve an explicit false or zero.
+
+Snapshot lists use `SnapshotListOpts.NextToken`, an opaque cursor. A generation
+filter selects a historical snapshot, where upstream ignores other filters and
+may return null timestamps, rule UUIDs, or condition trees.
+
+### Omitted values and explicit clears
+
+Current schema models distinguish omitted optional fields, null, and values.
+For optional nullable fields, use `aisec.Value(value)` or `aisec.Null[T]()`. Their
+zero value omits the field. Optional non-nullable fields use pointers. Required
+nullable fields use pointers, where nil emits null.
+
+```go
+import "github.com/cdot65/prisma-airs-go/aisec/modelsecurity/schema"
+
+updated, err := client.SecurityGroups.UpdateFields(ctx, groupUUID,
+    schema.ModelSecurityGroupUpdateRequest{
+        Description: aisec.Value(""), // explicitly clear the description
+    })
+```
+
+`Scans.CreateDetails`, `GetDetails`, and `ListDetails`, plus
+`SecurityGroups.GetRuleInstanceDetails`, `ListRuleInstanceDetails`,
+`UpdateFields`, and `UpdateRuleInstanceFields`, provide the current types for
+callers that need nullable fields or precise update semantics. Existing methods
+retain their legacy types. Legacy string response fields still collapse null to
+an empty string; choose the corresponding details method when this matters.
+
+### Custom conditions and assignment outcomes
+
+Custom-rule conditions have typed union constructors/accessors for label
+conditions, rule-result conditions, and recursive condition groups. Enum types
+accept future string values. The SDK preserves schema structure and presence;
+the service validates limits and semantic constraints.
+
+```go
+condition, err := schema.NewCustomRuleCreateRequestConditionFromLabelCondition(
+    schema.LabelCondition{
+        Type: "label", Key: "classification", Operator: "equals",
+        Value: aisec.Value("sensitive"),
+    })
+if err != nil { return err }
+rule, err := client.CustomRules.Create(ctx, schema.CustomRuleCreateRequest{
+    Name: "Sensitive models", CompatibleSources: []schema.SourceType{"LOCAL"},
+    Condition: condition, ViolationMessage: "Sensitive model detected",
+})
+```
+
+`AssignSecurityGroups` returns the complete HTTP 207 response. Inspect each
+result's `Status`, `Error`, and `RuleInstanceUUID`: a successful HTTP request can
+contain failed assignments. The SDK does not flatten those into a single error.
+Archive/unarchive and assignment removal accept documented empty 204 responses.
+Custom rules have no upstream delete endpoint; archive is their lifecycle action.
+
+Live verification requires an active Model Security license. See the
+[live verification record](../developer/live-verification.md) for tenant results.

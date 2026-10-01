@@ -1,0 +1,1561 @@
+{
+  "POST /v1/scans": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "model_uri": "hf://test/model",
+      "owner": "owner",
+      "scan_origin": "MODEL_SECURITY_SDK",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_group_name": "group",
+      "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "eval_outcome": "ALLOWED",
+      "source_type": "LOCAL",
+      "sdk_version": "1.2"
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "model_uri": "hf://test/model",
+      "owner": "owner",
+      "scan_origin": "MODEL_SECURITY_SDK",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_group_name": "group",
+      "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "eval_outcome": "ALLOWED",
+      "source_type": "LOCAL",
+      "sdk_version": "1.2"
+    },
+    "status": 201,
+    "request": {
+      "model_uri": "hf://test/model",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "scan_origin": "MODEL_SECURITY_SDK"
+    }
+  },
+  "GET /v1/scans": {
+    "query": "limit=5&skip=2&model_version_uuid=550e8400-e29b-41d4-a716-446655440000&source_types=LOCAL&source_types=S3&eval_outcomes=ALLOWED&eval_outcomes=BLOCKED",
+    "response": {
+      "scans": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": "now",
+          "updated_at": "now",
+          "model_uri": "hf://test/model",
+          "owner": "owner",
+          "scan_origin": "MODEL_SECURITY_SDK",
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "security_group_name": "group",
+          "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "eval_outcome": "ALLOWED",
+          "source_type": "LOCAL",
+          "sdk_version": "1.2"
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      },
+      "count_capped": false
+    },
+    "fields": {
+      "scans": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": "now",
+          "updated_at": "now",
+          "model_uri": "hf://test/model",
+          "owner": "owner",
+          "scan_origin": "MODEL_SECURITY_SDK",
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "security_group_name": "group",
+          "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "eval_outcome": "ALLOWED",
+          "source_type": "LOCAL",
+          "sdk_version": "1.2"
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      },
+      "count_capped": false
+    },
+    "status": 200
+  },
+  "GET /v1/scans/{uuid}": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "model_uri": "hf://test/model",
+      "owner": "owner",
+      "scan_origin": "MODEL_SECURITY_SDK",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_group_name": "group",
+      "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "eval_outcome": "ALLOWED",
+      "source_type": "LOCAL",
+      "sdk_version": "1.2"
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "model_uri": "hf://test/model",
+      "owner": "owner",
+      "scan_origin": "MODEL_SECURITY_SDK",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_group_name": "group",
+      "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "eval_outcome": "ALLOWED",
+      "source_type": "LOCAL",
+      "sdk_version": "1.2"
+    },
+    "status": 200
+  },
+  "GET /v1/scans/{scan_uuid}/evaluations": {
+    "query": "limit=5&skip=2&result=PASSED",
+    "response": {
+      "evaluations": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "result": "PASSED",
+          "rule_origin": "CUSTOM",
+          "violation_count": 0,
+          "tsg_id": "test",
+          "created_at": "test",
+          "updated_at": "test",
+          "rule_instance_uuid": "test",
+          "scan_uuid": "test",
+          "rule_name": "test",
+          "rule_description": "test",
+          "rule_instance_state": "test"
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "evaluations": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "result": "PASSED",
+          "rule_origin": "CUSTOM",
+          "violation_count": 0,
+          "tsg_id": "test",
+          "created_at": "test",
+          "updated_at": "test",
+          "rule_instance_uuid": "test",
+          "scan_uuid": "test",
+          "rule_name": "test",
+          "rule_description": "test",
+          "rule_instance_state": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "GET /v1/evaluations/{uuid}": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "result": "PASSED",
+      "rule_origin": "CUSTOM",
+      "violation_count": 0
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "result": "PASSED",
+      "rule_origin": "CUSTOM",
+      "violation_count": 0
+    },
+    "status": 200
+  },
+  "GET /v1/scans/{scan_uuid}/files": {
+    "query": "limit=5&skip=2&query_path=%2Fnested&recursive=false",
+    "response": {
+      "files": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "path": "file.onnx",
+          "type": "FILE",
+          "result": "PASSED",
+          "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "test",
+          "created_at": "test",
+          "updated_at": "test",
+          "parent_path": "test"
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "files": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "path": "file.onnx",
+          "type": "FILE",
+          "result": "PASSED",
+          "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "test",
+          "created_at": "test",
+          "updated_at": "test",
+          "parent_path": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "GET /v1/scans/{scan_uuid}/rule-violations": {
+    "query": "limit=5&skip=2",
+    "response": {
+      "violations": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "description": "detected",
+          "rule_name": "rule",
+          "rule_origin": "CUSTOM",
+          "insights_url": "https://example.test/insights",
+          "threat_kb_url": "https://example.test/kb",
+          "remediation": {
+            "description": "fix",
+            "steps": [
+              "step"
+            ],
+            "url": "https://example.test"
+          },
+          "created_at": "test",
+          "updated_at": "test",
+          "rule_instance_uuid": "test",
+          "rule_description": "test",
+          "rule_instance_state": "test"
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "violations": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "description": "detected",
+          "rule_name": "rule",
+          "rule_origin": "CUSTOM",
+          "insights_url": "https://example.test/insights",
+          "threat_kb_url": "https://example.test/kb",
+          "remediation": {
+            "description": "fix",
+            "steps": [
+              "step"
+            ],
+            "url": "https://example.test"
+          },
+          "created_at": "test",
+          "updated_at": "test",
+          "rule_instance_uuid": "test",
+          "rule_description": "test",
+          "rule_instance_state": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "GET /v1/violations/{uuid}": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "description": "detected",
+      "rule_name": "rule",
+      "rule_origin": "CUSTOM",
+      "insights_url": "https://example.test/insights",
+      "threat_kb_url": "https://example.test/kb",
+      "remediation": {
+        "description": "fix",
+        "steps": [
+          "step"
+        ],
+        "url": "https://example.test"
+      }
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "description": "detected",
+      "rule_name": "rule",
+      "rule_origin": "CUSTOM",
+      "insights_url": "https://example.test/insights",
+      "threat_kb_url": "https://example.test/kb",
+      "remediation": {
+        "description": "fix",
+        "steps": [
+          "step"
+        ],
+        "url": "https://example.test"
+      }
+    },
+    "status": 200
+  },
+  "POST /v1/scans/{scan_uuid}/labels": {
+    "query": "",
+    "response": {
+      "labels": [
+        {
+          "key": "test",
+          "value": "value"
+        }
+      ]
+    },
+    "fields": {
+      "labels": [
+        {
+          "key": "test",
+          "value": "value"
+        }
+      ]
+    },
+    "status": 200,
+    "request": {
+      "labels": [
+        {
+          "key": "test",
+          "value": "value"
+        }
+      ]
+    }
+  },
+  "PUT /v1/scans/{scan_uuid}/labels": {
+    "query": "",
+    "response": {
+      "labels": [
+        {
+          "key": "test",
+          "value": "value"
+        }
+      ]
+    },
+    "fields": {
+      "labels": [
+        {
+          "key": "test",
+          "value": "value"
+        }
+      ]
+    },
+    "status": 200,
+    "request": {
+      "labels": [
+        {
+          "key": "test",
+          "value": "value"
+        }
+      ]
+    }
+  },
+  "DELETE /v1/scans/{scan_uuid}/labels": {
+    "query": "keys=one&keys=two",
+    "response": null,
+    "fields": {},
+    "status": 204
+  },
+  "GET /v1/scans/label-keys": {
+    "query": "limit=5&skip=2&search=test",
+    "response": {
+      "keys": [
+        "test"
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "keys": [
+        "test"
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "status": 200
+  },
+  "GET /v1/scans/label-keys/{key}/values": {
+    "query": "limit=5",
+    "response": {
+      "values": [
+        "test"
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "values": [
+        "test"
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "status": 200
+  },
+  "GET /v1/models": {
+    "query": "limit=5&skip=2&search_query=test&sort_field=updated_at&sort_order=asc&latest_version_outcomes=ALLOWED&latest_version_outcomes=BLOCKED&latest_version_formats=onnx&latest_version_formats=gguf&latest_version_source_types=LOCAL&latest_version_source_types=S3&latest_version_scan_time_before=before&start_time=start&end_time=end",
+    "response": {
+      "models": [
+        {
+          "created_at": "test",
+          "name": "test",
+          "tsg_id": "test",
+          "updated_at": "test",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ],
+      "pagination": {}
+    },
+    "fields": {
+      "models": [
+        {
+          "created_at": "test",
+          "name": "test",
+          "tsg_id": "test",
+          "updated_at": "test",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ],
+      "pagination": {}
+    },
+    "status": 200
+  },
+  "GET /v1/models/{uuid}": {
+    "query": "",
+    "response": {
+      "created_at": "test",
+      "name": "test",
+      "tsg_id": "test",
+      "updated_at": "test",
+      "uuid": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "fields": {
+      "created_at": "test",
+      "name": "test",
+      "tsg_id": "test",
+      "updated_at": "test",
+      "uuid": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "status": 200
+  },
+  "GET /v1/models/{uuid}/model-versions": {
+    "query": "limit=5&skip=2&sort_order=asc",
+    "response": {
+      "model_versions": [
+        {
+          "created_at": "test",
+          "model_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "revision": "test",
+          "tsg_id": "test",
+          "updated_at": "test",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ],
+      "pagination": {}
+    },
+    "fields": {
+      "model_versions": [
+        {
+          "created_at": "test",
+          "model_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "revision": "test",
+          "tsg_id": "test",
+          "updated_at": "test",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ],
+      "pagination": {}
+    },
+    "status": 200
+  },
+  "GET /v1/model-versions/{uuid}": {
+    "query": "",
+    "response": {
+      "created_at": "test",
+      "model_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "revision": "test",
+      "tsg_id": "test",
+      "updated_at": "test",
+      "uuid": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "fields": {
+      "created_at": "test",
+      "model_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "revision": "test",
+      "tsg_id": "test",
+      "updated_at": "test",
+      "uuid": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "status": 200
+  },
+  "GET /v1/model-versions/{uuid}/files": {
+    "query": "limit=5&skip=2",
+    "response": {
+      "files": [
+        {
+          "created_at": "test",
+          "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "parent_path": "test",
+          "path": "test",
+          "result": "SKIPPED",
+          "tsg_id": "test",
+          "type": "DIRECTORY",
+          "updated_at": "test",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ],
+      "pagination": {}
+    },
+    "fields": {
+      "files": [
+        {
+          "created_at": "test",
+          "model_version_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "parent_path": "test",
+          "path": "test",
+          "result": "SKIPPED",
+          "tsg_id": "test",
+          "type": "DIRECTORY",
+          "updated_at": "test",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ],
+      "pagination": {}
+    },
+    "status": 200
+  },
+  "GET /v1/pypi/authenticate": {
+    "query": "",
+    "response": {
+      "url": "https://example.test",
+      "expires_at": "now"
+    },
+    "fields": {
+      "url": "https://example.test",
+      "expires_at": "now"
+    },
+    "status": 200
+  },
+  "POST /v1/security-groups": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "name": "group",
+      "description": "description",
+      "source_type": "LOCAL",
+      "state": "COMPLETE",
+      "is_tombstone": false,
+      "enabled_rule_count": 3
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "name": "group",
+      "description": "description",
+      "source_type": "LOCAL",
+      "state": "COMPLETE",
+      "is_tombstone": false,
+      "enabled_rule_count": 3
+    },
+    "status": 201,
+    "request": {
+      "name": "group",
+      "source_type": "LOCAL",
+      "description": "description"
+    }
+  },
+  "GET /v1/security-groups": {
+    "query": "limit=5&skip=2&source_types=LOCAL&source_types=S3&enabled_rules=550e8400-e29b-41d4-a716-446655440000&enabled_rules=other",
+    "response": {
+      "security_groups": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": "now",
+          "updated_at": "now",
+          "name": "group",
+          "description": "description",
+          "source_type": "LOCAL",
+          "state": "COMPLETE",
+          "is_tombstone": false,
+          "enabled_rule_count": 3
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "security_groups": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": "now",
+          "updated_at": "now",
+          "name": "group",
+          "description": "description",
+          "source_type": "LOCAL",
+          "state": "COMPLETE",
+          "is_tombstone": false,
+          "enabled_rule_count": 3
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "status": 200
+  },
+  "GET /v1/security-groups/{uuid}": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "name": "group",
+      "description": "description",
+      "source_type": "LOCAL",
+      "state": "COMPLETE",
+      "is_tombstone": false,
+      "enabled_rule_count": 3
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "name": "group",
+      "description": "description",
+      "source_type": "LOCAL",
+      "state": "COMPLETE",
+      "is_tombstone": false,
+      "enabled_rule_count": 3
+    },
+    "status": 200
+  },
+  "PUT /v1/security-groups/{uuid}": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "name": "group",
+      "description": "description",
+      "source_type": "LOCAL",
+      "state": "COMPLETE",
+      "is_tombstone": false,
+      "enabled_rule_count": 3
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "name": "group",
+      "description": "description",
+      "source_type": "LOCAL",
+      "state": "COMPLETE",
+      "is_tombstone": false,
+      "enabled_rule_count": 3
+    },
+    "status": 200,
+    "request": {
+      "name": "updated",
+      "description": "updated"
+    }
+  },
+  "DELETE /v1/security-groups/{uuid}": {
+    "query": "",
+    "response": null,
+    "fields": {},
+    "status": 204
+  },
+  "GET /v1/security-groups/{security_group_uuid}/rule-instances": {
+    "query": "limit=5&skip=2&is_custom=false&generation=0",
+    "response": {
+      "rule_instances": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": "now",
+          "updated_at": "now",
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "security_rule_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "state": "BLOCKING",
+          "created_by": "creator",
+          "updated_by": "editor",
+          "custom_rule_uuid": null,
+          "custom_rule": null,
+          "rule": null,
+          "field_values": {}
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "pagination": {
+        "total_items": 1
+      },
+      "rule_instances": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": "now",
+          "updated_at": "now",
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "security_rule_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "state": "BLOCKING",
+          "created_by": "creator",
+          "updated_by": "editor",
+          "rule": null
+        }
+      ]
+    },
+    "status": 200
+  },
+  "GET /v1/security-groups/{security_group_uuid}/rule-instances/{rule_instance_uuid}": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_rule_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "state": "BLOCKING",
+      "created_by": "creator",
+      "updated_by": "editor",
+      "custom_rule_uuid": null,
+      "custom_rule": null,
+      "rule": null,
+      "field_values": {}
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_rule_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "state": "BLOCKING",
+      "created_by": "creator",
+      "updated_by": "editor",
+      "rule": null
+    },
+    "status": 200
+  },
+  "PUT /v1/security-groups/{security_group_uuid}/rule-instances/{rule_instance_uuid}": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_rule_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "state": "BLOCKING",
+      "created_by": "creator",
+      "updated_by": "editor",
+      "custom_rule_uuid": null,
+      "custom_rule": null,
+      "rule": null,
+      "field_values": {}
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_rule_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "state": "BLOCKING",
+      "created_by": "creator",
+      "updated_by": "editor",
+      "rule": null
+    },
+    "status": 200,
+    "request": {
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "state": "BLOCKING",
+      "field_values": {
+        "approved_formats": [
+          "onnx"
+        ]
+      }
+    }
+  },
+  "GET /v1/security-rules": {
+    "query": "limit=5&skip=2&generation=0",
+    "response": {
+      "rules": [
+        {
+          "compatible_sources": [
+            "LOCAL"
+          ],
+          "constant_values": {},
+          "default_state": "DISABLED",
+          "default_values": {},
+          "description": "test",
+          "editable_fields": [
+            {
+              "attribute_name": "test",
+              "display_name": "test",
+              "display_type": "SELECT",
+              "type": "test"
+            }
+          ],
+          "name": "test",
+          "remediation": {
+            "description": "test",
+            "steps": [
+              "test"
+            ],
+            "url": "test"
+          },
+          "rule_type": "METADATA",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "pagination": {
+        "total_items": 1
+      },
+      "rules": [
+        {
+          "compatible_sources": [
+            "LOCAL"
+          ],
+          "constant_values": {},
+          "default_state": "DISABLED",
+          "default_values": {},
+          "description": "test",
+          "editable_fields": [
+            {
+              "attribute_name": "test",
+              "display_name": "test",
+              "display_type": "SELECT",
+              "type": "test"
+            }
+          ],
+          "name": "test",
+          "remediation": {
+            "description": "test",
+            "steps": [
+              "test"
+            ],
+            "url": "test"
+          },
+          "rule_type": "METADATA",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "GET /v1/security-rules/{uuid}": {
+    "query": "",
+    "response": {
+      "compatible_sources": [
+        "LOCAL"
+      ],
+      "constant_values": {},
+      "default_state": "DISABLED",
+      "default_values": {},
+      "description": "test",
+      "editable_fields": [
+        {
+          "attribute_name": "test",
+          "display_name": "test",
+          "display_type": "SELECT",
+          "type": "test"
+        }
+      ],
+      "name": "test",
+      "remediation": {
+        "description": "test",
+        "steps": [
+          "test"
+        ],
+        "url": "test"
+      },
+      "rule_type": "METADATA",
+      "uuid": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "test"
+    },
+    "status": 200
+  },
+  "POST /v1/custom-rules": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "name": "custom",
+      "description": "description",
+      "compatible_sources": [
+        "LOCAL"
+      ],
+      "violation_message": "blocked",
+      "remediation_message": null,
+      "is_archived": false,
+      "created_by": null,
+      "updated_by": null,
+      "condition": null,
+      "created_at": null,
+      "updated_at": null,
+      "rule_action": null
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "name": "custom",
+      "description": "description",
+      "compatible_sources": [
+        "LOCAL"
+      ],
+      "violation_message": "blocked",
+      "remediation_message": null,
+      "is_archived": false,
+      "created_by": null,
+      "updated_by": null,
+      "condition": null,
+      "created_at": null,
+      "updated_at": null,
+      "rule_action": null
+    },
+    "status": 201,
+    "request": {
+      "name": "custom",
+      "compatible_sources": [
+        "LOCAL"
+      ],
+      "condition": {
+        "type": "label",
+        "key": "classification",
+        "operator": "equals",
+        "value": "sensitive"
+      },
+      "violation_message": "blocked",
+      "remediation_message": null
+    }
+  },
+  "GET /v1/custom-rules": {
+    "query": "limit=5&skip=2&is_archived=false&generation=0&source_types=LOCAL&source_types=S3&search_query=test&sort_field=created_at&sort_dir=asc",
+    "response": {
+      "custom_rules": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "name": "custom",
+          "description": "description",
+          "compatible_sources": [
+            "LOCAL"
+          ],
+          "violation_message": "blocked",
+          "remediation_message": null,
+          "is_archived": false,
+          "created_by": null,
+          "updated_by": null,
+          "condition": null,
+          "created_at": null,
+          "updated_at": null,
+          "rule_action": null
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "custom_rules": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "name": "custom",
+          "description": "description",
+          "compatible_sources": [
+            "LOCAL"
+          ],
+          "violation_message": "blocked",
+          "remediation_message": null,
+          "is_archived": false,
+          "created_by": null,
+          "updated_by": null,
+          "condition": null,
+          "created_at": null,
+          "updated_at": null,
+          "rule_action": null
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "status": 200
+  },
+  "GET /v1/custom-rules/{custom_rule_uuid}": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "name": "custom",
+      "description": "description",
+      "compatible_sources": [
+        "LOCAL"
+      ],
+      "violation_message": "blocked",
+      "remediation_message": null,
+      "is_archived": false,
+      "created_by": null,
+      "updated_by": null,
+      "condition": null,
+      "created_at": null,
+      "updated_at": null,
+      "rule_action": null
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "name": "custom",
+      "description": "description",
+      "compatible_sources": [
+        "LOCAL"
+      ],
+      "violation_message": "blocked",
+      "remediation_message": null,
+      "is_archived": false,
+      "created_by": null,
+      "updated_by": null,
+      "condition": null,
+      "created_at": null,
+      "updated_at": null,
+      "rule_action": null
+    },
+    "status": 200
+  },
+  "PUT /v1/custom-rules/{custom_rule_uuid}": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "name": "custom",
+      "description": "description",
+      "compatible_sources": [
+        "LOCAL"
+      ],
+      "violation_message": "blocked",
+      "remediation_message": null,
+      "is_archived": false,
+      "created_by": null,
+      "updated_by": null,
+      "condition": null,
+      "created_at": null,
+      "updated_at": null,
+      "rule_action": null
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "name": "custom",
+      "description": "description",
+      "compatible_sources": [
+        "LOCAL"
+      ],
+      "violation_message": "blocked",
+      "remediation_message": null,
+      "is_archived": false,
+      "created_by": null,
+      "updated_by": null,
+      "condition": null,
+      "created_at": null,
+      "updated_at": null,
+      "rule_action": null
+    },
+    "status": 200,
+    "request": {
+      "description": "",
+      "remediation_message": null,
+      "condition": {
+        "type": "label",
+        "key": "classification",
+        "operator": "equals",
+        "value": "sensitive"
+      }
+    }
+  },
+  "POST /v1/custom-rules/{custom_rule_uuid}/archive": {
+    "query": "",
+    "response": null,
+    "fields": {},
+    "status": 204
+  },
+  "POST /v1/custom-rules/{custom_rule_uuid}/unarchive": {
+    "query": "",
+    "response": null,
+    "fields": {},
+    "status": 204
+  },
+  "GET /v1/custom-rules/{custom_rule_uuid}/security-groups": {
+    "query": "limit=5&skip=2",
+    "response": {
+      "pagination": {},
+      "security_groups": [
+        {
+          "name": "test",
+          "rule_state": "DISABLED",
+          "source_type": "LOCAL",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ]
+    },
+    "fields": {
+      "pagination": {},
+      "security_groups": [
+        {
+          "name": "test",
+          "rule_state": "DISABLED",
+          "source_type": "LOCAL",
+          "uuid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "POST /v1/custom-rules/{custom_rule_uuid}/security-groups": {
+    "query": "",
+    "response": {
+      "results": [
+        {
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "status": "created"
+        },
+        {
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "status": "error",
+          "error": "missing"
+        }
+      ]
+    },
+    "fields": {
+      "results": [
+        {
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "status": "created"
+        },
+        {
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "status": "error",
+          "error": "missing"
+        }
+      ]
+    },
+    "status": 207,
+    "request": {
+      "assignments": [
+        {
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "state": "DISABLED"
+        },
+        {
+          "security_group_uuid": "11111111-1111-4111-8111-111111111111",
+          "state": "BLOCKING"
+        }
+      ]
+    }
+  },
+  "DELETE /v1/custom-rules/{custom_rule_uuid}/security-groups/{sg_uuid}": {
+    "query": "",
+    "response": null,
+    "fields": {},
+    "status": 204
+  },
+  "GET /v1/custom-rules/versions": {
+    "query": "limit=5&next_token=next",
+    "response": {
+      "versions": [
+        {
+          "generation": 123,
+          "timestamp": "2026-10-01T00:00:00Z"
+        }
+      ],
+      "pagination": {
+        "next_token": "next"
+      }
+    },
+    "fields": {
+      "versions": [
+        {
+          "generation": 123,
+          "timestamp": "2026-10-01T00:00:00Z"
+        }
+      ],
+      "pagination": {
+        "next_token": "next"
+      }
+    },
+    "status": 200
+  },
+  "GET /v1/security-rules/versions": {
+    "query": "limit=5&next_token=next",
+    "response": {
+      "versions": [
+        {
+          "generation": 123,
+          "timestamp": "2026-10-01T00:00:00Z"
+        }
+      ],
+      "pagination": {
+        "next_token": "next"
+      }
+    },
+    "fields": {
+      "versions": [
+        {
+          "generation": 123,
+          "timestamp": "2026-10-01T00:00:00Z"
+        }
+      ],
+      "pagination": {
+        "next_token": "next"
+      }
+    },
+    "status": 200
+  },
+  "GET /v1/security-groups/{security_group_uuid}/rule-instances/versions": {
+    "query": "limit=5&next_token=next",
+    "response": {
+      "versions": [
+        {
+          "generation": 123,
+          "timestamp": "2026-10-01T00:00:00Z"
+        }
+      ],
+      "pagination": {
+        "next_token": "next"
+      }
+    },
+    "fields": {
+      "versions": [
+        {
+          "generation": 123,
+          "timestamp": "2026-10-01T00:00:00Z"
+        }
+      ],
+      "pagination": {
+        "next_token": "next"
+      }
+    },
+    "status": 200
+  },
+  "CreateDetails": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "model_uri": "hf://test/model",
+      "owner": "owner",
+      "scan_origin": "MODEL_SECURITY_SDK",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_group_name": "group",
+      "model_version_uuid": null,
+      "eval_outcome": "ALLOWED",
+      "source_type": "LOCAL",
+      "sdk_version": "1.2"
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "model_uri": "hf://test/model",
+      "owner": "owner",
+      "scan_origin": "MODEL_SECURITY_SDK",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_group_name": "group",
+      "model_version_uuid": null,
+      "eval_outcome": "ALLOWED",
+      "source_type": "LOCAL",
+      "sdk_version": "1.2"
+    },
+    "status": 201,
+    "request": {
+      "model_uri": "hf://test/model",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "model_author": null
+    }
+  },
+  "GetDetails": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "model_uri": "hf://test/model",
+      "owner": "owner",
+      "scan_origin": "MODEL_SECURITY_SDK",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_group_name": "group",
+      "model_version_uuid": null,
+      "eval_outcome": "ALLOWED",
+      "source_type": "LOCAL",
+      "sdk_version": "1.2"
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "model_uri": "hf://test/model",
+      "owner": "owner",
+      "scan_origin": "MODEL_SECURITY_SDK",
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_group_name": "group",
+      "model_version_uuid": null,
+      "eval_outcome": "ALLOWED",
+      "source_type": "LOCAL",
+      "sdk_version": "1.2"
+    },
+    "status": 200
+  },
+  "ListDetails": {
+    "query": "limit=5",
+    "response": {
+      "scans": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": "now",
+          "updated_at": "now",
+          "model_uri": "hf://test/model",
+          "owner": "owner",
+          "scan_origin": "MODEL_SECURITY_SDK",
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "security_group_name": "group",
+          "model_version_uuid": null,
+          "eval_outcome": "ALLOWED",
+          "source_type": "LOCAL",
+          "sdk_version": "1.2"
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      },
+      "count_capped": false
+    },
+    "fields": {
+      "scans": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": "now",
+          "updated_at": "now",
+          "model_uri": "hf://test/model",
+          "owner": "owner",
+          "scan_origin": "MODEL_SECURITY_SDK",
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "security_group_name": "group",
+          "model_version_uuid": null,
+          "eval_outcome": "ALLOWED",
+          "source_type": "LOCAL",
+          "sdk_version": "1.2"
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      },
+      "count_capped": false
+    },
+    "status": 200
+  },
+  "UpdateFields": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "name": "group",
+      "description": "description",
+      "source_type": "LOCAL",
+      "state": "COMPLETE",
+      "is_tombstone": false,
+      "enabled_rule_count": 3
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": "now",
+      "updated_at": "now",
+      "name": "group",
+      "description": "description",
+      "source_type": "LOCAL",
+      "state": "COMPLETE",
+      "is_tombstone": false
+    },
+    "status": 200,
+    "request": {
+      "description": null,
+      "name": ""
+    }
+  },
+  "GetRuleInstanceDetails": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": null,
+      "updated_at": null,
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_rule_uuid": null,
+      "state": "BLOCKING",
+      "created_by": "creator",
+      "updated_by": "editor",
+      "custom_rule_uuid": null,
+      "custom_rule": null,
+      "rule": null,
+      "field_values": {}
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": null,
+      "updated_at": null,
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_rule_uuid": null,
+      "state": "BLOCKING",
+      "created_by": "creator",
+      "updated_by": "editor",
+      "custom_rule_uuid": null,
+      "custom_rule": null,
+      "rule": null,
+      "field_values": {}
+    },
+    "status": 200
+  },
+  "ListRuleInstanceDetails": {
+    "query": "limit=5&generation=0",
+    "response": {
+      "rule_instances": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": null,
+          "updated_at": null,
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "security_rule_uuid": null,
+          "state": "BLOCKING",
+          "created_by": "creator",
+          "updated_by": "editor",
+          "custom_rule_uuid": null,
+          "custom_rule": null,
+          "rule": null,
+          "field_values": {}
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "fields": {
+      "rule_instances": [
+        {
+          "uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "tsg_id": "tenant",
+          "created_at": null,
+          "updated_at": null,
+          "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+          "security_rule_uuid": null,
+          "state": "BLOCKING",
+          "created_by": "creator",
+          "updated_by": "editor",
+          "custom_rule_uuid": null,
+          "custom_rule": null,
+          "rule": null,
+          "field_values": {}
+        }
+      ],
+      "pagination": {
+        "total_items": 1
+      }
+    },
+    "status": 200
+  },
+  "UpdateRuleInstanceFields": {
+    "query": "",
+    "response": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": null,
+      "updated_at": null,
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_rule_uuid": null,
+      "state": "BLOCKING",
+      "created_by": "creator",
+      "updated_by": "editor",
+      "custom_rule_uuid": null,
+      "custom_rule": null,
+      "rule": null,
+      "field_values": {}
+    },
+    "fields": {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "tsg_id": "tenant",
+      "created_at": null,
+      "updated_at": null,
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "security_rule_uuid": null,
+      "state": "BLOCKING",
+      "created_by": "creator",
+      "updated_by": "editor",
+      "custom_rule_uuid": null,
+      "custom_rule": null,
+      "rule": null,
+      "field_values": {}
+    },
+    "status": 200,
+    "request": {
+      "security_group_uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "state": null,
+      "field_values": {}
+    }
+  }
+}

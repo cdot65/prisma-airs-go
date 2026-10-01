@@ -31,6 +31,9 @@ Thumbs.db
 # MkDocs build output
 site/
 
+# Python development tools
+__pycache__/
+
 # Review documents
 REVIEW-*.md
 

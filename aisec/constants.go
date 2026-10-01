@@ -199,3 +199,10 @@ const (
 	// Instances/Licensing (management plane).
 	RedTeamInstancesPath = "/v1/instances"
 )
+
+// Current Model Security inventory and custom-rule collections.
+const (
+	ModelSecModelsPath        = "/v1/models"
+	ModelSecModelVersionsPath = "/v1/model-versions"
+	ModelSecCustomRulesPath   = "/v1/custom-rules"
+)

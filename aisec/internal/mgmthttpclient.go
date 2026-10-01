@@ -18,6 +18,8 @@ type MgmtRequestOptions struct {
 	Path   string
 	Body   any
 	Params map[string]string
+	// Query preserves repeated query parameters and overrides Params keys.
+	Query url.Values
 	// ResponsePolicy defaults to RequireJSON. Exceptions belong at the endpoint.
 	ResponsePolicy ResponsePolicy
 }
@@ -28,6 +30,7 @@ type RawMgmtRequestOptions struct {
 	Method string
 	Path   string
 	Params map[string]string
+	Query  url.Values
 	// Body is sent verbatim. When nil, no body is sent.
 	Body []byte
 	// ContentType defaults to application/json.
@@ -71,6 +74,16 @@ func DoMgmtRaw(ctx context.Context, svcCfg *OAuthServiceConfig, opts RawMgmtRequ
 	u, err := buildURL(svcCfg.BaseURL, opts.Path, opts.Params)
 	if err != nil {
 		return nil, err
+	}
+	if opts.Query != nil {
+		q := u.Query()
+		for key, values := range opts.Query {
+			q.Del(key)
+			for _, value := range values {
+				q.Add(key, value)
+			}
+		}
+		u.RawQuery = q.Encode()
 	}
 	contentType := opts.ContentType
 	if contentType == "" {
@@ -131,6 +144,7 @@ func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts 
 		Method: opts.Method,
 		Path:   opts.Path,
 		Params: opts.Params,
+		Query:  opts.Query,
 		Body:   bodyBytes,
 	})
 	if err != nil {
