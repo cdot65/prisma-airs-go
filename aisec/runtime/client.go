@@ -96,13 +96,7 @@ func (c *ProfilesClient) Create(ctx context.Context, req CreateProfileRequest) (
 }
 
 func (c *ProfilesClient) List(ctx context.Context, opts ListOpts) (*SecurityProfileListResponse, error) {
-	resp, err := internal.DoMgmtRequest[SecurityProfileListResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.MgmtProfilesTsgPath + "/" + c.tsgID, Params: buildListParams(opts),
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
+	return c.ListWithOptions(ctx, ProfileListOpts{ListOpts: opts})
 }
 
 func (c *ProfilesClient) Update(ctx context.Context, profileID string, req UpdateProfileRequest) (*SecurityProfile, error) {
@@ -510,14 +504,7 @@ type OAuthManagementClient struct {
 }
 
 func (c *OAuthManagementClient) GetToken(ctx context.Context, req OAuthTokenRequest) (*OAuthToken, error) {
-	resp, err := internal.DoMgmtRequest[OAuthToken](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.MgmtOAuthTokenPath,
-		Body: req,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
+	return c.GetTokenWithTTL(ctx, req, TokenTTLOpts{})
 }
 
 func (c *OAuthManagementClient) InvalidateToken(ctx context.Context) (*InvalidateTokenResponse, error) {
