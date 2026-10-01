@@ -118,3 +118,15 @@ func TestConstants_Version(t *testing.T) {
 		t.Errorf("UserAgent = %q, want %q", UserAgent, want)
 	}
 }
+
+func TestConstants_ModelInventoryAndCustomRules(t *testing.T) {
+	for _, tc := range []struct{ name, got, want string }{
+		{"ModelSecModelsPath", ModelSecModelsPath, "/v1/models"},
+		{"ModelSecModelVersionsPath", ModelSecModelVersionsPath, "/v1/model-versions"},
+		{"ModelSecCustomRulesPath", ModelSecCustomRulesPath, "/v1/custom-rules"},
+	} {
+		if tc.got != tc.want {
+			t.Errorf("%s=%q;want %q", tc.name, tc.got, tc.want)
+		}
+	}
+}
