@@ -7,6 +7,9 @@ type CustomPromptSetCreateRequest struct {
 	Name          string   `json:"name"`
 	Description   string   `json:"description,omitempty"`
 	PropertyNames []string `json:"property_names,omitempty"`
+	// Properties preserves pre-v0.5 consumer source and wire compatibility.
+	// Deprecated: use PropertyNames or current schema methods; upstream support for this legacy map is not guaranteed.
+	Properties map[string]any `json:"properties,omitempty"`
 }
 
 // CustomPromptSetUpdateRequest is the request to update a prompt set.
@@ -14,6 +17,9 @@ type CustomPromptSetUpdateRequest struct {
 	Name          string   `json:"name,omitempty"`
 	Description   string   `json:"description,omitempty"`
 	PropertyNames []string `json:"property_names,omitempty"`
+	// Properties preserves pre-v0.5 consumer source and wire compatibility.
+	// Deprecated: use PropertyNames or current schema methods; upstream support for this legacy map is not guaranteed.
+	Properties map[string]any `json:"properties,omitempty"`
 }
 
 // CustomPromptSetArchiveRequest is the request to archive a prompt set.

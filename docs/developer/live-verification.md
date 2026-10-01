@@ -124,3 +124,13 @@ All 88 source operations and ten explicit service/user route variants have HTTP
 contracts. User-key creation requires a caller-owned user fixture; connectivity
 execution, traffic-derived usage resets and production capability/access changes
 remain mock-verified. Disposable CRUD does not prove every helper executed live.
+
+### Existing Terraform consumer compatibility
+
+The existing provider pinned v0.4.1 and still constructed the legacy prompt-set
+`Properties` map. An earlier SDK revision had removed that field. It is restored
+alongside `PropertyNames`, preserving its prior wire representation; the newer
+contract does not guarantee service support for legacy `properties` metadata.
+This change avoids a consumer compile break without inventing a conversion.
+Provider verification uses an external temporary modfile with a local SDK
+replacement and `TF_ACC=0`, leaving its tracked dependency configuration intact.
