@@ -78,6 +78,7 @@ nav:
       - OAuth Lifecycle: services/oauth-lifecycle.md
       - Model Security API: services/model-security-api.md
       - Red Team API: services/red-team-api.md
+      - AI Gateway Management: services/ai-gateway-api.md
   - Examples:
       - Runtime Scanning: examples/runtime-scanning.md
       - Security Profile CRUD: examples/profile-crud.md

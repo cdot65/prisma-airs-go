@@ -11,5 +11,6 @@ Scores are review judgement, not production guarantees; consult
 | Runtime current spec alignment | 9.5/10 | 9.4/10 | Review of `44f6a90...7f803a9`; 21-operation payload/query/error matrix; live disposable CRUD/rotation |
 | Model Security inventory/custom rules/history | 9.5/10 | 9.4/10 | Review of `7f803a9...83aa6ed`; 41-operation contracts plus seven precise alternatives; live inventory/lifecycle/assignment/cleanup |
 | Red Team adapters and Network Broker | 9.5/10 | 9.4/10 | Review of `83aa6ed...02d02b2`; 12-operation contracts; live disposable draft CRUD/cleanup and broker reads |
+| Red Team current reports, metadata and complete models | 9.2/10 | 9.3/10 | Review of `02d02b2...6f493c8`; all94-operation public contracts; strict live reads/disposable CRUD; upstream metadata422 documented |
 
 Each integration feature group must reach at least 9/10 on both review axes.

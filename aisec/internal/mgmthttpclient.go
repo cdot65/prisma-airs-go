@@ -110,6 +110,11 @@ func DoMgmtRaw(ctx context.Context, svcCfg *OAuthServiceConfig, opts RawMgmtRequ
 				return nil, err
 			}
 
+			for key, values := range svcCfg.Headers {
+				for _, value := range values {
+					req.Header.Add(key, value)
+				}
+			}
 			req.Header.Set("Content-Type", contentType)
 			req.Header.Set("User-Agent", aisec.UserAgent)
 			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)

@@ -222,3 +222,24 @@ const (
 	RedTeamReportV2Path              = "/v2/report"
 	RedTeamTargetProfileErrorLogPath = "/v1/error-log/target-profile"
 )
+
+// AI Gateway management clients share SCM OAuth and route explicit CRUD planes.
+const (
+	DefaultGatewayDataEndpoint  = "https://api.apps.paloaltonetworks.com/ai_gw/v2"
+	DefaultGatewayAdminEndpoint = "https://api.apps.paloaltonetworks.com/ai_gw/admin/v2"
+	EnvGatewayDataEndpoint      = "PANW_AI_GW_DATA_ENDPOINT"
+	EnvGatewayAdminEndpoint     = "PANW_AI_GW_ADMIN_ENDPOINT"
+	HeaderTsgID                 = "x-tsg-id"
+	GatewayGuardrailsPath       = "/guardrails"
+	GatewayOrgGuardrailsPath    = "/guardrails"
+	GatewayConfigsPath          = "/configs"
+	GatewayIntegrationsPath     = "/integrations"
+	GatewayProvidersPath        = "/providers"
+	GatewayMCPIntegrationsPath  = "/mcp-integrations"
+	GatewayMCPServersPath       = "/mcp-servers"
+	GatewayAPIKeysPath          = "/api-keys"
+	GatewayUsageLimitsPath      = "/policies/usage-limits"
+	GatewayRateLimitsPath       = "/policies/rate-limits"
+	GatewaySecretReferencesPath = "/secret-references"
+	GatewayDeploymentsPath      = "/deployments"
+)

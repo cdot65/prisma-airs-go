@@ -14,7 +14,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 DOMAINS = {"modelsecurity": ["model-data", "model-mgmt"],
-           "redteam": ["redteam-data", "redteam-mgmt", "redteam-broker"]}
+           "redteam": ["redteam-data", "redteam-mgmt", "redteam-broker"], "gateway": ["gateway"]}
 INLINE_RESPONSES = {"redteam-broker": [("ChannelListResponse", "/v1/channels", "get", "200")]}
 INITIALISMS = {x: x.upper() for x in ["id", "uuid", "api", "url", "uri", "http", "https", "json", "csv", "tsg", "sdk", "asr", "mcp", "sha256", "pypi", "aws", "gcp", "ms", "llm", "dp", "ip", "kb"]}
 
@@ -31,6 +31,7 @@ def name(value):
 
 class Generator:
     def __init__(self, labels):
+        self.extensible = "gateway" in labels
         self.schemas = {}
         self.names = {}
         for label in labels:
@@ -38,6 +39,52 @@ class Generator:
             components = dict(document["components"]["schemas"])
             for key, path, method, status in INLINE_RESPONSES.get(label, []):
                 components[key] = document["paths"][path][method]["responses"][status]["content"]["application/json"]["schema"]
+            if label=="gateway":
+                from gateway_scope import operations
+                scope=operations(document)
+                # Operation inline types are rooted only in the agreed CRUD surface.
+                roots=[]
+                for op in scope:
+                    source=document["paths"][op["path"]][op["verb"].lower()]
+                    for suffix,shape in [("Request",op["request"]),("Response",op["reply"])]:
+                        if shape is not None:
+                            if "$ref" in shape:roots.append(shape)
+                            else:
+                                key=op["key"]+suffix
+                                components[key]=shape;roots.append({"$ref":"#/components/schemas/"+key})
+                    if op["query"]:
+                        key=op["key"]+"Options"
+                        components[key]={"type":"object","properties":{q["name"]:q["schema"] for q in op["query"]},"required":[q["name"]for q in op["query"]if q.get("required")]};roots.append({"$ref":"#/components/schemas/"+key})
+                wanted=set()
+                def visit(value):
+                    if isinstance(value,dict):
+                        if "$ref" in value and "/schemas/" in value["$ref"]:
+                            key=value["$ref"].rsplit("/",1)[-1]
+                            if key not in wanted:wanted.add(key);visit(components[key])
+                        for v in value.values():visit(v)
+                    elif isinstance(value,list):
+                        for v in value:visit(v)
+                visit(roots);components={k:v for k,v in components.items()if k in wanted}
+                def flexible(value):
+                    if isinstance(value,dict):
+                        for key,prop in value.get("properties",{}).items():
+                            if key in ["config","configurations"]:
+                                value["properties"][key]={"x-sdk-json-document":True,"nullable":prop.get("nullable",False)}
+                        for v in value.values():flexible(v)
+                    elif isinstance(value,list):
+                        for v in value:flexible(v)
+                flexible(components)
+                # SCM returns flat config receipts/details; upstream also allows an envelope.
+                # Recorded SCM write fields absent from the generic source schema.
+                components["CreateIntegrationRequest"]["properties"]["organisation_id"]={"type":"string"}
+                components["CreateApiKeyObject"]["properties"]["type"]={"type":"string"}
+                common={key:{"type":"string"}for key in ["id","name","slug","organisation_id","workspace_id","status","owner_id","updated_by","created_at","last_updated_at","object","format","type","version_id"]}
+                components["ConfigsGetResponse"]["properties"].update(common)
+                components["ConfigsGetResponse"]["properties"]["config"]={"x-sdk-json-document":True}
+                components["ConfigsCreateResponse"]["properties"].update({key:{"type":"string"}for key in ["id","slug","version_id","object"]})
+                components["ConfigsUpdateResponse"]["properties"].update({key:{"type":"string"}for key in ["id","slug","version_id","object"]})
+                for key in ["ConfigsListResponse"]:
+                    components[key]["properties"].update({"object":{"type":"string"},"total":{"type":"integer"},"has_more":{"type":"boolean"}})
             for key, schema in components.items():
                 if key in self.schemas and self.schemas[key] != schema:
                     raise ValueError("Conflicting component: " + key)
@@ -107,6 +154,7 @@ class Generator:
 
     def type(self, schema, hint):
         schema, nullable = self.nullable(schema)
+        if schema.get("x-sdk-json-document"):return "JSONDocument",nullable
         if "$ref" in schema:
             return self.names[schema["$ref"].rsplit("/", 1)[-1]], nullable
         if len(schema.get("allOf", [])) == 1 and not schema.get("properties") and "$ref" in schema["allOf"][0]:
@@ -117,7 +165,8 @@ class Generator:
         kind = schema.get("type")
         if kind == "array":
             if "items" not in schema:
-                raise ValueError("Array without items: " + hint)
+                if not self.extensible:raise ValueError("Array without items: " + hint)
+                schema={**schema,"items":{}}
             item, item_nullable = self.type(schema["items"], hint + "Item")
             return "[]" + ("*" if item_nullable else "") + item, nullable
         if kind == "object" or "additionalProperties" in schema:
@@ -195,8 +244,15 @@ class Generator:
                 elif null: typ="*"+typ
                 if value.get("description"): fields.append(self.comment(value["description"]))
                 fields.append(field+" "+typ+" `json:"+json.dumps(tag)+"`")
+            if self.extensible:
+                self.imports.add("encoding/json")
+                fields.append('AdditionalFields map[string]json.RawMessage `json:"-"`')
             lines=[description,"type "+typename+" struct {","\n".join(fields),"}"]
-            if optional:
+            if self.extensible:
+                known="[]string{"+",".join(json.dumps(k)for k in schema["properties"])+"}"
+                lines.append(f"func (x {typename}) MarshalJSON()([]byte,error){{type alias {typename};return marshalFields(alias(x),x.AdditionalFields,{known})}}")
+                lines.append(f"func (x *{typename}) UnmarshalJSON(data []byte)error{{type alias {typename};var candidate alias;extra,err:=unmarshalFields(data,&candidate,{known});if err!=nil{{return err}};candidate.AdditionalFields=extra;*x={typename}(candidate);return nil}}")
+            elif optional:
                 self.imports.add("github.com/cdot65/prisma-airs-go/aisec/internal")
                 lines.append(f"func (x {typename}) MarshalJSON() ([]byte,error) {{ type alias {typename};return internal.MarshalOptionalFields(alias(x)) }}")
             return "\n".join(lines)

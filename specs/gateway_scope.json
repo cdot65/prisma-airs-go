@@ -1,0 +1,1103 @@
+[
+  {
+    "client": "Guardrails",
+    "plane": "data",
+    "name": "Create",
+    "path": "/guardrails",
+    "wirepath": "/guardrails",
+    "verb": "POST",
+    "stem": "/guardrails",
+    "ids": [],
+    "key": "GuardrailsCreate"
+  },
+  {
+    "client": "Guardrails",
+    "plane": "data",
+    "name": "List",
+    "path": "/guardrails",
+    "wirepath": "/guardrails",
+    "verb": "GET",
+    "stem": "/guardrails",
+    "ids": [],
+    "key": "GuardrailsList"
+  },
+  {
+    "client": "Guardrails",
+    "plane": "data",
+    "name": "Get",
+    "path": "/guardrails/{guardrailId}",
+    "wirepath": "/guardrails/{guardrailId}",
+    "verb": "GET",
+    "stem": "/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "GuardrailsGet"
+  },
+  {
+    "client": "Guardrails",
+    "plane": "data",
+    "name": "Update",
+    "path": "/guardrails/{guardrailId}",
+    "wirepath": "/guardrails/{guardrailId}",
+    "verb": "PUT",
+    "stem": "/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "GuardrailsUpdate"
+  },
+  {
+    "client": "Guardrails",
+    "plane": "data",
+    "name": "Delete",
+    "path": "/guardrails/{guardrailId}",
+    "wirepath": "/guardrails/{guardrailId}",
+    "verb": "DELETE",
+    "stem": "/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "GuardrailsDelete"
+  },
+  {
+    "client": "Guardrails",
+    "plane": "data",
+    "name": "SetMCPServers",
+    "path": "/guardrails/{guardrailId}/mcp-servers",
+    "wirepath": "/guardrails/{guardrailId}/mcp-servers",
+    "verb": "PUT",
+    "stem": "/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "GuardrailsSetMCPServers"
+  },
+  {
+    "client": "Guardrails",
+    "plane": "data",
+    "name": "ListMCPServers",
+    "path": "/guardrails/{guardrailId}/mcp-servers",
+    "wirepath": "/guardrails/{guardrailId}/mcp-servers",
+    "verb": "GET",
+    "stem": "/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "GuardrailsListMCPServers"
+  },
+  {
+    "client": "Guardrails",
+    "plane": "data",
+    "name": "UpsertMCPServer",
+    "path": "/guardrails/{guardrailId}/mcp-servers/{mcpServerId}",
+    "wirepath": "/guardrails/{guardrailId}/mcp-servers/{mcpServerId}",
+    "verb": "PUT",
+    "stem": "/guardrails",
+    "ids": [
+      "guardrailId",
+      "mcpServerId"
+    ],
+    "key": "GuardrailsUpsertMCPServer"
+  },
+  {
+    "client": "OrgGuardrails",
+    "plane": "admin",
+    "name": "Create",
+    "path": "/admin/v2/guardrails",
+    "wirepath": "/guardrails",
+    "verb": "POST",
+    "stem": "/admin/v2/guardrails",
+    "ids": [],
+    "key": "OrgGuardrailsCreate"
+  },
+  {
+    "client": "OrgGuardrails",
+    "plane": "admin",
+    "name": "List",
+    "path": "/admin/v2/guardrails",
+    "wirepath": "/guardrails",
+    "verb": "GET",
+    "stem": "/admin/v2/guardrails",
+    "ids": [],
+    "key": "OrgGuardrailsList"
+  },
+  {
+    "client": "OrgGuardrails",
+    "plane": "admin",
+    "name": "Get",
+    "path": "/admin/v2/guardrails/{guardrailId}",
+    "wirepath": "/guardrails/{guardrailId}",
+    "verb": "GET",
+    "stem": "/admin/v2/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "OrgGuardrailsGet"
+  },
+  {
+    "client": "OrgGuardrails",
+    "plane": "admin",
+    "name": "Update",
+    "path": "/admin/v2/guardrails/{guardrailId}",
+    "wirepath": "/guardrails/{guardrailId}",
+    "verb": "PUT",
+    "stem": "/admin/v2/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "OrgGuardrailsUpdate"
+  },
+  {
+    "client": "OrgGuardrails",
+    "plane": "admin",
+    "name": "Delete",
+    "path": "/admin/v2/guardrails/{guardrailId}",
+    "wirepath": "/guardrails/{guardrailId}",
+    "verb": "DELETE",
+    "stem": "/admin/v2/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "OrgGuardrailsDelete"
+  },
+  {
+    "client": "OrgGuardrails",
+    "plane": "admin",
+    "name": "SetMCPServers",
+    "path": "/admin/v2/guardrails/{guardrailId}/mcp-servers",
+    "wirepath": "/guardrails/{guardrailId}/mcp-servers",
+    "verb": "PUT",
+    "stem": "/admin/v2/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "OrgGuardrailsSetMCPServers"
+  },
+  {
+    "client": "OrgGuardrails",
+    "plane": "admin",
+    "name": "ListMCPServers",
+    "path": "/admin/v2/guardrails/{guardrailId}/mcp-servers",
+    "wirepath": "/guardrails/{guardrailId}/mcp-servers",
+    "verb": "GET",
+    "stem": "/admin/v2/guardrails",
+    "ids": [
+      "guardrailId"
+    ],
+    "key": "OrgGuardrailsListMCPServers"
+  },
+  {
+    "client": "OrgGuardrails",
+    "plane": "admin",
+    "name": "UpsertMCPServer",
+    "path": "/admin/v2/guardrails/{guardrailId}/mcp-servers/{mcpServerId}",
+    "wirepath": "/guardrails/{guardrailId}/mcp-servers/{mcpServerId}",
+    "verb": "PUT",
+    "stem": "/admin/v2/guardrails",
+    "ids": [
+      "guardrailId",
+      "mcpServerId"
+    ],
+    "key": "OrgGuardrailsUpsertMCPServer"
+  },
+  {
+    "client": "Configs",
+    "plane": "data",
+    "name": "List",
+    "path": "/configs",
+    "wirepath": "/configs",
+    "verb": "GET",
+    "stem": "/configs",
+    "ids": [],
+    "key": "ConfigsList"
+  },
+  {
+    "client": "Configs",
+    "plane": "data",
+    "name": "Create",
+    "path": "/configs",
+    "wirepath": "/configs",
+    "verb": "POST",
+    "stem": "/configs",
+    "ids": [],
+    "key": "ConfigsCreate"
+  },
+  {
+    "client": "Configs",
+    "plane": "data",
+    "name": "Delete",
+    "path": "/configs/{slug}",
+    "wirepath": "/configs/{slug}",
+    "verb": "DELETE",
+    "stem": "/configs",
+    "ids": [
+      "slug"
+    ],
+    "key": "ConfigsDelete"
+  },
+  {
+    "client": "Configs",
+    "plane": "data",
+    "name": "Get",
+    "path": "/configs/{slug}",
+    "wirepath": "/configs/{slug}",
+    "verb": "GET",
+    "stem": "/configs",
+    "ids": [
+      "slug"
+    ],
+    "key": "ConfigsGet"
+  },
+  {
+    "client": "Configs",
+    "plane": "data",
+    "name": "Update",
+    "path": "/configs/{slug}",
+    "wirepath": "/configs/{slug}",
+    "verb": "PUT",
+    "stem": "/configs",
+    "ids": [
+      "slug"
+    ],
+    "key": "ConfigsUpdate"
+  },
+  {
+    "client": "Configs",
+    "plane": "data",
+    "name": "ListVersions",
+    "path": "/configs/{slug}/versions",
+    "wirepath": "/configs/{slug}/versions",
+    "verb": "GET",
+    "stem": "/configs",
+    "ids": [
+      "slug"
+    ],
+    "key": "ConfigsListVersions"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "List",
+    "path": "/integrations",
+    "wirepath": "/integrations",
+    "verb": "GET",
+    "stem": "/integrations",
+    "ids": [],
+    "key": "IntegrationsList"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "Create",
+    "path": "/integrations",
+    "wirepath": "/integrations",
+    "verb": "POST",
+    "stem": "/integrations",
+    "ids": [],
+    "key": "IntegrationsCreate"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "Get",
+    "path": "/integrations/{slug}",
+    "wirepath": "/integrations/{slug}",
+    "verb": "GET",
+    "stem": "/integrations",
+    "ids": [
+      "slug"
+    ],
+    "key": "IntegrationsGet"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "Update",
+    "path": "/integrations/{slug}",
+    "wirepath": "/integrations/{slug}",
+    "verb": "PUT",
+    "stem": "/integrations",
+    "ids": [
+      "slug"
+    ],
+    "key": "IntegrationsUpdate"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "Delete",
+    "path": "/integrations/{slug}",
+    "wirepath": "/integrations/{slug}",
+    "verb": "DELETE",
+    "stem": "/integrations",
+    "ids": [
+      "slug"
+    ],
+    "key": "IntegrationsDelete"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "ListModels",
+    "path": "/integrations/{slug}/models",
+    "wirepath": "/integrations/{slug}/models",
+    "verb": "GET",
+    "stem": "/integrations",
+    "ids": [
+      "slug"
+    ],
+    "key": "IntegrationsListModels"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "SetModels",
+    "path": "/integrations/{slug}/models",
+    "wirepath": "/integrations/{slug}/models",
+    "verb": "PUT",
+    "stem": "/integrations",
+    "ids": [
+      "slug"
+    ],
+    "key": "IntegrationsSetModels"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "DeleteModels",
+    "path": "/integrations/{slug}/models",
+    "wirepath": "/integrations/{slug}/models",
+    "verb": "DELETE",
+    "stem": "/integrations",
+    "ids": [
+      "slug"
+    ],
+    "key": "IntegrationsDeleteModels"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "ListWorkspaces",
+    "path": "/integrations/{slug}/workspaces",
+    "wirepath": "/integrations/{slug}/workspaces",
+    "verb": "GET",
+    "stem": "/integrations",
+    "ids": [
+      "slug"
+    ],
+    "key": "IntegrationsListWorkspaces"
+  },
+  {
+    "client": "Integrations",
+    "plane": "admin",
+    "name": "SetWorkspaces",
+    "path": "/integrations/{slug}/workspaces",
+    "wirepath": "/integrations/{slug}/workspaces",
+    "verb": "PUT",
+    "stem": "/integrations",
+    "ids": [
+      "slug"
+    ],
+    "key": "IntegrationsSetWorkspaces"
+  },
+  {
+    "client": "Providers",
+    "plane": "data",
+    "name": "List",
+    "path": "/providers",
+    "wirepath": "/providers",
+    "verb": "GET",
+    "stem": "/providers",
+    "ids": [],
+    "key": "ProvidersList"
+  },
+  {
+    "client": "Providers",
+    "plane": "data",
+    "name": "Create",
+    "path": "/providers",
+    "wirepath": "/providers",
+    "verb": "POST",
+    "stem": "/providers",
+    "ids": [],
+    "key": "ProvidersCreate"
+  },
+  {
+    "client": "Providers",
+    "plane": "data",
+    "name": "Get",
+    "path": "/providers/{slug}",
+    "wirepath": "/providers/{slug}",
+    "verb": "GET",
+    "stem": "/providers",
+    "ids": [
+      "slug"
+    ],
+    "key": "ProvidersGet"
+  },
+  {
+    "client": "Providers",
+    "plane": "data",
+    "name": "Update",
+    "path": "/providers/{slug}",
+    "wirepath": "/providers/{slug}",
+    "verb": "PUT",
+    "stem": "/providers",
+    "ids": [
+      "slug"
+    ],
+    "key": "ProvidersUpdate"
+  },
+  {
+    "client": "Providers",
+    "plane": "data",
+    "name": "Delete",
+    "path": "/providers/{slug}",
+    "wirepath": "/providers/{slug}",
+    "verb": "DELETE",
+    "stem": "/providers",
+    "ids": [
+      "slug"
+    ],
+    "key": "ProvidersDelete"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "Create",
+    "path": "/mcp-integrations",
+    "wirepath": "/mcp-integrations",
+    "verb": "POST",
+    "stem": "/mcp-integrations",
+    "ids": [],
+    "key": "MCPIntegrationsCreate"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "List",
+    "path": "/mcp-integrations",
+    "wirepath": "/mcp-integrations",
+    "verb": "GET",
+    "stem": "/mcp-integrations",
+    "ids": [],
+    "key": "MCPIntegrationsList"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "Get",
+    "path": "/mcp-integrations/{mcpIntegrationId}",
+    "wirepath": "/mcp-integrations/{mcpIntegrationId}",
+    "verb": "GET",
+    "stem": "/mcp-integrations",
+    "ids": [
+      "mcpIntegrationId"
+    ],
+    "key": "MCPIntegrationsGet"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "Update",
+    "path": "/mcp-integrations/{mcpIntegrationId}",
+    "wirepath": "/mcp-integrations/{mcpIntegrationId}",
+    "verb": "PUT",
+    "stem": "/mcp-integrations",
+    "ids": [
+      "mcpIntegrationId"
+    ],
+    "key": "MCPIntegrationsUpdate"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "Delete",
+    "path": "/mcp-integrations/{mcpIntegrationId}",
+    "wirepath": "/mcp-integrations/{mcpIntegrationId}",
+    "verb": "DELETE",
+    "stem": "/mcp-integrations",
+    "ids": [
+      "mcpIntegrationId"
+    ],
+    "key": "MCPIntegrationsDelete"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "ListWorkspaces",
+    "path": "/mcp-integrations/{mcpIntegrationId}/workspaces",
+    "wirepath": "/mcp-integrations/{mcpIntegrationId}/workspaces",
+    "verb": "GET",
+    "stem": "/mcp-integrations",
+    "ids": [
+      "mcpIntegrationId"
+    ],
+    "key": "MCPIntegrationsListWorkspaces"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "SetWorkspaces",
+    "path": "/mcp-integrations/{mcpIntegrationId}/workspaces",
+    "wirepath": "/mcp-integrations/{mcpIntegrationId}/workspaces",
+    "verb": "PUT",
+    "stem": "/mcp-integrations",
+    "ids": [
+      "mcpIntegrationId"
+    ],
+    "key": "MCPIntegrationsSetWorkspaces"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "ListCapabilities",
+    "path": "/mcp-integrations/{mcpIntegrationId}/capabilities",
+    "wirepath": "/mcp-integrations/{mcpIntegrationId}/capabilities",
+    "verb": "GET",
+    "stem": "/mcp-integrations",
+    "ids": [
+      "mcpIntegrationId"
+    ],
+    "key": "MCPIntegrationsListCapabilities"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "SetCapabilities",
+    "path": "/mcp-integrations/{mcpIntegrationId}/capabilities",
+    "wirepath": "/mcp-integrations/{mcpIntegrationId}/capabilities",
+    "verb": "PUT",
+    "stem": "/mcp-integrations",
+    "ids": [
+      "mcpIntegrationId"
+    ],
+    "key": "MCPIntegrationsSetCapabilities"
+  },
+  {
+    "client": "MCPIntegrations",
+    "plane": "admin",
+    "name": "GetMetadata",
+    "path": "/mcp-integrations/{mcpIntegrationId}/metadata",
+    "wirepath": "/mcp-integrations/{mcpIntegrationId}/metadata",
+    "verb": "GET",
+    "stem": "/mcp-integrations",
+    "ids": [
+      "mcpIntegrationId"
+    ],
+    "key": "MCPIntegrationsGetMetadata"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "Create",
+    "path": "/mcp-servers",
+    "wirepath": "/mcp-servers",
+    "verb": "POST",
+    "stem": "/mcp-servers",
+    "ids": [],
+    "key": "MCPServersCreate"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "List",
+    "path": "/mcp-servers",
+    "wirepath": "/mcp-servers",
+    "verb": "GET",
+    "stem": "/mcp-servers",
+    "ids": [],
+    "key": "MCPServersList"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "Get",
+    "path": "/mcp-servers/{mcpServerId}",
+    "wirepath": "/mcp-servers/{mcpServerId}",
+    "verb": "GET",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersGet"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "Update",
+    "path": "/mcp-servers/{mcpServerId}",
+    "wirepath": "/mcp-servers/{mcpServerId}",
+    "verb": "PUT",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersUpdate"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "Delete",
+    "path": "/mcp-servers/{mcpServerId}",
+    "wirepath": "/mcp-servers/{mcpServerId}",
+    "verb": "DELETE",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersDelete"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "Test",
+    "path": "/mcp-servers/{mcpServerId}/test",
+    "wirepath": "/mcp-servers/{mcpServerId}/test",
+    "verb": "POST",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersTest"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "ListCapabilities",
+    "path": "/mcp-servers/{mcpServerId}/capabilities",
+    "wirepath": "/mcp-servers/{mcpServerId}/capabilities",
+    "verb": "GET",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersListCapabilities"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "SetCapabilities",
+    "path": "/mcp-servers/{mcpServerId}/capabilities",
+    "wirepath": "/mcp-servers/{mcpServerId}/capabilities",
+    "verb": "PUT",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersSetCapabilities"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "ListUserAccess",
+    "path": "/mcp-servers/{mcpServerId}/user-access",
+    "wirepath": "/mcp-servers/{mcpServerId}/user-access",
+    "verb": "GET",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersListUserAccess"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "SetUserAccess",
+    "path": "/mcp-servers/{mcpServerId}/user-access",
+    "wirepath": "/mcp-servers/{mcpServerId}/user-access",
+    "verb": "PUT",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersSetUserAccess"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "ListConnections",
+    "path": "/mcp-servers/{mcpServerId}/connections",
+    "wirepath": "/mcp-servers/{mcpServerId}/connections",
+    "verb": "GET",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersListConnections"
+  },
+  {
+    "client": "MCPServers",
+    "plane": "data",
+    "name": "DeleteConnections",
+    "path": "/mcp-servers/{mcpServerId}/connections",
+    "wirepath": "/mcp-servers/{mcpServerId}/connections",
+    "verb": "DELETE",
+    "stem": "/mcp-servers",
+    "ids": [
+      "mcpServerId"
+    ],
+    "key": "MCPServersDeleteConnections"
+  },
+  {
+    "client": "APIKeys",
+    "plane": "data",
+    "name": "Create",
+    "path": "/api-keys/{sub-type}",
+    "wirepath": "/api-keys/{sub-type}",
+    "verb": "POST",
+    "stem": "/api-keys",
+    "ids": [
+      "sub-type"
+    ],
+    "key": "APIKeysCreate"
+  },
+  {
+    "client": "APIKeys",
+    "plane": "data",
+    "name": "List",
+    "path": "/api-keys",
+    "wirepath": "/api-keys",
+    "verb": "GET",
+    "stem": "/api-keys",
+    "ids": [],
+    "key": "APIKeysList"
+  },
+  {
+    "client": "APIKeys",
+    "plane": "data",
+    "name": "Update",
+    "path": "/api-keys/{id}",
+    "wirepath": "/api-keys/{id}",
+    "verb": "PUT",
+    "stem": "/api-keys",
+    "ids": [
+      "id"
+    ],
+    "key": "APIKeysUpdate"
+  },
+  {
+    "client": "APIKeys",
+    "plane": "data",
+    "name": "Get",
+    "path": "/api-keys/{id}",
+    "wirepath": "/api-keys/{id}",
+    "verb": "GET",
+    "stem": "/api-keys",
+    "ids": [
+      "id"
+    ],
+    "key": "APIKeysGet"
+  },
+  {
+    "client": "APIKeys",
+    "plane": "data",
+    "name": "Delete",
+    "path": "/api-keys/{id}",
+    "wirepath": "/api-keys/{id}",
+    "verb": "DELETE",
+    "stem": "/api-keys",
+    "ids": [
+      "id"
+    ],
+    "key": "APIKeysDelete"
+  },
+  {
+    "client": "APIKeys",
+    "plane": "data",
+    "name": "Rotate",
+    "path": "/api-keys/{id}/rotate",
+    "wirepath": "/api-keys/{id}/rotate",
+    "verb": "POST",
+    "stem": "/api-keys",
+    "ids": [
+      "id"
+    ],
+    "key": "APIKeysRotate"
+  },
+  {
+    "client": "UsageLimits",
+    "plane": "data",
+    "name": "Create",
+    "path": "/policies/usage-limits",
+    "wirepath": "/policies/usage-limits",
+    "verb": "POST",
+    "stem": "/policies/usage-limits",
+    "ids": [],
+    "key": "UsageLimitsCreate"
+  },
+  {
+    "client": "UsageLimits",
+    "plane": "data",
+    "name": "List",
+    "path": "/policies/usage-limits",
+    "wirepath": "/policies/usage-limits",
+    "verb": "GET",
+    "stem": "/policies/usage-limits",
+    "ids": [],
+    "key": "UsageLimitsList"
+  },
+  {
+    "client": "UsageLimits",
+    "plane": "data",
+    "name": "Get",
+    "path": "/policies/usage-limits/{policyUsageLimitsId}",
+    "wirepath": "/policies/usage-limits/{policyUsageLimitsId}",
+    "verb": "GET",
+    "stem": "/policies/usage-limits",
+    "ids": [
+      "policyUsageLimitsId"
+    ],
+    "key": "UsageLimitsGet"
+  },
+  {
+    "client": "UsageLimits",
+    "plane": "data",
+    "name": "Update",
+    "path": "/policies/usage-limits/{policyUsageLimitsId}",
+    "wirepath": "/policies/usage-limits/{policyUsageLimitsId}",
+    "verb": "PUT",
+    "stem": "/policies/usage-limits",
+    "ids": [
+      "policyUsageLimitsId"
+    ],
+    "key": "UsageLimitsUpdate"
+  },
+  {
+    "client": "UsageLimits",
+    "plane": "data",
+    "name": "Delete",
+    "path": "/policies/usage-limits/{policyUsageLimitsId}",
+    "wirepath": "/policies/usage-limits/{policyUsageLimitsId}",
+    "verb": "DELETE",
+    "stem": "/policies/usage-limits",
+    "ids": [
+      "policyUsageLimitsId"
+    ],
+    "key": "UsageLimitsDelete"
+  },
+  {
+    "client": "UsageLimits",
+    "plane": "data",
+    "name": "ListEntities",
+    "path": "/policies/usage-limits/{policyUsageLimitsId}/entities",
+    "wirepath": "/policies/usage-limits/{policyUsageLimitsId}/entities",
+    "verb": "GET",
+    "stem": "/policies/usage-limits",
+    "ids": [
+      "policyUsageLimitsId"
+    ],
+    "key": "UsageLimitsListEntities"
+  },
+  {
+    "client": "UsageLimits",
+    "plane": "data",
+    "name": "ResetEntity",
+    "path": "/policies/usage-limits/{policyUsageLimitsId}/entities/{entityId}/reset",
+    "wirepath": "/policies/usage-limits/{policyUsageLimitsId}/entities/{entityId}/reset",
+    "verb": "PUT",
+    "stem": "/policies/usage-limits",
+    "ids": [
+      "policyUsageLimitsId",
+      "entityId"
+    ],
+    "key": "UsageLimitsResetEntity"
+  },
+  {
+    "client": "RateLimits",
+    "plane": "data",
+    "name": "Create",
+    "path": "/policies/rate-limits",
+    "wirepath": "/policies/rate-limits",
+    "verb": "POST",
+    "stem": "/policies/rate-limits",
+    "ids": [],
+    "key": "RateLimitsCreate"
+  },
+  {
+    "client": "RateLimits",
+    "plane": "data",
+    "name": "List",
+    "path": "/policies/rate-limits",
+    "wirepath": "/policies/rate-limits",
+    "verb": "GET",
+    "stem": "/policies/rate-limits",
+    "ids": [],
+    "key": "RateLimitsList"
+  },
+  {
+    "client": "RateLimits",
+    "plane": "data",
+    "name": "Get",
+    "path": "/policies/rate-limits/{rateLimitsPolicyId}",
+    "wirepath": "/policies/rate-limits/{rateLimitsPolicyId}",
+    "verb": "GET",
+    "stem": "/policies/rate-limits",
+    "ids": [
+      "rateLimitsPolicyId"
+    ],
+    "key": "RateLimitsGet"
+  },
+  {
+    "client": "RateLimits",
+    "plane": "data",
+    "name": "Update",
+    "path": "/policies/rate-limits/{rateLimitsPolicyId}",
+    "wirepath": "/policies/rate-limits/{rateLimitsPolicyId}",
+    "verb": "PUT",
+    "stem": "/policies/rate-limits",
+    "ids": [
+      "rateLimitsPolicyId"
+    ],
+    "key": "RateLimitsUpdate"
+  },
+  {
+    "client": "RateLimits",
+    "plane": "data",
+    "name": "Delete",
+    "path": "/policies/rate-limits/{rateLimitsPolicyId}",
+    "wirepath": "/policies/rate-limits/{rateLimitsPolicyId}",
+    "verb": "DELETE",
+    "stem": "/policies/rate-limits",
+    "ids": [
+      "rateLimitsPolicyId"
+    ],
+    "key": "RateLimitsDelete"
+  },
+  {
+    "client": "SecretReferences",
+    "plane": "admin",
+    "name": "List",
+    "path": "/secret-references",
+    "wirepath": "/secret-references",
+    "verb": "GET",
+    "stem": "/secret-references",
+    "ids": [],
+    "key": "SecretReferencesList"
+  },
+  {
+    "client": "SecretReferences",
+    "plane": "admin",
+    "name": "Create",
+    "path": "/secret-references",
+    "wirepath": "/secret-references",
+    "verb": "POST",
+    "stem": "/secret-references",
+    "ids": [],
+    "key": "SecretReferencesCreate"
+  },
+  {
+    "client": "SecretReferences",
+    "plane": "admin",
+    "name": "Get",
+    "path": "/secret-references/{secretReferenceId}",
+    "wirepath": "/secret-references/{secretReferenceId}",
+    "verb": "GET",
+    "stem": "/secret-references",
+    "ids": [
+      "secretReferenceId"
+    ],
+    "key": "SecretReferencesGet"
+  },
+  {
+    "client": "SecretReferences",
+    "plane": "admin",
+    "name": "Update",
+    "path": "/secret-references/{secretReferenceId}",
+    "wirepath": "/secret-references/{secretReferenceId}",
+    "verb": "PUT",
+    "stem": "/secret-references",
+    "ids": [
+      "secretReferenceId"
+    ],
+    "key": "SecretReferencesUpdate"
+  },
+  {
+    "client": "SecretReferences",
+    "plane": "admin",
+    "name": "Delete",
+    "path": "/secret-references/{secretReferenceId}",
+    "wirepath": "/secret-references/{secretReferenceId}",
+    "verb": "DELETE",
+    "stem": "/secret-references",
+    "ids": [
+      "secretReferenceId"
+    ],
+    "key": "SecretReferencesDelete"
+  },
+  {
+    "client": "Deployments",
+    "plane": "admin",
+    "name": "List",
+    "path": "/deployments",
+    "wirepath": "/deployments",
+    "verb": "GET",
+    "stem": "/deployments",
+    "ids": [],
+    "key": "DeploymentsList"
+  },
+  {
+    "client": "Deployments",
+    "plane": "admin",
+    "name": "Create",
+    "path": "/deployments",
+    "wirepath": "/deployments",
+    "verb": "POST",
+    "stem": "/deployments",
+    "ids": [],
+    "key": "DeploymentsCreate"
+  },
+  {
+    "client": "Deployments",
+    "plane": "admin",
+    "name": "Get",
+    "path": "/deployments/{deploymentId}",
+    "wirepath": "/deployments/{deploymentId}",
+    "verb": "GET",
+    "stem": "/deployments",
+    "ids": [
+      "deploymentId"
+    ],
+    "key": "DeploymentsGet"
+  },
+  {
+    "client": "Deployments",
+    "plane": "admin",
+    "name": "Update",
+    "path": "/deployments/{deploymentId}",
+    "wirepath": "/deployments/{deploymentId}",
+    "verb": "PUT",
+    "stem": "/deployments",
+    "ids": [
+      "deploymentId"
+    ],
+    "key": "DeploymentsUpdate"
+  },
+  {
+    "client": "Deployments",
+    "plane": "admin",
+    "name": "Delete",
+    "path": "/deployments/{deploymentId}",
+    "wirepath": "/deployments/{deploymentId}",
+    "verb": "DELETE",
+    "stem": "/deployments",
+    "ids": [
+      "deploymentId"
+    ],
+    "key": "DeploymentsDelete"
+  },
+  {
+    "client": "Deployments",
+    "plane": "admin",
+    "name": "Ping",
+    "path": "/deployments/{deploymentId}/ping",
+    "wirepath": "/deployments/{deploymentId}/ping",
+    "verb": "GET",
+    "stem": "/deployments",
+    "ids": [
+      "deploymentId"
+    ],
+    "key": "DeploymentsPing"
+  }
+]

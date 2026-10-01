@@ -91,3 +91,36 @@ the disposable prompt set because no delete endpoint exists. These strict tests
 passed with the race detector in 51.193 seconds. Regeneration, overrides,
 profiling execution and Copilot consent flows were not performed against existing
 resources. Every pinned operation has mock request/payload/response/error coverage.
+
+### Gateway management (2026-10-01)
+
+SCM OAuth plus `x-tsg-id` authenticated both bases. Existing-workspace discovery
+was read-only. Listing passed for all twelve resource families; combined
+`/api-keys` returned 403, while `/api-keys/service` and `/api-keys/user` passed.
+Explicit service/user methods cover that deployment difference.
+
+Disposable config create/get/update/version history/delete, workspace and org
+guardrail create/get/update/delete, service-key create/get/update/rotate/delete,
+usage/rate policy create/get/update/delete (and usage counter listing), deployment
+create/get/update/archive, and AWS service-role secret-reference metadata
+create/get/update/delete passed in an 80.757-second race run. No external secret
+was fetched, no existing policy changed, and the conditions match only the unique
+test metadata value. Archived test deployments remain archived by API design.
+
+Org MCP integration create/get/update, workspace binding, metadata read, server
+create/get/update, capability/connection/user-access listing and cleanup passed.
+The fixture uses a public MCP URL with no external credentials. No tool execution
+or inference request was sent. Org provider integration create/get/update,
+model/workspace listing, workspace binding, provider create/get/update/delete and
+integration cleanup passed in a focused 20.447-second race run.
+
+Early workspace-scoped integration creates returned 403. Org creation plus
+explicit binding worked. An early OpenAI name match selected Azure OpenAI and
+returned validation error; exact provider catalog selection corrected the
+fixture. Earlier creates that succeeded were cleaned up even when a later
+assertion failed. Both linked graphs subsequently passed together in a 50.607-second race run.
+
+All 88 source operations and ten explicit service/user route variants have HTTP
+contracts. User-key creation requires a caller-owned user fixture; connectivity
+execution, traffic-derived usage resets and production capability/access changes
+remain mock-verified. Disposable CRUD does not prove every helper executed live.

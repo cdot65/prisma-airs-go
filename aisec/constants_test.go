@@ -156,3 +156,29 @@ func TestConstants_CurrentRedTeamReports(t *testing.T) {
 		}
 	}
 }
+
+func TestConstants_Gateway(t *testing.T) {
+	for _, tc := range []struct{ name, got, want string }{
+		{"DefaultGatewayDataEndpoint", DefaultGatewayDataEndpoint, "https://api.apps.paloaltonetworks.com/ai_gw/v2"},
+		{"DefaultGatewayAdminEndpoint", DefaultGatewayAdminEndpoint, "https://api.apps.paloaltonetworks.com/ai_gw/admin/v2"},
+		{"EnvGatewayDataEndpoint", EnvGatewayDataEndpoint, "PANW_AI_GW_DATA_ENDPOINT"},
+		{"EnvGatewayAdminEndpoint", EnvGatewayAdminEndpoint, "PANW_AI_GW_ADMIN_ENDPOINT"},
+		{"HeaderTsgID", HeaderTsgID, "x-tsg-id"},
+		{"GatewayGuardrailsPath", GatewayGuardrailsPath, "/guardrails"},
+		{"GatewayOrgGuardrailsPath", GatewayOrgGuardrailsPath, "/guardrails"},
+		{"GatewayConfigsPath", GatewayConfigsPath, "/configs"},
+		{"GatewayIntegrationsPath", GatewayIntegrationsPath, "/integrations"},
+		{"GatewayProvidersPath", GatewayProvidersPath, "/providers"},
+		{"GatewayMCPIntegrationsPath", GatewayMCPIntegrationsPath, "/mcp-integrations"},
+		{"GatewayMCPServersPath", GatewayMCPServersPath, "/mcp-servers"},
+		{"GatewayAPIKeysPath", GatewayAPIKeysPath, "/api-keys"},
+		{"GatewayUsageLimitsPath", GatewayUsageLimitsPath, "/policies/usage-limits"},
+		{"GatewayRateLimitsPath", GatewayRateLimitsPath, "/policies/rate-limits"},
+		{"GatewaySecretReferencesPath", GatewaySecretReferencesPath, "/secret-references"},
+		{"GatewayDeploymentsPath", GatewayDeploymentsPath, "/deployments"},
+	} {
+		if tc.got != tc.want {
+			t.Errorf("%s=%q;want%q", tc.name, tc.got, tc.want)
+		}
+	}
+}

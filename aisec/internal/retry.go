@@ -61,6 +61,12 @@ func ExtractErrorMessage(body string, status int) string {
 			return msg
 		}
 	}
+	// SCM Gateway errors wrap the reason in a data envelope.
+	if data, ok := parsed["data"].(map[string]any); ok {
+		if message, ok := data["message"].(string); ok && message != "" {
+			return message
+		}
+	}
 	return fmt.Sprintf("API error %d", status)
 }
 
