@@ -48,6 +48,23 @@ All variables fall back to their `PANW_MGMT_*` equivalents.
 | `PANW_RED_TEAM_MGMT_ENDPOINT` | — | Management plane endpoint |
 | `PANW_RED_TEAM_TOKEN_ENDPOINT` | `PANW_MGMT_TOKEN_ENDPOINT` | Token endpoint |
 
+## AI Gateway (SCM OAuth)
+
+Credentials and token endpoint fall back to `PANW_MGMT_*` equivalents. API
+endpoint overrides use only their service-specific variables.
+
+| Variable | Fallback | Description |
+|---|---|---|
+| `PANW_AI_GW_CLIENT_ID` | `PANW_MGMT_CLIENT_ID` | SCM OAuth client ID |
+| `PANW_AI_GW_CLIENT_SECRET` | `PANW_MGMT_CLIENT_SECRET` | SCM OAuth client secret |
+| `PANW_AI_GW_TSG_ID` | `PANW_MGMT_TSG_ID` | Tenant ID; also sent as `x-tsg-id` on API requests |
+| `PANW_AI_GW_TOKEN_ENDPOINT` | `PANW_MGMT_TOKEN_ENDPOINT` | OAuth token endpoint |
+| `PANW_AI_GW_DATA_ENDPOINT` | — | CRUD data plane; default `https://api.apps.paloaltonetworks.com/ai_gw/v2` |
+| `PANW_AI_GW_ADMIN_ENDPOINT` | — | CRUD admin plane; default `https://api.apps.paloaltonetworks.com/ai_gw/admin/v2` |
+
+Red Team also accepts `PANW_RED_TEAM_BROKER_ENDPOINT` for the independent
+Network Broker API base.
+
 ## Examples
 
 | Variable | Description |

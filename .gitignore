@@ -42,3 +42,6 @@ REVIEW-*.md
 
 # Agent hook logs
 .claude/hooks/*.log
+
+# Release artifacts (build outside the checkout)
+dist/

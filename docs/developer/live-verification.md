@@ -134,3 +134,9 @@ contract does not guarantee service support for legacy `properties` metadata.
 This change avoids a consumer compile break without inventing a conversion.
 Provider verification uses an external temporary modfile with a local SDK
 replacement and `TF_ACC=0`, leaving its tracked dependency configuration intact.
+
+Final consumer verification passed with Go 1.25.6: `go test -race -count=1` and
+a provider binary build against the temporary modfile. The provider working tree
+remained clean. Final SDK checks passed on Go 1.24.6 and uncached Go 1.22.12 race
+tests, including integration-tag compilation/linting without live calls, snapshot
+and model freshness checks, and strict MkDocs rendering.

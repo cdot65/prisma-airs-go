@@ -13,15 +13,24 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"github.com/cdot65/prisma-airs-go/aisec"
 	"github.com/cdot65/prisma-airs-go/aisec/runtime"
 )
 
 func main() {
+	version := flag.Bool("version", false, "print SDK version and exit")
+	flag.Parse()
+	if *version {
+		fmt.Println(aisec.Version)
+		return
+	}
+
 	// ── 1. Initialize client ──────────────────────────────────────────────
 	fmt.Println("═══ Security Profile CRUD Example ═══")
 	fmt.Println()

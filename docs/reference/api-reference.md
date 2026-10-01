@@ -1,6 +1,8 @@
 # API Reference
 
-Complete reference for all public types, functions, and methods in the SDK.
+Core types and established interfaces are shown below. Current complete schema
+models and additive methods are documented in the service guides and generated
+[Go package reference](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.6.0/aisec).
 
 ## Package `aisec`
 
@@ -15,6 +17,7 @@ func WithAPIKey(key string) ConfigOption
 func WithAPIToken(token string) ConfigOption
 func WithEndpoint(endpoint string) ConfigOption
 func WithNumRetries(n int) ConfigOption
+func WithHTTPClient(client *http.Client) ConfigOption
 ```
 
 ### Error Types
@@ -25,6 +28,7 @@ type AISecSDKError struct {
     ErrorType ErrorType
     Message   string
     Err       error // wrapped error
+    StatusCode int // HTTP status, including 2xx decode errors
 }
 
 // ErrorType enum
@@ -41,7 +45,7 @@ const (
 ### Constants
 
 ```go
-const Version = "0.5.2"
+const Version = "0.6.0"
 
 // Content limits
 const (
@@ -402,3 +406,22 @@ const (
     DetectionServiceUngrounded     DetectionServiceName = "ungrounded"
 )
 ```
+
+## Current complete contracts
+
+The v0.6.0 update preserves established response types and provides additive
+complete models in `aisec/modelsecurity/schema`, `aisec/redteam/schema`, and
+`aisec/gateway/schema`. `aisec.Optional[T]` represents unset, explicit null, and
+concrete values for nullable updates.
+
+- [Runtime methods and current options](../services/runtime-api.md)
+- [Model inventory, custom rules, history, and precise methods](../services/model-security-api.md)
+- [Red Team adapters, Network Broker, and complete methods](../services/red-team-api.md)
+- [Gateway's twelve CRUD families and lifecycle helpers](../services/ai-gateway-api.md)
+
+`gateway.NewClient(gateway.Opts{})` exposes `Configs`, `Guardrails`,
+`OrgGuardrails`, `Integrations`, `Providers`, `MCPIntegrations`, `MCPServers`,
+`APIKeys`, `UsageLimits`, `RateLimits`, `SecretReferences`, and `Deployments`.
+Each request uses SCM OAuth and tenant headers through the common HTTP pipeline.
+[Live evidence and verification limits](../developer/live-verification.md) are
+separate from mock contract coverage.

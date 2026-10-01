@@ -14,6 +14,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -24,6 +25,13 @@ import (
 )
 
 func main() {
+	version := flag.Bool("version", false, "print SDK version and exit")
+	flag.Parse()
+	if *version {
+		fmt.Println(aisec.Version)
+		return
+	}
+
 	fmt.Println("═══ AIRS Runtime Scanning Example ═══")
 	fmt.Println()
 

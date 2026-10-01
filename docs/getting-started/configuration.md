@@ -33,7 +33,7 @@ hc := &http.Client{Timeout: 45 * time.Second}
 
 scanner := runtime.NewScanner(aisec.NewConfig(aisec.WithHTTPClient(hc)))
 client, err := runtime.NewClient(runtime.Opts{HTTPClient: hc})
-// modelsecurity.Opts and redteam.Opts have the same HTTPClient field.
+// modelsecurity.Opts, redteam.Opts, and gateway.Opts share this HTTPClient field.
 ```
 
 Endpoint resolution for the OAuth services is: option → environment variable → default, and
@@ -101,3 +101,13 @@ Falls back to `PANW_MGMT_*` variables if service-specific variables are not set.
 ### Runtime (Management) / Model Security / Red Team
 
 All OAuth2-based APIs share the same base domains. Override using the endpoint environment variables above.
+
+## AI Gateway management (SCM OAuth)
+
+Use `gateway.NewClient(gateway.Opts{})` with `PANW_AI_GW_*` credentials, or
+provide `ClientID`, `ClientSecret`, and `TsgID` explicitly. These credentials fall
+back to `PANW_MGMT_*`. `DataEndpoint` and `AdminEndpoint` override the two Gateway
+CRUD planes. Workspaces must already exist; the SDK does not provision them.
+See [Gateway management](../services/ai-gateway-api.md) for schemas and lifecycle
+semantics and [environment variables](../reference/environment-variables.md) for
+all overrides.

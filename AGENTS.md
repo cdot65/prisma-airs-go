@@ -21,8 +21,9 @@ go test -v ./aisec/runtime/ -run TestSyncScan   # single test
 aisec/                      # Core package: constants, config, errors, utils
   internal/                 # Private: HTTP client, retry, OAuth client
   runtime/                  # Runtime API — Scanner (API key) + Client with 8 sub-clients (OAuth2)
-  modelsecurity/            # Model Security API — 3 sub-clients, dual endpoint (OAuth2)
-  redteam/                  # Red Team API — 7 sub-clients, dual endpoint (OAuth2)
+  modelsecurity/            # Model Security API — 6 sub-clients, dual endpoint (OAuth2)
+  redteam/                  # Red Team API — 9 sub-clients, dual endpoint (OAuth2)
+  gateway/                  # AI Gateway — 12 CRUD families, SCM OAuth, data/admin planes
 docs/                       # MkDocs Material source
 .github/workflows/          # CI (lint/test), test matrix (Go 1.22-1.24), mkdocs deploy, release
 examples/                   # Usage examples
@@ -30,7 +31,7 @@ examples/                   # Usage examples
 
 ## Architecture
 
-Three service domains, two auth methods:
+Four service domains, two auth methods:
 
 | Domain | Package | Auth | Entry Point |
 |--------|---------|------|-------------|
@@ -38,6 +39,7 @@ Three service domains, two auth methods:
 | AI Runtime Security (mgmt) | `aisec/runtime` | OAuth2 client_credentials | `runtime.NewClient(opts)` |
 | Model Security | `aisec/modelsecurity` | OAuth2 client_credentials | `modelsecurity.NewClient(opts)` |
 | Red Team | `aisec/redteam` | OAuth2 client_credentials | `redteam.NewClient(opts)` |
+| AI Gateway management | `aisec/gateway` | SCM OAuth2 + tenant header | `gateway.NewClient(opts)` |
 
 OAuth2 services use dual endpoints (data plane + management plane) where applicable. Token lifecycle is automatic: caching, proactive refresh (30s buffer), concurrent deduplication, 401/403 auto-retry.
 
@@ -72,8 +74,9 @@ Credentials resolve in order: constructor options → service-specific env → f
 | `PANW_MGMT_` | Runtime management API | — |
 | `PANW_MODEL_SEC_` | Model Security | `PANW_MGMT_` |
 | `PANW_RED_TEAM_` | Red Team | `PANW_MGMT_` |
+| `PANW_AI_GW_` | AI Gateway management | `PANW_MGMT_` |
 
-Suffixes: `_CLIENT_ID`, `_CLIENT_SECRET`, `_TSG_ID`, `_TOKEN_ENDPOINT`, `_DATA_ENDPOINT`, `_MGMT_ENDPOINT`.
+Suffixes: `_CLIENT_ID`, `_CLIENT_SECRET`, `_TSG_ID`, `_TOKEN_ENDPOINT`, `_DATA_ENDPOINT`, `_MGMT_ENDPOINT`. Gateway uses `_ADMIN_ENDPOINT` for its admin plane; Red Team also has `_BROKER_ENDPOINT`.
 
 ## CI/CD
 
@@ -82,7 +85,7 @@ Suffixes: `_CLIENT_ID`, `_CLIENT_SECRET`, `_TSG_ID`, `_TOKEN_ENDPOINT`, `_DATA_E
 | `ci.yml` | push/PR | gofmt check, go vet, golangci-lint (Go 1.24) |
 | `test.yml` | push/PR | `go test -race` matrix: Go 1.22, 1.23, 1.24 |
 | `mkdocs-deploy.yml` | push to main | Build + deploy docs to GitHub Pages |
-| `release.yml` | release created | fmt + vet + test + build + tag verify |
+| `release.yml` | release published | checks + tag verification + six-platform example/source assets + checksums |
 
 ## Testing Patterns
 
@@ -119,3 +122,14 @@ Scan API tests use a single mock server with API key validation.
 ### Updating constants
 
 All API paths, endpoints, env var names, and limits live in `aisec/constants.go`. Tests in `aisec/constants_test.go` verify values — update both.
+
+## Pinned contracts and Gateway scope
+
+`specs/manifest.json` records source hashes and commits. `scripts/spec_snapshot.py
+--check` verifies snapshots; `scripts/schema_models.py modelsecurity redteam
+gateway --check` verifies model generation. Gateway selection/routing is declared
+in `specs/gateway_scope.json`; curations are documented in `API_ISSUES.md`.
+Gateway operations are management CRUD/lifecycle only, with existing workspaces.
+The provider owns reconciliation and state. See `docs/developer/live-verification.md`
+and `docs/developer/feature-quality.md` for verification limits and review scores.
+Release artifact instructions are in `docs/developer/releases.md`.

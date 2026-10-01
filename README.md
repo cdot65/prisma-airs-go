@@ -91,7 +91,7 @@ import "github.com/cdot65/prisma-airs-go/aisec/modelsecurity"
 
 client, err := modelsecurity.NewClient(modelsecurity.Opts{}) // falls back to PANW_MGMT_* env vars
 
-// 3 sub-clients + GetPyPIAuth convenience method
+// 6 sub-clients: scans, inventory, custom rules, groups, and rules
 scans, _ := client.Scans.List(ctx, modelsecurity.ScanListOpts{Limit: 10})
 groups, _ := client.SecurityGroups.List(ctx, modelsecurity.GroupListOpts{})
 rules, _ := client.SecurityRules.List(ctx, modelsecurity.RuleListOpts{})
@@ -105,7 +105,7 @@ import "github.com/cdot65/prisma-airs-go/aisec/redteam"
 
 client, err := redteam.NewClient(redteam.Opts{}) // falls back to PANW_MGMT_* env vars
 
-// 7 sub-clients + 10 convenience methods
+// 9 sub-clients, including adapters and the independent Network Broker
 scans, _ := client.Scans.List(ctx, redteam.ScanListOpts{Limit: 5})
 targets, _ := client.Targets.List(ctx, redteam.TargetListOpts{})
 categories, _ := client.Scans.GetCategories(ctx)
@@ -186,3 +186,8 @@ documented in [the Gateway guide](docs/services/ai-gateway-api.md). Current API
 models preserve legacy interfaces through opt-in methods; see
 [feature reviews](docs/developer/feature-quality.md) and
 [live verification](docs/developer/live-verification.md) for evidence and limits.
+
+Download checksummed cross-platform example binaries from the
+[v0.6.0 release](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.6.0), or
+install with `go get github.com/cdot65/prisma-airs-go@v0.6.0`. See
+[artifact usage and reproducible builds](docs/developer/releases.md).
