@@ -3,7 +3,10 @@ package runtime
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"github.com/cdot65/prisma-airs-go/aisec"
 	"net/http"
+	"reflect"
 	"testing"
 )
 
@@ -60,9 +63,9 @@ func TestTopics_UpdateFieldsPreservesEmptyDescriptionAndExamples(t *testing.T) {
 	t.Cleanup(api.Close)
 	empty := ""
 	examples := []string{}
-	_, err := newTestClient(t, token.URL, api.URL).Topics.UpdateFields(context.Background(), "id/segment", UpdateTopicFieldsRequest{Description: &empty, Examples: &examples})
-	if err != nil {
-		t.Fatal(err)
+	result, err := newTestClient(t, token.URL, api.URL).Topics.UpdateFields(context.Background(), "id/segment", UpdateTopicFieldsRequest{Description: &empty, Examples: &examples})
+	if err != nil || result == nil || result.TopicID != "id/segment" || result.Description != "" || len(result.Examples) != 0 {
+		t.Fatalf("result=%+v error=%v", result, err)
 	}
 }
 
@@ -95,14 +98,21 @@ func TestOAuth_GetTokenWithTTL(t *testing.T) {
 		if r.URL.Query().Get("tokenTtlInterval") != "0" || r.URL.Query().Get("tokenTtlUnit") != "minute" {
 			t.Errorf("TTL query=%s", r.URL.RawQuery)
 		}
-		_, _ = w.Write([]byte(`{"access_token":"test"}`))
+		var body map[string]json.RawMessage
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Error(err)
+		}
+		if string(body["client_id"]) != `"app"` || string(body["customer_app"]) != `"customer"` {
+			t.Errorf("token body=%v", body)
+		}
+		_, _ = w.Write([]byte(`{"access_token":"test","expires_in":"3600"}`))
 	})
 	t.Cleanup(token.Close)
 	t.Cleanup(api.Close)
 	zero := int64(0)
-	_, err := newTestClient(t, token.URL, api.URL).OAuth.GetTokenWithTTL(context.Background(), OAuthTokenRequest{ClientID: "app"}, TokenTTLOpts{Interval: &zero, Unit: "minute"})
-	if err != nil {
-		t.Fatal(err)
+	result, err := newTestClient(t, token.URL, api.URL).OAuth.GetTokenWithTTL(context.Background(), OAuthTokenRequest{ClientID: "app", CustomerApp: "customer"}, TokenTTLOpts{Interval: &zero, Unit: "minute"})
+	if err != nil || result == nil || result.AccessToken != "test" || result.ExpiresIn != "3600" {
+		t.Fatalf("result=%+v error=%v", result, err)
 	}
 }
 
@@ -159,5 +169,72 @@ func TestCustomerApps_DeletePreservesReturnedMetadata(t *testing.T) {
 	r, err := newTestClient(t, token.URL, api.URL).CustomerApps.Delete(context.Background(), "test", "tester")
 	if err != nil || r == nil || r.CustomerAppID != "app-1" || r.Status != "deleted" {
 		t.Fatalf("result=%+v error=%v", r, err)
+	}
+}
+
+func TestRuntimeOptionMethods_ErrorContracts(t *testing.T) {
+	ctx := context.Background()
+	inactive := false
+	zero := int64(0)
+	cases := []struct {
+		name string
+		call func(*Client) (any, error)
+	}{
+		{"profile_list", func(c *Client) (any, error) {
+			return contractResult(c.Profiles.ListWithOptions(ctx, ProfileListOpts{Latest: &inactive}))
+		}},
+		{"deployment_list", func(c *Client) (any, error) {
+			return contractResult(c.DeploymentProfiles.ListWithOptions(ctx, DeploymentProfileListOpts{Unactivated: &inactive}))
+		}},
+		{"topic_update", func(c *Client) (any, error) {
+			return contractResult(c.Topics.UpdateFields(ctx, "topic", UpdateTopicFieldsRequest{Revision: &zero, Active: &inactive}))
+		}},
+		{"token_ttl", func(c *Client) (any, error) {
+			return contractResult(c.OAuth.GetTokenWithTTL(ctx, OAuthTokenRequest{ClientID: "app"}, TokenTTLOpts{Interval: &zero, Unit: "minute"}))
+		}},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			for _, status := range []int{404, 200} {
+				t.Run(http.StatusText(status), func(t *testing.T) {
+					token, api := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
+						if tc.name == "topic_update" {
+							var b map[string]json.RawMessage
+							if err := json.NewDecoder(r.Body).Decode(&b); err != nil {
+								t.Error(err)
+							}
+							if string(b["revision"]) != "0" || string(b["active"]) != "false" {
+								t.Errorf("lost update values: %v", b)
+							}
+						}
+						w.WriteHeader(status)
+						if status == 200 {
+							_, _ = w.Write([]byte(`{"broken":`))
+						} else {
+							_, _ = w.Write([]byte(`{"message":"missing"}`))
+						}
+					})
+					t.Cleanup(token.Close)
+					t.Cleanup(api.Close)
+					result, err := tc.call(newTestClient(t, token.URL, api.URL))
+					var sdkErr *aisec.AISecSDKError
+					if !errors.As(err, &sdkErr) || sdkErr.StatusCode != status {
+						t.Fatalf("error=%v", err)
+					}
+					if result != nil && !reflect.ValueOf(result).IsNil() {
+						t.Fatalf("partial result: %#v", result)
+					}
+					if status == 404 && !errors.Is(err, aisec.ErrNotFound) {
+						t.Fatalf("missing sentinel: %v", err)
+					}
+					if status == 200 {
+						var syntax *json.SyntaxError
+						if !errors.As(err, &syntax) {
+							t.Fatalf("missing decode cause: %v", err)
+						}
+					}
+				})
+			}
+		})
 	}
 }
