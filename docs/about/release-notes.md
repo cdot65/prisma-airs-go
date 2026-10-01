@@ -1,5 +1,12 @@
 # Release Notes
 
+## v0.5.2
+
+- **fix**: OAuth operations requiring JSON now return `*AISecSDKError` for malformed JSON, incompatible field types, empty bodies, and JSON `null`, instead of silently returning zero-value or partial results. Decoding errors retain the HTTP status and wrapped JSON cause; unknown fields remain accepted.
+- **refactor**: JSON requests and CSV uploads share one response interpretation implementation. Plain-text and empty success are explicitly preserved for profile force deletion, topic deletion/force deletion, and CSV upload; documented no-content Red Team and Model Security deletes remain successful.
+- **fix(runtime)**: profile force deletion and topic delete responses decode both JSON strings and `{message: ...}` objects without changing public response types. Text success exceptions work even with misleading JSON Content-Type headers; HTML responses are rejected.
+- **test**: topic deletion and profile force deletion failures during integration cleanup now fail the test. Successful delete responses log their Content-Type and a bounded body prefix for future live verification.
+
 ## v0.5.1
 
 - **verified**: the changed Red Team report, goal, stream, custom-attack-report, score-trend and dashboard endpoints were exercised against a live tenant with the new read-only `TestIntegration_Reports_ReadEndpoints`; all returned data (the multi-turn detail endpoint answered at the spec path, but no multi-turn attack existed to fetch)

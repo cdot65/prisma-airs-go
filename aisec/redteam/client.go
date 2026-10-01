@@ -3,7 +3,6 @@ package redteam
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -559,6 +558,7 @@ func (c *TargetsClient) Update(ctx context.Context, uuid string, req TargetUpdat
 func (c *TargetsClient) Delete(ctx context.Context, uuid string) (*BaseResponse, error) {
 	resp, err := internal.DoMgmtRequest[BaseResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: aisec.RedTeamTargetPath + "/" + seg(uuid),
+		ResponsePolicy: internal.AllowEmptyJSON, // documented 204
 	})
 	if err != nil {
 		return nil, err
@@ -787,6 +787,7 @@ func (c *CustomAttacksClient) UpdatePrompt(ctx context.Context, promptSetID, pro
 func (c *CustomAttacksClient) DeletePrompt(ctx context.Context, promptSetID, promptID string) (*BaseResponse, error) {
 	resp, err := internal.DoMgmtRequest[BaseResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(promptSetID) + "/custom-prompt/" + seg(promptID),
+		ResponsePolicy: internal.AllowEmptyJSON, // documented 204
 	})
 	if err != nil {
 		return nil, err
@@ -873,13 +874,13 @@ func (c *CustomAttacksClient) UploadPromptsCsv(ctx context.Context, promptSetUUI
 		return nil, err
 	}
 
-	// A 2xx with a non-JSON body is treated as success with an empty result,
-	// matching DoMgmtRequest's tolerance for endpoints that reply in plain text.
-	var result BaseResponse
-	if len(raw.Body) > 0 {
-		_ = json.Unmarshal(raw.Body, &result)
+	// Preserve the tested plain-text success behavior, while rejecting invalid
+	// JSON instead of exposing a partially decoded result.
+	resp, err := internal.DecodeMgmtResponse[BaseResponse](raw, internal.AllowTextOrEmpty)
+	if err != nil {
+		return nil, err
 	}
-	return &result, nil
+	return &resp.Data, nil
 }
 
 // DownloadTemplate downloads a CSV template for the given prompt set.

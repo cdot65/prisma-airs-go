@@ -5,10 +5,14 @@ package runtime
 import (
 	"context"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
+	"sync"
 	"testing"
 	"time"
 
+	"github.com/cdot65/prisma-airs-go/aisec/internal"
 	"github.com/cdot65/prisma-airs-go/aisec/internal/testutil"
 )
 
@@ -17,11 +21,57 @@ func newIntegrationClient(t *testing.T) *Client {
 	testutil.LoadProjectEnv(t)
 	testutil.RequireEnv(t, "PANW_MGMT_CLIENT_ID", "PANW_MGMT_CLIENT_SECRET", "PANW_MGMT_TSG_ID")
 
-	client, err := NewClient(Opts{})
+	httpClient := *internal.DefaultHTTPClient()
+	httpClient.Transport = deleteResponseTransport{base: httpClient.Transport, logf: t.Logf}
+	client, err := NewClient(Opts{HTTPClient: &httpClient})
 	if err != nil {
 		t.Fatal(err)
 	}
 	return client
+}
+
+// Capture successful delete responses without recording request credentials or
+// changing the body stream. Log a bounded prefix once when the SDK closes it.
+type deleteResponseTransport struct {
+	base http.RoundTripper
+	logf func(string, ...any)
+}
+
+func (c deleteResponseTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	resp, err := c.base.RoundTrip(req)
+	if err == nil && req.Method == http.MethodDelete && resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		resp.Body = &deleteResponseBody{
+			ReadCloser: resp.Body, path: req.URL.EscapedPath(), status: resp.StatusCode,
+			contentType: resp.Header.Get("Content-Type"), logf: c.logf,
+		}
+	}
+	return resp, err
+}
+
+type deleteResponseBody struct {
+	io.ReadCloser
+	path, contentType string
+	status            int
+	preview           []byte
+	logf              func(string, ...any)
+	once              sync.Once
+}
+
+func (b *deleteResponseBody) Read(p []byte) (int, error) {
+	n, err := b.ReadCloser.Read(p)
+	const maxPreview = 4096
+	if len(b.preview) < maxPreview {
+		b.preview = append(b.preview, p[:min(n, maxPreview-len(b.preview))]...)
+	}
+	return n, err
+}
+
+func (b *deleteResponseBody) Close() error {
+	err := b.ReadCloser.Close()
+	b.once.Do(func() {
+		b.logf("DELETE %s response: status=%d Content-Type=%q body_prefix=%q", b.path, b.status, b.contentType, b.preview)
+	})
+	return err
 }
 
 func TestIntegration_Profiles_List(t *testing.T) {
@@ -93,7 +143,7 @@ func TestIntegration_Topics_CRUD(t *testing.T) {
 		defer delCancel()
 		resp, err := client.Topics.Delete(delCtx, created.TopicID)
 		if err != nil {
-			t.Logf("WARNING: cleanup delete topic %s failed: %v", created.TopicID, err)
+			t.Errorf("Topics.Delete during cleanup failed for %s: %v", created.TopicID, err)
 		} else {
 			t.Logf("Cleanup: deleted topic %s: %s", created.TopicID, resp.Message)
 		}
@@ -314,11 +364,11 @@ func TestIntegration_Profiles_CRUD(t *testing.T) {
 				}
 			}
 		} else {
-			t.Logf("WARNING: cleanup could not list profiles, deleting known ID only: %v", err)
+			t.Errorf("cleanup could not list profile revisions, deleting known ID only: %v", err)
 		}
 		for id := range ids {
 			if _, err := client.Profiles.ForceDelete(delCtx, id, "integration-test"); err != nil {
-				t.Logf("WARNING: cleanup ForceDelete %s: %v", id, err)
+				t.Errorf("Profiles.ForceDelete during cleanup failed for %s: %v", id, err)
 			} else {
 				t.Logf("Cleanup: force-deleted %s", id)
 			}

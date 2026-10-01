@@ -229,6 +229,7 @@ func (c *ScansClient) DeleteLabels(ctx context.Context, scanUUID string, keys []
 	}
 	_, err := internal.DoMgmtRequest[any](ctx, c.dataCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: path,
+		ResponsePolicy: internal.AllowEmptyJSON, // documented 204
 	})
 	return err
 }
@@ -312,6 +313,7 @@ func (c *SecurityGroupsClient) Delete(ctx context.Context, uuid string) error {
 	}
 	_, err := internal.DoMgmtRequest[any](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: aisec.ModelSecSecurityGroupsPath + "/" + internal.PathSeg(uuid),
+		ResponsePolicy: internal.AllowEmptyJSON, // documented 204
 	})
 	return err
 }

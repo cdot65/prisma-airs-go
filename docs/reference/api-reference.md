@@ -41,7 +41,7 @@ const (
 ### Constants
 
 ```go
-const Version = "0.4.1"
+const Version = "0.5.2"
 
 // Content limits
 const (

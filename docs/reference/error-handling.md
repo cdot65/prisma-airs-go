@@ -97,6 +97,35 @@ Client-side lookups that have no server endpoint (`Profiles.GetByID`, `Profiles.
 `DlpProfiles.Get`) report a missing item the same way, so `IsNotFound` works for both.
 Prefer these over matching on error text.
 
+## Successful HTTP Responses with Invalid Bodies
+
+OAuth operations that require structured JSON return `*aisec.AISecSDKError` with
+`ErrorType == aisec.AISecSDKInternalError` if the response is malformed, contains
+incompatible field types, is empty, or is JSON `null`. The result is nil; partially
+decoded data is never returned as success. `StatusCode` records the successful HTTP
+status (for example, 200), and JSON decoding errors preserve their cause for
+`errors.As`. Unknown JSON fields remain accepted; this is decoding validation, not
+full schema validation.
+
+The SDK preserves endpoint-specific success exceptions:
+
+| Operations | Accepted success bodies |
+|------------|-------------------------|
+| `Profiles.ForceDelete`, `Topics.Delete`, `Topics.ForceDelete`, `CustomAttacks.UploadPromptsCsv` | Typed JSON, plain text, or empty body; plain text yields an empty result/message |
+| `Targets.Delete`, `CustomAttacks.DeletePrompt`, `SecurityGroups.Delete`, `Scans.DeleteLabels` | Typed JSON or empty body, including documented 204 responses |
+| `Reports.DownloadReport`, `CustomAttacks.DownloadTemplate` | Raw bytes |
+
+Profile force deletion and topic deletions accept both JSON strings and JSON message
+objects. Text exceptions are determined by the body's shape, even if the server
+mislabels plain text as `application/json` or a `+json` media type. They do not
+suppress errors for malformed objects/arrays/quoted strings, markup such as HTML,
+or valid JSON of the wrong type. JSON `null` is rejected even for endpoints that
+allow empty bodies.
+
+This changes earlier behavior: a successful HTTP status alone no longer guarantees
+success for an operation that requires JSON. Body interpretation happens after
+HTTP retry handling, so a decoding error does not retry a completed operation.
+
 ## Error Wrapping
 
 All SDK errors support Go's `errors.Is` and `errors.As` for unwrapping:

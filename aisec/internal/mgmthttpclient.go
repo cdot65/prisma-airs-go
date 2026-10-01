@@ -18,6 +18,8 @@ type MgmtRequestOptions struct {
 	Path   string
 	Body   any
 	Params map[string]string
+	// ResponsePolicy defaults to RequireJSON. Exceptions belong at the endpoint.
+	ResponsePolicy ResponsePolicy
 }
 
 // RawMgmtRequestOptions describes an OAuth-authenticated request whose body or
@@ -135,17 +137,5 @@ func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts 
 		return nil, err
 	}
 
-	var data T
-	if len(raw.Body) > 0 {
-		if err := json.Unmarshal(raw.Body, &data); err != nil {
-			// Some endpoints (e.g. ForceDelete) return non-JSON on success.
-			// Tolerate parse failures for 2xx responses; return zero-value T.
-			if raw.Status >= 200 && raw.Status < 300 {
-				return &Response[T]{Status: raw.Status, Data: data}, nil
-			}
-			return nil, aisec.WrapError("failed to parse response JSON", aisec.AISecSDKInternalError, err)
-		}
-	}
-
-	return &Response[T]{Status: raw.Status, Data: data}, nil
+	return DecodeMgmtResponse[T](raw, opts.ResponsePolicy)
 }

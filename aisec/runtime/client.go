@@ -2,6 +2,7 @@ package runtime
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -221,15 +222,18 @@ func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityP
 
 // ForceDelete force-deletes a profile: DELETE /v1/mgmt/profile/{profile_id}/force?updated_by=
 func (c *ProfilesClient) ForceDelete(ctx context.Context, profileID string, updatedBy string) (*DeleteProfileResponse, error) {
-	resp, err := internal.DoMgmtRequest[DeleteProfileResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+	resp, err := internal.DoMgmtRequest[deleteMessageResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete,
 		Path:   aisec.MgmtProfileForcePath + "/" + seg(profileID) + "/force",
 		Params: map[string]string{"updated_by": updatedBy},
+		// This endpoint can return plain text on success.
+		ResponsePolicy: internal.AllowTextOrEmpty,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+	result := DeleteProfileResponse(resp.Data)
+	return &result, nil
 }
 
 // TopicsClient provides CRUD for custom detection topics.
@@ -268,27 +272,48 @@ func (c *TopicsClient) Update(ctx context.Context, topicID string, req UpdateTop
 	return &resp.Data, nil
 }
 
+// deleteMessageResponse adapts a JSON string or message object for runtime
+// deletions without changing their public response types.
+type deleteMessageResponse struct {
+	Message string `json:"message,omitempty"`
+}
+
+func (r *deleteMessageResponse) UnmarshalJSON(data []byte) error {
+	if len(data) > 0 && data[0] == '"' {
+		return json.Unmarshal(data, &r.Message)
+	}
+	// The local type has no UnmarshalJSON method, avoiding recursive decoding.
+	type messageObject deleteMessageResponse
+	return json.Unmarshal(data, (*messageObject)(r))
+}
+
 func (c *TopicsClient) Delete(ctx context.Context, topicID string) (*DeleteTopicResponse, error) {
-	resp, err := internal.DoMgmtRequest[string](ctx, c.svcCfg, internal.MgmtRequestOptions{
+	resp, err := internal.DoMgmtRequest[deleteMessageResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: aisec.MgmtTopicPath + "/" + seg(topicID),
+		// Preserve the legacy non-JSON success exception; API_ISSUES.md records
+		// a parse failure but does not establish the original body's format.
+		ResponsePolicy: internal.AllowTextOrEmpty,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &DeleteTopicResponse{Message: resp.Data}, nil
+	result := DeleteTopicResponse(resp.Data)
+	return &result, nil
 }
 
 // ForceDelete force-deletes a topic: DELETE /v1/mgmt/topic/force/{topic_id}?updated_by=
 func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string, updatedBy string) (*DeleteTopicResponse, error) {
-	resp, err := internal.DoMgmtRequest[string](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete,
-		Path:   aisec.MgmtTopicForcePath + "/force/" + seg(topicID),
-		Params: map[string]string{"updated_by": updatedBy},
+	resp, err := internal.DoMgmtRequest[deleteMessageResponse](ctx, c.svcCfg, internal.MgmtRequestOptions{
+		Method:         http.MethodDelete,
+		Path:           aisec.MgmtTopicForcePath + "/force/" + seg(topicID),
+		Params:         map[string]string{"updated_by": updatedBy},
+		ResponsePolicy: internal.AllowTextOrEmpty,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &DeleteTopicResponse{Message: resp.Data}, nil
+	result := DeleteTopicResponse(resp.Data)
+	return &result, nil
 }
 
 // ApiKeysClient provides API key lifecycle operations.

@@ -24,6 +24,7 @@ These are API-side behaviors, not SDK bugs.
 - SDK error: `failed to parse response JSON`
 - The delete may succeed server-side despite the parse error
 - **Impact:** Cleanup of test topics may leave orphaned resources
+- **SDK compatibility update (v0.5.2, 2026-10-01):** topic deletion accepts JSON strings, message objects, empty bodies, and plain text, including text mislabeled as JSON. Malformed structured bodies still fail. These cases are covered by mock tests; the original live body and Content-Type were not recorded, so their format remains unknown. Integration delete responses now log a bounded body prefix and Content-Type for the next authorized live run.
 
 ### 4. ScanLogs endpoint unresponsive
 - `POST /v1/mgmt/scanlogs` consistently times out (>2min)
