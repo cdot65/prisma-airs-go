@@ -23,13 +23,13 @@ func TestBackoffDelay_Bounds(t *testing.T) {
 }
 
 func TestIsRetryableStatus(t *testing.T) {
-	retryable := []int{500, 502, 503, 504}
+	retryable := []int{429, 500, 502, 503, 504}
 	for _, code := range retryable {
 		if !IsRetryableStatus(code) {
 			t.Errorf("expected %d to be retryable", code)
 		}
 	}
-	nonRetryable := []int{200, 400, 401, 403, 404, 429, 501}
+	nonRetryable := []int{200, 400, 401, 403, 404, 501}
 	for _, code := range nonRetryable {
 		if IsRetryableStatus(code) {
 			t.Errorf("expected %d to not be retryable", code)

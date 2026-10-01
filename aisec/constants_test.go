@@ -1,6 +1,9 @@
 package aisec
 
-import "testing"
+import (
+	"regexp"
+	"testing"
+)
 
 func TestConstants_Endpoints(t *testing.T) {
 	if DefaultEndpoint != "https://service.api.aisecurity.paloaltonetworks.com" {
@@ -69,7 +72,7 @@ func TestConstants_Retry(t *testing.T) {
 	if MaxNumberOfRetries != 5 {
 		t.Errorf("MaxNumberOfRetries = %d", MaxNumberOfRetries)
 	}
-	expected := []int{500, 502, 503, 504}
+	expected := []int{429, 500, 502, 503, 504}
 	if len(HTTPForceRetryStatusCodes) != len(expected) {
 		t.Fatalf("HTTPForceRetryStatusCodes len = %d", len(HTTPForceRetryStatusCodes))
 	}
@@ -108,10 +111,10 @@ func TestConstants_ScanPaths(t *testing.T) {
 }
 
 func TestConstants_Version(t *testing.T) {
-	if Version == "" {
-		t.Error("Version is empty")
+	if !regexp.MustCompile(`^\d+\.\d+\.\d+$`).MatchString(Version) {
+		t.Errorf("Version = %q, want MAJOR.MINOR.PATCH", Version)
 	}
-	if UserAgent == "" {
-		t.Error("UserAgent is empty")
+	if want := "PAN-AIRS/" + Version + "-go-sdk"; UserAgent != want {
+		t.Errorf("UserAgent = %q, want %q", UserAgent, want)
 	}
 }

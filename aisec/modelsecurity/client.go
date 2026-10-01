@@ -20,6 +20,9 @@ type Opts struct {
 	MgmtEndpoint  string
 	TokenEndpoint string
 	NumRetries    int
+	// HTTPClient overrides the HTTP client used for API and token requests
+	// (timeouts, proxies, transports, tracing). Defaults to the SDK client.
+	HTTPClient *http.Client
 }
 
 // Client is the Model Security API client with dual-endpoint routing.
@@ -33,15 +36,9 @@ type Client struct {
 
 // NewClient creates a new Model Security API client.
 func NewClient(opts Opts) (*Client, error) {
-	dataEndpoint := opts.DataEndpoint
-	if dataEndpoint == "" {
-		dataEndpoint = aisec.DefaultModelSecDataEndpoint
-	}
-
-	mgmtEndpoint := opts.MgmtEndpoint
-	if mgmtEndpoint == "" {
-		mgmtEndpoint = aisec.DefaultModelSecMgmtEndpoint
-	}
+	// Base URLs: option -> PANW_MODEL_SEC_{DATA,MGMT}_ENDPOINT -> default.
+	dataEndpoint := internal.ResolveEndpoint(opts.DataEndpoint, aisec.EnvModelSecDataEndpoint, aisec.DefaultModelSecDataEndpoint)
+	mgmtEndpoint := internal.ResolveEndpoint(opts.MgmtEndpoint, aisec.EnvModelSecMgmtEndpoint, aisec.DefaultModelSecMgmtEndpoint)
 
 	mgmtCfg, err := internal.ResolveOAuthConfig(internal.ResolveOAuthConfigOpts{
 		ClientID:          opts.ClientID,
@@ -52,6 +49,7 @@ func NewClient(opts Opts) (*Client, error) {
 		TokenEndpoint:     opts.TokenEndpoint,
 		PrimaryEnvPrefix:  "PANW_MODEL_SEC",
 		FallbackEnvPrefix: "PANW_MGMT",
+		HTTPClient:        opts.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
@@ -63,6 +61,7 @@ func NewClient(opts Opts) (*Client, error) {
 		OAuth:      mgmtCfg.OAuth,
 		NumRetries: mgmtCfg.NumRetries,
 		TsgID:      mgmtCfg.TsgID,
+		HTTPClient: mgmtCfg.HTTPClient,
 	}
 
 	c := &Client{mgmtCfg: mgmtCfg}
@@ -116,7 +115,7 @@ func (c *ScansClient) Get(ctx context.Context, uuid string) (*ScanBaseResponse, 
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid scan uuid: %s", uuid), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[ScanBaseResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/" + uuid,
+		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/" + internal.PathSeg(uuid),
 	})
 	if err != nil {
 		return nil, err
@@ -129,7 +128,7 @@ func (c *ScansClient) GetEvaluations(ctx context.Context, scanUUID string, opts 
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid scan uuid: %s", scanUUID), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[RuleEvaluationList](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/" + scanUUID + "/evaluations", Params: buildEvaluationListParams(opts),
+		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/" + internal.PathSeg(scanUUID) + "/evaluations", Params: buildEvaluationListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -142,7 +141,7 @@ func (c *ScansClient) GetEvaluation(ctx context.Context, uuid string) (*RuleEval
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid evaluation uuid: %s", uuid), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[RuleEvaluationResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecEvaluationsPath + "/" + uuid,
+		Method: http.MethodGet, Path: aisec.ModelSecEvaluationsPath + "/" + internal.PathSeg(uuid),
 	})
 	if err != nil {
 		return nil, err
@@ -155,7 +154,7 @@ func (c *ScansClient) GetFiles(ctx context.Context, scanUUID string, opts FileLi
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid scan uuid: %s", scanUUID), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[FileList](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/" + scanUUID + "/files", Params: buildFileListParams(opts),
+		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/" + internal.PathSeg(scanUUID) + "/files", Params: buildFileListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -168,7 +167,7 @@ func (c *ScansClient) GetViolations(ctx context.Context, scanUUID string, opts V
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid scan uuid: %s", scanUUID), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[ViolationList](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/" + scanUUID + "/rule-violations", Params: buildViolationListParams(opts),
+		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/" + internal.PathSeg(scanUUID) + "/rule-violations", Params: buildViolationListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -181,7 +180,7 @@ func (c *ScansClient) GetViolation(ctx context.Context, uuid string) (*Violation
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid violation uuid: %s", uuid), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[ViolationResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecViolationsPath + "/" + uuid,
+		Method: http.MethodGet, Path: aisec.ModelSecViolationsPath + "/" + internal.PathSeg(uuid),
 	})
 	if err != nil {
 		return nil, err
@@ -194,7 +193,7 @@ func (c *ScansClient) AddLabels(ctx context.Context, scanUUID string, req Labels
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid scan uuid: %s", scanUUID), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[LabelsResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.ModelSecScansPath + "/" + scanUUID + "/labels", Body: req,
+		Method: http.MethodPost, Path: aisec.ModelSecScansPath + "/" + internal.PathSeg(scanUUID) + "/labels", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -207,7 +206,7 @@ func (c *ScansClient) SetLabels(ctx context.Context, scanUUID string, req Labels
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid scan uuid: %s", scanUUID), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[LabelsResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.ModelSecScansPath + "/" + scanUUID + "/labels", Body: req,
+		Method: http.MethodPut, Path: aisec.ModelSecScansPath + "/" + internal.PathSeg(scanUUID) + "/labels", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -224,7 +223,7 @@ func (c *ScansClient) DeleteLabels(ctx context.Context, scanUUID string, keys []
 	for _, k := range keys {
 		q.Add("keys", k)
 	}
-	path := aisec.ModelSecScansPath + "/" + scanUUID + "/labels"
+	path := aisec.ModelSecScansPath + "/" + internal.PathSeg(scanUUID) + "/labels"
 	if qs := q.Encode(); qs != "" {
 		path += "?" + qs
 	}
@@ -246,7 +245,7 @@ func (c *ScansClient) GetLabelKeys(ctx context.Context, opts LabelListOpts) (*La
 
 func (c *ScansClient) GetLabelValues(ctx context.Context, key string, opts LabelListOpts) (*LabelValueList, error) {
 	resp, err := internal.DoMgmtRequest[LabelValueList](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/label-keys/" + url.PathEscape(key) + "/values", Params: buildLabelListParams(opts),
+		Method: http.MethodGet, Path: aisec.ModelSecScansPath + "/label-keys/" + internal.PathSeg(key) + "/values", Params: buildLabelListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -286,7 +285,7 @@ func (c *SecurityGroupsClient) Get(ctx context.Context, uuid string) (*ModelSecu
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid security group uuid: %s", uuid), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[ModelSecurityGroupResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecSecurityGroupsPath + "/" + uuid,
+		Method: http.MethodGet, Path: aisec.ModelSecSecurityGroupsPath + "/" + internal.PathSeg(uuid),
 	})
 	if err != nil {
 		return nil, err
@@ -299,7 +298,7 @@ func (c *SecurityGroupsClient) Update(ctx context.Context, uuid string, req Mode
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid security group uuid: %s", uuid), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[ModelSecurityGroupResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.ModelSecSecurityGroupsPath + "/" + uuid, Body: req,
+		Method: http.MethodPut, Path: aisec.ModelSecSecurityGroupsPath + "/" + internal.PathSeg(uuid), Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -312,7 +311,7 @@ func (c *SecurityGroupsClient) Delete(ctx context.Context, uuid string) error {
 		return aisec.NewAISecSDKError(fmt.Sprintf("invalid security group uuid: %s", uuid), aisec.UserRequestPayloadError)
 	}
 	_, err := internal.DoMgmtRequest[any](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.ModelSecSecurityGroupsPath + "/" + uuid,
+		Method: http.MethodDelete, Path: aisec.ModelSecSecurityGroupsPath + "/" + internal.PathSeg(uuid),
 	})
 	return err
 }
@@ -322,7 +321,7 @@ func (c *SecurityGroupsClient) ListRuleInstances(ctx context.Context, sgUUID str
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid security group uuid: %s", sgUUID), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[ListModelSecurityRuleInstancesResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecSecurityGroupsPath + "/" + sgUUID + "/rule-instances", Params: buildRuleInstanceListParams(opts),
+		Method: http.MethodGet, Path: aisec.ModelSecSecurityGroupsPath + "/" + internal.PathSeg(sgUUID) + "/rule-instances", Params: buildRuleInstanceListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -338,7 +337,7 @@ func (c *SecurityGroupsClient) GetRuleInstance(ctx context.Context, sgUUID, riUU
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid rule instance uuid: %s", riUUID), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[ModelSecurityRuleInstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecSecurityGroupsPath + "/" + sgUUID + "/rule-instances/" + riUUID,
+		Method: http.MethodGet, Path: aisec.ModelSecSecurityGroupsPath + "/" + internal.PathSeg(sgUUID) + "/rule-instances/" + internal.PathSeg(riUUID),
 	})
 	if err != nil {
 		return nil, err
@@ -354,7 +353,7 @@ func (c *SecurityGroupsClient) UpdateRuleInstance(ctx context.Context, sgUUID, r
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid rule instance uuid: %s", riUUID), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[ModelSecurityRuleInstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.ModelSecSecurityGroupsPath + "/" + sgUUID + "/rule-instances/" + riUUID, Body: req,
+		Method: http.MethodPut, Path: aisec.ModelSecSecurityGroupsPath + "/" + internal.PathSeg(sgUUID) + "/rule-instances/" + internal.PathSeg(riUUID), Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -384,7 +383,7 @@ func (c *SecurityRulesClient) Get(ctx context.Context, uuid string) (*ModelSecur
 		return nil, aisec.NewAISecSDKError(fmt.Sprintf("invalid security rule uuid: %s", uuid), aisec.UserRequestPayloadError)
 	}
 	resp, err := internal.DoMgmtRequest[ModelSecurityRuleResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecSecurityRulesPath + "/" + uuid,
+		Method: http.MethodGet, Path: aisec.ModelSecSecurityRulesPath + "/" + internal.PathSeg(uuid),
 	})
 	if err != nil {
 		return nil, err

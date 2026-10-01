@@ -2,7 +2,9 @@ package internal
 
 import (
 	"fmt"
+	"net/http"
 	"os"
+	"strings"
 
 	"github.com/cdot65/prisma-airs-go/aisec"
 )
@@ -13,6 +15,9 @@ type OAuthServiceConfig struct {
 	OAuth      *OAuthClient
 	NumRetries int
 	TsgID      string
+	// HTTPClient, when set, is used for API requests (token requests use the
+	// OAuthClient's own client, configured from the same value).
+	HTTPClient *http.Client
 }
 
 // ResolveOAuthConfigOpts are options for resolving OAuth config.
@@ -26,6 +31,7 @@ type ResolveOAuthConfigOpts struct {
 	TokenBufferMs     int
 	PrimaryEnvPrefix  string // e.g. "PANW_RED_TEAM"
 	FallbackEnvPrefix string // e.g. "PANW_MGMT"
+	HTTPClient        *http.Client
 }
 
 // ResolveOAuthConfig resolves OAuth2 credentials from options -> primary env vars -> fallback env vars.
@@ -92,11 +98,13 @@ func ResolveOAuthConfig(opts ResolveOAuthConfigOpts) (*OAuthServiceConfig, error
 		TsgID:         tsgID,
 		TokenEndpoint: tokenEndpoint,
 		TokenBufferMs: opts.TokenBufferMs,
+		HTTPClient:    opts.HTTPClient,
 	})
 
 	return &OAuthServiceConfig{
-		BaseURL:    opts.BaseURL,
+		BaseURL:    strings.TrimRight(opts.BaseURL, "/"),
 		OAuth:      oauthClient,
+		HTTPClient: opts.HTTPClient,
 		NumRetries: numRetries,
 		TsgID:      tsgID,
 	}, nil
@@ -116,4 +124,10 @@ func envOrEmpty(prefix, suffix string) string {
 		return ""
 	}
 	return os.Getenv(prefix + suffix)
+}
+
+// ResolveEndpoint picks a base URL: explicit option, then the environment
+// variable named envVar, then the default. Trailing slashes are removed.
+func ResolveEndpoint(explicit, envVar, def string) string {
+	return strings.TrimRight(firstNonEmpty(explicit, envOrEmpty(envVar, ""), def), "/")
 }

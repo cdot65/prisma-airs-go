@@ -2,6 +2,7 @@ package aisec
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 )
 
@@ -61,5 +62,62 @@ func TestAISecSDKError_Is(t *testing.T) {
 	var target *AISecSDKError
 	if !errors.As(err, &target) {
 		t.Error("errors.As should match")
+	}
+}
+
+func TestHTTPError_SentinelsMatchByStatus(t *testing.T) {
+	cases := []struct {
+		status int
+		want   error
+	}{
+		{400, ErrBadRequest}, {401, ErrUnauthorized}, {403, ErrForbidden},
+		{404, ErrNotFound}, {409, ErrConflict}, {429, ErrRateLimited},
+	}
+	for _, c := range cases {
+		err := NewHTTPError("boom", ClientSideError, c.status)
+		if !errors.Is(err, c.want) {
+			t.Errorf("status %d: errors.Is(err, %v) = false", c.status, c.want)
+		}
+		for _, other := range []error{ErrBadRequest, ErrUnauthorized, ErrForbidden, ErrNotFound, ErrConflict, ErrRateLimited} {
+			if other != c.want && errors.Is(err, other) {
+				t.Errorf("status %d wrongly matches %v", c.status, other)
+			}
+		}
+		if err.StatusCode != c.status {
+			t.Errorf("StatusCode = %d", err.StatusCode)
+		}
+	}
+}
+
+func TestHTTPError_UnmappedAndMissingStatusMatchNothing(t *testing.T) {
+	if errors.Is(NewHTTPError("x", ServerSideError, 500), ErrNotFound) {
+		t.Error("500 must not match ErrNotFound")
+	}
+	if errors.Is(NewAISecSDKError("x", ClientSideError), ErrNotFound) || IsNotFound(NewAISecSDKError("x", ClientSideError)) {
+		t.Error("an error with no status must not match any sentinel")
+	}
+	if IsNotFound(nil) {
+		t.Error("IsNotFound(nil) = true")
+	}
+}
+
+func TestHTTPError_WorksThroughWrapping(t *testing.T) {
+	inner := NewHTTPError("gone", ClientSideError, 404)
+	wrapped := fmt.Errorf("reading profile: %w", inner)
+	if !IsNotFound(wrapped) {
+		t.Error("IsNotFound should see through fmt.Errorf %w wrapping")
+	}
+	var sdk *AISecSDKError
+	if !errors.As(wrapped, &sdk) || sdk.StatusCode != 404 {
+		t.Errorf("errors.As failed: %#v", sdk)
+	}
+}
+
+func TestHTTPError_MessageFormatUnchanged(t *testing.T) {
+	// Downstream code (e.g. the Terraform provider) matches on error text, so
+	// adding a status code must not change the rendered message.
+	err := NewHTTPError("profile missing", ClientSideError, 404)
+	if got, want := err.Error(), "AISEC_CLIENT_SIDE_ERROR:profile missing"; got != want {
+		t.Errorf("Error() = %q, want %q", got, want)
 	}
 }

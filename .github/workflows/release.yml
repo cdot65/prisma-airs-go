@@ -34,10 +34,15 @@ jobs:
       - name: Build
         run: go build ./...
 
-      - name: Verify tag
+      - name: Verify tag matches aisec.Version
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
-          echo "Release tag: $TAG"
+          VERSION=$(sed -n 's/^[[:space:]]*Version[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' aisec/constants.go | head -n1)
+          echo "Release tag: $TAG, aisec.Version: $VERSION"
+          if [ -z "$VERSION" ] || [ "$TAG" != "v$VERSION" ]; then
+            echo "::error::tag $TAG does not match aisec.Version v$VERSION — bump aisec/constants.go before releasing"
+            exit 1
+          fi
 
       - name: Publish to Go module proxy
         run: |

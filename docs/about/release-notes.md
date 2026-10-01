@@ -1,5 +1,25 @@
 # Release Notes
 
+## v0.5.1
+
+- **verified**: the changed Red Team report, goal, stream, custom-attack-report, score-trend and dashboard endpoints were exercised against a live tenant with the new read-only `TestIntegration_Reports_ReadEndpoints`; all returned data (the multi-turn detail endpoint answered at the spec path, but no multi-turn attack existed to fetch)
+- **fix(redteam)**: `AttackListItem` now models the real list row — the identifier is `UUID` (the old `ID`/`Details` fields were never populated by the API and are kept only as deprecated fields). Pass `UUID` to `GetAttackDetail`
+- **test**: unit tests are hermetic — `PANW_*` variables are cleared in each package's `TestMain` (build tag `!integration`), so they pass with live credentials exported; `TestIntegration_Profiles_CRUD` now deletes every revision it creates (it previously leaked revision 2); `TestIntegration_PyPIAuth` no longer logs the access token embedded in the PyPI URL
+
+- **fix**: a persistent 401/403 no longer retries forever. The OAuth token refresh is granted once per request; a second 401/403 is returned as an error. Previously the refresh retry never consumed budget, so a genuine authorization failure produced an unbounded request loop (tens of thousands of requests per second against both the API and the token endpoint) until the context was cancelled
+- **fix(redteam)**: data-plane report, custom-attack-report, score-trend, quota and sentiment methods now use the verbs and paths in the OpenAPI spec (verified by `spec_conformance_test.go`, which pins all 75 Red Team operations). Changed: `ListAttacks` → `/v1/report/static/{job}/list-attacks`, `GetAttackDetail` → `…/static/{job}/attack/{id}`, `GetMultiTurnAttackDetail` → `…/static/{job}/attack-multi-turn/{id}`, `GetStaticReport`/`GetDynamicReport` → `…/{job}/report`, `ListGoals` → `…/dynamic/{job}/list-goals`, `ListGoalStreams` → `…/goal/{goal}/list-streams`, `GetStreamDetail` → `…/dynamic/stream/{id}`, all `CustomAttackReports` methods → `/v1/custom-attacks/report/…` and `/v1/custom-attacks/job/…`, `GetScoreTrend` now sends `target_id` as a query parameter, `UpdateSentiment` is a **POST**. `GetQuota` deliberately stays a **GET**: the spec says POST, but a live tenant returns 403 for POST and serves GET (verified 2026-10-01)
+- **feat(redteam)**: `Reports.GeneratePartialReport`; `GetScoreTrend` accepts optional `ScoreTrendOpts` (date range); `GoalListOpts` gains `Skip`, `Limit`, `Search`
+- **feat**: `AISecSDKError.StatusCode`, sentinel errors (`ErrNotFound`, `ErrUnauthorized`, `ErrForbidden`, `ErrBadRequest`, `ErrConflict`, `ErrRateLimited`) matched by `errors.Is`, and `aisec.IsNotFound`. Error message text is unchanged
+- **fix**: `PANW_MGMT_ENDPOINT`, `PANW_MODEL_SEC_{DATA,MGMT}_ENDPOINT` and `PANW_RED_TEAM_{DATA,MGMT}_ENDPOINT` are now honored (they were documented but never read). Resolution is option → environment → default
+- **feat**: injectable HTTP client — `HTTPClient` on `runtime.Opts`, `modelsecurity.Opts`, `redteam.Opts` and `aisec.WithHTTPClient` for the scan API. Token requests now use the same client and the caller's context, and cannot hang indefinitely
+- **feat**: 429 responses are retried, honoring `Retry-After` (capped at 30 s); backoff sleeps stop when the context is cancelled
+- **fix**: `Profiles.GetByID`, `Profiles.GetByName` and `DlpProfiles.Get` page through the whole list instead of looking only at the first 1000 items; their "not found" errors match `ErrNotFound`
+- **fix**: caller-supplied identifiers are escaped as single path segments (a `/`, `?` or `#` in an ID can no longer alter the request path)
+- **fix**: concurrent callers waiting on a failed token fetch receive the real error instead of a generic one; if the fetching caller's context ended, waiters fetch for themselves
+- **fix**: `UploadPromptsCsv`, `DownloadReport`, `DownloadTemplate` return `*AISecSDKError` for local failures and share the single OAuth request pipeline (`internal.DoMgmtRaw`)
+- **fix**: `integration_test.go` (build tag `integration`) compiled against a removed field; it builds again
+- **chore**: release workflow now fails when the release tag does not match `aisec.Version`; removed an accidentally tracked empty hook log
+
 ## v0.5.0
 
 - **feat**: add `EulaClient` sub-client with `GetContent`, `GetStatus`, `Accept` methods

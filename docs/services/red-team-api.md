@@ -88,6 +88,9 @@ streamDetail, err := client.Reports.GetStreamDetail(ctx, "stream-id")
 
 // Download report as CSV, JSON, or ALL
 data, err := client.Reports.DownloadReport(ctx, "job-id", redteam.FileFormatCSV)
+
+// Generate a partial report for a running job
+_, err = client.Reports.GeneratePartialReport(ctx, "job-id")
 ```
 
 ## Custom Attack Reports (Data Plane)

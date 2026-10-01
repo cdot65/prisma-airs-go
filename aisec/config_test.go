@@ -1,8 +1,10 @@
 package aisec
 
 import (
+	"net/http"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestNewConfig_WithAPIKey(t *testing.T) {
@@ -74,5 +76,15 @@ func TestNewConfig_ExplicitOverridesEnv(t *testing.T) {
 	cfg := NewConfig(WithAPIKey("explicit-key"))
 	if cfg.APIKey() != "explicit-key" {
 		t.Errorf("APIKey() = %q, want explicit-key", cfg.APIKey())
+	}
+}
+
+func TestConfig_WithHTTPClient(t *testing.T) {
+	if NewConfig().HTTPClient() != nil {
+		t.Error("default HTTPClient should be nil (SDK default applies)")
+	}
+	hc := &http.Client{Timeout: 3 * time.Second}
+	if got := NewConfig(WithHTTPClient(hc)).HTTPClient(); got != hc {
+		t.Errorf("HTTPClient() = %v, want the injected client", got)
 	}
 }

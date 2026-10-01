@@ -8,7 +8,6 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/cdot65/prisma-airs-go/aisec"
@@ -24,6 +23,9 @@ type Opts struct {
 	MgmtEndpoint  string
 	TokenEndpoint string
 	NumRetries    int
+	// HTTPClient overrides the HTTP client used for API and token requests
+	// (timeouts, proxies, transports, tracing). Defaults to the SDK client.
+	HTTPClient *http.Client
 }
 
 // Client is the Red Team API client with dual-endpoint routing.
@@ -42,14 +44,9 @@ type Client struct {
 
 // NewClient creates a new Red Team API client.
 func NewClient(opts Opts) (*Client, error) {
-	dataEndpoint := opts.DataEndpoint
-	if dataEndpoint == "" {
-		dataEndpoint = aisec.DefaultRedTeamDataEndpoint
-	}
-	mgmtEndpoint := opts.MgmtEndpoint
-	if mgmtEndpoint == "" {
-		mgmtEndpoint = aisec.DefaultRedTeamMgmtEndpoint
-	}
+	// Base URLs: option -> PANW_RED_TEAM_{DATA,MGMT}_ENDPOINT -> default.
+	dataEndpoint := internal.ResolveEndpoint(opts.DataEndpoint, aisec.EnvRedTeamDataEndpoint, aisec.DefaultRedTeamDataEndpoint)
+	mgmtEndpoint := internal.ResolveEndpoint(opts.MgmtEndpoint, aisec.EnvRedTeamMgmtEndpoint, aisec.DefaultRedTeamMgmtEndpoint)
 
 	mgmtCfg, err := internal.ResolveOAuthConfig(internal.ResolveOAuthConfigOpts{
 		ClientID:          opts.ClientID,
@@ -60,6 +57,7 @@ func NewClient(opts Opts) (*Client, error) {
 		TokenEndpoint:     opts.TokenEndpoint,
 		PrimaryEnvPrefix:  "PANW_RED_TEAM",
 		FallbackEnvPrefix: "PANW_MGMT",
+		HTTPClient:        opts.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
@@ -70,6 +68,7 @@ func NewClient(opts Opts) (*Client, error) {
 		OAuth:      mgmtCfg.OAuth,
 		NumRetries: mgmtCfg.NumRetries,
 		TsgID:      mgmtCfg.TsgID,
+		HTTPClient: mgmtCfg.HTTPClient,
 	}
 
 	c := &Client{dataCfg: dataCfg, mgmtCfg: mgmtCfg}
@@ -97,10 +96,25 @@ func (c *Client) GetScanStatistics(ctx context.Context, params map[string]string
 	return &resp.Data, nil
 }
 
-// GetScoreTrend gets the score trend for a target.
-func (c *Client) GetScoreTrend(ctx context.Context, targetID string) (*ScoreTrendResponse, error) {
+// GetScoreTrend gets the score trend for a target:
+// GET /v1/dashboard/score-trend?target_id=. Optional ScoreTrendOpts narrow the
+// date range.
+func (c *Client) GetScoreTrend(ctx context.Context, targetID string, opts ...ScoreTrendOpts) (*ScoreTrendResponse, error) {
+	params := map[string]string{"target_id": targetID}
+	if len(opts) > 0 {
+		o := opts[0]
+		if o.DateRange != "" {
+			params["date_range"] = string(o.DateRange)
+		}
+		if o.StartDate != "" {
+			params["start_date"] = o.StartDate
+		}
+		if o.EndDate != "" {
+			params["end_date"] = o.EndDate
+		}
+	}
 	resp, err := internal.DoMgmtRequest[ScoreTrendResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamDashboardPath + "/score-trend/" + targetID,
+		Method: http.MethodGet, Path: aisec.RedTeamDashboardPath + "/score-trend", Params: params,
 	})
 	if err != nil {
 		return nil, err
@@ -108,7 +122,9 @@ func (c *Client) GetScoreTrend(ctx context.Context, targetID string) (*ScoreTren
 	return &resp.Data, nil
 }
 
-// GetQuota gets the quota summary.
+// GetQuota gets the quota summary: GET /v1/metering/quota. The OpenAPI spec says
+// POST, but a live tenant returns 403 for POST and serves GET (verified
+// 2026-10-01); see the exception in spec_conformance_test.go.
 func (c *Client) GetQuota(ctx context.Context) (*QuotaSummary, error) {
 	resp, err := internal.DoMgmtRequest[QuotaSummary](ctx, c.dataCfg, internal.MgmtRequestOptions{
 		Method: http.MethodGet, Path: aisec.RedTeamQuotaPath,
@@ -122,7 +138,7 @@ func (c *Client) GetQuota(ctx context.Context) (*QuotaSummary, error) {
 // GetErrorLogs gets error logs for a job.
 func (c *Client) GetErrorLogs(ctx context.Context, jobID string, opts ListOpts) (*ErrorLogListResponse, error) {
 	resp, err := internal.DoMgmtRequest[ErrorLogListResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamErrorLogPath + "/" + jobID, Params: buildListParams(opts),
+		Method: http.MethodGet, Path: aisec.RedTeamErrorLogPath + "/" + seg(jobID), Params: buildListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -133,7 +149,7 @@ func (c *Client) GetErrorLogs(ctx context.Context, jobID string, opts ListOpts) 
 // UpdateSentiment updates the sentiment for a job.
 func (c *Client) UpdateSentiment(ctx context.Context, req SentimentRequest) (*SentimentResponse, error) {
 	resp, err := internal.DoMgmtRequest[SentimentResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamSentimentPath, Body: req,
+		Method: http.MethodPost, Path: aisec.RedTeamSentimentPath, Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -144,7 +160,7 @@ func (c *Client) UpdateSentiment(ctx context.Context, req SentimentRequest) (*Se
 // GetSentiment gets the sentiment for a job.
 func (c *Client) GetSentiment(ctx context.Context, jobID string) (*SentimentResponse, error) {
 	resp, err := internal.DoMgmtRequest[SentimentResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamSentimentPath + "/" + jobID,
+		Method: http.MethodGet, Path: aisec.RedTeamSentimentPath + "/" + seg(jobID),
 	})
 	if err != nil {
 		return nil, err
@@ -225,7 +241,7 @@ func (c *ScansClient) List(ctx context.Context, opts ScanListOpts) (*JobListResp
 
 func (c *ScansClient) Get(ctx context.Context, jobID string) (*JobResponse, error) {
 	resp, err := internal.DoMgmtRequest[JobResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamScanPath + "/" + jobID,
+		Method: http.MethodGet, Path: aisec.RedTeamScanPath + "/" + seg(jobID),
 	})
 	if err != nil {
 		return nil, err
@@ -235,7 +251,7 @@ func (c *ScansClient) Get(ctx context.Context, jobID string) (*JobResponse, erro
 
 func (c *ScansClient) Abort(ctx context.Context, jobID string) (*JobAbortResponse, error) {
 	resp, err := internal.DoMgmtRequest[JobAbortResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.RedTeamScanPath + "/" + jobID + "/abort",
+		Method: http.MethodPost, Path: aisec.RedTeamScanPath + "/" + seg(jobID) + "/abort",
 	})
 	if err != nil {
 		return nil, err
@@ -262,7 +278,7 @@ type ReportsClient struct {
 
 func (c *ReportsClient) GetStaticReport(ctx context.Context, jobID string) (*StaticJobReport, error) {
 	resp, err := internal.DoMgmtRequest[StaticJobReport](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + jobID,
+		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + seg(jobID) + "/report",
 	})
 	if err != nil {
 		return nil, err
@@ -272,7 +288,7 @@ func (c *ReportsClient) GetStaticReport(ctx context.Context, jobID string) (*Sta
 
 func (c *ReportsClient) GetDynamicReport(ctx context.Context, jobID string) (*DynamicJobReport, error) {
 	resp, err := internal.DoMgmtRequest[DynamicJobReport](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + jobID,
+		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + seg(jobID) + "/report",
 	})
 	if err != nil {
 		return nil, err
@@ -282,7 +298,7 @@ func (c *ReportsClient) GetDynamicReport(ctx context.Context, jobID string) (*Dy
 
 func (c *ReportsClient) ListAttacks(ctx context.Context, jobID string, opts AttackListOpts) (*AttackListResponse, error) {
 	resp, err := internal.DoMgmtRequest[AttackListResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportPath + "/" + jobID + "/attacks", Params: buildAttackListParams(opts),
+		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + seg(jobID) + "/list-attacks", Params: buildAttackListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -292,7 +308,7 @@ func (c *ReportsClient) ListAttacks(ctx context.Context, jobID string, opts Atta
 
 func (c *ReportsClient) GetAttackDetail(ctx context.Context, jobID, attackID string) (*AttackDetailResponse, error) {
 	resp, err := internal.DoMgmtRequest[AttackDetailResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportPath + "/" + jobID + "/attacks/" + attackID,
+		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + seg(jobID) + "/attack/" + seg(attackID),
 	})
 	if err != nil {
 		return nil, err
@@ -302,7 +318,7 @@ func (c *ReportsClient) GetAttackDetail(ctx context.Context, jobID, attackID str
 
 func (c *ReportsClient) GetMultiTurnAttackDetail(ctx context.Context, jobID, attackID string) (*AttackMultiTurnDetailResponse, error) {
 	resp, err := internal.DoMgmtRequest[AttackMultiTurnDetailResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportPath + "/" + jobID + "/attacks/" + attackID + "/multi-turn",
+		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + seg(jobID) + "/attack-multi-turn/" + seg(attackID),
 	})
 	if err != nil {
 		return nil, err
@@ -312,7 +328,7 @@ func (c *ReportsClient) GetMultiTurnAttackDetail(ctx context.Context, jobID, att
 
 func (c *ReportsClient) GetStaticRemediation(ctx context.Context, jobID string) (*RemediationResponse, error) {
 	resp, err := internal.DoMgmtRequest[RemediationResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + jobID + "/remediation",
+		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + seg(jobID) + "/remediation",
 	})
 	if err != nil {
 		return nil, err
@@ -322,7 +338,7 @@ func (c *ReportsClient) GetStaticRemediation(ctx context.Context, jobID string) 
 
 func (c *ReportsClient) GetStaticRuntimePolicy(ctx context.Context, jobID string) (*RuntimePolicyConfigResponse, error) {
 	resp, err := internal.DoMgmtRequest[RuntimePolicyConfigResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + jobID + "/runtime-policy-config",
+		Method: http.MethodGet, Path: aisec.RedTeamReportStaticPath + "/" + seg(jobID) + "/runtime-policy-config",
 	})
 	if err != nil {
 		return nil, err
@@ -332,7 +348,7 @@ func (c *ReportsClient) GetStaticRuntimePolicy(ctx context.Context, jobID string
 
 func (c *ReportsClient) GetDynamicRemediation(ctx context.Context, jobID string) (*RemediationResponse, error) {
 	resp, err := internal.DoMgmtRequest[RemediationResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + jobID + "/remediation",
+		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + seg(jobID) + "/remediation",
 	})
 	if err != nil {
 		return nil, err
@@ -342,7 +358,7 @@ func (c *ReportsClient) GetDynamicRemediation(ctx context.Context, jobID string)
 
 func (c *ReportsClient) GetDynamicRuntimePolicy(ctx context.Context, jobID string) (*RuntimePolicyConfigResponse, error) {
 	resp, err := internal.DoMgmtRequest[RuntimePolicyConfigResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + jobID + "/runtime-policy-config",
+		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + seg(jobID) + "/runtime-policy-config",
 	})
 	if err != nil {
 		return nil, err
@@ -352,7 +368,7 @@ func (c *ReportsClient) GetDynamicRuntimePolicy(ctx context.Context, jobID strin
 
 func (c *ReportsClient) ListGoals(ctx context.Context, jobID string, opts GoalListOpts) (*GoalListResponse, error) {
 	resp, err := internal.DoMgmtRequest[GoalListResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + jobID + "/goals", Params: buildGoalListParams(opts),
+		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + seg(jobID) + "/list-goals", Params: buildGoalListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -362,7 +378,7 @@ func (c *ReportsClient) ListGoals(ctx context.Context, jobID string, opts GoalLi
 
 func (c *ReportsClient) ListGoalStreams(ctx context.Context, jobID, goalID string, opts ListOpts) (*StreamListResponse, error) {
 	resp, err := internal.DoMgmtRequest[StreamListResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + jobID + "/goals/" + goalID + "/streams", Params: buildListParams(opts),
+		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/" + seg(jobID) + "/goal/" + seg(goalID) + "/list-streams", Params: buildListParams(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -372,7 +388,7 @@ func (c *ReportsClient) ListGoalStreams(ctx context.Context, jobID, goalID strin
 
 func (c *ReportsClient) GetStreamDetail(ctx context.Context, streamID string) (*StreamDetailResponse, error) {
 	resp, err := internal.DoMgmtRequest[StreamDetailResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamReportPath + "/streams/" + streamID,
+		Method: http.MethodGet, Path: aisec.RedTeamReportDynamicPath + "/stream/" + seg(streamID),
 	})
 	if err != nil {
 		return nil, err
@@ -382,52 +398,28 @@ func (c *ReportsClient) GetStreamDetail(ctx context.Context, streamID string) (*
 
 // DownloadReport downloads a report in the specified format.
 func (c *ReportsClient) DownloadReport(ctx context.Context, jobID string, format FileFormat) ([]byte, error) {
-	svcCfg := c.dataCfg
-	path := aisec.RedTeamReportDownloadPath + "/" + jobID + "/download"
-
-	u, err := url.Parse(svcCfg.BaseURL + path)
-	if err != nil {
-		return nil, fmt.Errorf("invalid URL: %s%s: %w", svcCfg.BaseURL, path, err)
-	}
-	q := u.Query()
-	q.Set("file_format", string(format))
-	u.RawQuery = q.Encode()
-
-	resp, err := internal.ExecuteWithRetry(internal.RetryOptions{
-		MaxRetries: svcCfg.NumRetries,
-		Execute: func(attempt int) (*http.Response, error) {
-			token, tokenErr := svcCfg.OAuth.GetToken()
-			if tokenErr != nil {
-				return nil, tokenErr
-			}
-			req, reqErr := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
-			if reqErr != nil {
-				return nil, reqErr
-			}
-			req.Header.Set("User-Agent", aisec.UserAgent)
-			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
-			return http.DefaultClient.Do(req)
-		},
-		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
-			if resp.StatusCode == 401 || resp.StatusCode == 403 {
-				_, _ = io.Copy(io.Discard, resp.Body)
-				_ = resp.Body.Close()
-				svcCfg.OAuth.ClearToken()
-				return true, nil
-			}
-			return false, nil
-		},
+	raw, err := internal.DoMgmtRaw(ctx, c.dataCfg, internal.RawMgmtRequestOptions{
+		Method: http.MethodGet,
+		Path:   aisec.RedTeamReportDownloadPath + "/" + seg(jobID) + "/download",
+		Params: map[string]string{"file_format": string(format)},
 	})
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = resp.Body.Close() }()
+	return raw.Body, nil
+}
 
-	var buf bytes.Buffer
-	if _, err := io.Copy(&buf, resp.Body); err != nil {
-		return nil, fmt.Errorf("failed to read report body: %w", err)
+// GeneratePartialReport requests generation of a partial report for a job:
+// POST /v1/report/{job_id}/generate-partial-report.
+func (c *ReportsClient) GeneratePartialReport(ctx context.Context, jobID string) (*BaseResponse, error) {
+	resp, err := internal.DoMgmtRequest[BaseResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
+		Method: http.MethodPost,
+		Path:   aisec.RedTeamReportPath + "/" + seg(jobID) + "/generate-partial-report",
+	})
+	if err != nil {
+		return nil, err
 	}
-	return buf.Bytes(), nil
+	return &resp.Data, nil
 }
 
 // --- Custom Attack Reports Client (data plane) ---
@@ -439,7 +431,7 @@ type CustomAttackReportsClient struct {
 
 func (c *CustomAttackReportsClient) GetReport(ctx context.Context, jobID string) (*CustomAttackReportResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomAttackReportResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/" + jobID,
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/report/" + seg(jobID),
 	})
 	if err != nil {
 		return nil, err
@@ -449,7 +441,7 @@ func (c *CustomAttackReportsClient) GetReport(ctx context.Context, jobID string)
 
 func (c *CustomAttackReportsClient) GetPromptSets(ctx context.Context, jobID string) (*PromptSetsReportResponse, error) {
 	resp, err := internal.DoMgmtRequest[PromptSetsReportResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/" + jobID + "/prompt-sets",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/report/" + seg(jobID) + "/prompt-sets",
 	})
 	if err != nil {
 		return nil, err
@@ -459,7 +451,7 @@ func (c *CustomAttackReportsClient) GetPromptSets(ctx context.Context, jobID str
 
 func (c *CustomAttackReportsClient) GetPromptsBySet(ctx context.Context, jobID, promptSetID string, opts PromptsBySetListOpts) ([]PromptDetailResponse, error) {
 	resp, err := internal.DoMgmtRequest[[]PromptDetailResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/" + jobID + "/prompt-sets/" + promptSetID + "/prompts",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/report/" + seg(jobID) + "/prompt-set/" + seg(promptSetID) + "/prompts",
 		Params: buildPromptsBySetListParams(opts),
 	})
 	if err != nil {
@@ -470,7 +462,7 @@ func (c *CustomAttackReportsClient) GetPromptsBySet(ctx context.Context, jobID, 
 
 func (c *CustomAttackReportsClient) GetPromptDetail(ctx context.Context, jobID, promptID string) (*PromptDetailResponse, error) {
 	resp, err := internal.DoMgmtRequest[PromptDetailResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/" + jobID + "/prompts/" + promptID,
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/report/" + seg(jobID) + "/prompt/" + seg(promptID),
 	})
 	if err != nil {
 		return nil, err
@@ -480,7 +472,7 @@ func (c *CustomAttackReportsClient) GetPromptDetail(ctx context.Context, jobID, 
 
 func (c *CustomAttackReportsClient) ListCustomAttacks(ctx context.Context, jobID string, opts CustomAttacksReportListOpts) (*CustomAttacksListResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomAttacksListResponse](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/" + jobID + "/attacks",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/job/" + seg(jobID) + "/list-custom-attacks",
 		Params: buildCustomAttacksReportListParams(opts),
 	})
 	if err != nil {
@@ -491,7 +483,7 @@ func (c *CustomAttackReportsClient) ListCustomAttacks(ctx context.Context, jobID
 
 func (c *CustomAttackReportsClient) GetAttackOutputs(ctx context.Context, jobID, attackID string) ([]CustomAttackOutput, error) {
 	resp, err := internal.DoMgmtRequest[[]CustomAttackOutput](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/" + jobID + "/attacks/" + attackID + "/outputs",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/job/" + seg(jobID) + "/attack/" + seg(attackID) + "/list-outputs",
 	})
 	if err != nil {
 		return nil, err
@@ -501,7 +493,7 @@ func (c *CustomAttackReportsClient) GetAttackOutputs(ctx context.Context, jobID,
 
 func (c *CustomAttackReportsClient) GetPropertyStats(ctx context.Context, jobID string) ([]PropertyStatistic, error) {
 	resp, err := internal.DoMgmtRequest[[]PropertyStatistic](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/" + jobID + "/property-stats",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttacksReportPath + "/job/" + seg(jobID) + "/property-stats",
 	})
 	if err != nil {
 		return nil, err
@@ -542,7 +534,7 @@ func (c *TargetsClient) List(ctx context.Context, opts TargetListOpts) (*TargetL
 
 func (c *TargetsClient) Get(ctx context.Context, uuid string) (*TargetResponse, error) {
 	resp, err := internal.DoMgmtRequest[TargetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamTargetPath + "/" + uuid,
+		Method: http.MethodGet, Path: aisec.RedTeamTargetPath + "/" + seg(uuid),
 	})
 	if err != nil {
 		return nil, err
@@ -556,7 +548,7 @@ func (c *TargetsClient) Update(ctx context.Context, uuid string, req TargetUpdat
 		params["validate"] = "true"
 	}
 	resp, err := internal.DoMgmtRequest[TargetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamTargetPath + "/" + uuid, Body: req, Params: params,
+		Method: http.MethodPut, Path: aisec.RedTeamTargetPath + "/" + seg(uuid), Body: req, Params: params,
 	})
 	if err != nil {
 		return nil, err
@@ -566,7 +558,7 @@ func (c *TargetsClient) Update(ctx context.Context, uuid string, req TargetUpdat
 
 func (c *TargetsClient) Delete(ctx context.Context, uuid string) (*BaseResponse, error) {
 	resp, err := internal.DoMgmtRequest[BaseResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.RedTeamTargetPath + "/" + uuid,
+		Method: http.MethodDelete, Path: aisec.RedTeamTargetPath + "/" + seg(uuid),
 	})
 	if err != nil {
 		return nil, err
@@ -586,7 +578,7 @@ func (c *TargetsClient) Probe(ctx context.Context, req TargetProbeRequest) (*Tar
 
 func (c *TargetsClient) GetProfile(ctx context.Context, uuid string) (*TargetProfileResponse, error) {
 	resp, err := internal.DoMgmtRequest[TargetProfileResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamTargetPath + "/" + uuid + "/profile",
+		Method: http.MethodGet, Path: aisec.RedTeamTargetPath + "/" + seg(uuid) + "/profile",
 	})
 	if err != nil {
 		return nil, err
@@ -596,7 +588,7 @@ func (c *TargetsClient) GetProfile(ctx context.Context, uuid string) (*TargetPro
 
 func (c *TargetsClient) UpdateProfile(ctx context.Context, uuid string, req TargetContextUpdate) (*TargetResponse, error) {
 	resp, err := internal.DoMgmtRequest[TargetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamTargetPath + "/" + uuid + "/profile", Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamTargetPath + "/" + seg(uuid) + "/profile", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -686,7 +678,7 @@ func (c *CustomAttacksClient) ListPromptSets(ctx context.Context, opts PromptSet
 
 func (c *CustomAttacksClient) GetPromptSet(ctx context.Context, uuid string) (*CustomPromptSetResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid,
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(uuid),
 	})
 	if err != nil {
 		return nil, err
@@ -696,7 +688,7 @@ func (c *CustomAttacksClient) GetPromptSet(ctx context.Context, uuid string) (*C
 
 func (c *CustomAttacksClient) UpdatePromptSet(ctx context.Context, uuid string, req CustomPromptSetUpdateRequest) (*CustomPromptSetResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid, Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(uuid), Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -706,7 +698,7 @@ func (c *CustomAttacksClient) UpdatePromptSet(ctx context.Context, uuid string, 
 
 func (c *CustomAttacksClient) ArchivePromptSet(ctx context.Context, uuid string, req CustomPromptSetArchiveRequest) (*CustomPromptSetResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid + "/archive", Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(uuid) + "/archive", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -716,7 +708,7 @@ func (c *CustomAttacksClient) ArchivePromptSet(ctx context.Context, uuid string,
 
 func (c *CustomAttacksClient) GetPromptSetReference(ctx context.Context, uuid string) (*CustomPromptSetReference, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptSetReference](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid + "/reference",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(uuid) + "/reference",
 	})
 	if err != nil {
 		return nil, err
@@ -730,7 +722,7 @@ func (c *CustomAttacksClient) GetPromptSetVersionInfo(ctx context.Context, uuid 
 		params = map[string]string{"version": version}
 	}
 	resp, err := internal.DoMgmtRequest[CustomPromptSetVersionInfo](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + uuid + "/version-info",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(uuid) + "/version-info",
 		Params: params,
 	})
 	if err != nil {
@@ -763,7 +755,7 @@ func (c *CustomAttacksClient) CreatePrompt(ctx context.Context, req CustomPrompt
 
 func (c *CustomAttacksClient) ListPrompts(ctx context.Context, promptSetID string, opts PromptListOpts) (*CustomPromptList, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptList](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + promptSetID + "/list-custom-prompts",
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(promptSetID) + "/list-custom-prompts",
 		Params: buildPromptListParams(opts),
 	})
 	if err != nil {
@@ -774,7 +766,7 @@ func (c *CustomAttacksClient) ListPrompts(ctx context.Context, promptSetID strin
 
 func (c *CustomAttacksClient) GetPrompt(ctx context.Context, promptSetID, promptID string) (*CustomPromptResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + promptSetID + "/custom-prompt/" + promptID,
+		Method: http.MethodGet, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(promptSetID) + "/custom-prompt/" + seg(promptID),
 	})
 	if err != nil {
 		return nil, err
@@ -784,7 +776,7 @@ func (c *CustomAttacksClient) GetPrompt(ctx context.Context, promptSetID, prompt
 
 func (c *CustomAttacksClient) UpdatePrompt(ctx context.Context, promptSetID, promptID string, req CustomPromptUpdateRequest) (*CustomPromptResponse, error) {
 	resp, err := internal.DoMgmtRequest[CustomPromptResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamCustomPromptSetPath + "/" + promptSetID + "/custom-prompt/" + promptID, Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(promptSetID) + "/custom-prompt/" + seg(promptID), Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -794,7 +786,7 @@ func (c *CustomAttacksClient) UpdatePrompt(ctx context.Context, promptSetID, pro
 
 func (c *CustomAttacksClient) DeletePrompt(ctx context.Context, promptSetID, promptID string) (*BaseResponse, error) {
 	resp, err := internal.DoMgmtRequest[BaseResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.RedTeamCustomPromptSetPath + "/" + promptSetID + "/custom-prompt/" + promptID,
+		Method: http.MethodDelete, Path: aisec.RedTeamCustomPromptSetPath + "/" + seg(promptSetID) + "/custom-prompt/" + seg(promptID),
 	})
 	if err != nil {
 		return nil, err
@@ -826,7 +818,7 @@ func (c *CustomAttacksClient) CreatePropertyName(ctx context.Context, req Proper
 
 func (c *CustomAttacksClient) GetPropertyValues(ctx context.Context, propertyName string) (*PropertyValuesResponse, error) {
 	resp, err := internal.DoMgmtRequest[PropertyValuesResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/property-values/" + propertyName,
+		Method: http.MethodGet, Path: aisec.RedTeamCustomAttackPath + "/property-values/" + seg(propertyName),
 	})
 	if err != nil {
 		return nil, err
@@ -857,116 +849,49 @@ func (c *CustomAttacksClient) CreatePropertyValue(ctx context.Context, req Prope
 
 // UploadPromptsCsv uploads a CSV file of custom prompts for the given prompt set.
 func (c *CustomAttacksClient) UploadPromptsCsv(ctx context.Context, promptSetUUID string, file io.Reader, filename string) (*BaseResponse, error) {
-	svcCfg := c.mgmtCfg
-
-	u, err := url.Parse(svcCfg.BaseURL + aisec.RedTeamUploadPromptsCsvPath)
-	if err != nil {
-		return nil, fmt.Errorf("invalid URL: %w", err)
-	}
-	q := u.Query()
-	q.Set("prompt_set_uuid", promptSetUUID)
-	u.RawQuery = q.Encode()
-
 	var body bytes.Buffer
 	writer := multipart.NewWriter(&body)
 	part, err := writer.CreateFormFile("file", filename)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create form file: %w", err)
+		return nil, aisec.WrapError("failed to create form file", aisec.AISecSDKInternalError, err)
 	}
 	if _, err := io.Copy(part, file); err != nil {
-		return nil, fmt.Errorf("failed to copy file data: %w", err)
+		return nil, aisec.WrapError("failed to copy file data", aisec.UserRequestPayloadError, err)
 	}
 	if err := writer.Close(); err != nil {
-		return nil, fmt.Errorf("failed to close multipart writer: %w", err)
+		return nil, aisec.WrapError("failed to close multipart writer", aisec.AISecSDKInternalError, err)
 	}
 
-	resp, err := internal.ExecuteWithRetry(internal.RetryOptions{
-		MaxRetries: svcCfg.NumRetries,
-		Execute: func(attempt int) (*http.Response, error) {
-			token, tokenErr := svcCfg.OAuth.GetToken()
-			if tokenErr != nil {
-				return nil, tokenErr
-			}
-			req, reqErr := http.NewRequestWithContext(ctx, http.MethodPost, u.String(), bytes.NewReader(body.Bytes()))
-			if reqErr != nil {
-				return nil, reqErr
-			}
-			req.Header.Set("Content-Type", writer.FormDataContentType())
-			req.Header.Set("User-Agent", aisec.UserAgent)
-			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
-			return http.DefaultClient.Do(req)
-		},
-		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
-			if resp.StatusCode == 401 || resp.StatusCode == 403 {
-				_, _ = io.Copy(io.Discard, resp.Body)
-				_ = resp.Body.Close()
-				svcCfg.OAuth.ClearToken()
-				return true, nil
-			}
-			return false, nil
-		},
+	raw, err := internal.DoMgmtRaw(ctx, c.mgmtCfg, internal.RawMgmtRequestOptions{
+		Method:      http.MethodPost,
+		Path:        aisec.RedTeamUploadPromptsCsvPath,
+		Params:      map[string]string{"prompt_set_uuid": promptSetUUID},
+		Body:        body.Bytes(),
+		ContentType: writer.FormDataContentType(),
 	})
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = resp.Body.Close() }()
 
-	respBody, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response body: %w", err)
-	}
+	// A 2xx with a non-JSON body is treated as success with an empty result,
+	// matching DoMgmtRequest's tolerance for endpoints that reply in plain text.
 	var result BaseResponse
-	if len(respBody) > 0 {
-		_ = json.Unmarshal(respBody, &result)
+	if len(raw.Body) > 0 {
+		_ = json.Unmarshal(raw.Body, &result)
 	}
 	return &result, nil
 }
 
 // DownloadTemplate downloads a CSV template for the given prompt set.
 func (c *CustomAttacksClient) DownloadTemplate(ctx context.Context, promptSetUUID string) ([]byte, error) {
-	svcCfg := c.mgmtCfg
-	path := aisec.RedTeamDownloadTemplatePath + "/" + promptSetUUID
-
-	u, err := url.Parse(svcCfg.BaseURL + path)
-	if err != nil {
-		return nil, fmt.Errorf("invalid URL: %s%s: %w", svcCfg.BaseURL, path, err)
-	}
-
-	resp, err := internal.ExecuteWithRetry(internal.RetryOptions{
-		MaxRetries: svcCfg.NumRetries,
-		Execute: func(attempt int) (*http.Response, error) {
-			token, tokenErr := svcCfg.OAuth.GetToken()
-			if tokenErr != nil {
-				return nil, tokenErr
-			}
-			req, reqErr := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
-			if reqErr != nil {
-				return nil, reqErr
-			}
-			req.Header.Set("User-Agent", aisec.UserAgent)
-			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
-			return http.DefaultClient.Do(req)
-		},
-		OnRetryableFailure: func(resp *http.Response, attempt int) (bool, error) {
-			if resp.StatusCode == 401 || resp.StatusCode == 403 {
-				_, _ = io.Copy(io.Discard, resp.Body)
-				_ = resp.Body.Close()
-				svcCfg.OAuth.ClearToken()
-				return true, nil
-			}
-			return false, nil
-		},
+	raw, err := internal.DoMgmtRaw(ctx, c.mgmtCfg, internal.RawMgmtRequestOptions{
+		Method: http.MethodGet,
+		Path:   aisec.RedTeamDownloadTemplatePath + "/" + seg(promptSetUUID),
 	})
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = resp.Body.Close() }()
-
-	var buf bytes.Buffer
-	if _, err := io.Copy(&buf, resp.Body); err != nil {
-		return nil, fmt.Errorf("failed to read template body: %w", err)
-	}
-	return buf.Bytes(), nil
+	return raw.Body, nil
 }
 
 // --- Param builders ---
@@ -1042,6 +967,15 @@ func buildAttackListParams(opts AttackListOpts) map[string]string {
 
 func buildGoalListParams(opts GoalListOpts) map[string]string {
 	params := map[string]string{}
+	if opts.Skip > 0 {
+		params["skip"] = fmt.Sprintf("%d", opts.Skip)
+	}
+	if opts.Limit > 0 {
+		params["limit"] = fmt.Sprintf("%d", opts.Limit)
+	}
+	if opts.Search != "" {
+		params["search"] = opts.Search
+	}
 	if opts.GoalType != "" {
 		params["goal_type"] = opts.GoalType
 	}
@@ -1175,7 +1109,7 @@ func (c *InstancesClient) Create(ctx context.Context, req InstanceRequest) (*Ins
 // Get retrieves an instance by tenant ID.
 func (c *InstancesClient) Get(ctx context.Context, tenantID string) (*InstanceGetResponse, error) {
 	resp, err := internal.DoMgmtRequest[InstanceGetResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.RedTeamInstancesPath + "/" + tenantID,
+		Method: http.MethodGet, Path: aisec.RedTeamInstancesPath + "/" + seg(tenantID),
 	})
 	if err != nil {
 		return nil, err
@@ -1186,7 +1120,7 @@ func (c *InstancesClient) Get(ctx context.Context, tenantID string) (*InstanceGe
 // Update updates an existing instance.
 func (c *InstancesClient) Update(ctx context.Context, tenantID string, req InstanceRequest) (*InstanceResponse, error) {
 	resp, err := internal.DoMgmtRequest[InstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.RedTeamInstancesPath + "/" + tenantID, Body: req,
+		Method: http.MethodPut, Path: aisec.RedTeamInstancesPath + "/" + seg(tenantID), Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -1197,7 +1131,7 @@ func (c *InstancesClient) Update(ctx context.Context, tenantID string, req Insta
 // Delete deletes an instance by tenant ID.
 func (c *InstancesClient) Delete(ctx context.Context, tenantID string) (*InstanceResponse, error) {
 	resp, err := internal.DoMgmtRequest[InstanceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.RedTeamInstancesPath + "/" + tenantID,
+		Method: http.MethodDelete, Path: aisec.RedTeamInstancesPath + "/" + seg(tenantID),
 	})
 	if err != nil {
 		return nil, err
@@ -1208,7 +1142,7 @@ func (c *InstancesClient) Delete(ctx context.Context, tenantID string) (*Instanc
 // CreateDevice creates devices for an instance.
 func (c *InstancesClient) CreateDevice(ctx context.Context, tenantID string, req DeviceRequest) (*DeviceResponse, error) {
 	resp, err := internal.DoMgmtRequest[DeviceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.RedTeamInstancesPath + "/" + tenantID + "/devices", Body: req,
+		Method: http.MethodPost, Path: aisec.RedTeamInstancesPath + "/" + seg(tenantID) + "/devices", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -1219,7 +1153,7 @@ func (c *InstancesClient) CreateDevice(ctx context.Context, tenantID string, req
 // UpdateDevice updates devices for an instance.
 func (c *InstancesClient) UpdateDevice(ctx context.Context, tenantID string, req DeviceRequest) (*DeviceResponse, error) {
 	resp, err := internal.DoMgmtRequest[DeviceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPatch, Path: aisec.RedTeamInstancesPath + "/" + tenantID + "/devices", Body: req,
+		Method: http.MethodPatch, Path: aisec.RedTeamInstancesPath + "/" + seg(tenantID) + "/devices", Body: req,
 	})
 	if err != nil {
 		return nil, err
@@ -1230,7 +1164,7 @@ func (c *InstancesClient) UpdateDevice(ctx context.Context, tenantID string, req
 // DeleteDevice deletes devices from an instance by serial numbers.
 func (c *InstancesClient) DeleteDevice(ctx context.Context, tenantID string, serialNumbers string) (*DeviceResponse, error) {
 	resp, err := internal.DoMgmtRequest[DeviceResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodDelete, Path: aisec.RedTeamInstancesPath + "/" + tenantID + "/devices",
+		Method: http.MethodDelete, Path: aisec.RedTeamInstancesPath + "/" + seg(tenantID) + "/devices",
 		Params: map[string]string{"serial_numbers": serialNumbers},
 	})
 	if err != nil {
@@ -1238,3 +1172,6 @@ func (c *InstancesClient) DeleteDevice(ctx context.Context, tenantID string, ser
 	}
 	return &resp.Data, nil
 }
+
+// seg escapes a caller-supplied identifier for use as a single URL path segment.
+func seg(s string) string { return internal.PathSeg(s) }

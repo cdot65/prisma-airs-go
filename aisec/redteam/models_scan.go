@@ -130,12 +130,37 @@ type ReportDownloadResponse struct {
 }
 
 // AttackListItem represents an attack in a list.
+//
+// Field set verified against a live tenant on 2026-10-01. The attack's
+// identifier — the value to pass to GetAttackDetail — is UUID.
 type AttackListItem struct {
-	ID       string         `json:"id,omitempty"`
-	Category string         `json:"category,omitempty"`
-	Severity string         `json:"severity,omitempty"`
-	Status   string         `json:"status,omitempty"`
-	Details  map[string]any `json:"details,omitempty"`
+	UUID                   string         `json:"uuid,omitempty"`
+	JobID                  string         `json:"job_id,omitempty"`
+	TargetID               string         `json:"target_id,omitempty"`
+	TsgID                  string         `json:"tsg_id,omitempty"`
+	Category               string         `json:"category,omitempty"`
+	CategoryDisplayName    string         `json:"category_display_name,omitempty"`
+	SubCategory            string         `json:"sub_category,omitempty"`
+	SubCategoryDisplayName string         `json:"sub_category_display_name,omitempty"`
+	AttackType             string         `json:"attack_type,omitempty"`
+	AttackModality         string         `json:"attack_modality,omitempty"`
+	Severity               string         `json:"severity,omitempty"`
+	Status                 string         `json:"status,omitempty"`
+	Prompt                 string         `json:"prompt,omitempty"`
+	PromptID               string         `json:"prompt_id,omitempty"`
+	PromptMappingID        string         `json:"prompt_mapping_id,omitempty"`
+	ASR                    float64        `json:"asr,omitempty"`
+	Threat                 bool           `json:"threat"`
+	MultiTurn              bool           `json:"multi_turn"`
+	MarkedSafe             *bool          `json:"marked_safe,omitempty"`
+	Version                float64        `json:"version,omitempty"`
+	ExtraInfo              map[string]any `json:"extra_info,omitempty"`
+
+	// Deprecated: the API does not return "id" for list rows (use UUID). Kept so
+	// existing code compiles; it is never populated from a live response.
+	ID string `json:"id,omitempty"`
+	// Deprecated: the API does not return "details"; kept for compatibility.
+	Details map[string]any `json:"details,omitempty"`
 }
 
 // AttackListResponse is the paginated list of attacks.

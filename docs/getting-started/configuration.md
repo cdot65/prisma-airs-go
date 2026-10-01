@@ -21,6 +21,24 @@ cfg := aisec.NewConfig(
 )
 ```
 
+## Custom HTTP client
+
+Every client accepts your own `*http.Client` for timeouts, proxies, custom transports or tracing.
+It carries both API and OAuth token traffic. Without one, the SDK uses a default client with no
+overall timeout (bound requests with the `context` you pass), pooled connections, and a 30-second
+limit on token requests that have no deadline of their own.
+
+```go
+hc := &http.Client{Timeout: 45 * time.Second}
+
+scanner := runtime.NewScanner(aisec.NewConfig(aisec.WithHTTPClient(hc)))
+client, err := runtime.NewClient(runtime.Opts{HTTPClient: hc})
+// modelsecurity.Opts and redteam.Opts have the same HTTPClient field.
+```
+
+Endpoint resolution for the OAuth services is: option → environment variable → default, and
+trailing slashes are ignored.
+
 ## Runtime API — Management (OAuth2)
 
 | Variable | Description | Required |

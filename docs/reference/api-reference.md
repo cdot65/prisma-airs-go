@@ -346,7 +346,9 @@ type Client struct {
 
 // Convenience methods
 func (c *Client) GetScanStatistics(ctx context.Context, params map[string]string) (*ScanStatisticsResponse, error)
-func (c *Client) GetScoreTrend(ctx context.Context, targetID string) (*ScoreTrendResponse, error)
+// GET /v1/dashboard/score-trend?target_id=…; opts optionally set DateRange or StartDate/EndDate
+func (c *Client) GetScoreTrend(ctx context.Context, targetID string, opts ...ScoreTrendOpts) (*ScoreTrendResponse, error)
+// GET /v1/metering/quota (the spec says POST; a live tenant serves GET and rejects POST)
 func (c *Client) GetQuota(ctx context.Context) (*QuotaSummary, error)
 func (c *Client) GetErrorLogs(ctx context.Context, jobID string, opts ListOpts) (*ErrorLogListResponse, error)
 func (c *Client) UpdateSentiment(ctx context.Context, req SentimentRequest) (*SentimentResponse, error)

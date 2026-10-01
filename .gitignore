@@ -36,3 +36,6 @@ REVIEW-*.md
 
 # Vendor (optional — we use Go modules)
 # vendor/
+
+# Agent hook logs
+.claude/hooks/*.log

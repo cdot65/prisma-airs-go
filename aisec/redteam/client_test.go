@@ -563,6 +563,9 @@ func TestGetScanStatistics(t *testing.T) {
 
 func TestGetQuota(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "GET" || r.URL.Path != "/v1/metering/quota" {
+			t.Errorf("request = %s %s, want GET /v1/metering/quota", r.Method, r.URL.Path)
+		}
 		_ = json.NewEncoder(w).Encode(QuotaSummary{
 			Static:  QuotaDetails{Allocated: 100, Consumed: 50},
 			Dynamic: QuotaDetails{Allocated: 200},
@@ -1080,8 +1083,8 @@ func TestGetErrorLogs(t *testing.T) {
 
 func TestUpdateSentiment(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "PUT" {
-			t.Errorf("method = %s", r.Method)
+		if r.Method != "POST" || r.URL.Path != "/v1/sentiment" {
+			t.Errorf("request = %s %s, want POST /v1/sentiment", r.Method, r.URL.Path)
 		}
 		_ = json.NewEncoder(w).Encode(SentimentResponse{JobID: "job-1", Sentiment: "positive"})
 	})

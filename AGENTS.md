@@ -52,7 +52,10 @@ Internal package (`aisec/internal/`) is not part of the public API. It provides:
 
 - **Go 1.22+**, stdlib only — no external dependencies
 - **`context.Context`** as first parameter on all API methods
-- **Errors**: wrap with `fmt.Errorf("...: %w", err)`, use `AISecSDKError` for SDK-specific errors
+- **Errors**: API methods return `*aisec.AISecSDKError` (build HTTP failures with `aisec.NewHTTPError` so `StatusCode` and `errors.Is(err, aisec.ErrNotFound)` work); wrap other errors with `fmt.Errorf("...: %w", err)`. Never make callers match on error text
+- **Requests**: all OAuth traffic goes through `internal.DoMgmtRequest[T]` / `internal.DoMgmtRaw` — do not hand-roll `http.NewRequest` + `ExecuteWithRetry` in a client (that is how the unbounded 401/403 loop was duplicated four times)
+- **Paths**: escape caller-supplied identifiers with `url.PathEscape` (the `seg` helper in `runtime` and `redteam`); take them from the spec — `aisec/redteam/spec_conformance_test.go` pins every Red Team verb/path/plane, so add a row for any new endpoint
+- **HTTP client**: never use `http.DefaultClient`; use the config's `HTTPClient` (`internal.DefaultHTTPClient()` when unset)
 - **Tests**: `_test.go` alongside source, `httptest.NewServer` for HTTP mocking, race detector always on
 - **JSON**: struct tags for marshaling, `omitempty` on optional fields
 - **Formatting**: `gofmt -s` enforced by CI, golangci-lint with errcheck enabled

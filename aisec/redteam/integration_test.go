@@ -190,9 +190,9 @@ func TestIntegration_DashboardOverview(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetDashboardOverview: %v", err)
 	}
-	t.Logf("Dashboard overview keys: %d", len(overview.Overview))
-	for k, v := range overview.Overview {
-		t.Logf("  %s: %v", k, v)
+	t.Logf("Dashboard overview: %d targets", overview.TotalTargets)
+	for _, c := range overview.TargetsByType {
+		t.Logf("  %+v", c)
 	}
 }
 

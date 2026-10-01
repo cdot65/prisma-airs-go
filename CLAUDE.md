@@ -50,7 +50,8 @@ Key packages:
 
 - Go 1.22+ minimum, stdlib-only (no external deps)
 - `context.Context` as first param on all API methods
-- Errors wrapped with `fmt.Errorf("...: %w", err)` for unwrapping
+- API errors are `*aisec.AISecSDKError` carrying `StatusCode`; match with `errors.Is(err, aisec.ErrNotFound)` etc., never on message text. Other errors wrapped with `fmt.Errorf("...: %w", err)`
+- OAuth requests go through `internal.DoMgmtRequest` / `internal.DoMgmtRaw`; every new Red Team endpoint needs a row in `aisec/redteam/spec_conformance_test.go`
 - Custom error type: `AISecSDKError` with `ErrorType` enum (6 types)
 - Tests in `_test.go` files alongside source, use `httptest.NewServer` for mocking
 - golangci-lint with errcheck enabled — all error returns must be handled (use `_ =` in tests)
