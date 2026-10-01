@@ -78,6 +78,7 @@ nav:
       - OAuth Lifecycle: services/oauth-lifecycle.md
       - Model Security API: services/model-security-api.md
       - Red Team API: services/red-team-api.md
+      - AI Gateway Management: services/ai-gateway-api.md
   - Examples:
       - Runtime Scanning: examples/runtime-scanning.md
       - Security Profile CRUD: examples/profile-crud.md
@@ -86,6 +87,9 @@ nav:
       - API Key Rotation: examples/api-key-rotation.md
   - Reference:
       - API Reference: reference/api-reference.md
+      - Live Verification: developer/live-verification.md
+      - Feature Reviews: developer/feature-quality.md
+      - Release Artifacts: developer/releases.md
       - Environment Variables: reference/environment-variables.md
       - Error Handling: reference/error-handling.md
   - About:

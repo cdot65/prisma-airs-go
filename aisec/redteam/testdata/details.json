@@ -1,0 +1,2877 @@
+{
+  "ScansClient.CreateDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "tsg_id": "test",
+      "name": "test",
+      "target": {
+        "uuid": "test",
+        "tsg_id": "test",
+        "name": "test",
+        "description": "test",
+        "target_type": "APPLICATION",
+        "connection_type": "DATABRICKS",
+        "api_endpoint_type": "PUBLIC",
+        "response_mode": "REST",
+        "auth_type": "HEADERS",
+        "session_supported": false,
+        "extra_info": {},
+        "adapter_uuid": "test",
+        "status": "DRAFT",
+        "active": false,
+        "validated": false,
+        "version": 0,
+        "secret_version": "test",
+        "created_by_user_id": "test",
+        "updated_by_user_id": "test",
+        "created_at": "test",
+        "updated_at": "test",
+        "profiling_status": "NOT_STARTED",
+        "canonical_id": "test",
+        "target_metadata": {
+          "multi_turn": false,
+          "multi_turn_error_message": "test",
+          "supports_multimodal_files": false,
+          "supports_multimodal_files_error_message": "test",
+          "audio_probe_passed": false,
+          "audio_probe_error": "test",
+          "audio_multi_turn_probe_passed": false,
+          "audio_multi_turn_probe_error": "test",
+          "rate_limit": 0,
+          "rate_limit_enabled": false,
+          "rate_limit_error_code": 0,
+          "rate_limit_error_json": {},
+          "rate_limit_error_message": "test",
+          "content_filter_enabled": false,
+          "content_filter_error_code": 0,
+          "content_filter_error_json": {},
+          "content_filter_error_message": "test",
+          "probe_message": "test",
+          "request_timeout": 0,
+          "supports_audio": false,
+          "audio_format": "WAV",
+          "supports_text": false
+        },
+        "adapter_secret_version": "test",
+        "target_background": {
+          "industry": "test",
+          "use_case": "test",
+          "competitors": [
+            "test"
+          ],
+          "agentic_profiling_enabled": false
+        },
+        "profiling_progress": 0,
+        "additional_context": {
+          "base_model": "test",
+          "core_architecture": "test",
+          "system_prompt": "test",
+          "languages_supported": [
+            "test"
+          ],
+          "banned_keywords": [
+            "test"
+          ],
+          "tools_accessible": [
+            "test"
+          ]
+        }
+      },
+      "job_type": "STATIC",
+      "job_metadata": {
+        "rate_limit_enabled": false,
+        "rate_limit": 0,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_message": "test",
+        "rate_limit_error_json": {},
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_message": "test",
+        "content_filter_error_json": {},
+        "language": {
+          "code": "test",
+          "name": "test"
+        },
+        "runtime_profile_id": "test",
+        "categories": {},
+        "include_file_attacks": false,
+        "include_audio_attacks": false,
+        "include_text_attacks": false
+      },
+      "version": 0,
+      "extra_info": {},
+      "target_id": "test",
+      "target_type": "test",
+      "total": 0,
+      "completed": 0,
+      "status": "INIT",
+      "score": 0,
+      "asr": 0,
+      "time_record": {
+        "queued_at": "test",
+        "started_at": "test",
+        "completed_at": "test",
+        "time_taken": "test"
+      },
+      "created_at": "test",
+      "updated_at": "test",
+      "created_by_user_id": "test",
+      "report_stats": {
+        "output_completion_percentage": 0,
+        "partial_report_unlocked": false,
+        "partial_report_unlocked_at": "test",
+        "report_summary": "test"
+      },
+      "metering_quota_uuid": "test",
+      "counted_towards_quota": "HELD",
+      "invocation_id": "test",
+      "runtime_metrics": {
+        "error_count": 0,
+        "error_percentage": 0,
+        "eta_seconds": 0,
+        "eta_state": "calculating",
+        "attempts_completed": 0,
+        "attempts_total": 0,
+        "attempts_unit": "attacks",
+        "currently_attacking": "test"
+      },
+      "progress": {
+        "kind": "standard",
+        "rows": [
+          {
+            "label": "test",
+            "sub_categories": [
+              "test"
+            ],
+            "completed": 0,
+            "total": 0,
+            "status": "queued"
+          }
+        ]
+      }
+    },
+    "status": 200,
+    "request": {
+      "name": "test",
+      "target": {
+        "uuid": "test",
+        "version": 0
+      },
+      "job_type": "STATIC",
+      "job_metadata": {
+        "rate_limit_enabled": false,
+        "rate_limit": 0,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_message": "test",
+        "rate_limit_error_json": {},
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_message": "test",
+        "content_filter_error_json": {},
+        "language": {
+          "code": "test",
+          "name": "test"
+        },
+        "runtime_profile_id": "test",
+        "categories": {},
+        "include_file_attacks": false,
+        "include_audio_attacks": false,
+        "include_text_attacks": false
+      },
+      "version": 0,
+      "extra_info": {}
+    }
+  },
+  "ScansClient.ListDetails": {
+    "query": "skip=2&limit=5&search=needle&status=COMPLETED&job_type=STATIC&target_id=target",
+    "response": {
+      "pagination": {
+        "total_items": 0
+      },
+      "data": [
+        {
+          "uuid": "test",
+          "tsg_id": "test",
+          "name": "test",
+          "target": {
+            "uuid": "test",
+            "tsg_id": "test",
+            "name": "test",
+            "description": "test",
+            "target_type": "APPLICATION",
+            "connection_type": "DATABRICKS",
+            "api_endpoint_type": "PUBLIC",
+            "response_mode": "REST",
+            "auth_type": "HEADERS",
+            "session_supported": false,
+            "extra_info": {},
+            "adapter_uuid": "test",
+            "status": "DRAFT",
+            "active": false,
+            "validated": false,
+            "version": 0,
+            "secret_version": "test",
+            "created_by_user_id": "test",
+            "updated_by_user_id": "test",
+            "created_at": "test",
+            "updated_at": "test",
+            "profiling_status": "NOT_STARTED",
+            "canonical_id": "test",
+            "target_metadata": {
+              "multi_turn": false,
+              "multi_turn_error_message": "test",
+              "supports_multimodal_files": false,
+              "supports_multimodal_files_error_message": "test",
+              "audio_probe_passed": false,
+              "audio_probe_error": "test",
+              "audio_multi_turn_probe_passed": false,
+              "audio_multi_turn_probe_error": "test",
+              "rate_limit": 0,
+              "rate_limit_enabled": false,
+              "rate_limit_error_code": 0,
+              "rate_limit_error_json": {},
+              "rate_limit_error_message": "test",
+              "content_filter_enabled": false,
+              "content_filter_error_code": 0,
+              "content_filter_error_json": {},
+              "content_filter_error_message": "test",
+              "probe_message": "test",
+              "request_timeout": 0,
+              "supports_audio": false,
+              "audio_format": "WAV",
+              "supports_text": false
+            },
+            "adapter_secret_version": "test",
+            "target_background": {
+              "industry": "test",
+              "use_case": "test",
+              "competitors": [],
+              "agentic_profiling_enabled": false
+            },
+            "profiling_progress": 0,
+            "additional_context": {
+              "base_model": "test",
+              "core_architecture": "test",
+              "system_prompt": "test",
+              "languages_supported": [],
+              "banned_keywords": [],
+              "tools_accessible": []
+            }
+          },
+          "job_type": "STATIC",
+          "job_metadata": {
+            "rate_limit_enabled": false,
+            "rate_limit": 0,
+            "rate_limit_error_code": 0,
+            "rate_limit_error_message": "test",
+            "rate_limit_error_json": {},
+            "content_filter_enabled": false,
+            "content_filter_error_code": 0,
+            "content_filter_error_message": "test",
+            "content_filter_error_json": {},
+            "language": {
+              "code": "test",
+              "name": "test"
+            },
+            "runtime_profile_id": "test",
+            "categories": {},
+            "include_file_attacks": false,
+            "include_audio_attacks": false,
+            "include_text_attacks": false
+          },
+          "version": 0,
+          "extra_info": {},
+          "target_id": "test",
+          "target_type": "test",
+          "total": 0,
+          "completed": 0,
+          "status": "INIT",
+          "score": 0,
+          "asr": 0,
+          "time_record": {
+            "queued_at": "test",
+            "started_at": "test",
+            "completed_at": "test",
+            "time_taken": "test"
+          },
+          "created_at": "test",
+          "updated_at": "test",
+          "created_by_user_id": "test",
+          "report_stats": {
+            "output_completion_percentage": 0,
+            "partial_report_unlocked": false,
+            "partial_report_unlocked_at": "test",
+            "report_summary": "test"
+          },
+          "metering_quota_uuid": "test",
+          "counted_towards_quota": "HELD",
+          "invocation_id": "test",
+          "runtime_metrics": {
+            "error_count": 0,
+            "error_percentage": 0,
+            "eta_seconds": 0,
+            "eta_state": "calculating",
+            "attempts_completed": 0,
+            "attempts_total": 0,
+            "attempts_unit": "attacks",
+            "currently_attacking": "test"
+          },
+          "progress": {
+            "kind": "standard",
+            "rows": [
+              {
+                "label": "test",
+                "completed": 0,
+                "total": 0,
+                "status": "queued"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": 200
+  },
+  "ScansClient.GetDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "tsg_id": "test",
+      "name": "test",
+      "target": {
+        "uuid": "test",
+        "tsg_id": "test",
+        "name": "test",
+        "description": "test",
+        "target_type": "APPLICATION",
+        "connection_type": "DATABRICKS",
+        "api_endpoint_type": "PUBLIC",
+        "response_mode": "REST",
+        "auth_type": "HEADERS",
+        "session_supported": false,
+        "extra_info": {},
+        "adapter_uuid": "test",
+        "status": "DRAFT",
+        "active": false,
+        "validated": false,
+        "version": 0,
+        "secret_version": "test",
+        "created_by_user_id": "test",
+        "updated_by_user_id": "test",
+        "created_at": "test",
+        "updated_at": "test",
+        "profiling_status": "NOT_STARTED",
+        "canonical_id": "test",
+        "target_metadata": {
+          "multi_turn": false,
+          "multi_turn_error_message": "test",
+          "supports_multimodal_files": false,
+          "supports_multimodal_files_error_message": "test",
+          "audio_probe_passed": false,
+          "audio_probe_error": "test",
+          "audio_multi_turn_probe_passed": false,
+          "audio_multi_turn_probe_error": "test",
+          "rate_limit": 0,
+          "rate_limit_enabled": false,
+          "rate_limit_error_code": 0,
+          "rate_limit_error_json": {},
+          "rate_limit_error_message": "test",
+          "content_filter_enabled": false,
+          "content_filter_error_code": 0,
+          "content_filter_error_json": {},
+          "content_filter_error_message": "test",
+          "probe_message": "test",
+          "request_timeout": 0,
+          "supports_audio": false,
+          "audio_format": "WAV",
+          "supports_text": false
+        },
+        "adapter_secret_version": "test",
+        "target_background": {
+          "industry": "test",
+          "use_case": "test",
+          "competitors": [
+            "test"
+          ],
+          "agentic_profiling_enabled": false
+        },
+        "profiling_progress": 0,
+        "additional_context": {
+          "base_model": "test",
+          "core_architecture": "test",
+          "system_prompt": "test",
+          "languages_supported": [
+            "test"
+          ],
+          "banned_keywords": [
+            "test"
+          ],
+          "tools_accessible": [
+            "test"
+          ]
+        }
+      },
+      "job_type": "STATIC",
+      "job_metadata": {
+        "rate_limit_enabled": false,
+        "rate_limit": 0,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_message": "test",
+        "rate_limit_error_json": {},
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_message": "test",
+        "content_filter_error_json": {},
+        "language": {
+          "code": "test",
+          "name": "test"
+        },
+        "runtime_profile_id": "test",
+        "categories": {},
+        "include_file_attacks": false,
+        "include_audio_attacks": false,
+        "include_text_attacks": false
+      },
+      "version": 0,
+      "extra_info": {},
+      "target_id": "test",
+      "target_type": "test",
+      "total": 0,
+      "completed": 0,
+      "status": "INIT",
+      "score": 0,
+      "asr": 0,
+      "time_record": {
+        "queued_at": "test",
+        "started_at": "test",
+        "completed_at": "test",
+        "time_taken": "test"
+      },
+      "created_at": "test",
+      "updated_at": "test",
+      "created_by_user_id": "test",
+      "report_stats": {
+        "output_completion_percentage": 0,
+        "partial_report_unlocked": false,
+        "partial_report_unlocked_at": "test",
+        "report_summary": "test"
+      },
+      "metering_quota_uuid": "test",
+      "counted_towards_quota": "HELD",
+      "invocation_id": "test",
+      "runtime_metrics": {
+        "error_count": 0,
+        "error_percentage": 0,
+        "eta_seconds": 0,
+        "eta_state": "calculating",
+        "attempts_completed": 0,
+        "attempts_total": 0,
+        "attempts_unit": "attacks",
+        "currently_attacking": "test"
+      },
+      "progress": {
+        "kind": "standard",
+        "rows": [
+          {
+            "label": "test",
+            "sub_categories": [
+              "test"
+            ],
+            "completed": 0,
+            "total": 0,
+            "status": "queued"
+          }
+        ]
+      }
+    },
+    "status": 200
+  },
+  "ScansClient.AbortDetails": {
+    "query": "",
+    "response": {
+      "job_id": "test",
+      "message": "test"
+    },
+    "status": 200
+  },
+  "ScansClient.GetCategoriesDetails": {
+    "query": "",
+    "response": [
+      {
+        "id": "test",
+        "display_name": "test",
+        "description": "test",
+        "preselect": false,
+        "sub_categories": [
+          {
+            "id": "test",
+            "display_name": "test",
+            "description": "test",
+            "preselect": false,
+            "prerequisites": [
+              {
+                "id": "test",
+                "display_name": "test",
+                "description": "test"
+              }
+            ],
+            "active": false,
+            "file_supported": false,
+            "audio_supported": false
+          }
+        ]
+      }
+    ],
+    "status": 200
+  },
+  "ReportsClient.GetStaticReportDetails": {
+    "query": "",
+    "response": {
+      "asr": 0,
+      "score": 0,
+      "security_report": {
+        "id": "test",
+        "display_name": "test",
+        "description": "test",
+        "preselect": false,
+        "sub_categories": [
+          {
+            "id": "test",
+            "display_name": "test",
+            "description": "test",
+            "preselect": false,
+            "prerequisites": [
+              {
+                "id": "test",
+                "display_name": "test",
+                "description": "test"
+              }
+            ],
+            "active": false,
+            "file_supported": false,
+            "audio_supported": false,
+            "successful": 0,
+            "failed": 0,
+            "total": 0
+          }
+        ],
+        "asr": 0,
+        "total_prompts": 0,
+        "total_attacks": 0,
+        "successful": 0,
+        "failed": 0
+      },
+      "safety_report": {
+        "id": "test",
+        "display_name": "test",
+        "description": "test",
+        "preselect": false,
+        "sub_categories": [
+          {
+            "id": "test",
+            "display_name": "test",
+            "description": "test",
+            "preselect": false,
+            "prerequisites": [
+              {
+                "id": "test",
+                "display_name": "test",
+                "description": "test"
+              }
+            ],
+            "active": false,
+            "file_supported": false,
+            "audio_supported": false,
+            "successful": 0,
+            "failed": 0,
+            "total": 0
+          }
+        ],
+        "asr": 0,
+        "total_prompts": 0,
+        "total_attacks": 0,
+        "successful": 0,
+        "failed": 0
+      },
+      "brand_report": {
+        "id": "test",
+        "display_name": "test",
+        "description": "test",
+        "preselect": false,
+        "sub_categories": [
+          {
+            "id": "test",
+            "display_name": "test",
+            "description": "test",
+            "preselect": false,
+            "prerequisites": [
+              {
+                "id": "test",
+                "display_name": "test",
+                "description": "test"
+              }
+            ],
+            "active": false,
+            "file_supported": false,
+            "audio_supported": false,
+            "successful": 0,
+            "failed": 0,
+            "total": 0
+          }
+        ],
+        "asr": 0,
+        "total_prompts": 0,
+        "total_attacks": 0,
+        "successful": 0,
+        "failed": 0
+      },
+      "compliance_report": [
+        {
+          "id": "test",
+          "display_name": "test",
+          "description": "test",
+          "active": false,
+          "version": "test",
+          "link": "test",
+          "techniques": [
+            {
+              "id": "test",
+              "display_name": "test",
+              "compliance_id": "test",
+              "description": "test",
+              "link": "test",
+              "version": "test",
+              "active": false,
+              "successful": 0,
+              "failed": 0,
+              "total": 0
+            }
+          ],
+          "score": 0
+        }
+      ],
+      "severity_report": {
+        "stats": [
+          {
+            "severity": "test",
+            "successful": 0,
+            "failed": 0
+          }
+        ],
+        "successful": 0,
+        "failed": 0,
+        "total_attacks": 0
+      },
+      "report_summary": "test",
+      "recommendations": {
+        "runtime_security_policy_configuration": [
+          {
+            "policy_id": "PROMPT_INJECTION",
+            "display_name": "test",
+            "config": {
+              "action": "ALLOW"
+            }
+          }
+        ],
+        "other_measures": [
+          {
+            "mapping_remediation_id": "test",
+            "subcategories": [
+              "test"
+            ],
+            "effectiveness": 0,
+            "ease_of_implementation": 0,
+            "priority": 0,
+            "remediation": "test",
+            "description": "test",
+            "resource_links": [
+              "test"
+            ],
+            "categories": [
+              "test"
+            ]
+          }
+        ]
+      }
+    },
+    "status": 200
+  },
+  "ReportsClient.GetDynamicReportDetails": {
+    "query": "",
+    "response": {
+      "total_goals": 0,
+      "total_streams": 0,
+      "total_threats": 0,
+      "goals_achieved": 0,
+      "report_summary": "test",
+      "score": 0,
+      "asr": 0
+    },
+    "status": 200
+  },
+  "ReportsClient.GetStaticRemediationDetails": {
+    "query": "",
+    "response": {
+      "remediations": [
+        {
+          "remediation": "test",
+          "description": "test",
+          "resource_links": [
+            "test"
+          ],
+          "priority_level": "test",
+          "ease_of_implementation_level": "test",
+          "effectiveness_level": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "ReportsClient.GetDynamicRemediationDetails": {
+    "query": "",
+    "response": {
+      "remediations": [
+        {
+          "remediation": "test",
+          "description": "test",
+          "resource_links": [
+            "test"
+          ],
+          "priority_level": "test",
+          "ease_of_implementation_level": "test",
+          "effectiveness_level": "test",
+          "categories": [
+            {
+              "category": "test",
+              "display_name": "test",
+              "description": "test"
+            }
+          ]
+        }
+      ]
+    },
+    "status": 200
+  },
+  "ReportsClient.GetStaticRuntimePolicyDetails": {
+    "query": "",
+    "response": {
+      "runtime_security_profile": [
+        {
+          "policy_id": "PROMPT_INJECTION",
+          "display_name": "test",
+          "config": {
+            "action": "ALLOW"
+          }
+        }
+      ]
+    },
+    "status": 200
+  },
+  "ReportsClient.GetDynamicRuntimePolicyDetails": {
+    "query": "",
+    "response": {
+      "runtime_security_profile": [
+        {
+          "policy_id": "PROMPT_INJECTION",
+          "display_name": "test",
+          "config": {
+            "action": "ALLOW"
+          }
+        }
+      ]
+    },
+    "status": 200
+  },
+  "ReportsClient.ListAttacksDetails": {
+    "query": "skip=2&limit=5&attack_status=COMPLETED&compliance=OWASP&attack_modality=TEXT&threat=false",
+    "response": {
+      "pagination": {
+        "total_items": 0
+      },
+      "data": [
+        {
+          "uuid": "test",
+          "tsg_id": "test",
+          "job_id": "test",
+          "target_id": "test",
+          "prompt": "test",
+          "status": "INIT",
+          "marked_safe": false,
+          "extra_info": {},
+          "threat": false,
+          "attack_type": "NORMAL",
+          "multi_turn": false,
+          "asr": 0,
+          "version": 0,
+          "error": false,
+          "prompt_mapping_id": "test",
+          "prompt_id": "test",
+          "category": "SECURITY",
+          "sub_category": "ADVERSARIAL_SUFFIX",
+          "severity": "test",
+          "category_display_name": "test",
+          "sub_category_display_name": "test",
+          "attack_modality": "TEXT"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "ReportsClient.GetAttackDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "tsg_id": "test",
+      "job_id": "test",
+      "target_id": "test",
+      "prompt": "test",
+      "status": "INIT",
+      "marked_safe": false,
+      "extra_info": {},
+      "threat": false,
+      "attack_type": "NORMAL",
+      "multi_turn": false,
+      "asr": 0,
+      "version": 0,
+      "error": false,
+      "prompt_mapping_id": "test",
+      "prompt_id": "test",
+      "category": "SECURITY",
+      "sub_category": "ADVERSARIAL_SUFFIX",
+      "severity": "test",
+      "threat_details": {
+        "raw_threat": false,
+        "threat_override": false,
+        "overridden_by": "test",
+        "overridden_at": "test"
+      },
+      "category_display_name": "test",
+      "sub_category_display_name": "test",
+      "compliance_frameworks": [
+        {
+          "id": "test",
+          "display_name": "test",
+          "description": "test",
+          "active": false,
+          "version": "test",
+          "link": "test",
+          "techniques": [
+            {
+              "id": "test",
+              "display_name": "test",
+              "compliance_id": "test",
+              "description": "test",
+              "link": "test",
+              "version": "test",
+              "active": false
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "uuid": "test",
+          "tsg_id": "test",
+          "attack_id": "test",
+          "job_id": "test",
+          "target_id": "test",
+          "output": "test",
+          "threat": false,
+          "marked_safe": false,
+          "response_audio": {
+            "audio_name": "test",
+            "signed_url": "test",
+            "audio_format": "WAV"
+          },
+          "transcript": "test",
+          "transcript_source": "TARGET",
+          "threat_details": {
+            "raw_threat": false,
+            "threat_override": false,
+            "overridden_by": "test",
+            "overridden_at": "test"
+          },
+          "error": false,
+          "error_message": "test",
+          "judge_reasoning": "test"
+        }
+      ],
+      "goal": "test",
+      "attack_modality": "TEXT",
+      "file": {
+        "file_name": "test",
+        "signed_url": "test",
+        "file_type": "test"
+      },
+      "audio": {
+        "audio_name": "test",
+        "signed_url": "test",
+        "audio_format": "WAV"
+      },
+      "audio_technique": "test"
+    },
+    "status": 200
+  },
+  "ReportsClient.GetMultiTurnAttackDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "tsg_id": "test",
+      "job_id": "test",
+      "target_id": "test",
+      "prompt": "test",
+      "status": "INIT",
+      "marked_safe": false,
+      "extra_info": {},
+      "threat": false,
+      "attack_type": "NORMAL",
+      "multi_turn": false,
+      "asr": 0,
+      "version": 0,
+      "error": false,
+      "prompt_mapping_id": "test",
+      "prompt_id": "test",
+      "category": "SECURITY",
+      "sub_category": "ADVERSARIAL_SUFFIX",
+      "severity": "test",
+      "threat_details": {
+        "raw_threat": false,
+        "threat_override": false,
+        "overridden_by": "test",
+        "overridden_at": "test"
+      },
+      "category_display_name": "test",
+      "sub_category_display_name": "test",
+      "compliance_frameworks": [
+        {
+          "id": "test",
+          "display_name": "test",
+          "description": "test",
+          "active": false,
+          "version": "test",
+          "link": "test",
+          "techniques": [
+            {
+              "id": "test",
+              "display_name": "test",
+              "compliance_id": "test",
+              "description": "test",
+              "link": "test",
+              "version": "test",
+              "active": false
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        [
+          {
+            "uuid": "test",
+            "tsg_id": "test",
+            "attack_id": "test",
+            "job_id": "test",
+            "target_id": "test",
+            "output": "test",
+            "threat": false,
+            "marked_safe": false,
+            "response_audio": {
+              "audio_name": "test",
+              "signed_url": "test",
+              "audio_format": "WAV"
+            },
+            "transcript": "test",
+            "transcript_source": "TARGET",
+            "prompt": "test",
+            "turn": 0,
+            "generation": 0,
+            "multi_turn": false,
+            "threat_details": {
+              "raw_threat": false,
+              "threat_override": false,
+              "overridden_by": "test",
+              "overridden_at": "test"
+            },
+            "error": false,
+            "error_message": "test",
+            "judge_reasoning": "test"
+          }
+        ]
+      ],
+      "goal": "test",
+      "attack_modality": "TEXT",
+      "file": {
+        "file_name": "test",
+        "signed_url": "test",
+        "file_type": "test"
+      },
+      "audio": {
+        "audio_name": "test",
+        "signed_url": "test",
+        "audio_format": "WAV"
+      },
+      "audio_technique": "test"
+    },
+    "status": 200
+  },
+  "ReportsClient.ListGoalsDetails": {
+    "query": "skip=2&limit=5&goal_category=category&count=false",
+    "response": {
+      "pagination": {
+        "total_items": 0
+      },
+      "data": [
+        {
+          "goal": "test",
+          "safe_response": "test",
+          "jailbroken_response": "test",
+          "goal_metadata": {},
+          "custom_goal": false,
+          "goal_type": "BASE",
+          "goal_category": "GOAL_MANIPULATION",
+          "goal_subtype": "MASS_DATA_LEAKAGE",
+          "uuid": "test",
+          "tsg_id": "test",
+          "job_id": "test",
+          "goal_to_show": "test",
+          "threat": false,
+          "version": 0,
+          "extra_info": {},
+          "error": false
+        }
+      ]
+    },
+    "status": 200
+  },
+  "ReportsClient.ListGoalStreamsDetails": {
+    "query": "",
+    "response": {
+      "pagination": {
+        "total_items": 0
+      },
+      "data": [
+        {
+          "uuid": "test",
+          "tsg_id": "test",
+          "job_id": "test",
+          "target_id": "test",
+          "stream_idx": 0,
+          "iteration": 0,
+          "goal_id": "test",
+          "goal": {
+            "goal": "test",
+            "goal_english": "test",
+            "safe_response": "test",
+            "jailbroken_response": "test",
+            "goal_metadata": {},
+            "custom_goal": false,
+            "goal_type": "BASE",
+            "goal_category": "GOAL_MANIPULATION",
+            "goal_subtype": "MASS_DATA_LEAKAGE",
+            "uuid": "test",
+            "tsg_id": "test",
+            "job_id": "test",
+            "goal_to_show": "test",
+            "threat": false,
+            "version": 0,
+            "extra_info": {},
+            "error": false
+          },
+          "marked_safe": false,
+          "stream_type": "NORMAL",
+          "threat": false,
+          "first_threat_iteration": {
+            "uuid": "test",
+            "tsg_id": "test",
+            "job_id": "test",
+            "stream_id": "test",
+            "goal_id": "test",
+            "iteration": 0,
+            "prompt": "test",
+            "prompt_english": "test",
+            "techniques": "test",
+            "improvement": "test",
+            "prompts_objective": "test",
+            "summary": "test",
+            "output": "test",
+            "output_english": "test",
+            "score": 0,
+            "judge_reasoning": "test",
+            "judge_explanation": "test",
+            "threat": false,
+            "created_at": "test",
+            "updated_at": "test",
+            "extra_info": {},
+            "version": 0,
+            "error": false,
+            "error_message": "test"
+          },
+          "created_at": "test",
+          "updated_at": "test",
+          "extra_info": {},
+          "version": 0,
+          "error": false,
+          "error_message": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "ReportsClient.GetStreamDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "tsg_id": "test",
+      "job_id": "test",
+      "target_id": "test",
+      "stream_idx": 0,
+      "iteration": 0,
+      "goal_id": "test",
+      "goal": "test",
+      "marked_safe": false,
+      "stream_type": "NORMAL",
+      "threat": false,
+      "first_threat_iteration": {
+        "uuid": "test",
+        "tsg_id": "test",
+        "job_id": "test",
+        "stream_id": "test",
+        "goal_id": "test",
+        "iteration": 0,
+        "prompt": "test",
+        "prompt_english": "test",
+        "techniques": "test",
+        "improvement": "test",
+        "prompts_objective": "test",
+        "summary": "test",
+        "output": "test",
+        "output_english": "test",
+        "score": 0,
+        "judge_reasoning": "test",
+        "judge_explanation": "test",
+        "threat": false,
+        "created_at": "test",
+        "updated_at": "test",
+        "extra_info": {},
+        "version": 0,
+        "error": false,
+        "error_message": "test"
+      },
+      "created_at": "test",
+      "updated_at": "test",
+      "extra_info": {},
+      "version": 0,
+      "error": false,
+      "error_message": "test",
+      "threat_details": {
+        "raw_threat": false,
+        "threat_override": false,
+        "overridden_by": "test",
+        "overridden_at": "test"
+      },
+      "iterations": [
+        {
+          "uuid": "test",
+          "tsg_id": "test",
+          "job_id": "test",
+          "stream_id": "test",
+          "goal_id": "test",
+          "iteration": 0,
+          "prompt": "test",
+          "techniques": "test",
+          "improvement": "test",
+          "prompts_objective": "test",
+          "summary": "test",
+          "output": "test",
+          "score": 0,
+          "judge_reasoning": "test",
+          "threat": false,
+          "created_at": "test",
+          "updated_at": "test",
+          "extra_info": {},
+          "version": 0,
+          "error": false,
+          "error_message": "test",
+          "threat_details": {
+            "raw_threat": false,
+            "threat_override": false,
+            "overridden_by": "test",
+            "overridden_at": "test"
+          }
+        }
+      ],
+      "goal_category": "GOAL_MANIPULATION",
+      "goal_metadata": {}
+    },
+    "status": 200
+  },
+  "ReportsClient.GeneratePartialReportDetails": {
+    "query": "",
+    "response": {
+      "message": "queued"
+    },
+    "status": 200
+  },
+  "CustomAttackReportsClient.GetReportDetails": {
+    "query": "",
+    "response": {
+      "total_prompts": 0,
+      "total_attacks": 0,
+      "total_threats": 0,
+      "failed_attacks": 0,
+      "score": 0,
+      "asr": 0,
+      "custom_attack_reports": [
+        {
+          "prompt_set_id": "test",
+          "prompt_set_name": "test",
+          "total_prompts": 0,
+          "total_attacks": 0,
+          "total_threats": 0,
+          "failed_attacks": 0,
+          "errored_attacks": 0,
+          "has_errors": false,
+          "threat_rate": 0,
+          "property_names": [
+            "test"
+          ],
+          "property_statistics": [
+            {
+              "property_name": "test",
+              "values": []
+            }
+          ]
+        }
+      ],
+      "property_statistics": [
+        {
+          "property_name": "test",
+          "values": [
+            {
+              "value": "test",
+              "successful_attack_count": 0,
+              "total_attack_count": 0,
+              "success_rate": 0
+            }
+          ]
+        }
+      ]
+    },
+    "status": 200
+  },
+  "CustomAttackReportsClient.GetPromptSetsDetails": {
+    "query": "skip=2&limit=5&property_filters=severity%3Ahigh&is_threat=false",
+    "response": {
+      "prompt_sets": [
+        {
+          "prompt_set_id": "test",
+          "prompt_set_name": "test",
+          "total_prompts": 0,
+          "total_attacks": 0,
+          "total_threats": 0,
+          "failed_attacks": 0,
+          "errored_attacks": 0,
+          "has_errors": false,
+          "threat_rate": 0,
+          "property_names": [
+            "test"
+          ],
+          "property_statistics": [
+            {
+              "property_name": "test",
+              "values": []
+            }
+          ]
+        }
+      ],
+      "total_prompt_sets": 0,
+      "applied_filters": {}
+    },
+    "status": 200
+  },
+  "CustomAttackReportsClient.GetPromptsBySetDetails": {
+    "query": "skip=2&limit=5&is_threat=false",
+    "response": [
+      {
+        "prompt_id": "test",
+        "prompt_text": "test",
+        "goal": "test",
+        "user_defined_goal": false,
+        "properties": [
+          {
+            "name": "test",
+            "value": "test"
+          }
+        ],
+        "attack_id": "test",
+        "threat": false,
+        "threat_details": {
+          "raw_threat": false,
+          "threat_override": false,
+          "overridden_by": "test",
+          "overridden_at": "test"
+        },
+        "attack_outputs": [
+          "test"
+        ],
+        "asr": 0,
+        "prompt_set_id": "test",
+        "prompt_set_name": "test",
+        "error": false
+      }
+    ],
+    "status": 200
+  },
+  "CustomAttackReportsClient.GetPromptDetails": {
+    "query": "",
+    "response": {
+      "prompt_id": "test",
+      "prompt_text": "test",
+      "goal": "test",
+      "user_defined_goal": false,
+      "properties": [
+        {
+          "name": "test",
+          "value": "test"
+        }
+      ],
+      "attack_id": "test",
+      "threat": false,
+      "threat_details": {
+        "raw_threat": false,
+        "threat_override": false,
+        "overridden_by": "test",
+        "overridden_at": "test"
+      },
+      "attack_outputs": [
+        "test"
+      ],
+      "asr": 0,
+      "prompt_set_id": "test",
+      "prompt_set_name": "test",
+      "error": false
+    },
+    "status": 200
+  },
+  "CustomAttackReportsClient.ListCustomAttacksDetails": {
+    "query": "skip=2&limit=5&status=COMPLETED&threat=false&prompt_set_id=set&property_value=high",
+    "response": {
+      "pagination": {
+        "total_items": 0
+      },
+      "data": [
+        {
+          "prompt_id": "test",
+          "prompt_text": "test",
+          "goal": "test",
+          "user_defined_goal": false,
+          "properties": [
+            {
+              "name": "test",
+              "value": "test"
+            }
+          ],
+          "attack_id": "test",
+          "threat": false,
+          "threat_details": {
+            "raw_threat": false,
+            "threat_override": false,
+            "overridden_by": "test",
+            "overridden_at": "test"
+          },
+          "attack_outputs": [
+            "test"
+          ],
+          "asr": 0,
+          "prompt_set_id": "test",
+          "prompt_set_name": "test",
+          "error": false
+        }
+      ],
+      "total_attacks": 0,
+      "total_threats": 0
+    },
+    "status": 200
+  },
+  "CustomAttackReportsClient.GetAttackOutputsDetails": {
+    "query": "",
+    "response": [
+      {
+        "uuid": "test",
+        "tsg_id": "test",
+        "custom_attack_id": "test",
+        "job_id": "test",
+        "target_id": "test",
+        "output": "test",
+        "threat": false,
+        "marked_safe": false,
+        "error": false,
+        "error_message": "test",
+        "judge_reasoning": "test",
+        "threat_details": {
+          "raw_threat": false,
+          "threat_override": false,
+          "overridden_by": "test",
+          "overridden_at": "test"
+        }
+      }
+    ],
+    "status": 200
+  },
+  "CustomAttackReportsClient.GetPropertyStatsDetails": {
+    "query": "",
+    "response": [
+      {}
+    ],
+    "status": 200
+  },
+  "Client.GetQuotaDetails": {
+    "query": "",
+    "response": {
+      "static": {
+        "allocated": 0,
+        "unlimited": false,
+        "consumed": 0
+      },
+      "dynamic": {
+        "allocated": 0,
+        "unlimited": false,
+        "consumed": 0
+      },
+      "custom": {
+        "allocated": 0,
+        "unlimited": false,
+        "consumed": 0
+      }
+    },
+    "status": 200
+  },
+  "Client.GetErrorLogsDetails": {
+    "query": "skip=2&limit=5",
+    "response": {
+      "pagination": {
+        "total_items": 0
+      },
+      "data": [
+        {
+          "job_id": "test",
+          "target_id": "test",
+          "target_version": 0,
+          "attack_id": "test",
+          "error_type": "CONTENT_FILTER",
+          "error_source": "TARGET",
+          "error_message": "test",
+          "target_object": {},
+          "extra_info": {},
+          "version": 0,
+          "created_at": "test",
+          "updated_at": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "Client.GetScanStatisticsDetails": {
+    "query": "",
+    "response": {
+      "total_scans": 0,
+      "targets_scanned": 0,
+      "targets_scanned_by_type": [
+        {
+          "name": "test",
+          "count": 0
+        }
+      ],
+      "scan_status": [
+        {
+          "name": "test",
+          "count": 0
+        }
+      ],
+      "risk_profile": [
+        {
+          "risk_rating": "CRITICAL",
+          "total": 0,
+          "targets_by_type": [
+            {
+              "name": "test",
+              "count": 0
+            }
+          ]
+        }
+      ]
+    },
+    "status": 200
+  },
+  "Client.GetScoreTrendDetails": {
+    "query": "target_id=target&start_date=2026-09-01&end_date=2026-10-01",
+    "response": {
+      "labels": [
+        "test"
+      ],
+      "iso_labels": [
+        "test"
+      ],
+      "series": [
+        {
+          "label": "STATIC",
+          "data": [
+            0
+          ]
+        }
+      ]
+    },
+    "status": 200
+  },
+  "Client.UpdateSentimentDetails": {
+    "query": "",
+    "response": {
+      "job_id": "test",
+      "up_vote": false,
+      "down_vote": false
+    },
+    "status": 200,
+    "request": {
+      "job_id": "test",
+      "up_vote": false,
+      "down_vote": false
+    }
+  },
+  "Client.GetSentimentDetails": {
+    "query": "",
+    "response": {
+      "job_id": "test",
+      "up_vote": false,
+      "down_vote": false
+    },
+    "status": 200
+  },
+  "Client.GetDashboardOverviewDetails": {
+    "query": "",
+    "response": {
+      "total_targets": 0,
+      "targets_by_type": [
+        {
+          "name": "test",
+          "count": 0
+        }
+      ]
+    },
+    "status": 200
+  },
+  "TargetsClient.CreateDetails": {
+    "query": "validate=false",
+    "response": {
+      "uuid": "test",
+      "tsg_id": "test",
+      "name": "test",
+      "description": "test",
+      "target_type": "APPLICATION",
+      "connection_type": "DATABRICKS",
+      "api_endpoint_type": "PUBLIC",
+      "response_mode": "REST",
+      "auth_type": "HEADERS",
+      "session_supported": false,
+      "extra_info": {},
+      "adapter_uuid": "test",
+      "status": "DRAFT",
+      "active": false,
+      "validated": false,
+      "version": 0,
+      "secret_version": "test",
+      "created_by_user_id": "test",
+      "updated_by_user_id": "test",
+      "created_at": "test",
+      "updated_at": "test",
+      "profiling_status": "NOT_STARTED",
+      "canonical_id": "test",
+      "target_metadata": {
+        "multi_turn": false,
+        "multi_turn_error_message": "test",
+        "supports_multimodal_files": false,
+        "supports_multimodal_files_error_message": "test",
+        "audio_probe_passed": false,
+        "audio_probe_error": "test",
+        "audio_multi_turn_probe_passed": false,
+        "audio_multi_turn_probe_error": "test",
+        "rate_limit": 0,
+        "rate_limit_enabled": false,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_json": {},
+        "rate_limit_error_message": "test",
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_json": {},
+        "content_filter_error_message": "test",
+        "probe_message": "test",
+        "request_timeout": 0,
+        "supports_audio": false,
+        "audio_format": "WAV",
+        "supports_text": false
+      },
+      "adapter_secret_version": "test",
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "profiling_progress": 0,
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      }
+    },
+    "status": 201,
+    "request": {
+      "connection_params": {
+        "target_connection_config": {
+          "api_key": "test",
+          "model_name": "test"
+        },
+        "multi_turn_config": {
+          "type": "stateful",
+          "response_id_field": "test",
+          "request_id_field": "test"
+        },
+        "multi_turn_supported": false
+      },
+      "auth_config": {
+        "auth_header": {}
+      },
+      "network_broker_channel_uuid": "test",
+      "name": "test",
+      "description": "test",
+      "target_type": "APPLICATION",
+      "connection_type": "DATABRICKS",
+      "api_endpoint_type": "PUBLIC",
+      "response_mode": "REST",
+      "auth_type": "HEADERS",
+      "session_supported": false,
+      "extra_info": {},
+      "adapter_uuid": "test",
+      "target_metadata": {
+        "multi_turn": false,
+        "multi_turn_error_message": "test",
+        "supports_multimodal_files": false,
+        "supports_multimodal_files_error_message": "test",
+        "audio_probe_passed": false,
+        "audio_probe_error": "test",
+        "audio_multi_turn_probe_passed": false,
+        "audio_multi_turn_probe_error": "test",
+        "rate_limit": 0,
+        "rate_limit_enabled": false,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_json": {},
+        "rate_limit_error_message": "test",
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_json": {},
+        "content_filter_error_message": "test",
+        "probe_message": "test",
+        "request_timeout": 0,
+        "supports_audio": false,
+        "audio_format": "WAV",
+        "supports_text": false
+      },
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      },
+      "canonical_id": "test",
+      "adapter_variable_overrides": [
+        {
+          "key": "test",
+          "value": "test",
+          "type": "VAR"
+        }
+      ]
+    }
+  },
+  "TargetsClient.ListDetails": {
+    "query": "skip=2&limit=5&search=needle&profiling_status=COMPLETED&adapter_uuid=adapter",
+    "response": {
+      "pagination": {
+        "total_items": 0
+      },
+      "data": [
+        {
+          "uuid": "test",
+          "tsg_id": "test",
+          "name": "test",
+          "description": "test",
+          "target_type": "APPLICATION",
+          "connection_type": "DATABRICKS",
+          "api_endpoint_type": "PUBLIC",
+          "response_mode": "REST",
+          "auth_type": "HEADERS",
+          "session_supported": false,
+          "extra_info": {},
+          "adapter_uuid": "test",
+          "status": "DRAFT",
+          "active": false,
+          "validated": false,
+          "version": 0,
+          "secret_version": "test",
+          "created_by_user_id": "test",
+          "updated_by_user_id": "test",
+          "created_at": "test",
+          "updated_at": "test",
+          "profiling_status": "NOT_STARTED",
+          "canonical_id": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "TargetsClient.GetDetails": {
+    "query": "",
+    "response": {
+      "connection_params": {
+        "target_connection_config": {
+          "api_key": "test",
+          "model_name": "test"
+        },
+        "multi_turn_config": {
+          "type": "stateful",
+          "response_id_field": "test",
+          "request_id_field": "test"
+        },
+        "multi_turn_supported": false
+      },
+      "auth_config": {
+        "auth_header": {}
+      },
+      "network_broker_channel_uuid": "test",
+      "uuid": "test",
+      "tsg_id": "test",
+      "name": "test",
+      "description": "test",
+      "target_type": "APPLICATION",
+      "connection_type": "DATABRICKS",
+      "api_endpoint_type": "PUBLIC",
+      "response_mode": "REST",
+      "auth_type": "HEADERS",
+      "session_supported": false,
+      "extra_info": {},
+      "adapter_uuid": "test",
+      "status": "DRAFT",
+      "active": false,
+      "validated": false,
+      "version": 0,
+      "secret_version": "test",
+      "created_by_user_id": "test",
+      "updated_by_user_id": "test",
+      "created_at": "test",
+      "updated_at": "test",
+      "profiling_status": "NOT_STARTED",
+      "canonical_id": "test",
+      "target_metadata": {
+        "multi_turn": false,
+        "multi_turn_error_message": "test",
+        "supports_multimodal_files": false,
+        "supports_multimodal_files_error_message": "test",
+        "audio_probe_passed": false,
+        "audio_probe_error": "test",
+        "audio_multi_turn_probe_passed": false,
+        "audio_multi_turn_probe_error": "test",
+        "rate_limit": 0,
+        "rate_limit_enabled": false,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_json": {},
+        "rate_limit_error_message": "test",
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_json": {},
+        "content_filter_error_message": "test",
+        "probe_message": "test",
+        "request_timeout": 0,
+        "supports_audio": false,
+        "audio_format": "WAV",
+        "supports_text": false
+      },
+      "adapter_secret_version": "test",
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "profiling_progress": 0,
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      },
+      "adapter_variable_overrides": [
+        {
+          "key": "test",
+          "value": "test",
+          "type": "VAR",
+          "is_redacted": false
+        }
+      ]
+    },
+    "status": 200
+  },
+  "TargetsClient.UpdateDetails": {
+    "query": "validate=false",
+    "response": {
+      "connection_params": {
+        "target_connection_config": {
+          "api_key": "test",
+          "model_name": "test"
+        },
+        "multi_turn_config": {
+          "type": "stateful",
+          "response_id_field": "test",
+          "request_id_field": "test"
+        },
+        "multi_turn_supported": false
+      },
+      "auth_config": {
+        "auth_header": {}
+      },
+      "network_broker_channel_uuid": "test",
+      "uuid": "test",
+      "tsg_id": "test",
+      "name": "test",
+      "description": "test",
+      "target_type": "APPLICATION",
+      "connection_type": "DATABRICKS",
+      "api_endpoint_type": "PUBLIC",
+      "response_mode": "REST",
+      "auth_type": "HEADERS",
+      "session_supported": false,
+      "extra_info": {},
+      "adapter_uuid": "test",
+      "status": "DRAFT",
+      "active": false,
+      "validated": false,
+      "version": 0,
+      "secret_version": "test",
+      "created_by_user_id": "test",
+      "updated_by_user_id": "test",
+      "created_at": "test",
+      "updated_at": "test",
+      "profiling_status": "NOT_STARTED",
+      "canonical_id": "test",
+      "target_metadata": {
+        "multi_turn": false,
+        "multi_turn_error_message": "test",
+        "supports_multimodal_files": false,
+        "supports_multimodal_files_error_message": "test",
+        "audio_probe_passed": false,
+        "audio_probe_error": "test",
+        "audio_multi_turn_probe_passed": false,
+        "audio_multi_turn_probe_error": "test",
+        "rate_limit": 0,
+        "rate_limit_enabled": false,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_json": {},
+        "rate_limit_error_message": "test",
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_json": {},
+        "content_filter_error_message": "test",
+        "probe_message": "test",
+        "request_timeout": 0,
+        "supports_audio": false,
+        "audio_format": "WAV",
+        "supports_text": false
+      },
+      "adapter_secret_version": "test",
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "profiling_progress": 0,
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      },
+      "adapter_variable_overrides": [
+        {
+          "key": "test",
+          "value": "test",
+          "type": "VAR"
+        }
+      ]
+    },
+    "status": 200,
+    "request": {
+      "connection_params": {
+        "target_connection_config": {
+          "api_key": "test",
+          "model_name": "test"
+        },
+        "multi_turn_config": {
+          "type": "stateful",
+          "response_id_field": "test",
+          "request_id_field": "test"
+        },
+        "multi_turn_supported": false
+      },
+      "auth_config": {
+        "auth_header": {}
+      },
+      "network_broker_channel_uuid": "test",
+      "name": "test",
+      "description": "test",
+      "target_type": "APPLICATION",
+      "connection_type": "DATABRICKS",
+      "api_endpoint_type": "PUBLIC",
+      "response_mode": "REST",
+      "auth_type": "HEADERS",
+      "session_supported": false,
+      "extra_info": {},
+      "adapter_uuid": "test",
+      "target_metadata": {
+        "multi_turn": false,
+        "multi_turn_error_message": "test",
+        "supports_multimodal_files": false,
+        "supports_multimodal_files_error_message": "test",
+        "audio_probe_passed": false,
+        "audio_probe_error": "test",
+        "audio_multi_turn_probe_passed": false,
+        "audio_multi_turn_probe_error": "test",
+        "rate_limit": 0,
+        "rate_limit_enabled": false,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_json": {},
+        "rate_limit_error_message": "test",
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_json": {},
+        "content_filter_error_message": "test",
+        "probe_message": "test",
+        "request_timeout": 0,
+        "supports_audio": false,
+        "audio_format": "WAV",
+        "supports_text": false
+      },
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      },
+      "canonical_id": "test",
+      "adapter_variable_overrides": [
+        {
+          "key": "test",
+          "value": "test",
+          "type": "VAR"
+        }
+      ]
+    }
+  },
+  "TargetsClient.ProbeDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "tsg_id": "test",
+      "name": "test",
+      "description": "test",
+      "target_type": "APPLICATION",
+      "connection_type": "DATABRICKS",
+      "api_endpoint_type": "PUBLIC",
+      "response_mode": "REST",
+      "auth_type": "HEADERS",
+      "session_supported": false,
+      "extra_info": {},
+      "adapter_uuid": "test",
+      "status": "DRAFT",
+      "active": false,
+      "validated": false,
+      "version": 0,
+      "secret_version": "test",
+      "created_by_user_id": "test",
+      "updated_by_user_id": "test",
+      "created_at": "test",
+      "updated_at": "test",
+      "profiling_status": "NOT_STARTED",
+      "canonical_id": "test",
+      "target_metadata": {
+        "multi_turn": false,
+        "multi_turn_error_message": "test",
+        "supports_multimodal_files": false,
+        "supports_multimodal_files_error_message": "test",
+        "audio_probe_passed": false,
+        "audio_probe_error": "test",
+        "audio_multi_turn_probe_passed": false,
+        "audio_multi_turn_probe_error": "test",
+        "rate_limit": 0,
+        "rate_limit_enabled": false,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_json": {},
+        "rate_limit_error_message": "test",
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_json": {},
+        "content_filter_error_message": "test",
+        "probe_message": "test",
+        "request_timeout": 0,
+        "supports_audio": false,
+        "audio_format": "WAV",
+        "supports_text": false
+      },
+      "adapter_secret_version": "test",
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "profiling_progress": 0,
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      }
+    },
+    "status": 200,
+    "request": {
+      "connection_params": {
+        "target_connection_config": {
+          "api_key": "test",
+          "model_name": "test"
+        },
+        "multi_turn_config": {
+          "type": "stateful",
+          "response_id_field": "test",
+          "request_id_field": "test"
+        },
+        "multi_turn_supported": false
+      },
+      "auth_config": {
+        "auth_header": {}
+      },
+      "network_broker_channel_uuid": "test",
+      "name": "test",
+      "description": "test",
+      "target_type": "APPLICATION",
+      "connection_type": "DATABRICKS",
+      "api_endpoint_type": "PUBLIC",
+      "response_mode": "REST",
+      "auth_type": "HEADERS",
+      "session_supported": false,
+      "extra_info": {},
+      "adapter_uuid": "test",
+      "target_metadata": {
+        "multi_turn": false,
+        "multi_turn_error_message": "test",
+        "supports_multimodal_files": false,
+        "supports_multimodal_files_error_message": "test",
+        "audio_probe_passed": false,
+        "audio_probe_error": "test",
+        "audio_multi_turn_probe_passed": false,
+        "audio_multi_turn_probe_error": "test",
+        "rate_limit": 0,
+        "rate_limit_enabled": false,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_json": {},
+        "rate_limit_error_message": "test",
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_json": {},
+        "content_filter_error_message": "test",
+        "probe_message": "test",
+        "request_timeout": 0,
+        "supports_audio": false,
+        "audio_format": "WAV",
+        "supports_text": false
+      },
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      },
+      "canonical_id": "test",
+      "adapter_variable_overrides": [
+        {
+          "key": "test",
+          "value": "test",
+          "type": "VAR"
+        }
+      ],
+      "uuid": "test",
+      "probe_fields": [
+        "test"
+      ]
+    }
+  },
+  "TargetsClient.GetProfileDetails": {
+    "query": "",
+    "response": {
+      "target_id": "test",
+      "target_version": 0,
+      "status": "test",
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      },
+      "other_details": {
+        "items": {}
+      },
+      "other_details_prettified": {
+        "execution_environment": {},
+        "core_architecture_and_identity": {},
+        "tools_and_integrations": {},
+        "audience_and_governance": {},
+        "performance_and_metrics": {},
+        "content_policy": {},
+        "other_discoveries": {}
+      },
+      "ai_generated_fields": [
+        "test"
+      ],
+      "ai_generated_items": {
+        "languages_supported": {
+          "ai_discovered_items": [
+            "test"
+          ],
+          "current_items": [
+            {
+              "value": "test",
+              "is_ai_generated": false,
+              "country_code": "test"
+            }
+          ],
+          "ai_count": 0,
+          "user_count": 0
+        },
+        "tools_accessible": {
+          "ai_discovered_items": [
+            "test"
+          ],
+          "current_items": [
+            {
+              "value": "test",
+              "is_ai_generated": false
+            }
+          ],
+          "ai_count": 0,
+          "user_count": 0
+        },
+        "banned_keywords": {
+          "ai_discovered_items": [
+            "test"
+          ],
+          "current_items": [
+            {
+              "value": "test",
+              "is_ai_generated": false
+            }
+          ],
+          "ai_count": 0,
+          "user_count": 0
+        },
+        "competitors": {
+          "ai_discovered_items": [
+            "test"
+          ],
+          "current_items": [
+            {
+              "value": "test",
+              "is_ai_generated": false
+            }
+          ],
+          "ai_count": 0,
+          "user_count": 0
+        },
+        "base_model": {
+          "ai_discovered_value": "test",
+          "is_ai_generated": false
+        },
+        "core_architecture": {
+          "ai_discovered_value": "test",
+          "is_ai_generated": false
+        },
+        "system_prompt": {
+          "ai_discovered_value": "test",
+          "is_ai_generated": false
+        }
+      },
+      "profiling_completed_at": "test",
+      "profiling_status": "test",
+      "profiling_progress": 0
+    },
+    "status": 200
+  },
+  "TargetsClient.UpdateProfileDetails": {
+    "query": "",
+    "response": {
+      "connection_params": {
+        "target_connection_config": {
+          "api_key": "test",
+          "model_name": "test"
+        },
+        "multi_turn_config": {
+          "type": "stateful",
+          "response_id_field": "test",
+          "request_id_field": "test"
+        },
+        "multi_turn_supported": false
+      },
+      "auth_config": {
+        "auth_header": {}
+      },
+      "network_broker_channel_uuid": "test",
+      "uuid": "test",
+      "tsg_id": "test",
+      "name": "test",
+      "description": "test",
+      "target_type": "APPLICATION",
+      "connection_type": "DATABRICKS",
+      "api_endpoint_type": "PUBLIC",
+      "response_mode": "REST",
+      "auth_type": "HEADERS",
+      "session_supported": false,
+      "extra_info": {},
+      "adapter_uuid": "test",
+      "status": "DRAFT",
+      "active": false,
+      "validated": false,
+      "version": 0,
+      "secret_version": "test",
+      "created_by_user_id": "test",
+      "updated_by_user_id": "test",
+      "created_at": "test",
+      "updated_at": "test",
+      "profiling_status": "NOT_STARTED",
+      "canonical_id": "test",
+      "target_metadata": {
+        "multi_turn": false,
+        "multi_turn_error_message": "test",
+        "supports_multimodal_files": false,
+        "supports_multimodal_files_error_message": "test",
+        "audio_probe_passed": false,
+        "audio_probe_error": "test",
+        "audio_multi_turn_probe_passed": false,
+        "audio_multi_turn_probe_error": "test",
+        "rate_limit": 0,
+        "rate_limit_enabled": false,
+        "rate_limit_error_code": 0,
+        "rate_limit_error_json": {},
+        "rate_limit_error_message": "test",
+        "content_filter_enabled": false,
+        "content_filter_error_code": 0,
+        "content_filter_error_json": {},
+        "content_filter_error_message": "test",
+        "probe_message": "test",
+        "request_timeout": 0,
+        "supports_audio": false,
+        "audio_format": "WAV",
+        "supports_text": false
+      },
+      "adapter_secret_version": "test",
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "profiling_progress": 0,
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      },
+      "adapter_variable_overrides": [
+        {
+          "key": "test",
+          "value": "test",
+          "type": "VAR"
+        }
+      ]
+    },
+    "status": 200,
+    "request": {
+      "target_background": {
+        "industry": "test",
+        "use_case": "test",
+        "competitors": [
+          "test"
+        ],
+        "agentic_profiling_enabled": false
+      },
+      "additional_context": {
+        "base_model": "test",
+        "core_architecture": "test",
+        "system_prompt": "test",
+        "languages_supported": [
+          "test"
+        ],
+        "banned_keywords": [
+          "test"
+        ],
+        "tools_accessible": [
+          "test"
+        ]
+      }
+    }
+  },
+  "TargetsClient.ValidateAuthDetails": {
+    "query": "",
+    "response": {
+      "validated": false,
+      "token_preview": "test",
+      "expires_in": 0
+    },
+    "status": 200,
+    "request": {
+      "auth_type": "HEADERS",
+      "auth_config": {
+        "auth_header": {}
+      },
+      "target_id": "test",
+      "network_broker_channel_uuid": "test"
+    }
+  },
+  "CustomAttacksClient.CreatePromptSetDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "name": "test",
+      "description": "test",
+      "language": {
+        "code": "test",
+        "name": "test"
+      },
+      "active": false,
+      "archive": false,
+      "status": "test",
+      "version": "test",
+      "stats": {
+        "total_prompts": 0,
+        "active_prompts": 0,
+        "failed_prompts": 0,
+        "validation_prompts": 0,
+        "inactive_prompts": 0
+      },
+      "extra_info": {},
+      "property_names": [
+        "test"
+      ],
+      "properties": [
+        {
+          "property_name": "test",
+          "created_at": "test"
+        }
+      ],
+      "created_by_user_id": "test",
+      "updated_by_user_id": "test",
+      "created_at": "test",
+      "updated_at": "test"
+    },
+    "status": 201,
+    "request": {
+      "name": "test",
+      "description": "test",
+      "property_names": [
+        "test"
+      ],
+      "language": "ar"
+    }
+  },
+  "CustomAttacksClient.ListPromptSetsDetails": {
+    "query": "skip=2&limit=5&language=en&active=false&archive=false",
+    "response": {
+      "pagination": {
+        "total_items": 0
+      },
+      "data": [
+        {
+          "uuid": "test",
+          "name": "test",
+          "description": "test",
+          "language": {
+            "code": "test",
+            "name": "test"
+          },
+          "active": false,
+          "archive": false,
+          "status": "test",
+          "stats": {
+            "total_prompts": 0,
+            "active_prompts": 0,
+            "failed_prompts": 0,
+            "validation_prompts": 0,
+            "inactive_prompts": 0
+          },
+          "property_names": [
+            "test"
+          ],
+          "created_by_user_id": "test",
+          "created_at": "test",
+          "updated_at": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.GetPromptSetDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "name": "test",
+      "description": "test",
+      "language": {
+        "code": "test",
+        "name": "test"
+      },
+      "active": false,
+      "archive": false,
+      "status": "test",
+      "version": "test",
+      "stats": {
+        "total_prompts": 0,
+        "active_prompts": 0,
+        "failed_prompts": 0,
+        "validation_prompts": 0,
+        "inactive_prompts": 0
+      },
+      "extra_info": {},
+      "property_names": [
+        "test"
+      ],
+      "properties": [
+        {
+          "property_name": "test",
+          "created_at": "test"
+        }
+      ],
+      "created_by_user_id": "test",
+      "updated_by_user_id": "test",
+      "created_at": "test",
+      "updated_at": "test"
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.UpdatePromptSetDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "name": "test",
+      "description": "test",
+      "language": {
+        "code": "test",
+        "name": "test"
+      },
+      "active": false,
+      "archive": false,
+      "status": "test",
+      "version": "test",
+      "stats": {
+        "total_prompts": 0,
+        "active_prompts": 0,
+        "failed_prompts": 0,
+        "validation_prompts": 0,
+        "inactive_prompts": 0
+      },
+      "extra_info": {},
+      "property_names": [
+        "test"
+      ],
+      "properties": [
+        {
+          "property_name": "test",
+          "created_at": "test"
+        }
+      ],
+      "created_by_user_id": "test",
+      "updated_by_user_id": "test",
+      "created_at": "test",
+      "updated_at": "test"
+    },
+    "status": 200,
+    "request": {
+      "name": "test",
+      "description": "test",
+      "archive": false,
+      "property_names": [
+        "test"
+      ]
+    }
+  },
+  "CustomAttacksClient.ArchivePromptSetDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "name": "test",
+      "description": "test",
+      "language": {
+        "code": "test",
+        "name": "test"
+      },
+      "active": false,
+      "archive": false,
+      "status": "test",
+      "version": "test",
+      "stats": {
+        "total_prompts": 0,
+        "active_prompts": 0,
+        "failed_prompts": 0,
+        "validation_prompts": 0,
+        "inactive_prompts": 0
+      },
+      "extra_info": {},
+      "property_names": [
+        "test"
+      ],
+      "properties": [
+        {
+          "property_name": "test",
+          "created_at": "test"
+        }
+      ],
+      "created_by_user_id": "test",
+      "updated_by_user_id": "test",
+      "created_at": "test",
+      "updated_at": "test"
+    },
+    "status": 200,
+    "request": {
+      "archive": false
+    }
+  },
+  "CustomAttacksClient.GetPromptSetReferenceDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "name": "test",
+      "language": "ar",
+      "version": "test",
+      "status": "test",
+      "active": false,
+      "tsg_id": "test",
+      "created_at": "test",
+      "updated_at": "test"
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.GetPromptSetVersionInfoDetails": {
+    "query": "version=v1",
+    "response": {
+      "uuid": "test",
+      "version": "test",
+      "status": "test",
+      "stats": {
+        "total_prompts": 0,
+        "active_prompts": 0,
+        "failed_prompts": 0,
+        "validation_prompts": 0,
+        "inactive_prompts": 0
+      },
+      "snapshot_created_at": "test",
+      "is_latest": false
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.ListActivePromptSetsDetails": {
+    "query": "",
+    "response": {
+      "data": [
+        {
+          "uuid": "test",
+          "name": "test",
+          "language": "ar",
+          "version": "test",
+          "status": "test",
+          "active": false,
+          "tsg_id": "test",
+          "created_at": "test",
+          "updated_at": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.CreatePromptDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "prompt": "test",
+      "goal": "test",
+      "user_defined_goal": false,
+      "detector_category": "test",
+      "severity": "test",
+      "status": "test",
+      "active": false,
+      "extra_info": {},
+      "prompt_set_id": "test",
+      "properties": {},
+      "property_assignments": [
+        {
+          "property_name": "test",
+          "property_value": "test"
+        }
+      ],
+      "created_at": "test",
+      "updated_at": "test"
+    },
+    "status": 201,
+    "request": {
+      "prompt": "test",
+      "goal": "test",
+      "properties": {},
+      "prompt_set_id": "test"
+    }
+  },
+  "CustomAttacksClient.ListPromptsDetails": {
+    "query": "skip=2&limit=5&status=ACTIVE&active=false",
+    "response": {
+      "pagination": {
+        "total_items": 0
+      },
+      "data": [
+        {
+          "uuid": "test",
+          "prompt": "test",
+          "goal": "test",
+          "user_defined_goal": false,
+          "status": "test",
+          "active": false,
+          "properties": {},
+          "created_at": "test",
+          "updated_at": "test"
+        }
+      ]
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.GetPromptDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "prompt": "test",
+      "goal": "test",
+      "user_defined_goal": false,
+      "detector_category": "test",
+      "severity": "test",
+      "status": "test",
+      "active": false,
+      "extra_info": {},
+      "prompt_set_id": "test",
+      "properties": {},
+      "property_assignments": [
+        {
+          "property_name": "test",
+          "property_value": "test"
+        }
+      ],
+      "created_at": "test",
+      "updated_at": "test"
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.UpdatePromptDetails": {
+    "query": "",
+    "response": {
+      "uuid": "test",
+      "prompt": "test",
+      "goal": "test",
+      "user_defined_goal": false,
+      "detector_category": "test",
+      "severity": "test",
+      "status": "test",
+      "active": false,
+      "extra_info": {},
+      "prompt_set_id": "test",
+      "properties": {},
+      "property_assignments": [
+        {
+          "property_name": "test",
+          "property_value": "test"
+        }
+      ],
+      "created_at": "test",
+      "updated_at": "test"
+    },
+    "status": 200,
+    "request": {
+      "prompt": "test",
+      "goal": "test",
+      "properties": {}
+    }
+  },
+  "CustomAttacksClient.GetPropertyNamesDetails": {
+    "query": "",
+    "response": {
+      "data": [
+        "test"
+      ]
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.CreatePropertyNameDetails": {
+    "query": "",
+    "response": {
+      "data": [
+        "test"
+      ]
+    },
+    "status": 201,
+    "request": {
+      "name": "test"
+    }
+  },
+  "CustomAttacksClient.GetPropertyValuesDetails": {
+    "query": "",
+    "response": {
+      "name": "test",
+      "values": [
+        "test"
+      ]
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.GetPropertyValuesMultipleDetails": {
+    "query": "property_names=first%2Csecond",
+    "response": {
+      "data": {}
+    },
+    "status": 200
+  },
+  "CustomAttacksClient.CreatePropertyValueDetails": {
+    "query": "",
+    "response": {
+      "message": "test",
+      "status": 0
+    },
+    "status": 200,
+    "request": {
+      "property_name": "test",
+      "property_value": "test"
+    }
+  }
+}

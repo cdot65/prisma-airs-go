@@ -547,6 +547,9 @@ func TestSubClients_AllPresent(t *testing.T) {
 	defer tokenSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, "https://data.example.com", "https://mgmt.example.com")
+	if client.Models == nil || client.ModelVersions == nil || client.CustomRules == nil {
+		t.Error("current schema sub-clients missing")
+	}
 	if client.Scans == nil {
 		t.Error("Scans is nil")
 	}
@@ -759,19 +762,6 @@ func TestScanListOpts_NoSortBy(t *testing.T) {
 	}
 	if params["sort_order"] != "desc" {
 		t.Errorf("sort_order = %q", params["sort_order"])
-	}
-}
-
-func TestBuildGroupListParams_SourceTypesAndEnabledRules(t *testing.T) {
-	params := buildGroupListParams(GroupListOpts{
-		SourceTypes:  []string{"LOCAL", "S3"},
-		EnabledRules: []string{"rule-1", "rule-2"},
-	})
-	if params["source_types"] != "LOCAL,S3" {
-		t.Errorf("source_types = %q", params["source_types"])
-	}
-	if params["enabled_rules"] != "rule-1,rule-2" {
-		t.Errorf("enabled_rules = %q", params["enabled_rules"])
 	}
 }
 

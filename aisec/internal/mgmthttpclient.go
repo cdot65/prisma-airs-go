@@ -18,6 +18,10 @@ type MgmtRequestOptions struct {
 	Path   string
 	Body   any
 	Params map[string]string
+	// Query preserves repeated query parameters and overrides Params keys.
+	Query url.Values
+	// ResponsePolicy defaults to RequireJSON. Exceptions belong at the endpoint.
+	ResponsePolicy ResponsePolicy
 }
 
 // RawMgmtRequestOptions describes an OAuth-authenticated request whose body or
@@ -26,6 +30,7 @@ type RawMgmtRequestOptions struct {
 	Method string
 	Path   string
 	Params map[string]string
+	Query  url.Values
 	// Body is sent verbatim. When nil, no body is sent.
 	Body []byte
 	// ContentType defaults to application/json.
@@ -70,6 +75,16 @@ func DoMgmtRaw(ctx context.Context, svcCfg *OAuthServiceConfig, opts RawMgmtRequ
 	if err != nil {
 		return nil, err
 	}
+	if opts.Query != nil {
+		q := u.Query()
+		for key, values := range opts.Query {
+			q.Del(key)
+			for _, value := range values {
+				q.Add(key, value)
+			}
+		}
+		u.RawQuery = q.Encode()
+	}
 	contentType := opts.ContentType
 	if contentType == "" {
 		contentType = "application/json"
@@ -95,6 +110,11 @@ func DoMgmtRaw(ctx context.Context, svcCfg *OAuthServiceConfig, opts RawMgmtRequ
 				return nil, err
 			}
 
+			for key, values := range svcCfg.Headers {
+				for _, value := range values {
+					req.Header.Add(key, value)
+				}
+			}
 			req.Header.Set("Content-Type", contentType)
 			req.Header.Set("User-Agent", aisec.UserAgent)
 			req.Header.Set(aisec.HeaderAuthToken, aisec.Bearer+token)
@@ -129,23 +149,12 @@ func DoMgmtRequest[T any](ctx context.Context, svcCfg *OAuthServiceConfig, opts 
 		Method: opts.Method,
 		Path:   opts.Path,
 		Params: opts.Params,
+		Query:  opts.Query,
 		Body:   bodyBytes,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	var data T
-	if len(raw.Body) > 0 {
-		if err := json.Unmarshal(raw.Body, &data); err != nil {
-			// Some endpoints (e.g. ForceDelete) return non-JSON on success.
-			// Tolerate parse failures for 2xx responses; return zero-value T.
-			if raw.Status >= 200 && raw.Status < 300 {
-				return &Response[T]{Status: raw.Status, Data: data}, nil
-			}
-			return nil, aisec.WrapError("failed to parse response JSON", aisec.AISecSDKInternalError, err)
-		}
-	}
-
-	return &Response[T]{Status: raw.Status, Data: data}, nil
+	return DecodeMgmtResponse[T](raw, opts.ResponsePolicy)
 }

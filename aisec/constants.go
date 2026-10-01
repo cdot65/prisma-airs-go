@@ -2,7 +2,7 @@ package aisec
 
 // Version and user agent.
 const (
-	Version   = "0.5.1"
+	Version   = "0.6.0"
 	UserAgent = "PAN-AIRS/" + Version + "-go-sdk"
 )
 
@@ -198,4 +198,48 @@ const (
 
 	// Instances/Licensing (management plane).
 	RedTeamInstancesPath = "/v1/instances"
+)
+
+// Current Model Security inventory and custom-rule collections.
+const (
+	ModelSecModelsPath        = "/v1/models"
+	ModelSecModelVersionsPath = "/v1/model-versions"
+	ModelSecCustomRulesPath   = "/v1/custom-rules"
+)
+
+// Red Team adapter management and Network Broker routing.
+const (
+	RedTeamAdaptersPath          = "/v1/adapters"
+	RedTeamChannelsPath          = "/v1/channels"
+	DefaultRedTeamBrokerEndpoint = "https://api.sase.paloaltonetworks.com/ai-red-teaming/data-plane/network-broker"
+	EnvRedTeamBrokerEndpoint     = "PANW_RED_TEAM_BROKER_ENDPOINT"
+)
+
+// Additional Red Team metadata, report receipts and profiling logs.
+const (
+	RedTeamLanguagesPath             = "/v1/languages"
+	RedTeamGoalCategoriesPath        = "/v1/goal-categories"
+	RedTeamReportV2Path              = "/v2/report"
+	RedTeamTargetProfileErrorLogPath = "/v1/error-log/target-profile"
+)
+
+// AI Gateway management clients share SCM OAuth and route explicit CRUD planes.
+const (
+	DefaultGatewayDataEndpoint  = "https://api.apps.paloaltonetworks.com/ai_gw/v2"
+	DefaultGatewayAdminEndpoint = "https://api.apps.paloaltonetworks.com/ai_gw/admin/v2"
+	EnvGatewayDataEndpoint      = "PANW_AI_GW_DATA_ENDPOINT"
+	EnvGatewayAdminEndpoint     = "PANW_AI_GW_ADMIN_ENDPOINT"
+	HeaderTsgID                 = "x-tsg-id"
+	GatewayGuardrailsPath       = "/guardrails"
+	GatewayOrgGuardrailsPath    = "/guardrails"
+	GatewayConfigsPath          = "/configs"
+	GatewayIntegrationsPath     = "/integrations"
+	GatewayProvidersPath        = "/providers"
+	GatewayMCPIntegrationsPath  = "/mcp-integrations"
+	GatewayMCPServersPath       = "/mcp-servers"
+	GatewayAPIKeysPath          = "/api-keys"
+	GatewayUsageLimitsPath      = "/policies/usage-limits"
+	GatewayRateLimitsPath       = "/policies/rate-limits"
+	GatewaySecretReferencesPath = "/secret-references"
+	GatewayDeploymentsPath      = "/deployments"
 )

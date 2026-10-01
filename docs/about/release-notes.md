@@ -1,5 +1,29 @@
 # Release Notes
 
+## v0.6.0
+
+- **feat(runtime)**: current query/update fields, explicit clears, precise delete-response handling, and live-verified topic force-delete and API key regeneration routes. Existing list aliases remain available.
+- **feat(modelsecurity)**: model/version/file inventory, custom-rule lifecycle, rule/group history, and additive complete schema methods with omitted/null/value intent.
+- **feat(redteam)**: target adapters, an independent Network Broker client, current report/metadata/lifecycle helpers, and complete opt-in models while retaining existing methods and field types. Deprecated prompt-set `Properties` maps remain source and wire compatible for the existing Terraform provider.
+- **feat(gateway)**: SCM OAuth management clients for twelve CRUD/lifecycle families, 88 selected source operations, and explicit service/user API key aliases. Configuration replacement, binding ownership, one-time credentials, and deployment archival are documented. Workspaces must already exist.
+- **fix**: endpoint-specific response interpretation rejects malformed or incompatible JSON with typed status/cause errors while preserving allowed text/empty deletes, including misleading JSON headers and JSON-string success messages. This includes the separately committed v0.5.2 hotfix.
+- **test**: pinned source hashes, complete public HTTP contracts, generated-schema checks, independent feature scores of at least 9/10 on both axes, targeted disposable live CRUD checks, Go 1.22+ race verification, and existing Terraform consumer validation.
+- **release**: checksummed source and Linux/macOS/Windows amd64/arm64 example binaries; see [release artifacts](../developer/releases.md).
+
+The live Red Team scan-metadata route currently returns HTTP 422 despite the
+pinned source declaring no parameters. The SDK retains its documented route and
+strict live assertion. Some execution, permanent Broker creation, and lifecycle
+helpers have mock contract verification only. See [live verification](../developer/live-verification.md)
+for exact coverage; this release does not assert that every live integration passes.
+
+
+## v0.5.2
+
+- **fix**: OAuth operations requiring JSON now return `*AISecSDKError` for malformed JSON, incompatible field types, empty bodies, and JSON `null`, instead of silently returning zero-value or partial results. Decoding errors retain the HTTP status and wrapped JSON cause; unknown fields remain accepted.
+- **refactor**: JSON requests and CSV uploads share one response interpretation implementation. Plain-text and empty success are explicitly preserved for profile force deletion, topic deletion/force deletion, and CSV upload; documented no-content Red Team and Model Security deletes remain successful.
+- **fix(runtime)**: profile force deletion and topic delete responses decode both JSON strings and `{message: ...}` objects without changing public response types. Text success exceptions work even with misleading JSON Content-Type headers; HTML responses are rejected.
+- **test**: topic deletion and profile force deletion failures during integration cleanup now fail the test. Successful delete responses log their Content-Type and a bounded body prefix for future live verification.
+
 ## v0.5.1
 
 - **verified**: the changed Red Team report, goal, stream, custom-attack-report, score-trend and dashboard endpoints were exercised against a live tenant with the new read-only `TestIntegration_Reports_ReadEndpoints`; all returned data (the multi-turn detail endpoint answered at the spec path, but no multi-turn attack existed to fetch)

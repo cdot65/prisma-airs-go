@@ -158,43 +158,6 @@ func TestProfiles_ForceDelete(t *testing.T) {
 	}
 }
 
-func TestProfiles_ForceDelete_NonJSON(t *testing.T) {
-	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "DELETE" {
-			t.Errorf("method = %s, want DELETE", r.Method)
-		}
-		// Simulate the real API: returns plain text, not JSON
-		w.WriteHeader(200)
-		_, _ = w.Write([]byte("deleted"))
-	})
-	defer tokenSrv.Close()
-	defer apiSrv.Close()
-
-	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
-	resp, err := client.Profiles.ForceDelete(context.Background(), "p-1", "admin@example.com")
-	if err != nil {
-		t.Fatalf("expected no error for non-JSON 2xx response, got: %v", err)
-	}
-	// Zero-value message is acceptable when API returns non-JSON
-	_ = resp
-}
-
-func TestTopics_ForceDelete_NonJSON(t *testing.T) {
-	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
-		// Simulate the real API: returns empty body
-		w.WriteHeader(200)
-	})
-	defer tokenSrv.Close()
-	defer apiSrv.Close()
-
-	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
-	resp, err := client.Topics.ForceDelete(context.Background(), "t-1", "admin@example.com")
-	if err != nil {
-		t.Fatalf("expected no error for empty 2xx response, got: %v", err)
-	}
-	_ = resp
-}
-
 func TestTopics_CRUD(t *testing.T) {
 	tokenSrv, apiSrv := newTestMgmtServer(t, func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(CustomTopic{TopicID: "t-1", TopicName: "test"})
@@ -698,8 +661,8 @@ func TestTopics_ForceDelete(t *testing.T) {
 		if r.Method != "DELETE" {
 			t.Errorf("method = %s", r.Method)
 		}
-		if !strings.Contains(r.URL.Path, "/topic/force/t-1") {
-			t.Errorf("path = %q, want /topic/force/t-1", r.URL.Path)
+		if r.URL.Path != "/v1/mgmt/topic/t-1/force" {
+			t.Errorf("path = %q, want /v1/mgmt/topic/t-1/force", r.URL.Path)
 		}
 		if r.URL.Query().Get("updated_by") != "admin@example.com" {
 			t.Errorf("updated_by = %q", r.URL.Query().Get("updated_by"))

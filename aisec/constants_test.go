@@ -118,3 +118,67 @@ func TestConstants_Version(t *testing.T) {
 		t.Errorf("UserAgent = %q, want %q", UserAgent, want)
 	}
 }
+
+func TestConstants_ModelInventoryAndCustomRules(t *testing.T) {
+	for _, tc := range []struct{ name, got, want string }{
+		{"ModelSecModelsPath", ModelSecModelsPath, "/v1/models"},
+		{"ModelSecModelVersionsPath", ModelSecModelVersionsPath, "/v1/model-versions"},
+		{"ModelSecCustomRulesPath", ModelSecCustomRulesPath, "/v1/custom-rules"},
+	} {
+		if tc.got != tc.want {
+			t.Errorf("%s=%q;want %q", tc.name, tc.got, tc.want)
+		}
+	}
+}
+
+func TestConstants_AdaptersAndNetworkBroker(t *testing.T) {
+	for _, tc := range []struct{ name, got, want string }{
+		{"RedTeamAdaptersPath", RedTeamAdaptersPath, "/v1/adapters"},
+		{"RedTeamChannelsPath", RedTeamChannelsPath, "/v1/channels"},
+		{"DefaultRedTeamBrokerEndpoint", DefaultRedTeamBrokerEndpoint, "https://api.sase.paloaltonetworks.com/ai-red-teaming/data-plane/network-broker"},
+		{"EnvRedTeamBrokerEndpoint", EnvRedTeamBrokerEndpoint, "PANW_RED_TEAM_BROKER_ENDPOINT"},
+	} {
+		if tc.got != tc.want {
+			t.Errorf("%s=%q;want %q", tc.name, tc.got, tc.want)
+		}
+	}
+}
+
+func TestConstants_CurrentRedTeamReports(t *testing.T) {
+	for _, tc := range []struct{ name, got, want string }{
+		{"RedTeamLanguagesPath", RedTeamLanguagesPath, "/v1/languages"},
+		{"RedTeamGoalCategoriesPath", RedTeamGoalCategoriesPath, "/v1/goal-categories"},
+		{"RedTeamReportV2Path", RedTeamReportV2Path, "/v2/report"},
+		{"RedTeamTargetProfileErrorLogPath", RedTeamTargetProfileErrorLogPath, "/v1/error-log/target-profile"},
+	} {
+		if tc.got != tc.want {
+			t.Errorf("%s=%q;want %q", tc.name, tc.got, tc.want)
+		}
+	}
+}
+
+func TestConstants_Gateway(t *testing.T) {
+	for _, tc := range []struct{ name, got, want string }{
+		{"DefaultGatewayDataEndpoint", DefaultGatewayDataEndpoint, "https://api.apps.paloaltonetworks.com/ai_gw/v2"},
+		{"DefaultGatewayAdminEndpoint", DefaultGatewayAdminEndpoint, "https://api.apps.paloaltonetworks.com/ai_gw/admin/v2"},
+		{"EnvGatewayDataEndpoint", EnvGatewayDataEndpoint, "PANW_AI_GW_DATA_ENDPOINT"},
+		{"EnvGatewayAdminEndpoint", EnvGatewayAdminEndpoint, "PANW_AI_GW_ADMIN_ENDPOINT"},
+		{"HeaderTsgID", HeaderTsgID, "x-tsg-id"},
+		{"GatewayGuardrailsPath", GatewayGuardrailsPath, "/guardrails"},
+		{"GatewayOrgGuardrailsPath", GatewayOrgGuardrailsPath, "/guardrails"},
+		{"GatewayConfigsPath", GatewayConfigsPath, "/configs"},
+		{"GatewayIntegrationsPath", GatewayIntegrationsPath, "/integrations"},
+		{"GatewayProvidersPath", GatewayProvidersPath, "/providers"},
+		{"GatewayMCPIntegrationsPath", GatewayMCPIntegrationsPath, "/mcp-integrations"},
+		{"GatewayMCPServersPath", GatewayMCPServersPath, "/mcp-servers"},
+		{"GatewayAPIKeysPath", GatewayAPIKeysPath, "/api-keys"},
+		{"GatewayUsageLimitsPath", GatewayUsageLimitsPath, "/policies/usage-limits"},
+		{"GatewayRateLimitsPath", GatewayRateLimitsPath, "/policies/rate-limits"},
+		{"GatewaySecretReferencesPath", GatewaySecretReferencesPath, "/secret-references"},
+		{"GatewayDeploymentsPath", GatewayDeploymentsPath, "/deployments"},
+	} {
+		if tc.got != tc.want {
+			t.Errorf("%s=%q;want%q", tc.name, tc.got, tc.want)
+		}
+	}
+}

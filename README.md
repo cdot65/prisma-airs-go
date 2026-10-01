@@ -6,7 +6,7 @@
 [![Go 1.22+](https://img.shields.io/badge/go-%3E%3D1.22-00ADD8)](https://go.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Go SDK for Palo Alto Networks **Prisma AIRS** — covering the full lifecycle from configuration management to operational scanning across three service domains: **AI Runtime Security**, **Model Security**, and **AI Red Teaming**.
+Go SDK for Palo Alto Networks **Prisma AIRS** — covering the full lifecycle from configuration management to operational scanning across four service domains: **AI Runtime Security**, **Model Security**, **AI Red Teaming**, and **AI Gateway Management**.
 
 ## Installation
 
@@ -24,6 +24,7 @@ Requires Go 1.22+. Zero external dependencies (stdlib only).
 | **AI Runtime Security** | `runtime.Client`        | OAuth2         | Profiles, topics, API keys, apps, DLP, deployment, logs    |
 | **Model Security**      | `modelsecurity.Client`  | OAuth2         | ML model scanning, security groups, rule management        |
 | **AI Red Teaming**      | `redteam.Client`        | OAuth2         | Automated red team scans, reports, targets, custom attacks |
+| **AI Gateway Management** | `gateway.Client` | OAuth2 + TSG | 12 CRUD families, bindings, policies, secrets, deployments |
 
 All OAuth2 services share credentials and handle token lifecycle automatically (caching, proactive refresh, 401/403 auto-retry).
 
@@ -90,7 +91,7 @@ import "github.com/cdot65/prisma-airs-go/aisec/modelsecurity"
 
 client, err := modelsecurity.NewClient(modelsecurity.Opts{}) // falls back to PANW_MGMT_* env vars
 
-// 3 sub-clients + GetPyPIAuth convenience method
+// 6 sub-clients: scans, inventory, custom rules, groups, and rules
 scans, _ := client.Scans.List(ctx, modelsecurity.ScanListOpts{Limit: 10})
 groups, _ := client.SecurityGroups.List(ctx, modelsecurity.GroupListOpts{})
 rules, _ := client.SecurityRules.List(ctx, modelsecurity.RuleListOpts{})
@@ -104,7 +105,7 @@ import "github.com/cdot65/prisma-airs-go/aisec/redteam"
 
 client, err := redteam.NewClient(redteam.Opts{}) // falls back to PANW_MGMT_* env vars
 
-// 7 sub-clients + 10 convenience methods
+// 9 sub-clients, including adapters and the independent Network Broker
 scans, _ := client.Scans.List(ctx, redteam.ScanListOpts{Limit: 5})
 targets, _ := client.Targets.List(ctx, redteam.TargetListOpts{})
 categories, _ := client.Scans.GetCategories(ctx)
@@ -179,3 +180,14 @@ make check          # fmt + vet + lint + test
 ## License
 
 MIT
+
+AI Gateway CRUD usage, explicit lifecycle semantics and SCM compatibility are
+documented in [the Gateway guide](docs/services/ai-gateway-api.md). Current API
+models preserve legacy interfaces through opt-in methods; see
+[feature reviews](docs/developer/feature-quality.md) and
+[live verification](docs/developer/live-verification.md) for evidence and limits.
+
+Download checksummed cross-platform example binaries from the
+[v0.6.0 release](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.6.0), or
+install with `go get github.com/cdot65/prisma-airs-go@v0.6.0`. See
+[artifact usage and reproducible builds](docs/developer/releases.md).

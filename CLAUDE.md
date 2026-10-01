@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Go SDK for Palo Alto Networks Prisma AIRS — covers the full lifecycle across three service domains (AI Runtime Security, Model Security, AI Red Teaming). Port of the TypeScript `@cdot65/prisma-airs-sdk`. Zero external dependencies (stdlib only). Foundation for a Terraform provider.
+Go SDK for Palo Alto Networks Prisma AIRS — covers the full lifecycle across four service domains (AI Runtime Security, Model Security, AI Red Teaming, AI Gateway Management). Port of the TypeScript `@cdot65/prisma-airs-sdk`. Zero external dependencies (stdlib only). Foundation for a Terraform provider.
 
 ## Commands
 
@@ -27,20 +27,24 @@ go test -v ./... -run "TestName"
 
 ## Architecture
 
-**3 service domains**, 2 auth methods:
+**4 service domains**, 2 auth methods:
 
 - **Runtime API — Scan** (API Key): `runtime.NewScanner(cfg)` → SyncScan, AsyncScan, QueryByScanIDs, QueryByReportIDs
 - **Runtime API — Management** (OAuth2): `runtime.NewClient(opts)` → 8 sub-clients (profiles, topics, apikeys, apps, dlp, deployment, scanlogs, oauth)
-- **Model Security API** (OAuth2): `modelsecurity.NewClient(opts)` → 3 sub-clients (scans, groups, rules) + GetPyPIAuth, dual endpoint
-- **Red Team API** (OAuth2): `redteam.NewClient(opts)` → 7 sub-clients (scans, reports, customAttackReports, targets, customAttacks, eula, instances) + 10 convenience methods, dual endpoint
+- **Model Security API** (OAuth2): `modelsecurity.NewClient(opts)` → 6 sub-clients (scans, models, versions, custom rules, groups, rules) + GetPyPIAuth, dual endpoint
+- **Red Team API** (OAuth2): `redteam.NewClient(opts)` → 9 sub-clients including adapters and Network Broker, with management/data/broker routing
+
+- **AI Gateway management** (SCM OAuth): `gateway.NewClient(opts)` → 12 CRUD families, existing workspaces, data/admin routing
 
 Key packages:
 
 - `aisec/` — constants, config (functional options), errors (`AISecSDKError`), utils (UUID, HMAC)
 - `aisec/internal/` — `DoRequest[T]`, `DoMgmtRequest[T]`, `ExecuteWithRetry`, `OAuthClient`, `ResolveOAuthConfig`
 - `aisec/runtime/` — Scanner + Content (data plane) and Client + 8 sub-clients (management plane)
-- `aisec/modelsecurity/` — Client + 3 sub-clients, data plane / mgmt plane split
-- `aisec/redteam/` — Client + 7 sub-clients + 10 convenience methods, data plane / mgmt plane split
+- `aisec/modelsecurity/` — Client + 6 sub-clients, data plane / mgmt plane split
+- `aisec/redteam/` — Client + 9 sub-clients, data plane / mgmt plane split
+
+- `aisec/gateway/` — twelve CRUD/lifecycle families; generated complete models in `schema`
 
 **Auth:** API key (HMAC-SHA256) for scans. OAuth2 client_credentials (with token caching, proactive refresh, concurrent dedup, 401/403 auto-retry) for everything else.
 
@@ -64,7 +68,7 @@ Key packages:
 - **ci.yml**: gofmt check, go vet, golangci-lint (Go 1.24)
 - **test.yml**: `go test -race` matrix: Go 1.22, 1.23, 1.24
 - **mkdocs-deploy.yml**: MkDocs Material build + GitHub Pages deploy on push to main
-- **release.yml**: fmt + vet + test + build + tag verification on release
+- **release.yml**: fmt + vet + race tests + build + tag verification, then six-platform source/example assets and checksums
 
 ## Docs
 

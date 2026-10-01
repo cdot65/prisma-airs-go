@@ -106,7 +106,9 @@ type ModelProtectionConfig struct {
 	Name              string                `json:"name"`
 	Action            ProfileAction         `json:"action"`
 	ToxicCategoryList []ToxicCategoryConfig `json:"toxic-category-list,omitempty"`
-	TopicList         []TopicArrayConfig    `json:"topic-list,omitempty"`
+	// Upstream ModelProtectionObject places topic-list.items in a sibling
+	// property named items. Preserve the intended topic-list wire format.
+	TopicList []TopicArrayConfig `json:"topic-list,omitempty"`
 }
 
 // AgentProtectionConfig holds agent protection configuration.
@@ -171,19 +173,32 @@ type SecurityProfileListResponse struct {
 
 // CreateProfileRequest is the request to create a profile.
 type CreateProfileRequest struct {
-	ProfileName string         `json:"profile_name"`
-	Policy      *ProfilePolicy `json:"policy,omitempty"`
+	ProfileID      string         `json:"profile_id,omitempty"`
+	ProfileName    string         `json:"profile_name"`
+	Policy         *ProfilePolicy `json:"policy,omitempty"`
+	Revision       *int32         `json:"revision,omitempty"`
+	Active         *bool          `json:"active,omitempty"`
+	CreatedBy      string         `json:"created_by,omitempty"`
+	UpdatedBy      string         `json:"updated_by,omitempty"`
+	LastModifiedTs string         `json:"last_modified_ts,omitempty"`
 }
 
 // UpdateProfileRequest is the request to update a profile.
 type UpdateProfileRequest struct {
-	ProfileName string         `json:"profile_name,omitempty"`
-	Policy      *ProfilePolicy `json:"policy,omitempty"`
+	ProfileID      string         `json:"profile_id,omitempty"`
+	ProfileName    string         `json:"profile_name,omitempty"`
+	Policy         *ProfilePolicy `json:"policy,omitempty"`
+	Revision       *int32         `json:"revision,omitempty"`
+	Active         *bool          `json:"active,omitempty"`
+	UpdatedBy      string         `json:"updated_by,omitempty"`
+	CreatedBy      string         `json:"created_by,omitempty"`
+	LastModifiedTs string         `json:"last_modified_ts,omitempty"`
 }
 
 // DeleteProfileResponse is the response from deleting a profile.
 type DeleteProfileResponse struct {
-	Message string `json:"message,omitempty"`
+	Message string          `json:"message,omitempty"`
+	Payload []PolicyPayload `json:"payload,omitempty"`
 }
 
 // CustomTopic represents a custom detection topic.
@@ -208,21 +223,78 @@ type CustomTopicListResponse struct {
 
 // CreateTopicRequest is the request to create a topic.
 type CreateTopicRequest struct {
-	TopicName   string   `json:"topic_name"`
-	Description string   `json:"description,omitempty"`
-	Examples    []string `json:"examples,omitempty"`
+	TopicID        string   `json:"topic_id,omitempty"`
+	TopicName      string   `json:"topic_name"`
+	Description    string   `json:"description,omitempty"`
+	Examples       []string `json:"examples,omitempty"`
+	Revision       *int64   `json:"revision,omitempty"`
+	Active         *bool    `json:"active,omitempty"`
+	CreatedBy      string   `json:"created_by,omitempty"`
+	UpdatedBy      string   `json:"updated_by,omitempty"`
+	LastModifiedTs string   `json:"last_modified_ts,omitempty"`
+	CreatedTs      string   `json:"created_ts,omitempty"`
 }
 
 // UpdateTopicRequest is the request to update a topic.
 type UpdateTopicRequest struct {
-	TopicName   string   `json:"topic_name,omitempty"`
-	Description string   `json:"description,omitempty"`
-	Examples    []string `json:"examples,omitempty"`
+	TopicID        string   `json:"topic_id,omitempty"`
+	TopicName      string   `json:"topic_name,omitempty"`
+	Description    string   `json:"description,omitempty"`
+	Examples       []string `json:"examples,omitempty"`
+	Revision       *int64   `json:"revision,omitempty"`
+	Active         *bool    `json:"active,omitempty"`
+	UpdatedBy      string   `json:"updated_by,omitempty"`
+	CreatedBy      string   `json:"created_by,omitempty"`
+	LastModifiedTs string   `json:"last_modified_ts,omitempty"`
+	CreatedTs      string   `json:"created_ts,omitempty"`
 }
 
 // DeleteTopicResponse is the response from deleting a topic.
 type DeleteTopicResponse struct {
-	Message string `json:"message,omitempty"`
+	Message string           `json:"message,omitempty"`
+	Payload []ProfilePayload `json:"payload,omitempty"`
+}
+
+// PolicyPayload identifies a policy reported by a profile deletion.
+type PolicyPayload struct {
+	PolicyID   string `json:"policy_id,omitempty"`
+	PolicyName string `json:"policy_name,omitempty"`
+	Priority   int64  `json:"priority"`
+}
+
+// ProfilePayload identifies a profile reported by a topic deletion.
+type ProfilePayload struct {
+	ProfileID   string `json:"profile_id,omitempty"`
+	ProfileName string `json:"profile_name,omitempty"`
+	Revision    int64  `json:"revision"`
+}
+
+// ProfileListOpts extends profile pagination with revision selection.
+type ProfileListOpts struct {
+	ListOpts
+	Latest *bool
+}
+
+// DeploymentProfileListOpts selects unactivated deployment profiles when set.
+type DeploymentProfileListOpts struct {
+	Unactivated *bool
+}
+
+// TokenTTLOpts controls the management-issued application token lifetime.
+type TokenTTLOpts struct {
+	Interval *int64
+	Unit     string
+}
+
+// UpdateTopicFieldsRequest distinguishes omitted fields from explicit empty,
+// zero, or false updates. A nil pointer omits the corresponding field.
+type UpdateTopicFieldsRequest struct {
+	TopicName   *string   `json:"topic_name,omitempty"`
+	Description *string   `json:"description,omitempty"`
+	Examples    *[]string `json:"examples,omitempty"`
+	Revision    *int64    `json:"revision,omitempty"`
+	Active      *bool     `json:"active,omitempty"`
+	UpdatedBy   *string   `json:"updated_by,omitempty"`
 }
 
 // ApiKey represents an API key with all spec-defined fields.
@@ -312,15 +384,22 @@ type CustomerAppListResponse struct {
 
 // UpdateAppRequest is the request to update a customer app.
 type UpdateAppRequest struct {
-	AppName       string `json:"app_name,omitempty"`
-	ModelName     string `json:"model_name,omitempty"`
-	CloudProvider string `json:"cloud_provider,omitempty"`
-	Environment   string `json:"environment,omitempty"`
+	AppName          string `json:"app_name,omitempty"`
+	ModelName        string `json:"model_name,omitempty"`
+	CloudProvider    string `json:"cloud_provider,omitempty"`
+	Environment      string `json:"environment,omitempty"`
+	CustomerAppID    string `json:"customer_appId,omitempty"`
+	TsgID            string `json:"tsg_id,omitempty"`
+	Status           string `json:"status,omitempty"`
+	CreatedBy        string `json:"created_by,omitempty"`
+	UpdatedBy        string `json:"updated_by,omitempty"`
+	AiAgentFramework string `json:"ai_agent_framework,omitempty"`
 }
 
 // DeleteAppResponse is the response from deleting a customer app.
 type DeleteAppResponse struct {
 	Message string `json:"message,omitempty"`
+	CustomerApp
 }
 
 // DlpProfile represents a DLP data profile.

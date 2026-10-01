@@ -1,5 +1,7 @@
 package modelsecurity
 
+import "github.com/cdot65/prisma-airs-go/aisec/modelsecurity/schema"
+
 // Enums matching API spec
 
 // EvalOutcome represents the outcome of a scan evaluation.
@@ -256,6 +258,8 @@ type ScanDetails struct {
 
 // FileScanData holds per-file scan data.
 type FileScanData struct {
+	SHA256          string           `json:"sha256,omitempty"`
+	SizeBytes       *int64           `json:"size_bytes,omitempty"`
 	FilePath        string           `json:"file_path"`
 	ModelscanStatus ModelScanStatus  `json:"modelscan_status"`
 	BlobID          string           `json:"blob_id"`
@@ -291,6 +295,7 @@ type ScanCreateRequest struct {
 
 // ScanBaseResponse is the base scan response.
 type ScanBaseResponse struct {
+	SDKVersion               string       `json:"sdk_version,omitempty"`
 	UUID                     string       `json:"uuid"`
 	TsgID                    string       `json:"tsg_id"`
 	CreatedAt                string       `json:"created_at"`
@@ -318,14 +323,16 @@ type ScanBaseResponse struct {
 
 // ScanList is the paginated list of scans.
 type ScanList struct {
-	Items    []ScanBaseResponse `json:"scans"`
-	Metadata PaginationMeta     `json:"pagination"`
+	CountCapped *bool              `json:"count_capped,omitempty"`
+	Items       []ScanBaseResponse `json:"scans"`
+	Metadata    PaginationMeta     `json:"pagination"`
 }
 
 // --- Rule Evaluation types ---
 
 // RuleEvaluationResponse represents a single rule evaluation.
 type RuleEvaluationResponse struct {
+	RuleOrigin        schema.RuleOrigin    `json:"rule_origin,omitempty"`
 	UUID              string               `json:"uuid"`
 	TsgID             string               `json:"tsg_id"`
 	CreatedAt         string               `json:"created_at"`
@@ -373,21 +380,25 @@ type FileList struct {
 
 // ViolationResponse represents a rule violation.
 type ViolationResponse struct {
-	UUID              string    `json:"uuid"`
-	TsgID             string    `json:"tsg_id"`
-	CreatedAt         string    `json:"created_at"`
-	UpdatedAt         string    `json:"updated_at"`
-	Description       string    `json:"description"`
-	RuleInstanceUUID  string    `json:"rule_instance_uuid"`
-	RuleName          string    `json:"rule_name"`
-	RuleDescription   string    `json:"rule_description"`
-	RuleInstanceState RuleState `json:"rule_instance_state"`
-	File              string    `json:"file,omitempty"`
-	Hash              string    `json:"hash,omitempty"`
-	Module            string    `json:"module,omitempty"`
-	Operator          string    `json:"operator,omitempty"`
-	Threat            string    `json:"threat,omitempty"`
-	ThreatDescription string    `json:"threat_description,omitempty"`
+	InsightsURL       string            `json:"insights_url,omitempty"`
+	Remediation       *RuleRemediation  `json:"remediation,omitempty"`
+	RuleOrigin        schema.RuleOrigin `json:"rule_origin,omitempty"`
+	ThreatKBURL       string            `json:"threat_kb_url,omitempty"`
+	UUID              string            `json:"uuid"`
+	TsgID             string            `json:"tsg_id"`
+	CreatedAt         string            `json:"created_at"`
+	UpdatedAt         string            `json:"updated_at"`
+	Description       string            `json:"description"`
+	RuleInstanceUUID  string            `json:"rule_instance_uuid"`
+	RuleName          string            `json:"rule_name"`
+	RuleDescription   string            `json:"rule_description"`
+	RuleInstanceState RuleState         `json:"rule_instance_state"`
+	File              string            `json:"file,omitempty"`
+	Hash              string            `json:"hash,omitempty"`
+	Module            string            `json:"module,omitempty"`
+	Operator          string            `json:"operator,omitempty"`
+	Threat            string            `json:"threat,omitempty"`
+	ThreatDescription string            `json:"threat_description,omitempty"`
 }
 
 // ViolationList is the paginated list of violations.
@@ -438,15 +449,16 @@ type ModelSecurityGroupUpdateRequest struct {
 
 // ModelSecurityGroupResponse is a security group.
 type ModelSecurityGroupResponse struct {
-	UUID        string                  `json:"uuid"`
-	TsgID       string                  `json:"tsg_id"`
-	CreatedAt   string                  `json:"created_at"`
-	UpdatedAt   string                  `json:"updated_at"`
-	Name        string                  `json:"name"`
-	Description string                  `json:"description"`
-	SourceType  SourceType              `json:"source_type"`
-	State       ModelSecurityGroupState `json:"state"`
-	IsTombstone bool                    `json:"is_tombstone"`
+	EnabledRuleCount *int64                  `json:"enabled_rule_count,omitempty"`
+	UUID             string                  `json:"uuid"`
+	TsgID            string                  `json:"tsg_id"`
+	CreatedAt        string                  `json:"created_at"`
+	UpdatedAt        string                  `json:"updated_at"`
+	Name             string                  `json:"name"`
+	Description      string                  `json:"description"`
+	SourceType       SourceType              `json:"source_type"`
+	State            ModelSecurityGroupState `json:"state"`
+	IsTombstone      bool                    `json:"is_tombstone"`
 }
 
 // ListModelSecurityGroupsResponse is the paginated list of security groups.
@@ -466,15 +478,19 @@ type ModelSecurityRuleInstanceUpdateRequest struct {
 
 // ModelSecurityRuleInstanceResponse is a rule instance within a security group.
 type ModelSecurityRuleInstanceResponse struct {
-	UUID              string                     `json:"uuid"`
-	TsgID             string                     `json:"tsg_id"`
-	CreatedAt         string                     `json:"created_at"`
-	UpdatedAt         string                     `json:"updated_at"`
-	SecurityGroupUUID string                     `json:"security_group_uuid"`
-	SecurityRuleUUID  string                     `json:"security_rule_uuid"`
-	State             RuleState                  `json:"state"`
-	FieldValues       map[string]any             `json:"field_values,omitempty"`
-	Rule              *ModelSecurityRuleResponse `json:"rule"`
+	CreatedBy         string                            `json:"created_by,omitempty"`
+	UpdatedBy         string                            `json:"updated_by,omitempty"`
+	CustomRuleUUID    string                            `json:"custom_rule_uuid,omitempty"`
+	CustomRule        *schema.CustomRuleInstanceSummary `json:"custom_rule,omitempty"`
+	UUID              string                            `json:"uuid"`
+	TsgID             string                            `json:"tsg_id"`
+	CreatedAt         string                            `json:"created_at"`
+	UpdatedAt         string                            `json:"updated_at"`
+	SecurityGroupUUID string                            `json:"security_group_uuid"`
+	SecurityRuleUUID  string                            `json:"security_rule_uuid"`
+	State             RuleState                         `json:"state"`
+	FieldValues       map[string]any                    `json:"field_values,omitempty"`
+	Rule              *ModelSecurityRuleResponse        `json:"rule"`
 }
 
 // ListModelSecurityRuleInstancesResponse is the paginated list of rule instances.
@@ -517,6 +533,7 @@ type PyPIAuthResponse struct {
 
 // ScanListOpts are options for listing scans.
 type ScanListOpts struct {
+	ModelVersionUUID  string
 	Skip              int
 	Limit             int
 	SortOrder         string
@@ -541,6 +558,7 @@ type EvaluationListOpts struct {
 
 // FileListOpts are options for listing files.
 type FileListOpts struct {
+	Recursive *bool
 	Skip      int
 	Limit     int
 	SortField string
@@ -576,6 +594,8 @@ type GroupListOpts struct {
 
 // RuleInstanceListOpts are options for listing rule instances.
 type RuleInstanceListOpts struct {
+	IsCustom         *bool
+	Generation       *int64
 	Skip             int
 	Limit            int
 	SecurityRuleUUID string
@@ -584,8 +604,42 @@ type RuleInstanceListOpts struct {
 
 // RuleListOpts are options for listing security rules.
 type RuleListOpts struct {
+	Generation  *int64
 	Skip        int
 	Limit       int
 	SourceType  string
 	SearchQuery string
 }
+
+// ModelListOpts filters model inventory. Arrays use repeated query parameters.
+type ModelListOpts struct {
+	Limit, Skip                                                           int
+	SearchQuery, SortField, SortOrder                                     string
+	LatestVersionOutcomes, LatestVersionFormats, LatestVersionSourceTypes []string
+	LatestVersionScanTimeBefore, StartTime, EndTime                       string
+}
+
+// ModelVersionListOpts controls inventory version pagination.
+type ModelVersionListOpts struct {
+	Limit, Skip int
+	SortOrder   string
+}
+
+// CustomRuleListOpts can read a historical generation; upstream ignores other
+// filters during historical reads.
+type CustomRuleListOpts struct {
+	Limit, Skip                     int
+	SortField, SortDir, SearchQuery string
+	IsArchived                      *bool
+	SourceTypes                     []string
+	Generation                      *int64
+}
+
+// SnapshotListOpts uses the server's opaque cursor, not an item offset.
+type SnapshotListOpts struct {
+	Limit     int
+	NextToken string
+}
+
+// PageOpts controls offset pagination of inventory and assignment lists.
+type PageOpts struct{ Limit, Skip int }

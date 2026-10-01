@@ -32,4 +32,20 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: latest
+          version: v1.64.8
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check source snapshots and generated schemas
+        run: |
+          python3 -m pip install PyYAML==6.0.2
+          python3 scripts/spec_snapshot.py --check
+          python3 scripts/schema_models.py modelsecurity redteam gateway --check
+      - name: Compile integration tests without live calls
+        run: go test -race -tags=integration -run '^$' ./...
+      - name: Lint integration tests
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64.8
+          args: --build-tags integration ./...

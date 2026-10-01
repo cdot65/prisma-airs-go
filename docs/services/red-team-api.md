@@ -284,3 +284,80 @@ templates, err := client.GetTargetTemplates(ctx)
 // Registry credentials
 creds, err := client.GetRegistryCredentials(ctx)
 ```
+
+## Adapters and Network Broker
+
+`client.Adapters` exposes `Create`, `List`, `Get`, `Update`, `Delete`, `GetConfig`,
+and `Validate`. Current request/response models live in
+`github.com/cdot65/prisma-airs-go/aisec/redteam/schema` and preserve omitted,
+null, false, zero, and empty values. They are generated from the pinned contracts
+with `python3 scripts/schema_models.py redteam` (`--check` verifies regeneration).
+Existing Red Team types and methods remain available.
+
+```go
+inactive := false
+adapter, err := client.Adapters.Create(ctx,
+    schema.CustomTargetAdapterCreateRequest{
+        Name: "My adapter", ScriptB64: encodedScript, Prompt: "test prompt",
+    }, redteam.AdapterWriteOpts{Validate: &inactive})
+```
+
+An omitted `Validate` lets the server use its default (true). Explicit false
+saves a draft without executing the adapter. `Validate` returns diagnostic
+fields; `Validated == false` can be a successful HTTP response with a failed
+validation outcome. The caller interprets that outcome.
+
+Adapter PUT is a full replacement: supply name, script, and test prompt. Its
+variable list defines the complete desired key set. Providing a value sets it;
+null keeps a stored value (including a redacted secret); omitting a key deletes
+that variable. Do not replace stored secrets with read-time redaction markers.
+The production service returned a cleared empty description as JSON null during
+live testing; the SDK returns the observed value without normalizing it.
+
+`client.NetworkBroker` exposes `List`, `Create`, `Get`, `Update` (PATCH), and
+`GetStats`. It shares the OAuth token and configured HTTP transport but routes to
+the separate Network Broker base URL. Override it with `Opts.BrokerEndpoint` or
+`PANW_RED_TEAM_BROKER_ENDPOINT`. `ChannelListOpts.Status` emits repeated query
+keys; `IncludeAllIfEmpty` is a pointer so explicit false is retained.
+
+The broker contract has **no DELETE endpoint**. Channel creation has no matching
+SDK delete helper, and updating a channel changes its name/description. The SDK
+does not manufacture a deletion operation or install broker infrastructure.
+Channel status uses the referenced string enum, including future string values.
+
+Current job models preserve nullable progress/count/score fields and expose typed
+standard/agentic progress alternatives. Tagged accessors reject a mismatched
+alternative; use explicit tag values when constructing progress data.
+
+## Current-schema methods and helpers
+
+All 47 data-plane, 42 management-plane and five Network Broker operations in
+`specs/manifest.json` have public HTTP contract tests. Existing methods retain
+source-compatible types. Their `Details` counterparts return complete models
+from `aisec/redteam/schema`; for example `Scans.ListDetails`,
+`Targets.CreateDetails`, `Targets.UpdateDetails`, `Reports.GetStaticReportDetails`,
+`Reports.GetAttackDetails`, and `CustomAttacks.CreatePromptSetDetails`. Typed
+requests precede optional query arguments, as in
+`Targets.CreateDetails(ctx, request, false)`.
+
+Nullable optional values use `aisec.Value(value)`, `aisec.Null[T]()` or an unset
+`aisec.Optional[T]`. This preserves explicit false, zero, empty collections and
+null separately from omission. New target adapter variables, language, profiling
+status, report metadata and nullable counts are available without changing the
+legacy model fields. Union models offer typed constructors and `As...` accessors.
+For current report methods, unsupported legacy `Search` options are omitted;
+legacy methods retain their previous query behavior.
+
+Additional helpers expose languages and goal categories, scan metadata and
+runtime-profile association, static/dynamic ASR, report status/regeneration,
+nullable threat overrides, target profiling, Copilot token lifecycle and error
+log reads/downloads. `Reports.GetDownload` returns the v2 filename/short-lived
+URL receipt; `Reports.DownloadReport` retains v1 raw bytes. The SDK does not
+follow the receipt's URL or expose it to logging automatically.
+
+Profiling, report regeneration and threat overrides are explicit mutations.
+Copilot authentication requires caller-managed Azure credentials and browser
+consent. These mutations have mock contract verification; the live probe does
+not change existing jobs or profiles. See [live verification](../developer/live-verification.md).
+The documented scan-metadata route currently returns HTTP 422 on the tested
+production tenant; the SDK preserves that typed error (see `API_ISSUES.md`).

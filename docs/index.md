@@ -9,7 +9,8 @@ Go SDK for Palo Alto Networks **Prisma AI Runtime Security (AIRS)** — a unifie
 | **AI Runtime Security** | Real-time content scanning for prompts, responses, and tool events |
 | **Runtime (Management)** | Configuration CRUD for security profiles, topics, API keys, and apps |
 | **Model Security** | ML model scanning, security groups, and rule management |
-| **AI Red Teaming** | Automated red team scans, reports, targets, and custom attacks |
+| **AI Red Teaming** | Automated red team scans, reports, targets, adapters, and Network Broker |
+| **AI Gateway Management** | Twelve SCM OAuth CRUD families and explicit lifecycle helpers |
 
 ## Key Features
 
@@ -30,7 +31,9 @@ graph LR
     B --> F[AIRS Scanning Service]
     C --> G[AIRS Management Service]
     D --> H[AIMS Data/Mgmt Planes]
-    E --> I[Red Team Data/Mgmt Planes]
+    E --> I[Red Team Data/Mgmt/Broker Planes]
+    A --> J[AI Gateway CRUD<br/>SCM OAuth]
+    J --> K[Gateway Data/Admin Planes]
 ```
 
 ## Quick Links

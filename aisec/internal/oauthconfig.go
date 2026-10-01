@@ -18,6 +18,8 @@ type OAuthServiceConfig struct {
 	// HTTPClient, when set, is used for API requests (token requests use the
 	// OAuthClient's own client, configured from the same value).
 	HTTPClient *http.Client
+	// Headers are service-specific API headers; they are never sent to the token endpoint.
+	Headers http.Header
 }
 
 // ResolveOAuthConfigOpts are options for resolving OAuth config.

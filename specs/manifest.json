@@ -1,0 +1,85 @@
+{
+  "captured": "2026-10-01",
+  "inputs": [
+    {
+      "file": "runtime-service.yaml",
+      "contract": "runtime-data.json",
+      "repository": "https://github.com/PaloAltoNetworks/pan.dev",
+      "source": "openapi-specs/prisma-airs/scan/scan-service_latest.yaml",
+      "commit": "029ad7ca1df31bcdcb6e4f1799530236b5a65ded",
+      "sha256": "e97a5a75d5a6073c56af022452d65197c2c474597a569f628fe1d7de0f63e7c3",
+      "version": "0.0.0",
+      "operations": 4
+    },
+    {
+      "file": "runtime-mgmt.yaml",
+      "contract": "runtime-mgmt.json",
+      "repository": "https://github.com/PaloAltoNetworks/pan.dev",
+      "source": "openapi-specs/prisma-airs/management/mgmt-service_latest.yaml",
+      "commit": "029ad7ca1df31bcdcb6e4f1799530236b5a65ded",
+      "sha256": "7ee421fd6ba31bd4f1c88d233ea032a52cd29ad59b71f2c3cbea9bc033fc215f",
+      "version": "0.0.0",
+      "operations": 21
+    },
+    {
+      "file": "model-service.yaml",
+      "contract": "model-data.json",
+      "repository": "https://github.com/PaloAltoNetworks/pan.dev",
+      "source": "openapi-specs/prisma-airs-model-security/dataplane/data-plane.yml",
+      "commit": "029ad7ca1df31bcdcb6e4f1799530236b5a65ded",
+      "sha256": "1a581d23ceb7456b9a5f978b212235e2149dadf917eae7d31e1463667339d6dc",
+      "version": "0.1.0",
+      "operations": 18
+    },
+    {
+      "file": "model-mgmt.yaml",
+      "contract": "model-mgmt.json",
+      "repository": "https://github.com/PaloAltoNetworks/pan.dev",
+      "source": "openapi-specs/prisma-airs-model-security/management/mgmt-plane.yml",
+      "commit": "029ad7ca1df31bcdcb6e4f1799530236b5a65ded",
+      "sha256": "92b010dbe1b2ba96984aaaadfca95e4a2ff68a1fa98209765cfa1b0bcffcc808",
+      "version": "0.1.0",
+      "operations": 23
+    },
+    {
+      "file": "redteam-service.yaml",
+      "contract": "redteam-data.json",
+      "repository": "https://github.com/PaloAltoNetworks/pan.dev",
+      "source": "openapi-specs/prisma-airs-redteam/data-plane/dp-openapi.yaml",
+      "commit": "029ad7ca1df31bcdcb6e4f1799530236b5a65ded",
+      "sha256": "77f015de78f2dfe9eee944601b94b541c8f111da35f847e40a36084829451ca1",
+      "version": "0.93.0",
+      "operations": 47
+    },
+    {
+      "file": "redteam-mgmt.yaml",
+      "contract": "redteam-mgmt.json",
+      "repository": "https://github.com/PaloAltoNetworks/pan.dev",
+      "source": "openapi-specs/prisma-airs-redteam/management/mp-openapi.yaml",
+      "commit": "029ad7ca1df31bcdcb6e4f1799530236b5a65ded",
+      "sha256": "5fbb533bd5f0156bf85c0a549b962aaf2f96cf09d0b6d9d82ac2d2afe87509a0",
+      "version": "0.86.0",
+      "operations": 42
+    },
+    {
+      "file": "redteam-network-broker.yaml",
+      "contract": "redteam-broker.json",
+      "repository": "https://github.com/PaloAltoNetworks/pan.dev",
+      "source": "openapi-specs/prisma-airs-redteam/network-broker/AIRS-Red-Teaming-Network-Broker.yaml",
+      "commit": "029ad7ca1df31bcdcb6e4f1799530236b5a65ded",
+      "sha256": "0cf2176db90da796fdd086a5f8bd6b3dcf3dcd9065d42c4230e10603bb1ea4b5",
+      "version": "1.0.0",
+      "operations": 5
+    },
+    {
+      "file": "gateway.yaml",
+      "contract": "gateway.json",
+      "repository": "https://github.com/PaloAltoNetworks/openapi",
+      "source": "openapi.yaml",
+      "commit": "659339799ae30a06c3bf1859507a4a6c131814fc",
+      "sha256": "58146a40cd134c08372283432b5f1d6978656ff5404b6f53caa5b03de972308c",
+      "version": "3.0.0",
+      "operations": 188
+    }
+  ]
+}

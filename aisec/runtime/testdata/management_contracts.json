@@ -1,0 +1,589 @@
+{
+  "POST /v1/mgmt/apikey": {
+    "query": "",
+    "response": {
+      "api_key_id": "key",
+      "api_key_name": "test",
+      "revoked": false,
+      "rotation_time_interval": 90,
+      "rotation_time_unit": "day",
+      "customer_appId": "app"
+    },
+    "fields": {
+      "api_key_id": "key",
+      "api_key_name": "test",
+      "revoked": false,
+      "rotation_time_interval": 90,
+      "rotation_time_unit": "day",
+      "customer_appId": "app"
+    },
+    "request": {
+      "api_key_name": "test",
+      "auth_code": "auth",
+      "revoked": false,
+      "cust_app": "app",
+      "created_by": "tester",
+      "rotation_time_interval": 90,
+      "rotation_time_unit": "day",
+      "cust_env": "dev",
+      "cust_cloud_provider": "aws"
+    }
+  },
+  "GET /v1/mgmt/apikeys": {
+    "query": "limit=5&offset=0",
+    "response": {
+      "api_keys": [
+        {
+          "api_key_id": "key",
+          "api_key_name": "test",
+          "revoked": false,
+          "rotation_time_interval": 90,
+          "rotation_time_unit": "day",
+          "customer_appId": "app"
+        }
+      ],
+      "next_offset": 5
+    },
+    "fields": {
+      "api_keys": [
+        {
+          "api_key_id": "key",
+          "api_key_name": "test",
+          "revoked": false,
+          "rotation_time_interval": 90,
+          "rotation_time_unit": "day",
+          "customer_appId": "app"
+        }
+      ],
+      "next_offset": 5
+    }
+  },
+  "DELETE /v1/mgmt/apikey/delete/{api_key_name}": {
+    "query": "updated_by=tester",
+    "response": "deleted",
+    "fields": {
+      "message": "deleted"
+    }
+  },
+  "POST /v1/mgmt/apikey/regenerate/{api_key_id}": {
+    "query": "",
+    "response": {
+      "api_key_id": "key",
+      "api_key_name": "test",
+      "revoked": false,
+      "rotation_time_interval": 90,
+      "rotation_time_unit": "day",
+      "customer_appId": "app"
+    },
+    "fields": {
+      "api_key_id": "key",
+      "api_key_name": "test",
+      "revoked": false,
+      "rotation_time_interval": 90,
+      "rotation_time_unit": "day",
+      "customer_appId": "app"
+    },
+    "request": {
+      "updated_by": "tester",
+      "rotation_time_interval": 90,
+      "rotation_time_unit": "day"
+    }
+  },
+  "POST /v1/mgmt/profile": {
+    "query": "",
+    "response": {
+      "profile_id": "profile",
+      "profile_name": "test",
+      "revision": 2,
+      "active": false,
+      "policy": {},
+      "created_by": "tester",
+      "updated_by": "editor",
+      "last_modified_ts": "now"
+    },
+    "fields": {
+      "profile_id": "profile",
+      "profile_name": "test",
+      "revision": 2,
+      "active": false,
+      "policy": {},
+      "created_by": "tester",
+      "updated_by": "editor",
+      "last_modified_ts": "now"
+    },
+    "request": {
+      "profile_name": "test",
+      "policy": {},
+      "revision": 0,
+      "active": false,
+      "created_by": "tester"
+    }
+  },
+  "PUT /v1/mgmt/profile/uuid/{profile_id}": {
+    "query": "",
+    "response": {
+      "profile_id": "profile",
+      "profile_name": "test",
+      "revision": 2,
+      "active": false,
+      "policy": {},
+      "created_by": "tester",
+      "updated_by": "editor",
+      "last_modified_ts": "now"
+    },
+    "fields": {
+      "profile_id": "profile",
+      "profile_name": "test",
+      "revision": 2,
+      "active": false,
+      "policy": {},
+      "created_by": "tester",
+      "updated_by": "editor",
+      "last_modified_ts": "now"
+    },
+    "request": {
+      "profile_name": "updated",
+      "policy": {},
+      "revision": 0,
+      "active": false,
+      "updated_by": "tester"
+    }
+  },
+  "DELETE /v1/mgmt/profile/{profile_id}": {
+    "query": "",
+    "response": "deleted",
+    "fields": {
+      "message": "deleted"
+    }
+  },
+  "GET /v1/mgmt/profiles": {
+    "query": "limit=5&offset=0",
+    "response": {
+      "ai_profiles": [
+        {
+          "profile_id": "profile",
+          "profile_name": "test",
+          "revision": 2,
+          "active": false,
+          "policy": {},
+          "created_by": "tester",
+          "updated_by": "editor",
+          "last_modified_ts": "now"
+        }
+      ],
+      "next_offset": 5
+    },
+    "fields": {
+      "ai_profiles": [
+        {
+          "profile_id": "profile",
+          "profile_name": "test",
+          "revision": 2,
+          "active": false,
+          "policy": {},
+          "created_by": "tester",
+          "updated_by": "editor",
+          "last_modified_ts": "now"
+        }
+      ],
+      "next_offset": 5
+    }
+  },
+  "DELETE /v1/mgmt/profile/{profile_id}/force": {
+    "query": "updated_by=tester",
+    "response": {
+      "message": "deleted",
+      "payload": [
+        {
+          "policy_id": "policy",
+          "policy_name": "name",
+          "priority": 0
+        }
+      ]
+    },
+    "fields": {
+      "message": "deleted",
+      "payload": [
+        {
+          "policy_id": "policy",
+          "policy_name": "name",
+          "priority": 0
+        }
+      ]
+    }
+  },
+  "GET /v1/mgmt/dlpprofiles": {
+    "query": "offset=0",
+    "response": {
+      "dlp_profiles": [
+        {
+          "id": "dlp",
+          "name": "test",
+          "uuid": "uuid",
+          "version": "1"
+        }
+      ]
+    },
+    "fields": {
+      "dlp_profiles": [
+        {
+          "id": "dlp",
+          "name": "test",
+          "uuid": "uuid",
+          "version": "1"
+        }
+      ]
+    }
+  },
+  "GET /v1/mgmt/deploymentprofiles": {
+    "query": "offset=0",
+    "response": {
+      "deployment_profiles": [
+        {
+          "auth_code": "auth",
+          "dp_name": "test",
+          "tsg_id": "123",
+          "status": "active"
+        }
+      ],
+      "status": "ok"
+    },
+    "fields": {
+      "deployment_profiles": [
+        {
+          "auth_code": "auth",
+          "dp_name": "test",
+          "tsg_id": "123",
+          "status": "active"
+        }
+      ],
+      "status": "ok"
+    }
+  },
+  "GET /v1/mgmt/customerapp": {
+    "query": "app_name=test",
+    "response": {
+      "customer_appId": "app",
+      "app_name": "test",
+      "model_name": "model",
+      "cloud_provider": "aws",
+      "environment": "dev",
+      "tsg_id": "123",
+      "status": "active",
+      "created_by": "creator",
+      "updated_by": "tester",
+      "agent_app": false,
+      "ai_agent_framework": "framework"
+    },
+    "fields": {
+      "customer_appId": "app",
+      "app_name": "test",
+      "model_name": "model",
+      "cloud_provider": "aws",
+      "environment": "dev",
+      "tsg_id": "123",
+      "status": "active",
+      "created_by": "creator",
+      "updated_by": "tester",
+      "agent_app": false,
+      "ai_agent_framework": "framework"
+    }
+  },
+  "DELETE /v1/mgmt/customerapp": {
+    "query": "app_name=test&updated_by=tester",
+    "response": {
+      "customer_appId": "app",
+      "app_name": "test",
+      "model_name": "model",
+      "cloud_provider": "aws",
+      "environment": "dev",
+      "tsg_id": "123",
+      "status": "active",
+      "created_by": "creator",
+      "updated_by": "tester",
+      "agent_app": false,
+      "ai_agent_framework": "framework",
+      "message": "deleted"
+    },
+    "fields": {
+      "customer_appId": "app",
+      "app_name": "test",
+      "model_name": "model",
+      "cloud_provider": "aws",
+      "environment": "dev",
+      "tsg_id": "123",
+      "status": "active",
+      "created_by": "creator",
+      "updated_by": "tester",
+      "agent_app": false,
+      "ai_agent_framework": "framework",
+      "message": "deleted"
+    }
+  },
+  "PUT /v1/mgmt/customerapp": {
+    "query": "customer_app_id=test",
+    "response": {
+      "customer_appId": "app",
+      "app_name": "test",
+      "model_name": "model",
+      "cloud_provider": "aws",
+      "environment": "dev",
+      "tsg_id": "123",
+      "status": "active",
+      "created_by": "creator",
+      "updated_by": "tester",
+      "agent_app": false,
+      "ai_agent_framework": "framework"
+    },
+    "fields": {
+      "customer_appId": "app",
+      "app_name": "test",
+      "model_name": "model",
+      "cloud_provider": "aws",
+      "environment": "dev",
+      "tsg_id": "123",
+      "status": "active",
+      "created_by": "creator",
+      "updated_by": "tester",
+      "agent_app": false,
+      "ai_agent_framework": "framework"
+    },
+    "request": {
+      "app_name": "updated",
+      "model_name": "model",
+      "cloud_provider": "aws",
+      "environment": "dev",
+      "customer_appId": "test",
+      "tsg_id": "123",
+      "status": "active",
+      "created_by": "creator",
+      "updated_by": "tester",
+      "ai_agent_framework": "framework"
+    }
+  },
+  "GET /v1/mgmt/customerapps": {
+    "query": "limit=5&offset=0",
+    "response": {
+      "customer_apps": [
+        {
+          "customer_appId": "app",
+          "app_name": "test",
+          "model_name": "model",
+          "cloud_provider": "aws",
+          "environment": "dev",
+          "tsg_id": "123",
+          "status": "active",
+          "created_by": "creator",
+          "updated_by": "tester",
+          "agent_app": false,
+          "ai_agent_framework": "framework"
+        }
+      ],
+      "next_offset": 5
+    },
+    "fields": {
+      "customer_apps": [
+        {
+          "customer_appId": "app",
+          "app_name": "test",
+          "model_name": "model",
+          "cloud_provider": "aws",
+          "environment": "dev",
+          "tsg_id": "123",
+          "status": "active",
+          "created_by": "creator",
+          "updated_by": "tester",
+          "agent_app": false,
+          "ai_agent_framework": "framework"
+        }
+      ],
+      "next_offset": 5
+    }
+  },
+  "POST /v1/mgmt/topic": {
+    "query": "",
+    "response": {
+      "topic_id": "topic",
+      "topic_name": "test",
+      "revision": 2,
+      "active": false,
+      "description": "description",
+      "examples": [
+        "example"
+      ],
+      "created_by": "tester",
+      "updated_by": "editor",
+      "last_modified_ts": "now",
+      "created_ts": "then"
+    },
+    "fields": {
+      "topic_id": "topic",
+      "topic_name": "test",
+      "revision": 2,
+      "active": false,
+      "description": "description",
+      "examples": [
+        "example"
+      ],
+      "created_by": "tester",
+      "updated_by": "editor",
+      "last_modified_ts": "now",
+      "created_ts": "then"
+    },
+    "request": {
+      "topic_name": "test",
+      "description": "description",
+      "examples": [
+        "example"
+      ],
+      "revision": 0,
+      "active": false,
+      "created_by": "tester"
+    }
+  },
+  "PUT /v1/mgmt/topic/uuid/{topic_id}": {
+    "query": "",
+    "response": {
+      "topic_id": "topic",
+      "topic_name": "test",
+      "revision": 2,
+      "active": false,
+      "description": "description",
+      "examples": [
+        "example"
+      ],
+      "created_by": "tester",
+      "updated_by": "editor",
+      "last_modified_ts": "now",
+      "created_ts": "then"
+    },
+    "fields": {
+      "topic_id": "topic",
+      "topic_name": "test",
+      "revision": 2,
+      "active": false,
+      "description": "description",
+      "examples": [
+        "example"
+      ],
+      "created_by": "tester",
+      "updated_by": "editor",
+      "last_modified_ts": "now",
+      "created_ts": "then"
+    },
+    "request": {
+      "topic_name": "updated",
+      "description": "description",
+      "examples": [
+        "example"
+      ],
+      "revision": 0,
+      "active": false,
+      "updated_by": "tester"
+    }
+  },
+  "DELETE /v1/mgmt/topic/{topic_id}": {
+    "query": "",
+    "response": {
+      "message": "deleted",
+      "payload": [
+        {
+          "profile_id": "profile",
+          "profile_name": "test",
+          "revision": 2
+        }
+      ]
+    },
+    "fields": {
+      "message": "deleted",
+      "payload": [
+        {
+          "profile_id": "profile",
+          "profile_name": "test",
+          "revision": 2
+        }
+      ]
+    }
+  },
+  "DELETE /v1/mgmt/topic/{topic_id}/force": {
+    "query": "updated_by=tester",
+    "response": {
+      "message": "deleted",
+      "payload": [
+        {
+          "profile_id": "profile",
+          "profile_name": "test",
+          "revision": 2
+        }
+      ]
+    },
+    "fields": {
+      "message": "deleted",
+      "payload": [
+        {
+          "profile_id": "profile",
+          "profile_name": "test",
+          "revision": 2
+        }
+      ]
+    }
+  },
+  "GET /v1/mgmt/topics": {
+    "query": "limit=5&offset=0",
+    "response": {
+      "custom_topics": [
+        {
+          "topic_id": "topic",
+          "topic_name": "test",
+          "revision": 2,
+          "active": false,
+          "description": "description",
+          "examples": [
+            "example"
+          ],
+          "created_by": "tester",
+          "updated_by": "editor",
+          "last_modified_ts": "now",
+          "created_ts": "then"
+        }
+      ],
+      "next_offset": 5
+    },
+    "fields": {
+      "custom_topics": [
+        {
+          "topic_id": "topic",
+          "topic_name": "test",
+          "revision": 2,
+          "active": false,
+          "description": "description",
+          "examples": [
+            "example"
+          ],
+          "created_by": "tester",
+          "updated_by": "editor",
+          "last_modified_ts": "now",
+          "created_ts": "then"
+        }
+      ],
+      "next_offset": 5
+    }
+  },
+  "POST /v1/mgmt/oauth/client_credential/accesstoken": {
+    "query": "",
+    "response": {
+      "access_token": "token",
+      "token_type": "Bearer",
+      "expires_in": "3600"
+    },
+    "fields": {
+      "access_token": "token",
+      "token_type": "Bearer",
+      "expires_in": "3600"
+    },
+    "request": {
+      "client_id": "client",
+      "customer_app": "app"
+    }
+  }
+}

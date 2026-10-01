@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   contact:
     email: support@paloaltonetworks.com
@@ -154,12 +154,12 @@ paths:
             type: array
             items:
               type: string
-
+              nullable: false
             maximum: 5
           style: form # Serialize as scan_ids=id1,id2,id3
           explode: false
       responses:
-        "200":
+        200:
           description: Successfully returned records for scan results
           content:
             application/json:
@@ -212,12 +212,12 @@ paths:
             type: array
             items:
               type: string
-
+              nullable: false
             maximum: 5
           style: form # Serialize as report_ids=id1,id2,id3
           explode: false
       responses:
-        "200":
+        200:
           description: Successfully returned threat scan reports
           content:
             application/json:
@@ -327,9 +327,8 @@ components:
           type: string
           description: End user IP using the AI application
         agent_meta:
+          $ref: "#/components/schemas/AgentMeta"
           description: Additional metadata about the agent used in the scan request
-          allOf:
-            - $ref: "#/components/schemas/AgentMeta"
 
     AgentMeta:
       type: object
@@ -348,9 +347,8 @@ components:
       type: object
       properties:
         metadata:
+          $ref: "#/components/schemas/ToolEventMetadata"
           description: Metadata associated with the tool or function call event
-          allOf:
-            - $ref: "#/components/schemas/ToolEventMetadata"
         input:
           type: string
           description: Raw JSON string of input to the server
@@ -915,13 +913,11 @@ components:
           type: string
           description: Detection service verdict such as "malicious" or "benign"
         malware_script_report:
+          $ref: "#/components/schemas/MalwareReportObject"
           description: Malware script scanning report details
-          allOf:
-            - $ref: "#/components/schemas/MalwareReportObject"
         command_injection_report:
+          $ref: "#/components/schemas/CmdInjectReportObject"
           description: Command injection scanning report details
-          allOf:
-            - $ref: "#/components/schemas/CmdInjectReportObject"
 
     MalwareReportObject:
       type: object
@@ -1356,9 +1352,6 @@ components:
             completed_at: "2025-04-17T07:38:34Z"
             profile_id: "6e06ec5b-a128-4a4f-a393-ff5da75203d9"
             profile_name: "malicious-code-profile"
-            timeout: false
-            error: false
-            errors: []
             prompt_detected:
               injection: false
               malicious_code: false
@@ -1376,9 +1369,6 @@ components:
             completed_at: "2025-04-17T07:38:35Z"
             profile_id: "7b4a9de9-09e9-4ce5-b090-7f99fdffc9a5"
             profile_name: "detect-toxic-content-profile"
-            timeout: false
-            error: false
-            errors: []
             prompt_detected:
               dlp: false
               injection: false
@@ -1394,4 +1384,3 @@ components:
             tr_id: "2082"
           scan_id: "a43e8177-9776-465b-8ef3-a95c5a9607f8"
           status: "complete"
-

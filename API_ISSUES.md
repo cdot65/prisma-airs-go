@@ -1,5 +1,18 @@
 # API Issues Discovered During E2E Testing
 
+## Live recheck — 2026-10-01
+
+The October alignment rechecked temporary topic/profile CRUD and API-key
+creation, regeneration, and deletion. Topics/profile/API-key deletes return JSON
+strings under application/json. Ordinary profile/API-key deletion now uses the
+same string-or-object adapter while still requiring JSON; force/profile/topic
+text exceptions remain explicit. The topic force route is
+`/v1/mgmt/topic/{id}/force`; `/topic/force/{id}` returned 403. Key regeneration
+uses `/v1/mgmt/apikey/regenerate/{id}` and returns a replacement key ID. Existing
+TSG-qualified and new unqualified profile/topic/key listing routes both returned
+200. See `docs/developer/live-verification.md` for evidence; the historical entries
+below retain their original dates and have not all been rechecked.
+
 Issues found while running integration tests against the live AIRS API (2026-03-21).
 These are API-side behaviors, not SDK bugs.
 
@@ -24,6 +37,7 @@ These are API-side behaviors, not SDK bugs.
 - SDK error: `failed to parse response JSON`
 - The delete may succeed server-side despite the parse error
 - **Impact:** Cleanup of test topics may leave orphaned resources
+- **SDK compatibility update (v0.5.2, 2026-10-01):** topic deletion accepts JSON strings, message objects, empty bodies, and plain text, including text mislabeled as JSON. Malformed structured bodies still fail. These cases are covered by mock tests; the original live body and Content-Type were not recorded, so their format remains unknown. Integration delete responses now log a bounded body prefix and Content-Type for the next authorized live run.
 
 ### 4. ScanLogs endpoint unresponsive
 - `POST /v1/mgmt/scanlogs` consistently times out (>2min)
@@ -57,3 +71,42 @@ No issues found — all CRUD operations work correctly.
 ## Scan API
 
 No issues found — sync scan, async scan, query by scan/report IDs all work correctly.
+
+## October 2026: Red Team scan metadata route returns validation error
+
+Pinned data-plane specification documents `GET /v1/scan/scan-metadata` with no
+parameters and a free-form JSON object response. On 2026-10-01 the selected
+production tenant returned HTTP 422 (`code: validation_error`,
+`message: Request validation failed`) with no parameter details. The alternative
+`/v1/scan-metadata` and trailing-slash route returned 403, and
+`/v1/scan/metadata` returned 422. A generic job route shadowing the static route
+is a possibility, not a confirmed cause. Keep the documented path, expose the
+typed error, and retain a strict live assertion until the service is corrected.
+No successful live metadata response has been recorded.
+
+## October 2026: Gateway SCM deployment differences
+
+The supplied Gateway contract describes generic Portkey servers/bearer auth.
+SCM uses `/ai_gw/v2` and `/ai_gw/admin/v2` with shared SCM OAuth and `x-tsg-id`.
+All twelve selected resource-family listings passed live on 2026-10-01.
+
+* Config listing requires `workspace_id`; the generic source omits its query.
+  Config detail/create/update can return flat records instead of the source's
+  envelope. Config documents and integration `configurations` can arrive as
+  JSON-encoded strings. `JSONDocument` preserves the wire form and validates it.
+* Combined `/api-keys` returned 403. Explicit `/api-keys/service` and
+  `/api-keys/user` routes worked; service-key CRUD/rotation were verified live.
+  The SDK exposes `...ForKind` operations without automatic fallback.
+* Org integration writes use the numeric TSG, not the internal organisation UUID
+  returned by reads. `CreateIntegrationRequest.OrganisationID` and API-key
+  `CreateAPIKeyObject.Type` are SCM write fields omitted from the generic source.
+* Workspace-scoped integration creation returned 403 on this tenant. Org
+  integration creation plus an explicit workspace binding worked for providers
+  and MCP servers. There is no automatic provisioning or binding in the SDK.
+* Deployment deletion archives rather than removes the resource. Create receipts
+  return one-time credentials/client auth distinct from masked detail reads.
+* Validation failures can wrap their message in `{success:false,data:{message}}`;
+  HTTP SDK errors now retain that reason and the original status.
+
+Unmodeled fields are retained in `AdditionalFields`. Curations are in the model
+generator and reviewed scope manifest; original pinned source files are unchanged.

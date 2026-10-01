@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
+	"strconv"
 
 	"github.com/cdot65/prisma-airs-go/aisec"
 	"github.com/cdot65/prisma-airs-go/aisec/internal"
@@ -28,6 +28,9 @@ type Opts struct {
 // Client is the Model Security API client with dual-endpoint routing.
 type Client struct {
 	Scans          *ScansClient
+	Models         *ModelsClient
+	ModelVersions  *ModelVersionsClient
+	CustomRules    *CustomRulesClient
 	SecurityGroups *SecurityGroupsClient
 	SecurityRules  *SecurityRulesClient
 
@@ -66,6 +69,9 @@ func NewClient(opts Opts) (*Client, error) {
 
 	c := &Client{mgmtCfg: mgmtCfg}
 	c.Scans = &ScansClient{dataCfg: dataCfg}
+	c.Models = &ModelsClient{dataCfg: dataCfg}
+	c.ModelVersions = &ModelVersionsClient{dataCfg: dataCfg}
+	c.CustomRules = &CustomRulesClient{mgmtCfg: mgmtCfg}
 	c.SecurityGroups = &SecurityGroupsClient{mgmtCfg: mgmtCfg}
 	c.SecurityRules = &SecurityRulesClient{mgmtCfg: mgmtCfg}
 
@@ -102,7 +108,7 @@ func (c *ScansClient) Create(ctx context.Context, req ScanCreateRequest) (*ScanB
 
 func (c *ScansClient) List(ctx context.Context, opts ScanListOpts) (*ScanList, error) {
 	resp, err := internal.DoMgmtRequest[ScanList](ctx, c.dataCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecScansPath, Params: buildScanListParams(opts),
+		Method: http.MethodGet, Path: aisec.ModelSecScansPath, Query: scanListQuery(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -229,6 +235,7 @@ func (c *ScansClient) DeleteLabels(ctx context.Context, scanUUID string, keys []
 	}
 	_, err := internal.DoMgmtRequest[any](ctx, c.dataCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: path,
+		ResponsePolicy: internal.AllowEmptyJSON, // documented 204
 	})
 	return err
 }
@@ -272,7 +279,7 @@ func (c *SecurityGroupsClient) Create(ctx context.Context, req ModelSecurityGrou
 
 func (c *SecurityGroupsClient) List(ctx context.Context, opts GroupListOpts) (*ListModelSecurityGroupsResponse, error) {
 	resp, err := internal.DoMgmtRequest[ListModelSecurityGroupsResponse](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
-		Method: http.MethodGet, Path: aisec.ModelSecSecurityGroupsPath, Params: buildGroupListParams(opts),
+		Method: http.MethodGet, Path: aisec.ModelSecSecurityGroupsPath, Query: groupListQuery(opts),
 	})
 	if err != nil {
 		return nil, err
@@ -312,6 +319,7 @@ func (c *SecurityGroupsClient) Delete(ctx context.Context, uuid string) error {
 	}
 	_, err := internal.DoMgmtRequest[any](ctx, c.mgmtCfg, internal.MgmtRequestOptions{
 		Method: http.MethodDelete, Path: aisec.ModelSecSecurityGroupsPath + "/" + internal.PathSeg(uuid),
+		ResponsePolicy: internal.AllowEmptyJSON, // documented 204
 	})
 	return err
 }
@@ -419,11 +427,8 @@ func buildScanListParams(opts ScanListOpts) map[string]string {
 	if opts.LabelsQuery != "" {
 		params["labels_query"] = opts.LabelsQuery
 	}
-	if len(opts.EvalOutcomes) > 0 {
-		params["eval_outcomes"] = strings.Join(opts.EvalOutcomes, ",")
-	}
-	if len(opts.SourceTypes) > 0 {
-		params["source_types"] = strings.Join(opts.SourceTypes, ",")
+	if opts.ModelVersionUUID != "" {
+		params["model_version_uuid"] = opts.ModelVersionUUID
 	}
 	return params
 }
@@ -474,6 +479,9 @@ func buildFileListParams(opts FileListOpts) map[string]string {
 	if opts.QueryPath != "" {
 		params["query_path"] = opts.QueryPath
 	}
+	if opts.Recursive != nil {
+		params["recursive"] = strconv.FormatBool(*opts.Recursive)
+	}
 	return params
 }
 
@@ -519,12 +527,6 @@ func buildGroupListParams(opts GroupListOpts) map[string]string {
 	if opts.SearchQuery != "" {
 		params["search_query"] = opts.SearchQuery
 	}
-	if len(opts.SourceTypes) > 0 {
-		params["source_types"] = strings.Join(opts.SourceTypes, ",")
-	}
-	if len(opts.EnabledRules) > 0 {
-		params["enabled_rules"] = strings.Join(opts.EnabledRules, ",")
-	}
 	return params
 }
 
@@ -542,6 +544,12 @@ func buildRuleInstanceListParams(opts RuleInstanceListOpts) map[string]string {
 	if opts.State != "" {
 		params["state"] = opts.State
 	}
+	if opts.IsCustom != nil {
+		params["is_custom"] = strconv.FormatBool(*opts.IsCustom)
+	}
+	if opts.Generation != nil {
+		params["generation"] = strconv.FormatInt(*opts.Generation, 10)
+	}
 	return params
 }
 
@@ -558,6 +566,9 @@ func buildRuleListParams(opts RuleListOpts) map[string]string {
 	}
 	if opts.SearchQuery != "" {
 		params["search_query"] = opts.SearchQuery
+	}
+	if opts.Generation != nil {
+		params["generation"] = strconv.FormatInt(*opts.Generation, 10)
 	}
 	return params
 }

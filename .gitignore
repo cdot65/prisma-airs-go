@@ -31,6 +31,9 @@ Thumbs.db
 # MkDocs build output
 site/
 
+# Python development tools
+__pycache__/
+
 # Review documents
 REVIEW-*.md
 
@@ -39,3 +42,6 @@ REVIEW-*.md
 
 # Agent hook logs
 .claude/hooks/*.log
+
+# Release artifacts (build outside the checkout)
+dist/

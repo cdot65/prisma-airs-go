@@ -1,0 +1,2616 @@
+{
+  "GuardrailsCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test",
+      "version_id": "test"
+    },
+    "request": {
+      "name": "test",
+      "target": "llm",
+      "workspace_id": "test",
+      "organisation_id": "test",
+      "checks": [
+        {
+          "id": "default.jwt",
+          "parameters": {
+            "jwksUri": "test",
+            "headerKey": "test",
+            "cacheMaxAge": 0,
+            "clockTolerance": 0,
+            "maxTokenAge": "test",
+            "algorithms": [
+              "test"
+            ]
+          },
+          "name": "test",
+          "is_enabled": false
+        }
+      ],
+      "actions": {
+        "deny": false,
+        "async": false,
+        "on_success": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        },
+        "on_fail": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        }
+      }
+    }
+  },
+  "GuardrailsList": {
+    "query": "workspace_id=test&page_size=0&current_page=0",
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "id": "test",
+          "name": "test",
+          "slug": "test",
+          "target": "llm",
+          "organisation_id": "test",
+          "workspace_id": "test",
+          "status": "active",
+          "created_at": "test",
+          "last_updated_at": "test",
+          "owner_id": "test",
+          "updated_by": "test"
+        }
+      ],
+      "total": 0
+    },
+    "options": {
+      "workspace_id": "test",
+      "page_size": 0,
+      "current_page": 0
+    }
+  },
+  "GuardrailsGet": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "name": "test",
+      "slug": "test",
+      "target": "llm",
+      "organisation_id": "test",
+      "workspace_id": "test",
+      "status": "active",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "owner_id": "test",
+      "updated_by": "test",
+      "checks": [
+        {
+          "id": "default.jwt",
+          "parameters": {
+            "jwksUri": "test",
+            "headerKey": "test",
+            "cacheMaxAge": 0,
+            "clockTolerance": 0,
+            "maxTokenAge": "test",
+            "algorithms": [
+              "test"
+            ]
+          },
+          "name": "test",
+          "is_enabled": false
+        }
+      ],
+      "actions": {
+        "deny": false,
+        "async": false,
+        "on_success": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        },
+        "on_fail": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        }
+      },
+      "mcp_server_mappings": [
+        {
+          "id": "test",
+          "guardrail_id": "test",
+          "mcp_server_id": "test",
+          "run_on": [
+            "input"
+          ],
+          "capability_ids": [
+            "test"
+          ]
+        }
+      ]
+    }
+  },
+  "GuardrailsUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test",
+      "version_id": "test"
+    },
+    "request": {
+      "name": "test",
+      "checks": [
+        {
+          "id": "default.jwt",
+          "parameters": {
+            "jwksUri": "test",
+            "headerKey": "test",
+            "cacheMaxAge": 0,
+            "clockTolerance": 0,
+            "maxTokenAge": "test",
+            "algorithms": [
+              "test"
+            ]
+          },
+          "name": "test",
+          "is_enabled": false
+        }
+      ],
+      "actions": {
+        "deny": false,
+        "async": false,
+        "on_success": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        },
+        "on_fail": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        }
+      }
+    }
+  },
+  "GuardrailsDelete": {
+    "query": "",
+    "status": 200,
+    "response": null
+  },
+  "GuardrailsSetMCPServers": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "changed": false,
+      "added": 0,
+      "updated": 0,
+      "removed": 0
+    },
+    "request": {
+      "mcp_servers": {
+        "test": {
+          "run_on": [
+            "input"
+          ],
+          "mcp_integration_capability_ids": [
+            "test"
+          ]
+        }
+      }
+    }
+  },
+  "GuardrailsListMCPServers": {
+    "query": "",
+    "status": 200,
+    "response": [
+      {
+        "id": "test",
+        "guardrail_id": "test",
+        "mcp_server_id": "test",
+        "run_on": [
+          "input"
+        ],
+        "capability_ids": [
+          "test"
+        ]
+      }
+    ]
+  },
+  "GuardrailsUpsertMCPServer": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "map_id": "test"
+    },
+    "request": {
+      "run_on": [
+        "input"
+      ],
+      "mcp_integration_capability_ids": [
+        "test"
+      ]
+    }
+  },
+  "OrgGuardrailsCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test",
+      "version_id": "test"
+    },
+    "request": {
+      "name": "test",
+      "target": "llm",
+      "workspace_id": "test",
+      "organisation_id": "test",
+      "checks": [
+        {
+          "id": "default.jwt",
+          "parameters": {
+            "jwksUri": "test",
+            "headerKey": "test",
+            "cacheMaxAge": 0,
+            "clockTolerance": 0,
+            "maxTokenAge": "test",
+            "algorithms": [
+              "test"
+            ]
+          },
+          "name": "test",
+          "is_enabled": false
+        }
+      ],
+      "actions": {
+        "deny": false,
+        "async": false,
+        "on_success": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        },
+        "on_fail": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        }
+      }
+    }
+  },
+  "OrgGuardrailsList": {
+    "query": "workspace_id=test&page_size=0&current_page=0",
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "id": "test",
+          "name": "test",
+          "slug": "test",
+          "target": "llm",
+          "organisation_id": "test",
+          "workspace_id": "test",
+          "status": "active",
+          "created_at": "test",
+          "last_updated_at": "test",
+          "owner_id": "test",
+          "updated_by": "test"
+        }
+      ],
+      "total": 0
+    },
+    "options": {
+      "workspace_id": "test",
+      "page_size": 0,
+      "current_page": 0
+    }
+  },
+  "OrgGuardrailsGet": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "name": "test",
+      "slug": "test",
+      "target": "llm",
+      "organisation_id": "test",
+      "workspace_id": "test",
+      "status": "active",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "owner_id": "test",
+      "updated_by": "test",
+      "checks": [
+        {
+          "id": "default.jwt",
+          "parameters": {
+            "jwksUri": "test",
+            "headerKey": "test",
+            "cacheMaxAge": 0,
+            "clockTolerance": 0,
+            "maxTokenAge": "test",
+            "algorithms": [
+              "test"
+            ]
+          },
+          "name": "test",
+          "is_enabled": false
+        }
+      ],
+      "actions": {
+        "deny": false,
+        "async": false,
+        "on_success": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        },
+        "on_fail": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        }
+      },
+      "mcp_server_mappings": [
+        {
+          "id": "test",
+          "guardrail_id": "test",
+          "mcp_server_id": "test",
+          "run_on": [
+            "input"
+          ],
+          "capability_ids": [
+            "test"
+          ]
+        }
+      ]
+    }
+  },
+  "OrgGuardrailsUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test",
+      "version_id": "test"
+    },
+    "request": {
+      "name": "test",
+      "checks": [
+        {
+          "id": "default.jwt",
+          "parameters": {
+            "jwksUri": "test",
+            "headerKey": "test",
+            "cacheMaxAge": 0,
+            "clockTolerance": 0,
+            "maxTokenAge": "test",
+            "algorithms": [
+              "test"
+            ]
+          },
+          "name": "test",
+          "is_enabled": false
+        }
+      ],
+      "actions": {
+        "deny": false,
+        "async": false,
+        "on_success": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        },
+        "on_fail": {
+          "feedback": {
+            "value": 0,
+            "weight": 0,
+            "metadata": "test"
+          }
+        }
+      }
+    }
+  },
+  "OrgGuardrailsDelete": {
+    "query": "",
+    "status": 200,
+    "response": null
+  },
+  "OrgGuardrailsSetMCPServers": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "changed": false,
+      "added": 0,
+      "updated": 0,
+      "removed": 0
+    },
+    "request": {
+      "mcp_servers": {
+        "test": {
+          "run_on": [
+            "input"
+          ],
+          "mcp_integration_capability_ids": [
+            "test"
+          ]
+        }
+      }
+    }
+  },
+  "OrgGuardrailsListMCPServers": {
+    "query": "",
+    "status": 200,
+    "response": [
+      {
+        "id": "test",
+        "guardrail_id": "test",
+        "mcp_server_id": "test",
+        "run_on": [
+          "input"
+        ],
+        "capability_ids": [
+          "test"
+        ]
+      }
+    ]
+  },
+  "OrgGuardrailsUpsertMCPServer": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "map_id": "test"
+    },
+    "request": {
+      "run_on": [
+        "input"
+      ],
+      "mcp_integration_capability_ids": [
+        "test"
+      ]
+    }
+  },
+  "ConfigsList": {
+    "query": "workspace_id=test",
+    "status": 200,
+    "response": {
+      "success": false,
+      "data": [
+        {
+          "id": "test",
+          "name": "test",
+          "slug": "test",
+          "organisation_id": "test",
+          "workspace_id": "test",
+          "status": "test",
+          "owner_id": "test",
+          "updated_by": "test",
+          "created_at": "test",
+          "last_updated_at": "test"
+        }
+      ],
+      "object": "test",
+      "total": 0,
+      "has_more": false
+    },
+    "options": {
+      "workspace_id": "test"
+    }
+  },
+  "ConfigsCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "success": false,
+      "data": {
+        "id": "test",
+        "version_id": "test"
+      },
+      "id": "test",
+      "slug": "test",
+      "version_id": "test",
+      "object": "test"
+    },
+    "request": {
+      "name": "test",
+      "config": {
+        "provider": "@test",
+        "nested": {
+          "future_field": false
+        },
+        "targets": []
+      },
+      "workspace_id": "test"
+    }
+  },
+  "ConfigsDelete": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "ConfigsGet": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "success": false,
+      "data": {
+        "config": {
+          "provider": "@test",
+          "nested": {
+            "future_field": false
+          },
+          "targets": []
+        }
+      },
+      "id": "test",
+      "name": "test",
+      "slug": "test",
+      "organisation_id": "test",
+      "workspace_id": "test",
+      "status": "test",
+      "owner_id": "test",
+      "updated_by": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "object": "test",
+      "format": "test",
+      "type": "test",
+      "version_id": "test",
+      "config": {
+        "provider": "@test",
+        "nested": {
+          "future_field": false
+        },
+        "targets": []
+      }
+    }
+  },
+  "ConfigsUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "success": false,
+      "data": {
+        "version_id": "test"
+      },
+      "id": "test",
+      "slug": "test",
+      "version_id": "test",
+      "object": "test"
+    },
+    "request": {
+      "name": "test",
+      "config": {
+        "provider": "@test",
+        "nested": {
+          "future_field": false
+        },
+        "targets": []
+      },
+      "status": "test"
+    }
+  },
+  "ConfigsListVersions": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "object": "test",
+      "total": 0,
+      "data": [
+        {
+          "id": "test",
+          "name": "test",
+          "workspace_id": "test",
+          "slug": "test",
+          "organisation_id": "test",
+          "status": "test",
+          "owner_id": "test",
+          "updated_by": "test",
+          "created_at": "test",
+          "last_updated_at": "test",
+          "config": {
+            "provider": "@test",
+            "nested": {
+              "future_field": false
+            },
+            "targets": []
+          },
+          "format": "test",
+          "type": "test",
+          "version_id": "test",
+          "object": "test"
+        }
+      ]
+    }
+  },
+  "IntegrationsList": {
+    "query": "current_page=0&page_size=0&workspace_id=test&type=workspace",
+    "status": 200,
+    "response": {
+      "object": "list",
+      "total": 0,
+      "data": [
+        {
+          "id": "test",
+          "organisation_id": "test",
+          "ai_provider_id": "test",
+          "name": "test",
+          "status": "active",
+          "created_at": "test",
+          "last_updated_at": "test",
+          "slug": "test",
+          "description": "test",
+          "object": "integration"
+        }
+      ]
+    },
+    "options": {
+      "current_page": 0,
+      "page_size": 0,
+      "workspace_id": "test",
+      "type": "workspace"
+    }
+  },
+  "IntegrationsCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test"
+    },
+    "request": {
+      "name": "test",
+      "slug": "test",
+      "ai_provider_id": "test",
+      "key": "test",
+      "description": "test",
+      "workspace_id": "test",
+      "configurations": {
+        "provider": "@test",
+        "nested": {
+          "future_field": false
+        },
+        "targets": []
+      },
+      "create_default_provider": false,
+      "default_provider_slug": "test",
+      "secret_mappings": [
+        {
+          "target_field": "test",
+          "secret_reference_id": "test",
+          "secret_key": "test",
+          "value_format": "json"
+        }
+      ],
+      "pricing_adjustments": {
+        "multiplier": {
+          "default": 0,
+          "request_token": 0,
+          "response_token": 0,
+          "cache_read_input_token": 0,
+          "cache_write_input_token": 0,
+          "cache_read_audio_input_token": 0,
+          "request_audio_token": 0,
+          "response_audio_token": 0,
+          "reasoning_token": 0,
+          "prediction_accepted_token": 0,
+          "prediction_rejected_token": 0,
+          "request_image_token": 0,
+          "response_image_token": 0,
+          "request_text_token": 0,
+          "response_text_token": 0,
+          "cache_read_image_input_token": 0,
+          "cache_read_text_input_token": 0,
+          "cache_write_text_input_token": 0,
+          "cache_write_image_input_token": 0,
+          "image": {
+            "default": 0
+          },
+          "additional_units": {
+            "test": 0
+          }
+        }
+      },
+      "organisation_id": "test"
+    }
+  },
+  "IntegrationsGet": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "organisation_id": "test",
+      "ai_provider_id": "test",
+      "name": "test",
+      "status": "active",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "slug": "test",
+      "description": "test",
+      "object": "integration",
+      "masked_key": "test",
+      "configurations": {
+        "provider": "@test",
+        "nested": {
+          "future_field": false
+        },
+        "targets": []
+      },
+      "global_workspace_access_settings": {
+        "enabled": false,
+        "usage_limits": [
+          {
+            "credit_limit": 0,
+            "type": "cost",
+            "alert_threshold": 0,
+            "periodic_reset": "monthly",
+            "periodic_reset_days": 0,
+            "next_usage_reset_at": "test"
+          }
+        ],
+        "rate_limits": [
+          {
+            "type": "requests",
+            "unit": "rpd",
+            "value": 0
+          }
+        ]
+      },
+      "allow_all_models": false,
+      "workspace_count": 0,
+      "secret_mappings": [
+        {
+          "target_field": "test",
+          "secret_reference_id": "test",
+          "secret_key": "test",
+          "value_format": "json"
+        }
+      ],
+      "pricing_adjustments": {
+        "multiplier": {
+          "default": 0,
+          "request_token": 0,
+          "response_token": 0,
+          "cache_read_input_token": 0,
+          "cache_write_input_token": 0,
+          "cache_read_audio_input_token": 0,
+          "request_audio_token": 0,
+          "response_audio_token": 0,
+          "reasoning_token": 0,
+          "prediction_accepted_token": 0,
+          "prediction_rejected_token": 0,
+          "request_image_token": 0,
+          "response_image_token": 0,
+          "request_text_token": 0,
+          "response_text_token": 0,
+          "cache_read_image_input_token": 0,
+          "cache_read_text_input_token": 0,
+          "cache_write_text_input_token": 0,
+          "cache_write_image_input_token": 0,
+          "image": {
+            "default": 0
+          },
+          "additional_units": {
+            "test": 0
+          }
+        }
+      }
+    }
+  },
+  "IntegrationsUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "name": "test",
+      "key": "test",
+      "description": "test",
+      "configurations": {
+        "provider": "@test",
+        "nested": {
+          "future_field": false
+        },
+        "targets": []
+      },
+      "secret_mappings": [
+        {
+          "target_field": "test",
+          "secret_reference_id": "test",
+          "secret_key": "test",
+          "value_format": "json"
+        }
+      ],
+      "pricing_adjustments": {
+        "multiplier": {
+          "default": 0,
+          "request_token": 0,
+          "response_token": 0,
+          "cache_read_input_token": 0,
+          "cache_write_input_token": 0,
+          "cache_read_audio_input_token": 0,
+          "request_audio_token": 0,
+          "response_audio_token": 0,
+          "reasoning_token": 0,
+          "prediction_accepted_token": 0,
+          "prediction_rejected_token": 0,
+          "request_image_token": 0,
+          "response_image_token": 0,
+          "request_text_token": 0,
+          "response_text_token": 0,
+          "cache_read_image_input_token": 0,
+          "cache_read_text_input_token": 0,
+          "cache_write_text_input_token": 0,
+          "cache_write_image_input_token": 0,
+          "image": {
+            "default": 0
+          },
+          "additional_units": {
+            "test": 0
+          }
+        }
+      }
+    }
+  },
+  "IntegrationsDelete": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "IntegrationsListModels": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "total": 0,
+      "models": [
+        {
+          "slug": "test",
+          "name": "test",
+          "enabled": false,
+          "is_custom": false,
+          "is_finetune": false,
+          "base_model_slug": "test",
+          "pricing_config": {
+            "type": "static",
+            "pay_as_you_go": {
+              "request_token": {
+                "price": 0
+              },
+              "response_token": {
+                "price": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "IntegrationsSetModels": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "models": [
+        {
+          "slug": "test",
+          "enabled": false,
+          "is_custom": false,
+          "is_finetune": false,
+          "base_model_slug": "test",
+          "configurations": {
+            "provider": "@test",
+            "nested": {
+              "future_field": false
+            },
+            "targets": []
+          },
+          "pricing_config": {
+            "type": "static",
+            "pay_as_you_go": {
+              "request_token": {
+                "price": 0
+              },
+              "response_token": {
+                "price": 0
+              }
+            }
+          }
+        }
+      ],
+      "allow_all_models": false
+    }
+  },
+  "IntegrationsDeleteModels": {
+    "query": "slugs=test",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "options": {
+      "slugs": "test"
+    }
+  },
+  "IntegrationsListWorkspaces": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "total": 0,
+      "workspaces": [
+        {
+          "id": "test",
+          "enabled": false,
+          "usage_limits": [
+            {
+              "credit_limit": 0,
+              "type": "cost",
+              "alert_threshold": 0,
+              "periodic_reset": "monthly",
+              "periodic_reset_days": 0,
+              "next_usage_reset_at": "test"
+            }
+          ],
+          "rate_limits": [
+            {
+              "type": "requests",
+              "unit": "rpd",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "IntegrationsSetWorkspaces": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "workspaces": [
+        {
+          "id": "test",
+          "enabled": false,
+          "usage_limits": [
+            {
+              "credit_limit": 0,
+              "type": "cost",
+              "alert_threshold": 0,
+              "periodic_reset": "monthly",
+              "periodic_reset_days": 0,
+              "next_usage_reset_at": "test"
+            }
+          ],
+          "rate_limits": [
+            {
+              "type": "requests",
+              "unit": "rpd",
+              "value": 0
+            }
+          ],
+          "reset_usage": false,
+          "create_default_provider": false,
+          "default_provider_slug": "test"
+        }
+      ],
+      "global_workspace_access": {
+        "enabled": false,
+        "usage_limits": [
+          {
+            "credit_limit": 0,
+            "type": "cost",
+            "alert_threshold": 0,
+            "periodic_reset": "monthly",
+            "periodic_reset_days": 0,
+            "next_usage_reset_at": "test"
+          }
+        ],
+        "rate_limits": [
+          {
+            "type": "requests",
+            "unit": "rpd",
+            "value": 0
+          }
+        ]
+      },
+      "override_existing_workspace_access": false,
+      "create_default_provider": false,
+      "default_provider_slug": "test"
+    }
+  },
+  "ProvidersList": {
+    "query": "current_page=0&page_size=0&workspace_id=test",
+    "status": 200,
+    "response": {
+      "object": "list",
+      "total": 0,
+      "data": [
+        {
+          "name": "test",
+          "integration_id": "test",
+          "note": "test",
+          "status": "active",
+          "usage_limits": {
+            "credit_limit": 0,
+            "type": "cost",
+            "alert_threshold": 0,
+            "periodic_reset": "monthly",
+            "periodic_reset_days": 0,
+            "next_usage_reset_at": "test"
+          },
+          "reset_usage": 0,
+          "created_at": "test",
+          "slug": "test",
+          "rate_limits": [
+            {
+              "type": "requests",
+              "unit": "rpd",
+              "value": 0
+            }
+          ],
+          "expires_at": "test",
+          "object": "provider"
+        }
+      ]
+    },
+    "options": {
+      "current_page": 0,
+      "page_size": 0,
+      "workspace_id": "test"
+    }
+  },
+  "ProvidersCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test"
+    },
+    "request": {
+      "name": "test",
+      "integration_id": "test",
+      "workspace_id": "test",
+      "slug": "test",
+      "note": "test",
+      "usage_limits": {
+        "credit_limit": 0,
+        "type": "cost",
+        "alert_threshold": 0,
+        "periodic_reset": "monthly",
+        "periodic_reset_days": 0,
+        "next_usage_reset_at": "test"
+      },
+      "rate_limits": {
+        "type": "requests",
+        "unit": "rpd",
+        "value": 0
+      },
+      "expires_at": "test"
+    }
+  },
+  "ProvidersGet": {
+    "query": "workspace_id=test",
+    "status": 200,
+    "response": {
+      "name": "test",
+      "integration_id": "test",
+      "note": "test",
+      "status": "active",
+      "usage_limits": {
+        "credit_limit": 0,
+        "type": "cost",
+        "alert_threshold": 0,
+        "periodic_reset": "monthly",
+        "periodic_reset_days": 0,
+        "next_usage_reset_at": "test"
+      },
+      "reset_usage": 0,
+      "created_at": "test",
+      "slug": "test",
+      "rate_limits": [
+        {
+          "type": "requests",
+          "unit": "rpd",
+          "value": 0
+        }
+      ],
+      "expires_at": "test",
+      "object": "provider"
+    },
+    "options": {
+      "workspace_id": "test"
+    }
+  },
+  "ProvidersUpdate": {
+    "query": "workspace_id=test",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test"
+    },
+    "request": {
+      "name": "test",
+      "note": "test",
+      "usage_limits": {
+        "credit_limit": 0,
+        "type": "cost",
+        "alert_threshold": 0,
+        "periodic_reset": "monthly",
+        "periodic_reset_days": 0,
+        "next_usage_reset_at": "test"
+      },
+      "rate_limits": {
+        "type": "requests",
+        "unit": "rpd",
+        "value": 0
+      },
+      "expires_at": "test",
+      "reset_usage": false
+    },
+    "options": {
+      "workspace_id": "test"
+    }
+  },
+  "ProvidersDelete": {
+    "query": "workspace_id=test",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "options": {
+      "workspace_id": "test"
+    }
+  },
+  "MCPIntegrationsCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test"
+    },
+    "request": {
+      "organisation_id": "test",
+      "workspace_id": "test",
+      "slug": "test",
+      "name": "test",
+      "description": "test",
+      "configurations": {
+        "provider": "@test",
+        "nested": {
+          "future_field": false
+        },
+        "targets": []
+      },
+      "url": "test",
+      "auth_type": "oauth_auto",
+      "transport": "http",
+      "secret_mappings": [
+        {
+          "target_field": "test",
+          "secret_reference_id": "test",
+          "secret_key": "test",
+          "value_format": "json"
+        }
+      ]
+    }
+  },
+  "MCPIntegrationsList": {
+    "query": "type=workspace&workspace_id=test&page_size=0&current_page=0&search=test",
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "id": "test",
+          "name": "test",
+          "owner_id": "test",
+          "status": "test",
+          "type": "workspace",
+          "url": "test",
+          "auth_type": "oauth_auto",
+          "transport": "http",
+          "configurations": {
+            "provider": "@test",
+            "nested": {
+              "future_field": false
+            },
+            "targets": []
+          },
+          "created_at": "test",
+          "last_updated_at": "test",
+          "slug": "test",
+          "workspace_id": "test",
+          "description": "test",
+          "workspaces_count": 0,
+          "secret_mappings": [
+            {
+              "target_field": "test",
+              "secret_reference_id": "test",
+              "secret_key": "test",
+              "value_format": "json"
+            }
+          ]
+        }
+      ],
+      "total": 0,
+      "has_more": false
+    },
+    "options": {
+      "type": "workspace",
+      "workspace_id": "test",
+      "page_size": 0,
+      "current_page": 0,
+      "search": "test"
+    }
+  },
+  "MCPIntegrationsGet": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "name": "test",
+      "description": "test",
+      "owner_id": "test",
+      "status": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "configurations": {
+        "provider": "@test",
+        "nested": {
+          "future_field": false
+        },
+        "targets": []
+      },
+      "global_workspace_access": {
+        "future_field": false
+      },
+      "workspace_id": "test",
+      "slug": "test",
+      "url": "test",
+      "auth_type": "oauth_auto",
+      "transport": "http",
+      "type": "workspace",
+      "secret_mappings": [
+        {
+          "target_field": "test",
+          "secret_reference_id": "test",
+          "secret_key": "test",
+          "value_format": "json"
+        }
+      ]
+    }
+  },
+  "MCPIntegrationsUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "name": "test",
+      "description": "test",
+      "configurations": {
+        "provider": "@test",
+        "nested": {
+          "future_field": false
+        },
+        "targets": []
+      },
+      "url": "test",
+      "auth_type": "oauth_auto",
+      "transport": "http",
+      "secret_mappings": [
+        {
+          "target_field": "test",
+          "secret_reference_id": "test",
+          "secret_key": "test",
+          "value_format": "json"
+        }
+      ]
+    }
+  },
+  "MCPIntegrationsDelete": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "MCPIntegrationsListWorkspaces": {
+    "query": "version=test",
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "id": "test",
+          "enabled": false,
+          "status": "test",
+          "created_at": "test",
+          "last_updated_at": "test"
+        }
+      ],
+      "global_workspace_access": {
+        "future_field": false
+      },
+      "total": 0
+    },
+    "options": {
+      "version": "test"
+    }
+  },
+  "MCPIntegrationsSetWorkspaces": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "workspaces": [
+        {
+          "id": "test",
+          "enabled": false
+        }
+      ],
+      "global_workspace_access": {
+        "enabled": false
+      },
+      "override_existing_workspace_access": false
+    }
+  },
+  "MCPIntegrationsListCapabilities": {
+    "query": "page=0&page_size=0&type=tool",
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "name": "test",
+          "type": "tool",
+          "title": "test",
+          "description": "test",
+          "icons": [
+            {
+              "future_field": false
+            }
+          ],
+          "enabled": false,
+          "created_at": "test",
+          "last_updated_at": "test",
+          "input_schema": {
+            "future_field": false
+          },
+          "output_schema": {
+            "future_field": false
+          },
+          "execution": {
+            "future_field": false
+          },
+          "annotations": {
+            "future_field": false
+          },
+          "arguments": [
+            {
+              "future_field": false
+            }
+          ],
+          "uri": "test",
+          "uri_template": "test",
+          "mime_type": "test",
+          "size": 0
+        }
+      ],
+      "counts": {
+        "tools": {
+          "total": 0,
+          "enabled": 0
+        },
+        "prompts": {
+          "total": 0,
+          "enabled": 0
+        },
+        "resources": {
+          "total": 0,
+          "enabled": 0
+        },
+        "resource_templates": {
+          "total": 0,
+          "enabled": 0
+        }
+      },
+      "total": 0,
+      "has_more": false
+    },
+    "options": {
+      "page": 0,
+      "page_size": 0,
+      "type": "tool"
+    }
+  },
+  "MCPIntegrationsSetCapabilities": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "success": false
+    },
+    "request": {
+      "capabilities": [
+        {
+          "name": "test",
+          "type": "tool",
+          "enabled": false
+        }
+      ]
+    }
+  },
+  "MCPIntegrationsGetMetadata": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "server_name": "test",
+      "server_version": "test",
+      "protocol_version": "test",
+      "capability_flags": {
+        "future_field": false
+      },
+      "sync_status": "test",
+      "last_synced_at": "test",
+      "sync_error": "test"
+    }
+  },
+  "MCPServersCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test"
+    },
+    "request": {
+      "workspace_id": "test",
+      "name": "test",
+      "description": "test",
+      "mcp_integration_id": "test",
+      "slug": "test"
+    }
+  },
+  "MCPServersList": {
+    "query": "workspace_id=test&current_page=0&page_size=0&id=test&search=test",
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "id": "test",
+          "organisation_id": "test",
+          "name": "test",
+          "description": "test",
+          "status": "test",
+          "created_at": "test",
+          "owner_id": "test",
+          "slug": "test",
+          "workspace_id": "test",
+          "mcp_integration_id": "test",
+          "mcp_integration_slug": "test",
+          "mcp_integration_url": "test",
+          "auth_type": "test",
+          "workspace_name": "test",
+          "workspace_slug": "test",
+          "url": "test"
+        }
+      ],
+      "total": 0
+    },
+    "options": {
+      "workspace_id": "test",
+      "current_page": 0,
+      "page_size": 0,
+      "id": "test",
+      "search": "test"
+    }
+  },
+  "MCPServersGet": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test",
+      "name": "test",
+      "status": "test",
+      "description": "test",
+      "created_at": "test",
+      "mcp_integration_id": "test",
+      "mcp_integration_details": {
+        "id": "test",
+        "slug": "test",
+        "status": "test",
+        "configurations": {
+          "provider": "@test",
+          "nested": {
+            "future_field": false
+          },
+          "targets": []
+        },
+        "url": "test",
+        "transport": "test",
+        "auth_type": "test"
+      },
+      "workspace_id": "test"
+    }
+  },
+  "MCPServersUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "name": "test",
+      "description": "test"
+    }
+  },
+  "MCPServersDelete": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "MCPServersTest": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "success": false,
+      "status_code": 0,
+      "response_time_ms": 0,
+      "url": "test",
+      "server_name": "test",
+      "error": "test"
+    }
+  },
+  "MCPServersListCapabilities": {
+    "query": "page=0&page_size=0&type=tool",
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "name": "test",
+          "type": "tool",
+          "title": "test",
+          "description": "test",
+          "icons": [
+            {
+              "future_field": false
+            }
+          ],
+          "enabled": false,
+          "integration_enabled": false,
+          "input_schema": {
+            "future_field": false
+          },
+          "output_schema": {
+            "future_field": false
+          },
+          "execution": {
+            "future_field": false
+          },
+          "annotations": {
+            "future_field": false
+          },
+          "arguments": [
+            {
+              "future_field": false
+            }
+          ],
+          "uri": "test",
+          "uri_template": "test",
+          "mime_type": "test",
+          "size": 0
+        }
+      ],
+      "counts": {
+        "tools": {
+          "total": 0,
+          "enabled": 0
+        },
+        "prompts": {
+          "total": 0,
+          "enabled": 0
+        },
+        "resources": {
+          "total": 0,
+          "enabled": 0
+        },
+        "resource_templates": {
+          "total": 0,
+          "enabled": 0
+        }
+      },
+      "total": 0,
+      "has_more": false
+    },
+    "options": {
+      "page": 0,
+      "page_size": 0,
+      "type": "tool"
+    }
+  },
+  "MCPServersSetCapabilities": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "success": false
+    },
+    "request": {
+      "capabilities": [
+        {
+          "name": "test",
+          "type": "tool",
+          "enabled": false
+        }
+      ]
+    }
+  },
+  "MCPServersListUserAccess": {
+    "query": "page=0&page_size=0&search=test",
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "user_id": "test",
+          "first_name": "test",
+          "last_name": "test",
+          "enabled": false,
+          "has_override": false,
+          "connection_status": "connected"
+        }
+      ],
+      "default_user_access": "allow",
+      "total": 0,
+      "has_more": false
+    },
+    "options": {
+      "page": 0,
+      "page_size": 0,
+      "search": "test"
+    }
+  },
+  "MCPServersSetUserAccess": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "success": false
+    },
+    "request": {
+      "user_access": [
+        {
+          "user_id": "test",
+          "enabled": false
+        }
+      ],
+      "default_user_access": "allow"
+    }
+  },
+  "MCPServersListConnections": {
+    "query": "user_id=test&workspace_id=test&current_page=0&page_size=0",
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "user_id": "test",
+          "connected": false,
+          "created_at": "test",
+          "last_updated_at": "test"
+        }
+      ],
+      "total": 0,
+      "has_more": false
+    },
+    "options": {
+      "user_id": "test",
+      "workspace_id": "test",
+      "current_page": 0,
+      "page_size": 0
+    }
+  },
+  "MCPServersDeleteConnections": {
+    "query": "user_id=test&workspace_id=test",
+    "status": 200,
+    "response": {
+      "success": false
+    },
+    "options": {
+      "user_id": "test",
+      "workspace_id": "test"
+    }
+  },
+  "APIKeysCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "key": "test",
+      "object": "api-key"
+    },
+    "request": {
+      "name": "test",
+      "description": "test",
+      "organisation_id": "test",
+      "workspace_id": "test",
+      "user_id": "test",
+      "rate_limits": [
+        {
+          "type": "requests",
+          "unit": "rpd",
+          "value": 0
+        }
+      ],
+      "usage_limits": {
+        "credit_limit": 0,
+        "type": "cost",
+        "alert_threshold": 0,
+        "periodic_reset": "monthly",
+        "periodic_reset_days": 0,
+        "next_usage_reset_at": "test"
+      },
+      "scopes": [
+        "test"
+      ],
+      "defaults": {
+        "metadata": {
+          "future_field": false
+        },
+        "config_id": "test",
+        "allow_config_override": false
+      },
+      "alert_emails": [
+        "test"
+      ],
+      "expires_at": "test",
+      "rotation_policy": {
+        "rotation_period": "weekly",
+        "next_rotation_at": "test",
+        "key_transition_period_ms": 0
+      },
+      "type": "test"
+    }
+  },
+  "APIKeysList": {
+    "query": "page_size=0&current_page=0&workspace_id=test",
+    "status": 200,
+    "response": {
+      "total": 0,
+      "object": "list",
+      "data": [
+        {
+          "id": "test",
+          "key": "test",
+          "name": "test",
+          "description": "test",
+          "type": "organisation-service",
+          "organisation_id": "test",
+          "workspace_id": "test",
+          "user_id": "test",
+          "status": "active",
+          "created_at": "test",
+          "last_updated_at": "test",
+          "creation_mode": "ui",
+          "rate_limits": [
+            {
+              "type": "test",
+              "unit": "test",
+              "value": 0
+            }
+          ],
+          "usage_limits": {
+            "credit_limit": 0,
+            "type": "cost",
+            "alert_threshold": 0,
+            "periodic_reset": "monthly",
+            "periodic_reset_days": 0,
+            "next_usage_reset_at": "test"
+          },
+          "reset_usage": 0,
+          "scopes": [
+            "test"
+          ],
+          "defaults": {
+            "metadata": {
+              "future_field": false
+            },
+            "config_id": "test"
+          },
+          "alert_emails": [
+            "test"
+          ],
+          "expires_at": "test",
+          "object": "api-key"
+        }
+      ]
+    },
+    "options": {
+      "page_size": 0,
+      "current_page": 0,
+      "workspace_id": "test"
+    }
+  },
+  "APIKeysUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "name": "test",
+      "description": "test",
+      "rate_limits": [
+        {
+          "type": "requests",
+          "unit": "rpd",
+          "value": 0
+        }
+      ],
+      "usage_limits": {
+        "credit_limit": 0,
+        "type": "cost",
+        "alert_threshold": 0,
+        "periodic_reset": "monthly",
+        "periodic_reset_days": 0,
+        "next_usage_reset_at": "test"
+      },
+      "reset_usage": false,
+      "scopes": [
+        "test"
+      ],
+      "defaults": {
+        "metadata": {
+          "future_field": false
+        },
+        "config_id": "test",
+        "allow_config_override": false
+      },
+      "alert_emails": [
+        "test"
+      ],
+      "expires_at": "test",
+      "rotation_policy": {
+        "rotation_period": "weekly",
+        "next_rotation_at": "test",
+        "key_transition_period_ms": 0
+      }
+    }
+  },
+  "APIKeysGet": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "key": "test",
+      "name": "test",
+      "description": "test",
+      "type": "organisation-service",
+      "organisation_id": "test",
+      "workspace_id": "test",
+      "user_id": "test",
+      "status": "active",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "creation_mode": "ui",
+      "rate_limits": [
+        {
+          "type": "test",
+          "unit": "test",
+          "value": 0
+        }
+      ],
+      "usage_limits": {
+        "credit_limit": 0,
+        "type": "cost",
+        "alert_threshold": 0,
+        "periodic_reset": "monthly",
+        "periodic_reset_days": 0,
+        "next_usage_reset_at": "test"
+      },
+      "reset_usage": 0,
+      "scopes": [
+        "test"
+      ],
+      "defaults": {
+        "metadata": {
+          "future_field": false
+        },
+        "config_id": "test"
+      },
+      "alert_emails": [
+        "test"
+      ],
+      "expires_at": "test",
+      "object": "api-key"
+    }
+  },
+  "APIKeysDelete": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "APIKeysRotate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "key": "test",
+      "key_transition_expires_at": "test"
+    },
+    "request": {
+      "key_transition_period_ms": 0
+    }
+  },
+  "UsageLimitsCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "object": "test"
+    },
+    "request": {
+      "name": "test",
+      "conditions": [
+        {
+          "key": "test",
+          "value": "test",
+          "excludes": "test"
+        }
+      ],
+      "group_by": [
+        {
+          "key": "test"
+        }
+      ],
+      "type": "cost",
+      "credit_limit": 0,
+      "alert_threshold": 0,
+      "periodic_reset": "monthly",
+      "workspace_id": "test",
+      "organisation_id": "test"
+    }
+  },
+  "UsageLimitsList": {
+    "query": "workspace_id=test&status=active&type=cost&page_size=0&current_page=0",
+    "status": 200,
+    "response": {
+      "object": "test",
+      "data": [
+        {
+          "id": "test",
+          "name": "test",
+          "conditions": [
+            {
+              "key": "test",
+              "value": "test",
+              "excludes": "test"
+            }
+          ],
+          "group_by": [
+            {
+              "key": "test"
+            }
+          ],
+          "type": "cost",
+          "credit_limit": 0,
+          "alert_threshold": 0,
+          "periodic_reset": "monthly",
+          "periodic_reset_days": 0,
+          "next_usage_reset_at": "test",
+          "last_reset_at": "test",
+          "status": "active",
+          "workspace_id": "test",
+          "organisation_id": "test",
+          "created_at": "test",
+          "last_updated_at": "test",
+          "value_key_usage_map": {
+            "test": {
+              "current_usage": 0,
+              "status": "active",
+              "is_threshold_alerts_sent": false,
+              "is_exhausted_alerts_sent": false
+            }
+          }
+        }
+      ],
+      "total": 0
+    },
+    "options": {
+      "workspace_id": "test",
+      "status": "active",
+      "type": "cost",
+      "page_size": 0,
+      "current_page": 0
+    }
+  },
+  "UsageLimitsGet": {
+    "query": "status=active&include_usage=false",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "name": "test",
+      "conditions": [
+        {
+          "key": "test",
+          "value": "test",
+          "excludes": "test"
+        }
+      ],
+      "group_by": [
+        {
+          "key": "test"
+        }
+      ],
+      "type": "cost",
+      "credit_limit": 0,
+      "alert_threshold": 0,
+      "periodic_reset": "monthly",
+      "periodic_reset_days": 0,
+      "next_usage_reset_at": "test",
+      "last_reset_at": "test",
+      "status": "active",
+      "workspace_id": "test",
+      "organisation_id": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "value_key_usage_map": {
+        "test": {
+          "current_usage": 0,
+          "status": "active",
+          "is_threshold_alerts_sent": false,
+          "is_exhausted_alerts_sent": false
+        }
+      },
+      "object": "test"
+    },
+    "options": {
+      "status": "active",
+      "include_usage": false
+    }
+  },
+  "UsageLimitsUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "name": "test",
+      "description": "test",
+      "conditions": [
+        {
+          "key": "test",
+          "value": "test",
+          "excludes": "test"
+        }
+      ],
+      "credit_limit": 0,
+      "alert_threshold": 0,
+      "periodic_reset": "monthly",
+      "periodic_reset_days": 0,
+      "next_usage_reset_at": "test",
+      "reset_usage_for_value": "test"
+    }
+  },
+  "UsageLimitsDelete": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "UsageLimitsListEntities": {
+    "query": "status=active&search=test&page_size=0&current_page=0",
+    "status": 200,
+    "response": {
+      "object": "test",
+      "data": [
+        {
+          "id": "test",
+          "value_key": "test",
+          "current_usage": 0
+        }
+      ],
+      "total": 0
+    },
+    "options": {
+      "status": "active",
+      "search": "test",
+      "page_size": 0,
+      "current_page": 0
+    }
+  },
+  "UsageLimitsResetEntity": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "RateLimitsCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "object": "test"
+    },
+    "request": {
+      "name": "test",
+      "conditions": [
+        {
+          "key": "test",
+          "value": "test",
+          "excludes": "test"
+        }
+      ],
+      "group_by": [
+        {
+          "key": "test"
+        }
+      ],
+      "type": "requests",
+      "unit": "rpm",
+      "value": 0,
+      "target": "llm",
+      "workspace_id": "test",
+      "organisation_id": "test"
+    }
+  },
+  "RateLimitsList": {
+    "query": "workspace_id=test&status=active&type=requests&unit=rpm&target=llm&page_size=0&current_page=0",
+    "status": 200,
+    "response": {
+      "object": "test",
+      "data": [
+        {
+          "id": "test",
+          "name": "test",
+          "conditions": [
+            {
+              "key": "test",
+              "value": "test",
+              "excludes": "test"
+            }
+          ],
+          "group_by": [
+            {
+              "key": "test"
+            }
+          ],
+          "type": "requests",
+          "unit": "rpm",
+          "value": 0,
+          "status": "active",
+          "workspace_id": "test",
+          "organisation_id": "test",
+          "created_at": "test",
+          "last_updated_at": "test",
+          "target": "llm"
+        }
+      ],
+      "total": 0
+    },
+    "options": {
+      "workspace_id": "test",
+      "status": "active",
+      "type": "requests",
+      "unit": "rpm",
+      "target": "llm",
+      "page_size": 0,
+      "current_page": 0
+    }
+  },
+  "RateLimitsGet": {
+    "query": "status=active",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "name": "test",
+      "conditions": [
+        {
+          "key": "test",
+          "value": "test",
+          "excludes": "test"
+        }
+      ],
+      "group_by": [
+        {
+          "key": "test"
+        }
+      ],
+      "type": "requests",
+      "unit": "rpm",
+      "value": 0,
+      "status": "active",
+      "workspace_id": "test",
+      "organisation_id": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "target": "llm",
+      "object": "test"
+    },
+    "options": {
+      "status": "active"
+    }
+  },
+  "RateLimitsUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "name": "test",
+      "unit": "rpm",
+      "value": 0,
+      "conditions": [
+        {
+          "key": "test",
+          "value": "test",
+          "excludes": "test"
+        }
+      ]
+    }
+  },
+  "RateLimitsDelete": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "SecretReferencesList": {
+    "query": "manager_type=aws_sm&tags=test&search=test&current_page=0&page_size=0",
+    "status": 200,
+    "response": {
+      "object": "list",
+      "total": 0,
+      "data": [
+        {
+          "id": "test",
+          "name": "test",
+          "slug": "test",
+          "manager_type": "aws_sm",
+          "status": "ACTIVE",
+          "created_at": "test",
+          "last_updated_at": "test",
+          "object": "secret-reference"
+        }
+      ]
+    },
+    "options": {
+      "manager_type": "aws_sm",
+      "tags": "test",
+      "search": "test",
+      "current_page": 0,
+      "page_size": 0
+    }
+  },
+  "SecretReferencesCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "slug": "test",
+      "object": "secret-reference"
+    },
+    "request": {
+      "organisation_id": "test",
+      "name": "test",
+      "slug": "test",
+      "description": "test",
+      "manager_type": "aws_sm",
+      "auth_config": {
+        "aws_auth_type": "accessKey",
+        "aws_access_key_id": "test",
+        "aws_secret_access_key": "test",
+        "aws_region": "test"
+      },
+      "secret_path": "test",
+      "secret_key": "test",
+      "allow_all_workspaces": false,
+      "allowed_workspaces": [
+        "test"
+      ],
+      "tags": {
+        "test": "test"
+      }
+    }
+  },
+  "SecretReferencesGet": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "organisation_id": "test",
+      "name": "test",
+      "slug": "test",
+      "description": "test",
+      "manager_type": "aws_sm",
+      "secret_path": "test",
+      "secret_key": "test",
+      "allow_all_workspaces": false,
+      "tags": {
+        "test": "test"
+      },
+      "status": "ACTIVE",
+      "created_by": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "auth_config": {
+        "future_field": false
+      },
+      "object": "secret-reference"
+    }
+  },
+  "SecretReferencesUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "name": "test",
+      "description": "test",
+      "auth_config": {
+        "future_field": false
+      },
+      "secret_path": "test",
+      "secret_key": "test",
+      "allow_all_workspaces": false,
+      "allowed_workspaces": [
+        "test"
+      ],
+      "tags": {
+        "test": "test"
+      }
+    }
+  },
+  "SecretReferencesDelete": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "DeploymentsList": {
+    "query": "status=active&type=production&workspace_slug=first&workspace_slug=second&search=test&tags%5Bteam%5D=test&tags%5Benv%5D=dev",
+    "status": 200,
+    "response": {
+      "object": "list",
+      "total": 0,
+      "data": [
+        {
+          "id": "test",
+          "name": "test",
+          "slug": "test",
+          "type": "production",
+          "status": "active",
+          "is_default": 0,
+          "connection_status": "healthy",
+          "created_by": "test",
+          "created_at": "test",
+          "last_updated_at": "test",
+          "last_synced_at": "test",
+          "last_resynced_at": "test",
+          "tags": {
+            "test": "test"
+          },
+          "object": "deployment"
+        }
+      ]
+    },
+    "options": {
+      "status": "active",
+      "type": "production",
+      "workspace_slug": [
+        "first",
+        "second"
+      ],
+      "search": "test",
+      "tags": {
+        "team": "test",
+        "env": "dev"
+      }
+    }
+  },
+  "DeploymentsCreate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "organisation_id": "test",
+      "client_auth": "test",
+      "credentials": {
+        "username": "test",
+        "password": "test"
+      },
+      "object": "deployment"
+    },
+    "request": {
+      "organisation_id": "test",
+      "name": "test",
+      "slug": "test",
+      "type": "production",
+      "deployment_config": {
+        "future_field": false
+      },
+      "is_default": false,
+      "auth_settings": {
+        "gateway_base_url": "test",
+        "mcp_gateway_base_url": "test",
+        "is_dataservice_hosted": 0,
+        "is_playground_proxy_allowed": 0,
+        "workspaces_allowed": [
+          "test"
+        ],
+        "jwt_subs_allowed": [
+          "test"
+        ],
+        "jwt_sub_workspace_mapping": {
+          "test": "test"
+        }
+      },
+      "tags": {
+        "test": "test"
+      }
+    }
+  },
+  "DeploymentsGet": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "id": "test",
+      "name": "test",
+      "slug": "test",
+      "type": "production",
+      "status": "active",
+      "is_default": 0,
+      "connection_status": "healthy",
+      "created_by": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "last_synced_at": "test",
+      "last_resynced_at": "test",
+      "tags": {
+        "test": "test"
+      },
+      "object": "deployment",
+      "auth_settings": {
+        "gateway_base_url": "test",
+        "mcp_gateway_base_url": "test",
+        "private_link_endpoint": "test",
+        "use_private_link_proxy": 0,
+        "is_dataservice_hosted": 0,
+        "is_playground_proxy_allowed": 0,
+        "disable_portkey_gateway": 0,
+        "workspaces_allowed": [
+          "test"
+        ],
+        "jwt_subs_allowed": [
+          "test"
+        ],
+        "jwt_sub_workspace_mapping": {
+          "test": "test"
+        },
+        "allow_all_workspaces": 0
+      },
+      "deployment_config": {
+        "future_field": false
+      },
+      "workspaces": [
+        {
+          "id": "test",
+          "slug": "test"
+        }
+      ],
+      "credentials": {
+        "username": "test",
+        "password": "test"
+      },
+      "client_auth": "test"
+    }
+  },
+  "DeploymentsUpdate": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    },
+    "request": {
+      "name": "test",
+      "type": "production",
+      "status": "active",
+      "deployment_config": {
+        "future_field": false
+      },
+      "is_default": false,
+      "rotate_auth": false,
+      "override_existing": false,
+      "auth_settings": {
+        "gateway_base_url": "test",
+        "mcp_gateway_base_url": "test",
+        "is_dataservice_hosted": 0,
+        "is_playground_proxy_allowed": 0,
+        "workspaces_allowed": [
+          "test"
+        ],
+        "jwt_subs_allowed": [
+          "test"
+        ],
+        "jwt_sub_workspace_mapping": {
+          "test": "test"
+        },
+        "allow_all_workspaces": false,
+        "remove_workspaces_allowed": [
+          "test"
+        ],
+        "remove_subs_allowed": [
+          "test"
+        ]
+      },
+      "tags": {
+        "test": "test"
+      }
+    }
+  },
+  "DeploymentsDelete": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "future_field": false
+    }
+  },
+  "DeploymentsPing": {
+    "query": "",
+    "status": 200,
+    "response": {
+      "status": "healthy",
+      "gateway_base_url": "test",
+      "outbound": {
+        "status": "healthy",
+        "status_code": 0,
+        "version": "test",
+        "error": "test"
+      },
+      "inbound": {
+        "status": "healthy",
+        "error": "test"
+      },
+      "object": "deployment"
+    }
+  }
+}

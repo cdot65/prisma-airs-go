@@ -80,17 +80,6 @@ func TestUploadPromptsCsv_SendsMultipartFileAndQuery(t *testing.T) {
 	}
 }
 
-func TestUploadPromptsCsv_PlainTextSuccessIsTolerated(t *testing.T) {
-	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, _ *http.Request) { _, _ = w.Write([]byte("OK")) })
-	defer tokenSrv.Close()
-	defer apiSrv.Close()
-	client := newTestClient(t, tokenSrv.URL, apiSrv.URL, apiSrv.URL)
-
-	if _, err := client.CustomAttacks.UploadPromptsCsv(context.Background(), "ps", strings.NewReader("x"), "f.csv"); err != nil {
-		t.Errorf("a 2xx with a non-JSON body should succeed, got %v", err)
-	}
-}
-
 func TestUploadPromptsCsv_ReaderFailureIsAnSDKError(t *testing.T) {
 	tokenSrv, apiSrv := newTestServers(t, func(w http.ResponseWriter, _ *http.Request) { t.Error("no request should be sent") })
 	defer tokenSrv.Close()
