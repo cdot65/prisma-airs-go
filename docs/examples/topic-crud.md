@@ -124,9 +124,13 @@ For topics that may be referenced by active profiles, use force delete:
 resp, err := client.Topics.ForceDelete(ctx, created.TopicID, "admin@example.com")
 ```
 
-!!! note "ForceDelete response"
-    The API may return a non-JSON response for successful deletes. The SDK handles this
-    gracefully — `err` will be `nil` on success, but `resp.Message` may be empty.
+:::note[ForceDelete response]
+Successful deletes may return a JSON message string, an object with a `message`
+field, plain text, or an empty body. The SDK accepts these response shapes even
+when plain text is labeled `application/json`. JSON messages populate
+`resp.Message`; plain text and empty bodies leave it empty. Malformed JSON still
+returns an error.
+:::
 
 ## Using Topics in Security Profiles
 

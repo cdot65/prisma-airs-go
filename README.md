@@ -191,3 +191,11 @@ Download checksummed cross-platform example binaries from the
 [v0.6.0 release](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.6.0), or
 install with `go get github.com/cdot65/prisma-airs-go@v0.6.0`. See
 [artifact usage and reproducible builds](docs/developer/releases.md).
+
+## Documentation development
+
+The [documentation site](https://cdot65.github.io/prisma-airs-go/) shares
+Docusaurus navigation and AIRS styling with the SDK, CLI, and harness. Guides
+remain in `docs/`; site configuration and private Node dependencies live in
+`docs-site/`. See [the site README](docs-site/README.md) for local development
+and checks. These dependencies do not affect the Go module.

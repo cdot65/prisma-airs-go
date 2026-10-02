@@ -5,7 +5,7 @@
 | Auth Method | Used By | Credentials |
 |-------------|---------|-------------|
 | **API Key** (HMAC-SHA256) | Runtime API (scanning) | `PANW_AI_SEC_API_KEY` |
-| **OAuth2** (client_credentials) | Runtime (management), Model Security, Red Team | `PANW_MGMT_CLIENT_ID`, `PANW_MGMT_CLIENT_SECRET`, `PANW_MGMT_TSG_ID` |
+| **OAuth2** (client_credentials) | Runtime (management), Model Security, Red Team, Gateway management | `PANW_MGMT_CLIENT_ID`, `PANW_MGMT_CLIENT_SECRET`, `PANW_MGMT_TSG_ID` |
 
 ## AI Runtime Security — Content Scanning
 
@@ -155,3 +155,49 @@ func main() {
     fmt.Printf("Available categories: %d\n", len(categories))
 }
 ```
+
+## AI Gateway — Management in an Existing Workspace
+
+Set `PANW_AI_GW_CLIENT_ID`, `PANW_AI_GW_CLIENT_SECRET`, and `PANW_AI_GW_TSG_ID`
+(or the `PANW_MGMT_*` fallbacks), then supply an existing workspace ID. Gateway
+uses SCM OAuth; this example reads configuration metadata without sending an
+inference request.
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    "os"
+
+    "github.com/cdot65/prisma-airs-go/aisec/gateway"
+    "github.com/cdot65/prisma-airs-go/aisec/gateway/schema"
+)
+
+func main() {
+    workspaceID := os.Getenv("GATEWAY_WORKSPACE_ID")
+    if workspaceID == "" {
+        log.Fatal("Set GATEWAY_WORKSPACE_ID to an existing workspace ID")
+    }
+    client, err := gateway.NewClient(gateway.Opts{})
+    if err != nil {
+        log.Fatal(err)
+    }
+    result, err := client.Configs.List(context.Background(), schema.ConfigsListOptions{
+        WorkspaceID: workspaceID,
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+    count := 0
+    if result.Data != nil {
+        count = len(*result.Data)
+    }
+    fmt.Printf("Configuration page contains %d entries\n", count)
+}
+```
+
+See the [Gateway management guide](../services/ai-gateway-api.md) for the 12 CRUD
+families, nullable updates, routing, and lifecycle methods.

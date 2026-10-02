@@ -21,3 +21,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Documentation theme
+
+The documentation site adapts Apache-2.0 theme components from Prisma AIRS
+Harness and Prisma AIRS CLI. Their attribution is recorded in
+[the theme notices](https://github.com/cdot65/prisma-airs-go/blob/main/docs-site/THIRD_PARTY_NOTICES.md),
+with the full [Apache-2.0 license](https://github.com/cdot65/prisma-airs-go/blob/main/docs-site/LICENSE-APACHE-2.0).
+The Go SDK and its original documentation remain MIT licensed.
