@@ -110,3 +110,13 @@ All twelve selected resource-family listings passed live on 2026-10-01.
 
 Unmodeled fields are retained in `AdditionalFields`. Curations are in the model
 generator and reviewed scope manifest; original pinned source files are unchanged.
+
+## Customer-app update deployment code (2026-10-02 live finding)
+
+The published v0.6.0 management update model omits `auth_code`, but a disposable live customer-app update on redtail-prod requires it. The pinned snapshot remains unchanged; the curated update request fixture records this live exception.
+
+The v0.6.1 fix adds optional `UpdateAppRequest.AuthCode`. When omitted, `CustomerApps.Update` uses the supported paginated list route and matches `customer_app_id`, accepting only one distinct nonempty associated deployment code. Missing or ambiguous codes return typed errors; callers can supply an explicit code. The legacy name-based single-app GET returned 403 with the same superuser credentials, while list succeeded.
+
+Provider app import/update/delete and external-deletion tests passed with an isolated Go workspace using this candidate. Published v0.6.0 remains unchanged; the owner approved v0.6.1 publication, followed by provider repinning and a published-module live rerun. No inference requests or production app changes were used.
+
+Customer-app DELETE can also return a JSON-string success body rather than the typed response object. The provider treats a 2xx decode error as provisional and verifies absence through List. Correcting that SDK delete response remains separate from this update fix.

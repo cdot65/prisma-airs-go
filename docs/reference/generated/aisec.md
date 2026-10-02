@@ -295,7 +295,7 @@ const (
 
 ```go
 const (
-	Version		= "0.6.0"
+	Version		= "0.6.1"
 	UserAgent	= "PAN-AIRS/" + Version + "-go-sdk"
 )
 ```

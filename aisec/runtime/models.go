@@ -384,6 +384,9 @@ type CustomerAppListResponse struct {
 
 // UpdateAppRequest is the request to update a customer app.
 type UpdateAppRequest struct {
+	// AuthCode selects the deployment profile. The live service requires it.
+	// When omitted, Update resolves an unambiguous code from the existing app.
+	AuthCode         string `json:"auth_code,omitempty"`
 	AppName          string `json:"app_name,omitempty"`
 	ModelName        string `json:"model_name,omitempty"`
 	CloudProvider    string `json:"cloud_provider,omitempty"`

@@ -123,6 +123,8 @@ updated, err := client.CustomerApps.Update(ctx, "app-id", runtime.UpdateAppReque
 resp, err := client.CustomerApps.Delete(ctx, "app-name", "admin@example.com")
 ```
 
+`UpdateAppRequest.AuthCode` selects the existing deployment. When omitted, Update performs paginated List lookup by app ID and uses one unambiguous nonempty deployment code. Missing codes return `MissingVariableError`; conflicting codes return `UserRequestPayloadError`. Supply `AuthCode` explicitly to choose a deployment and avoid the extra lookup. The legacy single-app Get may return 403; use List for inventory.
+
 ### DlpProfiles — DLP Data Profiles (Read-Only)
 
 ```go

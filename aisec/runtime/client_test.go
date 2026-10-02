@@ -252,7 +252,7 @@ func TestCustomerApps_Update_QueryParam(t *testing.T) {
 	defer apiSrv.Close()
 
 	client := newTestClient(t, tokenSrv.URL, apiSrv.URL)
-	app, err := client.CustomerApps.Update(context.Background(), "app-123", UpdateAppRequest{AppName: "updated"})
+	app, err := client.CustomerApps.Update(context.Background(), "app-123", UpdateAppRequest{AuthCode: "fixture-code", AppName: "updated"})
 	if err != nil {
 		t.Fatal(err)
 	}
