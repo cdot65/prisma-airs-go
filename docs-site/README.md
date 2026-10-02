@@ -25,5 +25,5 @@ GitHub Pages Actions environment through `.github/workflows/deploy-docs.yml`.
 
 The AIRS palette and Prism theme derive from the harness; the accessible,
 collapsible on-page navigation derives from the CLI. Attribution and their
-Apache-2.0 license are included in `THIRD_PARTY_NOTICES.md` and
+Apache-2.0 license are included in `THIRD_PARTY_NOTICES.md`, `NOTICE`, and
 `LICENSE-APACHE-2.0`. The Go SDK remains MIT licensed.
