@@ -7,7 +7,7 @@
 ## Install
 
 ```bash
-go get github.com/cdot65/prisma-airs-go
+go get github.com/cdot65/prisma-airs-go@v0.6.0
 ```
 
 ## Import
@@ -18,6 +18,7 @@ import (
     "github.com/cdot65/prisma-airs-go/aisec/runtime"
     "github.com/cdot65/prisma-airs-go/aisec/modelsecurity"
     "github.com/cdot65/prisma-airs-go/aisec/redteam"
+    "github.com/cdot65/prisma-airs-go/aisec/gateway"
 )
 ```
 

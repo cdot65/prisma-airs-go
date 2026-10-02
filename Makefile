@@ -1,4 +1,4 @@
-.PHONY: fmt vet lint test test-coverage test-integration build check clean
+.PHONY: fmt vet lint test test-coverage test-integration build check clean docs-install docs-build docs-check docs-serve
 
 ## Format source code
 fmt:
@@ -35,4 +35,20 @@ check: fmt vet lint test
 ## Remove build artifacts
 clean:
 	rm -f coverage.out
-	rm -rf site/
+	rm -rf site/ docs-site/build/ docs-site/.docusaurus/
+
+## Install private documentation dependencies
+docs-install:
+	npm --prefix docs-site ci
+
+## Build documentation (fails on broken links)
+docs-build:
+	npm --prefix docs-site run build
+
+## Typecheck, build, and browser-check documentation
+docs-check:
+	npm --prefix docs-site run check
+
+## Serve documentation locally
+docs-serve:
+	npm --prefix docs-site start

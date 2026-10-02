@@ -24,8 +24,9 @@ aisec/                      # Core package: constants, config, errors, utils
   modelsecurity/            # Model Security API — 6 sub-clients, dual endpoint (OAuth2)
   redteam/                  # Red Team API — 9 sub-clients, dual endpoint (OAuth2)
   gateway/                  # AI Gateway — 12 CRUD families, SCM OAuth, data/admin planes
-docs/                       # MkDocs Material source
-.github/workflows/          # CI (lint/test), test matrix (Go 1.22-1.24), mkdocs deploy, release
+docs/                       # Docusaurus Markdown/MDX source
+docs-site/                  # Private Node tooling, shared AIRS theme, browser checks
+.github/workflows/          # CI (lint/test), test matrix (Go 1.22-1.24), Docusaurus deploy, release
 examples/                   # Usage examples
 ```
 
@@ -84,7 +85,7 @@ Suffixes: `_CLIENT_ID`, `_CLIENT_SECRET`, `_TSG_ID`, `_TOKEN_ENDPOINT`, `_DATA_E
 |----------|---------|------|
 | `ci.yml` | push/PR | gofmt check, go vet, golangci-lint (Go 1.24) |
 | `test.yml` | push/PR | `go test -race` matrix: Go 1.22, 1.23, 1.24 |
-| `mkdocs-deploy.yml` | push to main | Build + deploy docs to GitHub Pages |
+| `deploy-docs.yml` | push to main | Build + deploy docs to GitHub Pages |
 | `release.yml` | release published | checks + tag verification + six-platform example/source assets + checksums |
 
 ## Testing Patterns
@@ -133,3 +134,8 @@ Gateway operations are management CRUD/lifecycle only, with existing workspaces.
 The provider owns reconciliation and state. See `docs/developer/live-verification.md`
 and `docs/developer/feature-quality.md` for verification limits and review scores.
 Release artifact instructions are in `docs/developer/releases.md`.
+
+For documentation changes, run `make docs-install`, then typecheck/build/browser
+checks with `make docs-check` (install Chromium first as described in
+`docs-site/README.md`). Preserve published guide URLs and keep Go API scope
+accurate; TypeScript/CLI/harness capabilities are not automatically Go features.

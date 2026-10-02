@@ -202,8 +202,10 @@ updated, err := client.Profiles.Update(ctx, created.ProfileID, runtime.UpdatePro
 }
 ```
 
-!!! note "Update creates a new revision"
-    The `profile_id` changes after update (`de02ba1f...` to `a5468b56...`) and `revision` bumps from 1 to 2. Use `GetByName` to always get the latest revision.
+:::note[Update creates a new revision]
+The `profile_id` changes after update (`de02ba1f...` to `a5468b56...`) and `revision` bumps from 1 to 2. Use `GetByName` to always get the latest revision.
+
+:::
 
 ### Step 7: Force Delete
 
@@ -215,9 +217,13 @@ if err != nil {
 fmt.Println("Deleted successfully")
 ```
 
-!!! note "ForceDelete response"
-    The API returns a non-JSON response for successful deletes. The SDK handles this
-    gracefully — `err` will be `nil` on success, but `resp.Message` may be empty.
+:::note[ForceDelete response]
+Successful deletes may return a JSON message string, an object with a `message`
+field, plain text, or an empty body. The SDK accepts these response shapes even
+when plain text is labeled `application/json`. JSON messages populate
+`resp.Message`; plain text and empty bodies leave it empty. Malformed JSON still
+returns an error.
+:::
 
 ## Valid Protection Names
 

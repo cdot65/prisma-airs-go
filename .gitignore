@@ -28,8 +28,13 @@ Thumbs.db
 *.swo
 *~
 
-# MkDocs build output
+# Documentation build output
 site/
+docs-site/node_modules/
+docs-site/build/
+docs-site/.docusaurus/
+docs-site/test-results/
+docs-site/playwright-report/
 
 # Python development tools
 __pycache__/

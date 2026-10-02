@@ -1,0 +1,74 @@
+---
+title: Prisma AIRS Go SDK
+description: Go clients for Runtime Security, Model Security, Red Team, and AI Gateway management.
+slug: /
+hide_title: true
+hide_table_of_contents: true
+---
+
+import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+<div className="sdk-hero">
+  <img src={useBaseUrl('/img/logo.svg')} alt="Prisma AIRS" width="100" height="110" />
+  <h1>Prisma AIRS Go SDK</h1>
+  <p>Typed Go clients for AI security and Gateway management, built on the standard library.</p>
+  <div className="sdk-actions">
+    <Link className="button button--primary" to="/getting-started/installation/">Get started</Link>
+    <Link className="button button--secondary" to="/reference/api-reference/">API reference</Link>
+  </div>
+</div>
+
+```sh
+go get github.com/cdot65/prisma-airs-go@v0.6.0
+```
+
+Go 1.22+ · MIT licensed · Zero external Go dependencies
+
+## Four service domains
+
+<div className="sdk-domains">
+  <Link className="card sdk-domain" to="/services/runtime-api/">
+    <h3>Runtime Security</h3>
+    <p>Scan prompts, responses, and tool events. Manage profiles, topics, API keys, and runtime configuration.</p>
+  </Link>
+  <Link className="card sdk-domain" to="/services/model-security-api/">
+    <h3>Model Security</h3>
+    <p>Review models, versions, files, and scan results. Manage custom rules, security groups, assignments, and history.</p>
+  </Link>
+  <Link className="card sdk-domain" to="/services/red-team-api/">
+    <h3>Red Team</h3>
+    <p>Manage targets, adapters, and custom attacks. Run scans, read reports, and connect through Network Broker.</p>
+  </Link>
+  <Link className="card sdk-domain" to="/services/ai-gateway-api/">
+    <h3>AI Gateway management</h3>
+    <p>Twelve CRUD families for configurations, guardrails, providers, integrations, MCP, API keys, policies, secrets, and deployments.</p>
+  </Link>
+</div>
+
+Every API method takes a context. HTTP clients are injectable, OAuth token
+refresh is automatic, and errors retain status and wrapped causes. Gateway
+workspaces must already exist; its client covers management CRUD and lifecycle
+operations. Inference, streaming, and workspace provisioning are outside its scope.
+
+## Start with your task
+
+| Task | Guide |
+|---|---|
+| Install the module and configure credentials | [Installation](getting-started/installation.md) and [configuration](getting-started/configuration.md) |
+| Send a content scan | [Runtime scanning](examples/runtime-scanning.md) |
+| Create and update security profiles or topics | [Profile CRUD](examples/profile-crud.md) and [topic CRUD](examples/topic-crud.md) |
+| Connect a Terraform provider to Gateway management | [Gateway guide](services/ai-gateway-api.md) |
+| Inspect methods and current response models | [API reference](reference/api-reference.md) and [Go package documentation](https://pkg.go.dev/github.com/cdot65/prisma-airs-go/aisec) |
+| Download example executables or reproduce a build | [Release artifacts](developer/releases.md) |
+
+## Understand the SDK
+
+- [Architecture](developer/architecture.md) explains clients, authentication, and caller responsibilities.
+- [Error handling](reference/error-handling.md) covers HTTP status, sentinels, and decoding failures.
+- [Live verification](developer/live-verification.md) separates exercised operations from mock-only helpers and upstream limitations.
+- [Release notes](about/release-notes.md) describe updates and compatibility changes.
+
+For the surrounding toolchain, see the [TypeScript SDK](https://cdot65.github.io/prisma-airs-sdk/),
+[AIRS CLI](https://cdot65.github.io/prisma-airs-cli/), and
+[AIRS Harness](https://cdot65.github.io/prisma-airs-harness/).

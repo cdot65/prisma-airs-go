@@ -67,9 +67,14 @@ Key packages:
 
 - **ci.yml**: gofmt check, go vet, golangci-lint (Go 1.24)
 - **test.yml**: `go test -race` matrix: Go 1.22, 1.23, 1.24
-- **mkdocs-deploy.yml**: MkDocs Material build + GitHub Pages deploy on push to main
+- **deploy-docs.yml**: Docusaurus typecheck/build/browser checks; GitHub Pages deployment on push to main
 - **release.yml**: fmt + vet + race tests + build + tag verification, then six-platform source/example assets and checksums
 
 ## Docs
 
-MkDocs Material site in `docs/`. Config in `mkdocs.yml`. Deployed to GitHub Pages at cdot65.github.io/prisma-airs-go/.
+Docusaurus site in `docs-site/`, reading guides directly from `docs/`. Config in `docs-site/docusaurus.config.ts`. Deployed to GitHub Pages at cdot65.github.io/prisma-airs-go/.
+
+For documentation changes, run `make docs-install`, then typecheck/build/browser
+checks with `make docs-check` (install Chromium first as described in
+`docs-site/README.md`). Preserve published guide URLs and keep Go API scope
+accurate; TypeScript/CLI/harness capabilities are not automatically Go features.
