@@ -2,10 +2,24 @@ name: Deploy Docs
 
 on:
   pull_request:
-    paths: ['docs/**', 'docs-site/**', '.github/workflows/deploy-docs.yml']
+    paths:
+      - 'docs/**'
+      - 'docs-site/**'
+      - 'aisec/**'
+      - 'scripts/generate_api_reference.go'
+      - 'scripts/check_doc_examples.py'
+      - 'go.mod'
+      - '.github/workflows/deploy-docs.yml'
   push:
     branches: [main]
-    paths: ['docs/**', 'docs-site/**', '.github/workflows/deploy-docs.yml']
+    paths:
+      - 'docs/**'
+      - 'docs-site/**'
+      - 'aisec/**'
+      - 'scripts/generate_api_reference.go'
+      - 'scripts/check_doc_examples.py'
+      - 'go.mod'
+      - '.github/workflows/deploy-docs.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,6 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.6'
       - uses: actions/setup-node@v5
         with:
           node-version: 24
@@ -27,6 +44,12 @@ jobs:
         working-directory: docs-site
       - run: npm run check
         working-directory: docs-site
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: documentation-browser-evidence
+          path: docs-site/test-results/
+          retention-days: 14
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:

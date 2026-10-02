@@ -1,29 +1,40 @@
 # Go SDK documentation
 
-Docusaurus documentation at https://cdot65.github.io/prisma-airs-go/.
-The site follows the AIRS SDK, CLI, and harness documentation structure. Go
-guides remain in `../docs`; edit those files directly. Node dependencies are
-private documentation tooling and do not change the SDK's stdlib-only Go module.
+Docusaurus at https://cdot65.github.io/prisma-airs-go/.
+The harness checkout is the exact design authority. The logo, global CSS, Prism
+palette, hero CSS, and DocItem layout are copied unchanged. Go guides live in
+`../docs`. Private Node tooling does not change the SDK's stdlib-only Go module.
 
-With Node 22 or later (CI uses Node 24):
+Use Node 24, Go 1.22+, and Python 3.12+ (CI uses Go 1.24.6):
 
 ```sh
 npm ci
-npm run typecheck
-npm run build
 npx playwright install chromium
-npm run test:browser
+npm run check
 ```
 
-On Alpine Linux, install the system Chromium package and run browser checks
-with `CHROMIUM_PATH=/usr/bin/chromium npm run test:browser`.
+`check` verifies source parity, generated API reference, complete Go example
+compilation, TypeScript, strict links/anchors, production build, browser routes,
+and pixel comparisons. `npm start` serves local development; `npm run serve`
+serves the production build. On Alpine use system Chromium and
+`CHROMIUM_PATH=/usr/bin/chromium npm run check`.
 
-Use `npm start` for local development. Builds fail on broken links and anchors.
-Published page paths are preserved from the previous MkDocs site, including
-`/services/`, `/reference/`, and `/developer/`. Deployment uses the existing
-GitHub Pages Actions environment through `.github/workflows/deploy-docs.yml`.
+The pixel check builds an independent reference from
+`design/harness/reference.tar.gz` using the harness’s own locked Docusaurus 3.10.1 dependencies and the explicit
+Go text/link adaptations in
+`copy.json`. Homepage and article screenshots must match exactly at desktop,
+tablet, and mobile sizes. Failures retain reference/actual/diff PNGs in
+`test-results/`, which CI uploads. The temporary reference is removed afterward.
 
-The AIRS palette and Prism theme derive from the harness; the accessible,
-collapsible on-page navigation derives from the CLI. Attribution and their
-Apache-2.0 license are included in `THIRD_PARTY_NOTICES.md`, `NOTICE`, and
-`LICENSE-APACHE-2.0`. The Go SDK remains MIT licensed.
+Regenerate method reference from the root with
+`go run scripts/generate_api_reference.go`. `scripts/check_doc_examples.py`
+compiles complete programs from the public guides; it makes no live API calls.
+
+Existing `/services/`, `/reference/`, `/developer/`, and example URLs remain
+published. The homepage is a full-width React page; the docs overview is
+`/overview/`. Pages builds use `.github/workflows/deploy-docs.yml`.
+
+Read `../docs/developer/design-parity.md` before changing design inputs.
+`design/harness/source.json` records the source commit and hashes. Preserve the
+applicable source notices in `NOTICE` and `THIRD_PARTY_NOTICES.md` and the full
+Apache-2.0 license. The Go SDK remains MIT licensed.

@@ -11,6 +11,11 @@ test('existing guide, example, reference, and release URLs remain readable', asy
     'reference/api-reference/', 'reference/environment-variables/', 'reference/error-handling/',
     'developer/live-verification/', 'developer/feature-quality/', 'developer/releases/',
     'about/release-notes/', 'about/license/',
+    'overview/', 'getting-started/', 'getting-started/authentication/', 'examples/',
+    'examples/model-security/', 'examples/red-team-inventory/', 'examples/gateway-crud/',
+    'guides/provider-patterns/', 'guides/troubleshooting/', 'developer/development/', 'developer/design-parity/',
+    ...['aisec', 'runtime', 'modelsecurity', 'redteam', 'gateway', 'modelsecurity-schema',
+      'redteam-schema', 'gateway-schema'].map(name => `reference/generated/${name}/`),
   ];
   for (const path of paths) {
     const response = await request.get(new URL(path, baseURL).href);
@@ -26,10 +31,12 @@ test('homepage links reach Go-specific guides without browser errors', async ({p
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('./');
-  await expect(page.getByRole('heading', {name: 'Prisma AIRS Go SDK', exact: true})).toBeVisible();
-  await expect(page.locator('.sdk-domain')).toHaveCount(4);
-  await page.getByRole('link', {name: 'Get started', exact: true}).click();
-  await expect(page.getByRole('heading', {name: 'Installation', exact: true})).toBeVisible();
+  await expect(page.locator('#hero-title')).toHaveText('Local control.Gateway intelligence.');
+  await expect(page.locator('main > section').first()).toHaveAttribute('aria-labelledby', 'hero-title');
+  await expect(page.locator('main > section').nth(1).locator('a')).toHaveCount(4);
+  await expect(page.locator('.theme-doc-sidebar-container')).toHaveCount(0);
+  await page.getByRole('link', {name: 'Get started →', exact: true}).click();
+  await expect(page.getByRole('heading', {name: 'Getting started', exact: true})).toBeVisible();
   await expect(page.locator('pre').first()).toContainText('go get github.com/cdot65/prisma-airs-go@v0.6.0');
   expect(errors).toEqual([]);
 });
@@ -42,15 +49,14 @@ test('Go code, Mermaid, and migrated delete callouts render', async ({page}) => 
   await expect(page.locator('pre.language-go').first()).toContainText('runtime.NewClient');
 });
 
-test('desktop on-page navigation can collapse and expand accessibly', async ({page}) => {
+test('desktop articles use the harness reading column without a right-hand contents panel', async ({page}) => {
   await page.setViewportSize({width: 1440, height: 1000});
-  await page.goto('services/ai-gateway-api/');
-  const toggle = page.getByRole('button', {name: 'Collapse on-page navigation'});
-  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-  await toggle.click();
-  await expect(page.locator('#doc-page-navigation')).toBeHidden();
-  await page.getByRole('button', {name: 'Expand on-page navigation'}).click();
-  await expect(page.locator('#doc-page-navigation')).toBeVisible();
+  await page.goto('getting-started/');
+  await expect(page.locator('article h1')).toHaveText('Getting started');
+  await expect(page.locator('aside[aria-label="On-page navigation"]')).toHaveCount(0);
+  await expect(page.locator('.theme-doc-toc-desktop')).toHaveCount(0);
+  await expect(page.locator('.theme-doc-toc-mobile')).toBeHidden();
+  expect(await page.locator('article').evaluate(element => element.getBoundingClientRect().width)).toBeGreaterThan(800);
 });
 
 test('mobile homepage and API reference fit the viewport and expose navigation', async ({page}) => {
@@ -58,7 +64,34 @@ test('mobile homepage and API reference fit the viewport and expose navigation',
   await page.goto('./');
   await page.getByRole('button', {name: 'Toggle navigation bar'}).click();
   await expect(page.locator('.navbar-sidebar')).toBeVisible();
+  await page.goto('getting-started/');
+  await expect(page.locator('.theme-doc-toc-mobile')).toBeVisible();
   await page.goto('reference/api-reference/');
   await expect(page.getByRole('heading', {name: 'API Reference', exact: true})).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
 });
+
+
+test('reference includes all service clients and schema catalogs', async ({page}) => {
+  await page.goto('reference/generated/gateway/');
+  await expect(page.getByRole('heading', {name: 'ConfigsClient.ListVersions'})).toBeVisible();
+  await expect(page.getByRole('heading', {name: 'APIKeysClient.ListForKind'})).toBeVisible();
+  await page.goto('reference/generated/redteam/');
+  await expect(page.getByRole('heading', {name: 'NetworkBrokerClient', level: 2})).toBeVisible();
+  await page.goto('reference/generated/modelsecurity/');
+  await expect(page.locator('#modelsclientlist')).toBeVisible();
+});
+
+for (const viewport of [{width: 1440, height: 1000}, {width: 1024, height: 768}, {width: 390, height: 844}]) {
+  test(`all homepage paths work at ${viewport.width}px`, async ({page}) => {
+    await page.setViewportSize(viewport);
+    await page.goto('./');
+    const links = await page.locator('main a').evaluateAll(elements => elements.map(element => (element as HTMLAnchorElement).href));
+    for (const href of links) {
+      const response = await page.goto(href);
+      expect(response?.status()).toBe(200);
+      await expect(page.locator('article h1')).toBeVisible();
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(viewport.width);
+  });
+}

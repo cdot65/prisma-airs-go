@@ -74,7 +74,9 @@ Key packages:
 
 Docusaurus site in `docs-site/`, reading guides directly from `docs/`. Config in `docs-site/docusaurus.config.ts`. Deployed to GitHub Pages at cdot65.github.io/prisma-airs-go/.
 
-For documentation changes, run `make docs-install`, then typecheck/build/browser
+For documentation changes, read `docs/developer/design-parity.md` before editing
+theme or layout; the owner-selected harness checkout is the design authority.
+Run `make docs-install`, then source/reference/example/build/browser/pixel
 checks with `make docs-check` (install Chromium first as described in
 `docs-site/README.md`). Preserve published guide URLs and keep Go API scope
 accurate; TypeScript/CLI/harness capabilities are not automatically Go features.

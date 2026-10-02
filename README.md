@@ -194,8 +194,10 @@ install with `go get github.com/cdot65/prisma-airs-go@v0.6.0`. See
 
 ## Documentation development
 
-The [documentation site](https://cdot65.github.io/prisma-airs-go/) shares
-Docusaurus navigation and AIRS styling with the SDK, CLI, and harness. Guides
+The [documentation site](https://cdot65.github.io/prisma-airs-go/) uses the
+harness’s exact Docusaurus logo, hero, fonts, colors, and article layout. It
+includes a numbered getting-started guide, examples for all four services,
+and a generated public method reference. Guides
 remain in `docs/`; site configuration and private Node dependencies live in
 `docs-site/`. See [the site README](docs-site/README.md) for local development
 and checks. These dependencies do not affect the Go module.

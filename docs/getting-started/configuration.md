@@ -1,6 +1,8 @@
 # Configuration
 
-All clients can be configured via environment variables, constructor options, or a combination of both. Constructor options take precedence over environment variables.
+All clients can be configured via environment variables, constructor options, or a combination of both. OAuth constructor options take precedence over environment variables. Runtime
+scan options use environment fallbacks for empty credentials; the scan endpoint
+uses its environment override when the configured value equals the SDK default.
 
 ## Runtime API — Scanning (API Key Auth)
 

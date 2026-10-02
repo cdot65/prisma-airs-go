@@ -1,427 +1,77 @@
 # API Reference
 
-Core types and established interfaces are shown below. Current complete schema
-models and additive methods are documented in the service guides and generated
-[Go package reference](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.6.0/aisec).
+The Go SDK provides independent clients for four service domains. This reference
+is generated from the public Go declarations, so established interfaces and
+additive complete-response methods appear together. Schema catalogs link to
+full versioned field declarations and codec methods.
 
-## Package `aisec`
+## Choose a package
 
-### Configuration
-
-```go
-// NewConfig creates a new SDK configuration.
-func NewConfig(opts ...ConfigOption) *Config
-
-// ConfigOption functions
-func WithAPIKey(key string) ConfigOption
-func WithAPIToken(token string) ConfigOption
-func WithEndpoint(endpoint string) ConfigOption
-func WithNumRetries(n int) ConfigOption
-func WithHTTPClient(client *http.Client) ConfigOption
-```
-
-### Error Types
+| Package | Entry point | Reference |
+| --- | --- | --- |
+| `aisec` | `NewConfig`, options, errors, nullable values | [Core SDK](generated/aisec.md) |
+| `aisec/runtime` | `NewScanner`, `NewClient` | [Runtime Security](generated/runtime.md) |
+| `aisec/modelsecurity` | `NewClient` | [Model Security](generated/modelsecurity.md) |
+| `aisec/redteam` | `NewClient` | [Red Team](generated/redteam.md) |
+| `aisec/gateway` | `NewClient` | [Gateway management](generated/gateway.md) |
 
 ```go
-// AISecSDKError is the base error type for all SDK errors.
-type AISecSDKError struct {
-    ErrorType ErrorType
-    Message   string
-    Err       error // wrapped error
-    StatusCode int // HTTP status, including 2xx decode errors
-}
-
-// ErrorType enum
-const (
-    ServerSideError        ErrorType = iota
-    ClientSideError
-    UserRequestPayloadError
-    MissingVariableError
-    AISecSDKInternalError
-    OAuthError
+import (
+    "github.com/cdot65/prisma-airs-go/aisec"
+    "github.com/cdot65/prisma-airs-go/aisec/runtime"
+    "github.com/cdot65/prisma-airs-go/aisec/modelsecurity"
+    "github.com/cdot65/prisma-airs-go/aisec/redteam"
+    "github.com/cdot65/prisma-airs-go/aisec/gateway"
 )
 ```
 
-### Constants
-
-```go
-const Version = "0.6.0"
-
-// Content limits
-const (
-    MaxContentPromptLength   = 2 * 1024 * 1024   // 2 MB
-    MaxContentResponseLength = 2 * 1024 * 1024   // 2 MB
-    MaxContentContextLength  = 100 * 1024 * 1024 // 100 MB
-)
-
-// Batch limits
-const (
-    MaxNumberOfScanIDs          = 5
-    MaxNumberOfReportIDs        = 5
-    MaxNumberOfBatchScanObjects = 5
-)
-
-// Retry
-const MaxNumberOfRetries = 5
-var HTTPForceRetryStatusCodes = []int{500, 502, 503, 504}
-```
-
----
-
-## Package `runtime`
-
-### Scanner
-
-```go
-func NewScanner(cfg *aisec.Config) *Scanner
-
-func (s *Scanner) SyncScan(ctx context.Context, profile AiProfile, content *Content, opts ...SyncScanOpts) (*ScanResponse, error)
-func (s *Scanner) AsyncScan(ctx context.Context, objects []AsyncScanObject) (*AsyncScanResponse, error)
-func (s *Scanner) QueryByScanIDs(ctx context.Context, scanIDs []string) ([]ScanIDResult, error)
-func (s *Scanner) QueryByReportIDs(ctx context.Context, reportIDs []string) ([]ThreatScanReport, error)
-```
-
-### Content
-
-```go
-func NewContent(opts ContentOpts) (*Content, error)
-
-type ContentOpts struct {
-    Prompt       string
-    Response     string
-    Context      string
-    CodePrompt   string
-    CodeResponse string
-    ToolEvent    *ToolEvent
-}
-
-func (c *Content) ByteLength() int
-```
-
-### Types
-
-```go
-type AiProfile struct {
-    ProfileName string `json:"profile_name"`
-}
-
-type ScanResponse struct {
-    Source                   string            `json:"source,omitempty"`
-    ReportID                 string            `json:"report_id"`
-    ScanID                   string            `json:"scan_id"`
-    TrID                     string            `json:"tr_id,omitempty"`
-    SessionID                string            `json:"session_id,omitempty"`
-    ProfileID                string            `json:"profile_id,omitempty"`
-    ProfileName              string            `json:"profile_name,omitempty"`
-    Category                 string            `json:"category"`
-    Action                   string            `json:"action"`
-    Timeout                  bool              `json:"timeout"`
-    Error                    bool              `json:"error"`
-    Errors                   []ContentError    `json:"errors"`
-    PromptDetected           *PromptDetected   `json:"prompt_detected,omitempty"`
-    ResponseDetected         *ResponseDetected `json:"response_detected,omitempty"`
-    PromptMaskedData         *MaskedData       `json:"prompt_masked_data,omitempty"`
-    ResponseMaskedData       *MaskedData       `json:"response_masked_data,omitempty"`
-    PromptDetectionDetails   *DetectionDetails `json:"prompt_detection_details,omitempty"`
-    ResponseDetectionDetails *DetectionDetails `json:"response_detection_details,omitempty"`
-    ToolDetected             *ToolDetected     `json:"tool_detected,omitempty"`
-    CreatedAt                string            `json:"created_at,omitempty"`
-    CompletedAt              string            `json:"completed_at,omitempty"`
-}
-
-type AsyncScanObject struct {
-    ReqID   uint32      `json:"req_id"`
-    ScanReq ScanRequest `json:"scan_req"`
-}
-
-type AsyncScanResponse struct {
-    Received string `json:"received"`
-    ScanID   string `json:"scan_id"`
-    ReportID string `json:"report_id,omitempty"`
-    Source   string `json:"source,omitempty"`
-}
-
-type ToolEvent struct {
-    Metadata *ToolEventMetadata `json:"metadata,omitempty"`
-    Input    string             `json:"input,omitempty"`
-    Output   string             `json:"output,omitempty"`
-}
-
-type ToolEventMetadata struct {
-    Ecosystem   string `json:"ecosystem"`
-    Method      string `json:"method"`
-    ServerName  string `json:"server_name"`
-    ToolInvoked string `json:"tool_invoked,omitempty"`
-}
-```
-
-### Client
-
-```go
-func NewClient(opts Opts) (*Client, error)
-
-type Opts struct {
-    ClientID      string
-    ClientSecret  string
-    TsgID         string
-    APIEndpoint   string
-    TokenEndpoint string
-    NumRetries    int
-}
-
-type Client struct {
-    Profiles           *ProfilesClient
-    Topics             *TopicsClient
-    ApiKeys            *ApiKeysClient
-    CustomerApps       *CustomerAppsClient
-    DlpProfiles        *DlpProfilesClient
-    DeploymentProfiles *DeploymentProfilesClient
-    ScanLogs           *ScanLogsClient
-    OAuth              *OAuthManagementClient
-}
-```
-
-### ProfilesClient
-
-```go
-func (c *ProfilesClient) Create(ctx context.Context, req CreateProfileRequest) (*SecurityProfile, error)
-func (c *ProfilesClient) List(ctx context.Context, opts ListOpts) (*SecurityProfileListResponse, error)
-func (c *ProfilesClient) GetByID(ctx context.Context, profileID string) (*SecurityProfile, error)
-func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityProfile, error)
-func (c *ProfilesClient) Update(ctx context.Context, profileID string, req UpdateProfileRequest) (*SecurityProfile, error)
-func (c *ProfilesClient) Delete(ctx context.Context, profileID string) (*DeleteProfileResponse, error)
-func (c *ProfilesClient) ForceDelete(ctx context.Context, profileID string, updatedBy string) (*DeleteProfileResponse, error)
-```
-
-### TopicsClient
-
-```go
-func (c *TopicsClient) Create(ctx context.Context, req CreateTopicRequest) (*CustomTopic, error)
-func (c *TopicsClient) List(ctx context.Context, opts ListOpts) (*CustomTopicListResponse, error)
-func (c *TopicsClient) Update(ctx context.Context, topicID string, req UpdateTopicRequest) (*CustomTopic, error)
-func (c *TopicsClient) Delete(ctx context.Context, topicID string) (*DeleteTopicResponse, error)
-func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string, updatedBy string) (*DeleteTopicResponse, error)
-```
-
-### ApiKeysClient
-
-```go
-func (c *ApiKeysClient) Create(ctx context.Context, req CreateApiKeyRequest) (*ApiKey, error)
-func (c *ApiKeysClient) List(ctx context.Context, opts ListOpts) (*ApiKeyListResponse, error)
-func (c *ApiKeysClient) Delete(ctx context.Context, keyName string, updatedBy string) (*ApiKeyDeleteResponse, error)
-func (c *ApiKeysClient) Regenerate(ctx context.Context, keyID string, req RegenerateKeyRequest) (*ApiKey, error)
-```
-
-### CustomerAppsClient
-
-```go
-func (c *CustomerAppsClient) List(ctx context.Context, opts ListOpts) (*CustomerAppListResponse, error)
-func (c *CustomerAppsClient) Get(ctx context.Context, appName string) (*CustomerApp, error)
-func (c *CustomerAppsClient) Update(ctx context.Context, appID string, req UpdateAppRequest) (*CustomerApp, error)
-func (c *CustomerAppsClient) Delete(ctx context.Context, appName string, updatedBy string) (*DeleteAppResponse, error)
-```
-
-### CustomerApp Types
-
-```go
-type CustomerApp struct {
-    CustomerAppID    string         `json:"customer_appId,omitempty"`
-    AppName          string         `json:"app_name,omitempty"`
-    TsgID            string         `json:"tsg_id,omitempty"`
-    ModelName        string         `json:"model_name,omitempty"`
-    CloudProvider    string         `json:"cloud_provider,omitempty"`
-    Environment      string         `json:"environment,omitempty"`
-    Status           string         `json:"status,omitempty"`
-    CreatedBy        string         `json:"created_by,omitempty"`
-    UpdatedBy        string         `json:"updated_by,omitempty"`
-    AgentApp         bool           `json:"agent_app,omitempty"`
-    AiAgentFramework string         `json:"ai_agent_framework,omitempty"`
-    AiSecProfileName string         `json:"ai_sec_profile_name,omitempty"`
-    ApiKeysDPInfo    []APIKeyDPInfo `json:"api_keys_dp_info,omitempty"`
-}
-
-type CustomerAppListResponse struct {
-    Items      []CustomerApp `json:"customer_apps"`
-    NextOffset int           `json:"next_offset,omitempty"`
-}
-
-type UpdateAppRequest struct {
-    AppName       string `json:"app_name,omitempty"`
-    ModelName     string `json:"model_name,omitempty"`
-    CloudProvider string `json:"cloud_provider,omitempty"`
-    Environment   string `json:"environment,omitempty"`
-}
-
-type APIKeyDPInfo struct {
-    ApiKeyName string `json:"api_key_name"`
-    DpName     string `json:"dp_name"`
-    AuthCode   string `json:"auth_code"`
-}
-```
-
-### ScanLogsClient
-
-```go
-func (c *ScanLogsClient) List(ctx context.Context, opts ScanLogListOpts) (*ScanLogListResponse, error)
-```
-
-### OAuthManagementClient
-
-```go
-func (c *OAuthManagementClient) GetToken(ctx context.Context, req OAuthTokenRequest) (*OAuthToken, error)
-func (c *OAuthManagementClient) InvalidateToken(ctx context.Context) (*InvalidateTokenResponse, error)
-```
-
-### Action Enums
-
-```go
-type ProfileAction string
-
-const (
-    ProfileActionAllow    ProfileAction = "allow"
-    ProfileActionBlock    ProfileAction = "block"
-    ProfileActionAlert    ProfileAction = "alert"
-    ProfileActionDisabled ProfileAction = ""
-)
-
-type ToxicContentAction string
-
-const (
-    ToxicContentHighBlockModerateAllow ToxicContentAction = "high:block, moderate:allow"
-    ToxicContentHighBlockModerateBlock ToxicContentAction = "high:block, moderate:block"
-    ToxicContentHighAllowModerateAllow ToxicContentAction = "high:allow, moderate:allow"
-)
-```
-
----
-
-## Package `modelsecurity`
-
-### Client
-
-```go
-func NewClient(opts Opts) (*Client, error)
-
-type Opts struct {
-    ClientID      string
-    ClientSecret  string
-    TsgID         string
-    DataEndpoint  string
-    MgmtEndpoint  string
-    TokenEndpoint string
-    NumRetries    int
-}
-
-type Client struct {
-    Scans          *ScansClient
-    SecurityGroups *SecurityGroupsClient
-    SecurityRules  *SecurityRulesClient
-}
-
-func (c *Client) GetPyPIAuth(ctx context.Context) (*PyPIAuthResponse, error)
-```
-
----
-
-## Package `redteam`
-
-### Client
-
-```go
-func NewClient(opts Opts) (*Client, error)
-
-type Opts struct {
-    ClientID      string
-    ClientSecret  string
-    TsgID         string
-    DataEndpoint  string
-    MgmtEndpoint  string
-    TokenEndpoint string
-    NumRetries    int
-}
-
-type Client struct {
-    Scans               *ScansClient
-    Reports             *ReportsClient
-    CustomAttackReports *CustomAttackReportsClient
-    Targets             *TargetsClient
-    CustomAttacks       *CustomAttacksClient
-}
-
-// Convenience methods
-func (c *Client) GetScanStatistics(ctx context.Context, params map[string]string) (*ScanStatisticsResponse, error)
-// GET /v1/dashboard/score-trend?target_id=…; opts optionally set DateRange or StartDate/EndDate
-func (c *Client) GetScoreTrend(ctx context.Context, targetID string, opts ...ScoreTrendOpts) (*ScoreTrendResponse, error)
-// GET /v1/metering/quota (the spec says POST; a live tenant serves GET and rejects POST)
-func (c *Client) GetQuota(ctx context.Context) (*QuotaSummary, error)
-func (c *Client) GetErrorLogs(ctx context.Context, jobID string, opts ListOpts) (*ErrorLogListResponse, error)
-func (c *Client) UpdateSentiment(ctx context.Context, req SentimentRequest) (*SentimentResponse, error)
-func (c *Client) GetSentiment(ctx context.Context, jobID string) (*SentimentResponse, error)
-func (c *Client) GetDashboardOverview(ctx context.Context) (*DashboardOverviewResponse, error)
-```
-
----
-
-## Enums
-
-### Scan API
-
-```go
-// Verdict
-const (
-    VerdictBenign    = "benign"
-    VerdictMalicious = "malicious"
-    VerdictUnknown   = "unknown"
-)
-
-// Action
-const (
-    ActionAllow = "allow"
-    ActionBlock = "block"
-    ActionAlert = "alert"
-)
-
-// Category
-const (
-    CategoryBenign    = "benign"
-    CategoryMalicious = "malicious"
-    CategoryUnknown   = "unknown"
-)
-```
-
-### Detection Services
-
-```go
-type DetectionServiceName string
-
-const (
-    DetectionServiceDLP            DetectionServiceName = "dlp"
-    DetectionServiceInjection      DetectionServiceName = "injection"
-    DetectionServiceURLCats        DetectionServiceName = "url_cats"
-    DetectionServiceToxicContent   DetectionServiceName = "toxic_content"
-    DetectionServiceMaliciousCode  DetectionServiceName = "malicious_code"
-    DetectionServiceAgent          DetectionServiceName = "agent"
-    DetectionServiceTopicViolation DetectionServiceName = "topic_violation"
-    DetectionServiceDBSecurity     DetectionServiceName = "db_security"
-    DetectionServiceUngrounded     DetectionServiceName = "ungrounded"
-)
-```
-
-## Current complete contracts
-
-The v0.6.0 update preserves established response types and provides additive
-complete models in `aisec/modelsecurity/schema`, `aisec/redteam/schema`, and
-`aisec/gateway/schema`. `aisec.Optional[T]` represents unset, explicit null, and
-concrete values for nullable updates.
-
-- [Runtime methods and current options](../services/runtime-api.md)
-- [Model inventory, custom rules, history, and precise methods](../services/model-security-api.md)
-- [Red Team adapters, Network Broker, and complete methods](../services/red-team-api.md)
-- [Gateway's twelve CRUD families and lifecycle helpers](../services/ai-gateway-api.md)
-
-`gateway.NewClient(gateway.Opts{})` exposes `Configs`, `Guardrails`,
-`OrgGuardrails`, `Integrations`, `Providers`, `MCPIntegrations`, `MCPServers`,
-`APIKeys`, `UsageLimits`, `RateLimits`, `SecretReferences`, and `Deployments`.
-Each request uses SCM OAuth and tenant headers through the common HTTP pipeline.
-[Live evidence and verification limits](../developer/live-verification.md) are
-separate from mock contract coverage.
+## Current schema catalogs
+
+| Domain | Catalog |
+| --- | --- |
+| Model Security | [Models, request fields, and complete responses](generated/modelsecurity-schema.md) |
+| Red Team | [Targets, jobs, reports, adapters, and broker models](generated/redteam-schema.md) |
+| Gateway management | [CRUD requests, receipts, reads, documents, and unions](generated/gateway-schema.md) |
+
+Generated current-schema models preserve nullable values and unknown fields
+where the contract allows them. Read [provider patterns](../guides/provider-patterns.md)
+for omission, explicit null, empty values, receipts, and state.
+
+## Request conventions
+
+Every API method takes `context.Context`. OAuth clients reuse token caching and
+refresh; Runtime scanning uses an API key or caller-supplied bearer token.
+OAuth constructor options override the corresponding environment configuration.
+Runtime scan configuration uses its documented environment fallbacks. See
+[authentication](../getting-started/authentication.md) and
+[configuration](../getting-started/configuration.md).
+
+An API method returns a typed response and an error. HTTP failures and response
+decoding failures use `*aisec.AISecSDKError`, with status and wrapped causes.
+Match HTTP sentinels with `errors.Is`; see [error handling](error-handling.md).
+
+## Compatibility and scope
+
+Established convenience interfaces remain available. Additive methods returning
+complete schema responses are listed beside them in the generated service
+reference. Use the return type that covers the service fields your caller needs.
+
+Gateway exposes twelve management CRUD/lifecycle families in existing workspaces.
+Inference, streaming, Realtime, workspace provisioning, and Terraform resource
+implementation are outside this client. Service guides explain current routing
+and compatibility exceptions:
+
+- [Runtime scan](../services/scan-api.md) and [management](../services/runtime-api.md)
+- [Model Security](../services/model-security-api.md)
+- [Red Team](../services/red-team-api.md)
+- [Gateway management](../services/ai-gateway-api.md)
+
+The [live verification record](../developer/live-verification.md) and
+[feature reviews](../developer/feature-quality.md) describe evidence and limits.
+
+## Reference maintenance
+
+`go run scripts/generate_api_reference.go` regenerates these pages from the
+checked-in source. Documentation CI runs the same tool with `-check` to catch
+stale output. The public [Go package documentation](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.6.0/aisec)
+provides complete source-linked declarations for the published release.
