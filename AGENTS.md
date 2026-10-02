@@ -25,7 +25,7 @@ aisec/                      # Core package: constants, config, errors, utils
   redteam/                  # Red Team API — 9 sub-clients, dual endpoint (OAuth2)
   gateway/                  # AI Gateway — 12 CRUD families, SCM OAuth, data/admin planes
 docs/                       # Docusaurus Markdown/MDX source
-docs-site/                  # Private Node tooling, shared AIRS theme, browser checks
+docs-site/                  # Private Node tooling, exact harness design, pixel/browser checks
 .github/workflows/          # CI (lint/test), test matrix (Go 1.22-1.24), Docusaurus deploy, release
 examples/                   # Usage examples
 ```
@@ -135,7 +135,9 @@ The provider owns reconciliation and state. See `docs/developer/live-verificatio
 and `docs/developer/feature-quality.md` for verification limits and review scores.
 Release artifact instructions are in `docs/developer/releases.md`.
 
-For documentation changes, run `make docs-install`, then typecheck/build/browser
+For documentation changes, read `docs/developer/design-parity.md` before editing
+theme or layout; the owner-selected harness checkout is the design authority.
+Run `make docs-install`, then source/reference/example/build/browser/pixel
 checks with `make docs-check` (install Chromium first as described in
 `docs-site/README.md`). Preserve published guide URLs and keep Go API scope
 accurate; TypeScript/CLI/harness capabilities are not automatically Go features.

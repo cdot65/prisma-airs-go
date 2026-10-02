@@ -24,8 +24,8 @@ SOFTWARE.
 
 ## Documentation theme
 
-The documentation site adapts Apache-2.0 theme components from Prisma AIRS
-Harness and Prisma AIRS CLI. Their attribution is recorded in
+The documentation site reuses Apache-2.0 theme components from Prisma AIRS
+Harness. Their attribution is recorded in
 [the theme notices](https://github.com/cdot65/prisma-airs-go/blob/main/docs-site/THIRD_PARTY_NOTICES.md),
 with the full [Apache-2.0 license](https://github.com/cdot65/prisma-airs-go/blob/main/docs-site/LICENSE-APACHE-2.0).
 The Go SDK and its original documentation remain MIT licensed.

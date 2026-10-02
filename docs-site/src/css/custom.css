@@ -85,16 +85,3 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 .markdown table { font-size: .9rem; }
 .footer.footer--dark { background: var(--airs-navy); color: var(--airs-muted); border-top: 1px solid var(--airs-border); --ifm-footer-link-color: var(--airs-white); --ifm-footer-title-color: var(--airs-cyan); }
 @media (max-width: 450px) { .navbar__title { font-size: .83rem; } .navbar__logo, .navbar__logo img { height: 42px; width: 42px; } }
-
-/* Go SDK landing page; existing AIRS theme tokens are shared with the harness. */
-.sdk-hero { padding: 2rem 0; text-align: center; }
-.sdk-hero img { width: 100px; height: 110px; margin-bottom: 1rem; }
-.sdk-hero h1 { font-size: clamp(2rem, 5vw, 3rem); }
-.sdk-hero p { max-width: 42rem; margin: 1rem auto; color: var(--airs-muted); }
-.sdk-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin: 1.5rem 0; }
-.sdk-domains { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-.sdk-domain { padding: 1.25rem; color: var(--airs-white); border-radius: var(--ifm-global-radius); }
-.sdk-domain:hover { color: var(--airs-white); text-decoration: none; border-color: var(--airs-cyan); }
-.sdk-domain h3 { margin-top: 0; color: var(--airs-cyan); }
-.sdk-domain p { margin-bottom: 0; color: var(--airs-muted); }
-@media (max-width: 600px) { .sdk-domains { grid-template-columns: 1fr; } .sdk-hero { padding: 1rem 0; } }

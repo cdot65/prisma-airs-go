@@ -14,7 +14,9 @@
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc --noEmit",
     "test:browser": "playwright test",
-    "check": "npm run typecheck && npm run build && npm run test:browser"
+    "check": "npm run check:source && npm run typecheck && npm run build && npm run test:browser && npm run test:parity",
+    "check:source": "python3 scripts/design_source.py && cd .. && go run scripts/generate_api_reference.go -check && python3 scripts/check_doc_examples.py",
+    "test:parity": "python3 scripts/check_design_parity.py"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",
@@ -57,6 +59,6 @@
     ]
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   }
 }
