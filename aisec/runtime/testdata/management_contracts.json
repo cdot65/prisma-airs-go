@@ -358,7 +358,8 @@
       "status": "active",
       "created_by": "creator",
       "updated_by": "tester",
-      "ai_agent_framework": "framework"
+      "ai_agent_framework": "framework",
+      "auth_code": "fixture-code"
     }
   },
   "GET /v1/mgmt/customerapps": {

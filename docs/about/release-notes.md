@@ -1,5 +1,9 @@
 # Release Notes
 
+## v0.6.1
+
+- Fix customer-app updates to carry the deployment authentication code required by the live API. Add optional `UpdateAppRequest.AuthCode`, with paginated unambiguous recovery when omitted and typed missing/ambiguity errors.
+
 ## v0.6.0
 
 - **feat(runtime)**: current query/update fields, explicit clears, precise delete-response handling, and live-verified topic force-delete and API key regeneration routes. Existing list aliases remain available.

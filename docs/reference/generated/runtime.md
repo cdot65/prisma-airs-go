@@ -237,6 +237,7 @@ func (c *CustomerAppsClient) Delete(ctx context.Context, appName string, updated
 ### CustomerAppsClient.Get
 
 Get retrieves a customer app by name: GET /v1/mgmt/customerapp?app_name=
+The live service may reject this legacy route with 403; use List for inventory.
 
 ```go
 func (c *CustomerAppsClient) Get(ctx context.Context, appName string) (*CustomerApp, error)

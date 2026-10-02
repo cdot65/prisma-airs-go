@@ -133,7 +133,7 @@ func TestRuntimeManagement_AllPinnedOperations(t *testing.T) {
 		{"GET", "/v1/mgmt/customerapp", "/v1/mgmt/customerapp", func(c *Client) (any, error) { return contractResult(c.CustomerApps.Get(ctx, "test")) }},
 		{"DELETE", "/v1/mgmt/customerapp", "/v1/mgmt/customerapp", func(c *Client) (any, error) { return contractResult(c.CustomerApps.Delete(ctx, "test", "tester")) }},
 		{"PUT", "/v1/mgmt/customerapp", "/v1/mgmt/customerapp", func(c *Client) (any, error) {
-			return contractResult(c.CustomerApps.Update(ctx, "test", UpdateAppRequest{AppName: "updated", ModelName: "model", CloudProvider: "aws", Environment: "dev", CustomerAppID: "test", TsgID: "123", Status: "active", CreatedBy: "creator", UpdatedBy: "tester", AiAgentFramework: "framework"}))
+			return contractResult(c.CustomerApps.Update(ctx, "test", UpdateAppRequest{AuthCode: "fixture-code", AppName: "updated", ModelName: "model", CloudProvider: "aws", Environment: "dev", CustomerAppID: "test", TsgID: "123", Status: "active", CreatedBy: "creator", UpdatedBy: "tester", AiAgentFramework: "framework"}))
 		}},
 		{"GET", "/v1/mgmt/customerapps", "/v1/mgmt/customerapps", func(c *Client) (any, error) { return contractResult(c.CustomerApps.List(ctx, ListOpts{Limit: 5})) }},
 		{"POST", "/v1/mgmt/topic", "/v1/mgmt/topic", func(c *Client) (any, error) {

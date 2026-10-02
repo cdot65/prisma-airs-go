@@ -377,6 +377,7 @@ func (c *CustomerAppsClient) List(ctx context.Context, opts ListOpts) (*Customer
 }
 
 // Get retrieves a customer app by name: GET /v1/mgmt/customerapp?app_name=
+// The live service may reject this legacy route with 403; use List for inventory.
 func (c *CustomerAppsClient) Get(ctx context.Context, appName string) (*CustomerApp, error) {
 	resp, err := internal.DoMgmtRequest[CustomerApp](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodGet, Path: aisec.MgmtCustomerAppPath,
@@ -390,6 +391,13 @@ func (c *CustomerAppsClient) Get(ctx context.Context, appName string) (*Customer
 
 // Update updates a customer app: PUT /v1/mgmt/customerapp?customer_app_id=
 func (c *CustomerAppsClient) Update(ctx context.Context, customerAppID string, req UpdateAppRequest) (*CustomerApp, error) {
+	if req.AuthCode == "" {
+		code, err := c.existingAppAuthCode(ctx, customerAppID)
+		if err != nil {
+			return nil, err
+		}
+		req.AuthCode = code
+	}
 	resp, err := internal.DoMgmtRequest[CustomerApp](ctx, c.svcCfg, internal.MgmtRequestOptions{
 		Method: http.MethodPut, Path: aisec.MgmtCustomerAppPath,
 		Params: map[string]string{"customer_app_id": customerAppID},
@@ -519,3 +527,42 @@ func (c *OAuthManagementClient) InvalidateToken(ctx context.Context) (*Invalidat
 
 // seg escapes a caller-supplied identifier for use as a single URL path segment.
 func seg(s string) string { return internal.PathSeg(s) }
+
+// existingAppAuthCode uses the supported list route, since the legacy single-app
+// GET is rejected by the live service. Never choose silently between deployments.
+func (c *CustomerAppsClient) existingAppAuthCode(ctx context.Context, id string) (string, error) {
+	var found *CustomerApp
+	err := paginate(func(opts ListOpts) ([]CustomerApp, int, error) {
+		page, err := c.List(ctx, opts)
+		if err != nil {
+			return nil, 0, err
+		}
+		return page.Items, page.NextOffset, nil
+	}, func(app CustomerApp) bool {
+		if app.CustomerAppID == id {
+			found = &app
+			return true
+		}
+		return false
+	})
+	if err != nil {
+		return "", err
+	}
+	if found == nil {
+		return "", notFound("customer app", id)
+	}
+	code := ""
+	for _, info := range found.ApiKeysDPInfo {
+		if info.AuthCode == "" {
+			continue
+		}
+		if code != "" && code != info.AuthCode {
+			return "", aisec.NewAISecSDKError("customer app has multiple deployment auth codes; supply UpdateAppRequest.AuthCode explicitly", aisec.UserRequestPayloadError)
+		}
+		code = info.AuthCode
+	}
+	if code == "" {
+		return "", aisec.NewAISecSDKError("customer app deployment auth code unavailable; supply UpdateAppRequest.AuthCode explicitly", aisec.MissingVariableError)
+	}
+	return code, nil
+}
