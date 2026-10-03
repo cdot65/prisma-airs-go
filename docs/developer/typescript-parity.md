@@ -1,11 +1,11 @@
-# TypeScript SDK parity (v0.8.0)
+# TypeScript SDK parity (v0.8.x)
 
-Go SDK **v0.8.0** tracks TypeScript SDK v0.34.0, commit
+Go SDK **v0.8.1** retains the parity introduced in v0.8.0 and tracks TypeScript SDK v0.34.0, commit
 `4a80dbdb` (full source revision and SHA-256 hashes in
 `specs/typescript-parity.json`). Install the complete release with:
 
 ```sh
-go get github.com/cdot65/prisma-airs-go@v0.8.0
+go get github.com/cdot65/prisma-airs-go@v0.8.1
 ```
 
 ## Product coverage
@@ -33,7 +33,7 @@ Current vendor OpenAPI contracts and their coverage denominators remain unchange
 `specs/contracts/typescript-parity.json` holds recovered TypeScript shapes, outside
 that denominator. The workspace routes were removed from vendor publication;
 IAM creation/binding comes from the TypeScript SDK's retained SCM captures.
-IAM DELETE is inferred and unverified. Provisioning does not grant roles.
+IAM DELETE was initially inferred; disposable dedicated-scope deletion was subsequently verified on 2026-10-03. This does not establish cleanup of shared scopes or access policies. Provisioning does not grant roles.
 
 Offline verification includes 49 retained TypeScript runtime wire cases, 63
 synthetic management route/plane cases, a retained public pricing catalog,
@@ -44,7 +44,7 @@ rounded int64-minimum seed is replaced with zero only in synthetic test executio
 to fit Go int64. Original fixture bytes remain hash-pinned. Feedback wire tests substitute a valid
 UUID for the shared fixture placeholder, matching TypeScript's UUID refinement.
 
-No newly added route was exercised against a live tenant in this parity pass.
+No newly added route was exercised against a live tenant in the original parity pass. Subsequent v0.8.1 workspace/IAM verification is recorded in the live-verification record.
 Existing live evidence is described separately in [live verification](live-verification.md).
 Realtime is tested through an injected socket; actual WebSocket upgrades and
 provider readiness depend on the caller's adapter and deployment. A normal socket

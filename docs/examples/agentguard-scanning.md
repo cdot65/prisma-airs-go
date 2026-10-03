@@ -11,7 +11,7 @@ separate Go application:
 
 ```sh
 go mod init example.com/agentguard-example
-go get github.com/cdot65/prisma-airs-go@v0.8.0
+go get github.com/cdot65/prisma-airs-go@v0.8.1
 ```
 
 Supply SCM OAuth credentials with access to an AgentGuard preview tenant through

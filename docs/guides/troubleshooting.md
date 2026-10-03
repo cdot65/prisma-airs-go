@@ -6,7 +6,7 @@ and one-time secrets out of diagnostics.
 
 ## Installation or compilation
 
-Use Go 1.22+ and install `github.com/cdot65/prisma-airs-go@v0.8.0` from a module.
+Use Go 1.22+ and install `github.com/cdot65/prisma-airs-go@v0.8.1` from a module.
 The executable name and package import name are different: Runtime lives in
 `aisec/runtime`; Gateway management lives in `aisec/gateway`.
 

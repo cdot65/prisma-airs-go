@@ -8,7 +8,7 @@ management and inference, and skill scanning (AgentGuard public preview). The SD
 foundation for applications and Terraform providers.
 
 ```sh
-go get github.com/cdot65/prisma-airs-go@v0.8.0
+go get github.com/cdot65/prisma-airs-go@v0.8.1
 ```
 
 These docs cover two kinds of work: understanding the service boundaries and

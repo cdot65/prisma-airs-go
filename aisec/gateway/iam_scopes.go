@@ -184,7 +184,8 @@ func (c *IAMScopesClient) BindWorkspace(ctx context.Context, name, workspaceSlug
 	return c.Update(ctx, name, IAMScopeUpdateInput{Description: current.Description, Resources: resources})
 }
 
-// Delete attempts the TypeScript SDK's inferred scope-delete route. This route is not live-verified.
+// Delete uses the recovered scope-delete route, verified for disposable dedicated
+// scopes on 2026-10-03. It remains outside published Gateway OpenAPI coverage.
 // A 404/405 is returned as an error, not interpreted as successful cleanup.
 func (c *IAMScopesClient) Delete(ctx context.Context, name string) error {
 	if err := validateScopeName(name); err != nil {
