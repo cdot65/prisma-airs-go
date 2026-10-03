@@ -9,12 +9,12 @@ full versioned field declarations and codec methods.
 
 | Package | Entry point | Reference |
 | --- | --- | --- |
-| `aisec` | `NewConfig`, options, errors, nullable values | [Core SDK](generated/aisec.md) |
+| `aisec` | `NewConfig`, options, errors, nullable values, `Paginate`, `CollectAll` | [Core SDK](generated/aisec.md) |
 | `aisec/runtime` | `NewScanner`, `NewClient` | [Runtime Security](generated/runtime.md) |
 | `aisec/modelsecurity` | `NewClient` | [Model Security](generated/modelsecurity.md) |
 | `aisec/redteam` | `NewClient` | [Red Team](generated/redteam.md) |
-| `aisec/gateway` | `NewClient` | [Gateway management](generated/gateway.md) |
-| `aisec/agentguard` | `NewClient` | [AgentGuard public preview](generated/agentguard.md) |
+| `aisec/gateway` | `NewClient`, `NewInferenceClient`, `NewModelPricingClient` | [AI Gateway](generated/gateway.md) |
+| `aisec/agentguard` | `NewClient` | [Skill scanning](generated/agentguard.md) |
 
 ```go
 import (
@@ -34,7 +34,9 @@ import (
 | Model Security | [Models, request fields, and complete responses](generated/modelsecurity-schema.md) |
 | Red Team | [Targets, jobs, reports, adapters, and broker models](generated/redteam-schema.md) |
 | Gateway management | [CRUD requests, receipts, reads, documents, and unions](generated/gateway-schema.md) |
-| AgentGuard public preview | [Scans, findings, instances, rules, and overrides](generated/agentguard-schema.md) |
+| Skill scanning (AgentGuard preview) | [Scans, findings, instances, rules, and overrides](generated/agentguard-schema.md) |
+
+| TypeScript parity (unreleased) | [Workspace/IAM, inference, telemetry, DLP and dashboard models](generated/parity-schema.md) |
 
 Generated current-schema models preserve nullable values and unknown fields
 where the contract allows them. Read [provider patterns](../guides/provider-patterns.md)
@@ -59,10 +61,11 @@ Established convenience interfaces remain available. Additive methods returning
 complete schema responses are listed beside them in the generated service
 reference. Use the return type that covers the service fields your caller needs.
 
-Gateway exposes twelve management CRUD/lifecycle families in existing workspaces.
-Inference, streaming, Realtime, workspace provisioning, and Terraform resource
-implementation are outside this client. Service guides explain current routing
-and compatibility exceptions:
+The unreleased parity candidate adds Gateway workspace/IAM provisioning,
+telemetry, inference, SSE and a caller-supplied Realtime socket adapter.
+Runtime adds DLP and dashboard clients. These APIs are separate from Terraform
+resource reconciliation. See the [parity coverage record](../developer/typescript-parity.md)
+for source pins, tests and service verification limits. Service guides explain routing:
 
 - [Runtime scan](../services/scan-api.md) and [management](../services/runtime-api.md)
 - [Model Security](../services/model-security-api.md)

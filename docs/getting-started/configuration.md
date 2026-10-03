@@ -109,12 +109,15 @@ All OAuth2-based APIs share the same base domains. Override using the endpoint e
 Use `gateway.NewClient(gateway.Opts{})` with `PANW_AI_GW_*` credentials, or
 provide `ClientID`, `ClientSecret`, and `TsgID` explicitly. These credentials fall
 back to `PANW_MGMT_*`. `DataEndpoint` and `AdminEndpoint` override the two Gateway
-CRUD planes. Workspaces must already exist; the SDK does not provision them.
+CRUD planes. The unreleased parity candidate adds `IAMEndpoint` and workspace
+provisioning. Its separate `InferenceOpts` requires an explicit runtime endpoint
+and API key; SCM credentials are never reused for inference.
+See the [workspace and inference examples](../examples/gateway-workspaces-inference.md).
 See [Gateway management](../services/ai-gateway-api.md) for schemas and lifecycle
 semantics and [environment variables](../reference/environment-variables.md) for
 all overrides.
 
-## AgentGuard public preview (SCM OAuth)
+## Skill scanning (AgentGuard public preview) (SCM OAuth)
 
 Use `agentguard.NewClient(agentguard.Opts{})` with both service base URLs in
 `PANW_AGENT_GUARD_DATA_ENDPOINT` and `PANW_AGENT_GUARD_MGMT_ENDPOINT`, or set

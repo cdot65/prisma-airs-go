@@ -120,3 +120,24 @@ The v0.6.1 fix adds optional `UpdateAppRequest.AuthCode`. When omitted, `Custome
 Provider app import/update/delete and external-deletion tests passed with an isolated Go workspace using this candidate. Published v0.6.0 remains unchanged; the owner approved v0.6.1 publication, followed by provider repinning and a published-module live rerun. No inference requests or production app changes were used.
 
 Customer-app DELETE can also return a JSON-string success body rather than the typed response object. The provider treats a 2xx decode error as provisional and verifies absence through List. Correcting that SDK delete response remains separate from this update fix.
+
+## Unreleased TypeScript parity contracts
+
+TypeScript v0.34.0 supplies recovered request/response contracts in
+`specs/contracts/typescript-parity.json`, with source commit and file hashes.
+They are outside the current vendor OpenAPI denominator. Workspace/IAM routes
+were recovered after vendor removal “per engineering”; IAM DELETE is inferred,
+unverified, and never treated as successful cleanup on 404/405. Workspace list
+retains total/has_more but does not invent undocumented paging parameters.
+
+The TypeScript inventory emits an expression for the shared organisation auth
+settings path. `export_typescript_parity.mts` resolves the two calls to the
+captured `/organisations/{tsgId}/auth-settings` path. Synthetic contract fixtures
+are labelled separately from the 49 retained inference wire fixtures. Their
+rounded JavaScript int64-minimum seed is set to representable zero during test
+execution only; original fixture bytes remain unchanged and hash-pinned.
+
+Red Team responses may contain current `total_items` or legacy `total`; collectors
+prefer the current total. AgentGuard scan listing additionally preserves the
+TypeScript-captured browser `isBackgroundRefresh` flag, including false, without
+changing the supplied preview contract snapshots.

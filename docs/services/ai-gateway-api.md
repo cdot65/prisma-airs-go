@@ -1,9 +1,9 @@
-# AI Gateway management
+# AI Gateway
 
 `aisec/gateway` covers twelve resource families and all 88 CRUD/lifecycle
 operations selected from the pinned October 2026 Gateway specification. It uses
-SCM OAuth with the `x-tsg-id` header. An existing workspace is required for
-workspace resources. Credentials resolve from constructor options, then
+SCM OAuth with the `x-tsg-id` header. Existing resource methods remain available. The unreleased TypeScript parity
+additions below add workspace/IAM provisioning and separately authenticated inference. Credentials resolve from constructor options, then
 `PANW_AI_GW_*`, then `PANW_MGMT_*`.
 
 ```go
@@ -92,9 +92,74 @@ OpenAI and OpenAI are separate provider families.
 
 Deployment delete archives the record; archived deployments can remain listed.
 `Ping`/MCP `Test` are explicit connectivity operations. No infrastructure is
-installed or provisioned. Inference, streaming, Realtime and workspace/IAM
-provisioning are outside this management client.
+installed or provisioned. Inference uses its own API key and explicit endpoint. SCM OAuth is used for
+management and IAM; it is never sent to the inference endpoint.
 
 [Live evidence and limits](../developer/live-verification.md) separate disposable
 CRUD verification from mock-only helpers requiring traffic, real third-party
 credentials, connected infrastructure or user consent.
+
+## Workspace and IAM provisioning (unreleased)
+
+`Workspaces.Provision` creates an IAM scope, creates the admin-plane workspace,
+then binds the workspace **slug** to the scope. `ScopeName` can be generated;
+`WorkspaceProvisionOptions{ExistingScope: true}` reuses a named scope. Existing
+bindings and the scope description survive. This does not assign a service-account
+role or access policy. A newly created workspace may require admin-plane reads
+until the caller receives its scope grant.
+
+These routes were recovered from TypeScript v0.34.0 and earlier vendor Git history.
+The vendor removed workspace/SCIM paths “per engineering”; this surface is kept
+separate from current OpenAPI coverage. IAM DELETE remains unverified.
+
+Provision failures return both a partial `WorkspaceProvisionResult` and a
+`WorkspaceProvisionError` with the failed stage and cleanup outcome. Definite
+workspace rejection permits best-effort cleanup of a newly created scope; ambiguous
+outcomes retain it, and binding failures retain both objects. Writes are not replayed.
+
+Workspace reads default to the data plane; use `WorkspaceAdmin` for tenant-wide reads.
+Delete archives the workspace. List with `Status: "archived"` to inspect it; detail
+reads may return 404. The list preserves `Total`/`HasMore`; the captured contract
+provides no paging parameters.
+
+## Other management and telemetry additions (unreleased)
+
+`Organisations`, `Plugins` and `AuditLogs` use the admin plane. `LogExports` and
+`Telemetry` use the data plane. `Guardrails.GetCatalog` returns evaluator definitions;
+`Integrations.Catalog` and `ResolveProviderID` resolve provider catalog UUIDs.
+`CustomHostConfiguration` builds typed integration settings for a self-hosted model.
+
+Telemetry includes charts, grouping, filter boundaries and logs. Use a workspace
+**slug**, numeric tenant ID, and `TelemetryWindow`. Time strings carry numeric
+offsets; costs are in cents. Pointer filters preserve explicit zero; metadata is a
+native map. Log pages use `CurrentPage`/`PageSize`, not offset aliases.
+
+## Inference, streams and realtime (unreleased)
+
+`NewInferenceClient` requires its own endpoint and runtime key, supplied explicitly
+or through `PANW_AI_GW_INFERENCE_ENDPOINT` / `PANW_AI_GW_INFERENCE_API_KEY`.
+`Opts.Inference` optionally attaches it to the management client;
+`RuntimeInference()` returns an error when it is not configured.
+
+The client covers chat, completions, embeddings, images, audio, files, batches,
+fine-tuning, prompts, logs, feedback and Responses. Native request/response models
+live in `aisec/parity/schema`; `NewChatRequest` is a text-chat convenience.
+Multipart methods use `RuntimeFile`, and binary responses preserve bytes and headers.
+
+Use the separate `StreamChatCompletion`, `StreamCompletion`, `StreamPromptCompletion`
+and `StreamResponse` methods for SSE. Call `Close` when ending consumption early.
+Streams validate events and require a terminator; unexpected EOF is an error.
+Realtime requires a caller-supplied `WebSocketFactory` adapter. Its socket must honor
+contexts, reject redirects/compression, and enforce frame limits. Provider error
+events remain events rather than being reported as a successful model session.
+
+Retries default to zero for billable inference. Redirects are disabled, and routing
+headers cannot override authentication. Public model pricing uses the separate,
+unauthenticated `NewModelPricingClient` with an explicit endpoint.
+
+`BuildDottedObject`/`SetDottedValue` build immutable native configuration objects.
+`RedactAIGatewaySecrets` masks an explicit operation's request/response secrets in a
+clone; API return values are not automatically redacted.
+
+See [TypeScript parity and verification](../developer/typescript-parity.md) and
+[workspace and inference examples](../examples/gateway-workspaces-inference.md).

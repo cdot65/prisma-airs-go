@@ -338,6 +338,8 @@ ScanListOpts filters and paginates scans.
 
 ```go
 type ScanListOpts struct {
+	// IsBackgroundRefresh preserves the captured browser refresh flag, including false.
+	IsBackgroundRefresh	*bool
 	ListOpts
 	ScanFilter
 }

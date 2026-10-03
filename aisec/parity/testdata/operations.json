@@ -1,0 +1,1664 @@
+[
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/audit-logs",
+    "source": "src/ai-gateway/audit-logs-client.ts",
+    "member": "list",
+    "plane": "gateway",
+    "responseSchema": "GatewayAuditLogsResponseSchema",
+    "queryType": "AIGatewayAuditLogListOptions",
+    "className": "AIGatewayAuditLogsClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayAuditLogListOptions"
+      }
+    ],
+    "go": "gateway.AuditLogsClient.List",
+    "body": {},
+    "response": {
+      "records": []
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.adminBaseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/utils/static-resources/schema",
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "member": "getCatalog",
+    "plane": "gateway",
+    "responseSchema": "GatewayGuardrailCatalogResponseSchema",
+    "className": "AIGatewayGuardrailsClient",
+    "parameters": [],
+    "go": "gateway.GuardrailsClient.GetCatalog",
+    "body": {},
+    "response": {
+      "object": "test",
+      "evals": []
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/utils/static-resources/ai-providers",
+    "source": "src/ai-gateway/integrations-client.ts",
+    "member": "catalog",
+    "plane": "gateway",
+    "responseSchema": "ListCatalogProvidersResponseSchema",
+    "className": "AIGatewayIntegrationsClient",
+    "parameters": [],
+    "go": "gateway.IntegrationsClient.Catalog",
+    "body": {},
+    "response": {
+      "data": []
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.options.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/exports",
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "member": "list",
+    "plane": "gateway",
+    "responseSchema": "GatewayLogExportsClientListResponseSchema",
+    "queryType": "GatewayLogExportsClientListOptions",
+    "className": "AIGatewayLogExportsClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "GatewayLogExportsClientListOptions"
+      }
+    ],
+    "go": "gateway.LogExportsClient.List",
+    "body": {},
+    "response": {}
+  },
+  {
+    "gatewayBaseUrl": "this.options.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "POST",
+    "path": "/logs/exports",
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "member": "create",
+    "plane": "gateway",
+    "responseSchema": "GatewayLogExportsClientCreateResponseSchema",
+    "requestSchema": "GatewayLogExportsClientCreateRequestSchema",
+    "requestType": "GatewayLogExportsClientCreateRequest",
+    "className": "AIGatewayLogExportsClient",
+    "parameters": [
+      {
+        "name": "body",
+        "type": "GatewayLogExportsClientCreateRequest"
+      }
+    ],
+    "go": "gateway.LogExportsClient.Create",
+    "body": {
+      "filters": {
+        "time_of_generation_min": "test",
+        "time_of_generation_max": "test"
+      },
+      "requested_data": [],
+      "description": "test"
+    },
+    "response": {
+      "id": "test",
+      "object": "test"
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.options.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/exports/{gatewayPathSegment(exportId)}",
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "member": "get",
+    "plane": "gateway",
+    "responseSchema": "GatewayLogExportsClientGetResponseSchema",
+    "className": "AIGatewayLogExportsClient",
+    "parameters": [
+      {
+        "name": "exportId",
+        "type": "string"
+      }
+    ],
+    "go": "gateway.LogExportsClient.Get",
+    "body": {},
+    "response": {
+      "id": "test",
+      "organisation_id": "test",
+      "filters": {},
+      "requested_data": [],
+      "status": "test",
+      "description": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "created_by": "test",
+      "workspace_id": "test",
+      "object": "test"
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.options.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "PUT",
+    "path": "/logs/exports/{gatewayPathSegment(exportId)}",
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "member": "update",
+    "plane": "gateway",
+    "responseSchema": "GatewayLogExportsClientUpdateResponseSchema",
+    "requestSchema": "GatewayLogExportsClientUpdateRequestSchema",
+    "requestType": "GatewayLogExportsClientUpdateRequest",
+    "className": "AIGatewayLogExportsClient",
+    "parameters": [
+      {
+        "name": "exportId",
+        "type": "string"
+      },
+      {
+        "name": "body",
+        "type": "GatewayLogExportsClientUpdateRequest"
+      }
+    ],
+    "go": "gateway.LogExportsClient.Update",
+    "body": {
+      "filters": {
+        "time_of_generation_min": "test",
+        "time_of_generation_max": "test"
+      },
+      "description": "test"
+    },
+    "response": {
+      "id": "test",
+      "object": "test"
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.options.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "POST",
+    "path": "/logs/exports/{gatewayPathSegment(exportId)}/start",
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "member": "start",
+    "plane": "gateway",
+    "responseSchema": "GatewayLogExportsClientStartResponseSchema",
+    "className": "AIGatewayLogExportsClient",
+    "parameters": [
+      {
+        "name": "exportId",
+        "type": "string"
+      }
+    ],
+    "go": "gateway.LogExportsClient.Start",
+    "body": {},
+    "response": {
+      "message": "test",
+      "object": "test"
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.options.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "POST",
+    "path": "/logs/exports/{gatewayPathSegment(exportId)}/cancel",
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "member": "cancel",
+    "plane": "gateway",
+    "responseSchema": "GatewayLogExportsClientCancelResponseSchema",
+    "className": "AIGatewayLogExportsClient",
+    "parameters": [
+      {
+        "name": "exportId",
+        "type": "string"
+      }
+    ],
+    "go": "gateway.LogExportsClient.Cancel",
+    "body": {},
+    "response": {
+      "message": "test",
+      "object": "test"
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.options.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/exports/{gatewayPathSegment(exportId)}/download",
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "member": "download",
+    "plane": "gateway",
+    "responseSchema": "GatewayLogExportsClientDownloadResponseSchema",
+    "className": "AIGatewayLogExportsClient",
+    "parameters": [
+      {
+        "name": "exportId",
+        "type": "string"
+      }
+    ],
+    "go": "gateway.LogExportsClient.Download",
+    "body": {},
+    "response": {
+      "signed_url": "test"
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/organisations/{tsgId}/info",
+    "source": "src/ai-gateway/organisations-client.ts",
+    "member": "getInfo",
+    "plane": "gateway",
+    "responseSchema": "GatewayOrganisationInfoSchema",
+    "className": "AIGatewayOrganisationsClient",
+    "parameters": [
+      {
+        "name": "tsgId",
+        "type": "string"
+      }
+    ],
+    "go": "gateway.OrganisationsClient.GetInfo",
+    "body": {},
+    "response": {
+      "id": "test",
+      "name": "test",
+      "object": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "is_first_generation_done": 1,
+      "disable_portkey_gateway": 1,
+      "settings": {
+        "dashboard_gateway_url": "test",
+        "dashboard_mcp_gateway_url": "test",
+        "debug_log": 1,
+        "user_api_key_count": 1,
+        "user_api_key_ttl": 1,
+        "user_api_key_max_ttl": 1,
+        "user_key_metadata": 1,
+        "user_key_metadata_override": 1,
+        "user_api_key_auto_create": false,
+        "default_workspace_user_api_key_auto_create": false
+      },
+      "benefits": {
+        "limits": {},
+        "featureFlags": {}
+      },
+      "subscription": {
+        "type": "test",
+        "name": "test"
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/organisations/self",
+    "source": "src/ai-gateway/organisations-client.ts",
+    "member": "getSelf",
+    "plane": "gateway",
+    "responseSchema": "OrganisationSelfResponseSchema",
+    "className": "AIGatewayOrganisationsClient",
+    "parameters": [],
+    "go": "gateway.OrganisationsClient.GetSelf",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {}
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "PUT",
+    "path": "/organisations/self",
+    "source": "src/ai-gateway/organisations-client.ts",
+    "member": "updateSelf",
+    "plane": "gateway",
+    "responseSchema": "GatewayWriteResponseSchema",
+    "requestSchema": "GatewayOrganisationUpdateRequestSchema",
+    "requestType": "GatewayOrganisationUpdateRequest",
+    "className": "AIGatewayOrganisationsClient",
+    "parameters": [
+      {
+        "name": "body",
+        "type": "GatewayOrganisationUpdateRequest"
+      }
+    ],
+    "go": "gateway.OrganisationsClient.UpdateSelf",
+    "body": {},
+    "response": {}
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/organisations/{tsgId}/auth-settings",
+    "source": "src/ai-gateway/organisations-client.ts",
+    "member": "getAuthSettings",
+    "plane": "gateway",
+    "responseSchema": "AuthSettingsResponseSchema",
+    "className": "AIGatewayOrganisationsClient",
+    "parameters": [
+      {
+        "name": "tsgId",
+        "type": "string"
+      }
+    ],
+    "go": "gateway.OrganisationsClient.GetAuthSettings",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {}
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "PUT",
+    "path": "/organisations/{tsgId}/auth-settings",
+    "source": "src/ai-gateway/organisations-client.ts",
+    "member": "updateAuthSettings",
+    "plane": "gateway",
+    "responseSchema": "GatewayWriteResponseSchema",
+    "requestSchema": "GatewayOrganisationAuthSettingsUpdateRequestSchema",
+    "requestType": "GatewayOrganisationAuthSettingsUpdateRequest",
+    "className": "AIGatewayOrganisationsClient",
+    "parameters": [
+      {
+        "name": "tsgId",
+        "type": "string"
+      },
+      {
+        "name": "body",
+        "type": "GatewayOrganisationAuthSettingsUpdateRequest"
+      }
+    ],
+    "go": "gateway.OrganisationsClient.UpdateAuthSettings",
+    "body": {},
+    "response": {}
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/plugins",
+    "source": "src/ai-gateway/plugins-client.ts",
+    "member": "list",
+    "plane": "gateway",
+    "responseSchema": "ListPluginsResponseSchema",
+    "className": "AIGatewayPluginsClient",
+    "parameters": [],
+    "go": "gateway.PluginsClient.List",
+    "body": {},
+    "response": {
+      "object": "test",
+      "total": 1,
+      "data": []
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "POST",
+    "path": "/plugins",
+    "source": "src/ai-gateway/plugins-client.ts",
+    "member": "create",
+    "plane": "gateway",
+    "responseSchema": "GatewayWriteResponseSchema",
+    "requestSchema": "GatewayPluginCreateRequestSchema",
+    "requestType": "GatewayPluginCreateRequest",
+    "className": "AIGatewayPluginsClient",
+    "parameters": [
+      {
+        "name": "body",
+        "type": "GatewayPluginCreateRequest"
+      }
+    ],
+    "go": "gateway.PluginsClient.Create",
+    "body": {
+      "organisation_id": "123",
+      "integration_id": "550e8400-e29b-41d4-a716-446655440000",
+      "credentials": {}
+    },
+    "response": {}
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/error-category-trends",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "errorCategoryTrends",
+    "plane": "gateway",
+    "responseSchema": "ErrorCategoryTrendsResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.ErrorCategoryTrends",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "summary": {
+          "totalErrors": 1,
+          "totalUniqueErrorCodes": 1
+        },
+        "trend": [],
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/grouped-errors",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "groupedErrors",
+    "plane": "gateway",
+    "responseSchema": "GroupedErrorsResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.GroupedErrors",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "trend": [],
+        "total": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/analytics/filter-boundaries",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "filterBoundaries",
+    "plane": "gateway",
+    "responseSchema": "GatewayFilterBoundariesResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.FilterBoundaries",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "total_units_max": 1,
+        "total_units_min": 1,
+        "cost_max": 1,
+        "cost_min": 1,
+        "unique_ai_models": [],
+        "unique_status_codes": [],
+        "unique_environments": [],
+        "unique_prompt_ids": [],
+        "unique_virtual_keys": [],
+        "unique_configs": [],
+        "unique_api_keys": [],
+        "unique_metadata_keys": [],
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/cost",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "cost",
+    "plane": "gateway",
+    "responseSchema": "CostChartResponseSchema",
+    "queryType": "AIGatewayChartOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayChartOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.Cost",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "avg": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/requests",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "requests",
+    "plane": "gateway",
+    "responseSchema": "CountChartResponseSchema",
+    "queryType": "AIGatewayRequestChartOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayRequestChartOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.Requests",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/latency",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "latency",
+    "plane": "gateway",
+    "responseSchema": "LatencyChartResponseSchema",
+    "queryType": "AIGatewayChartOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayChartOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.Latency",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "p50": 1,
+        "p90": 1,
+        "p99": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/tokens",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "tokens",
+    "plane": "gateway",
+    "responseSchema": "TokensChartResponseSchema",
+    "queryType": "AIGatewayChartOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayChartOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.Tokens",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "avg": 1,
+        "total_request_units": 1,
+        "total_response_units": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/errors",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "errors",
+    "plane": "gateway",
+    "responseSchema": "CountChartResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.Errors",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/users",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "users",
+    "plane": "gateway",
+    "responseSchema": "CountChartResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.Users",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/cache-summary",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "cacheSummary",
+    "plane": "gateway",
+    "responseSchema": "CacheSummaryResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.CacheSummary",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "summary": {
+          "cacheHits": 1,
+          "avgCacheLatency": 1,
+          "totalRequests": 1,
+          "cacheSpeedup": 1
+        },
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/cache-hit-trend",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "cacheHitTrend",
+    "plane": "gateway",
+    "responseSchema": "CacheHitTrendResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.CacheHitTrend",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "trend": [],
+        "total": 1,
+        "summary": {
+          "totalCacheHits": 1,
+          "hitRate": 1
+        },
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/user-trends",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "userTrends",
+    "plane": "gateway",
+    "responseSchema": "UserTrendsResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.UserTrends",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "summary": {
+          "total": 1,
+          "unique": 1,
+          "avg": 1
+        },
+        "trend": [],
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/error-trends",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "errorTrends",
+    "plane": "gateway",
+    "responseSchema": "ErrorTrendsResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.ErrorTrends",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "summary": {
+          "errorPercent": 1
+        },
+        "trend": [],
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/rescued-retries",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "rescuedRetries",
+    "plane": "gateway",
+    "responseSchema": "RescuedRetriesResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.RescuedRetries",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "trend": [],
+        "total": 1,
+        "trends": [],
+        "retryTotal": 1,
+        "fallbackTotal": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/feedback-trend",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "feedbackTrend",
+    "plane": "gateway",
+    "responseSchema": "CountChartResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.FeedbackTrend",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/feedback-weighted",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "feedbackWeighted",
+    "plane": "gateway",
+    "responseSchema": "CountChartResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.FeedbackWeighted",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/feedback-score-distribution",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "feedbackScoreDistribution",
+    "plane": "gateway",
+    "responseSchema": "FeedbackScoreDistributionResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.FeedbackScoreDistribution",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/charts/feedback-models",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "feedbackModels",
+    "plane": "gateway",
+    "responseSchema": "FeedbackModelsResponseSchema",
+    "queryType": "AIGatewayWindowOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayWindowOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.FeedbackModels",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/groups/{dimension}",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "groupBy",
+    "plane": "gateway",
+    "responseSchema": "GroupListResponseSchema",
+    "queryType": "AIGatewayGroupOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "dimension",
+        "type": "(typeof AI_GW_GROUP_DIMENSIONS)[number]"
+      },
+      {
+        "name": "opts",
+        "type": "AIGatewayGroupOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.GroupBy",
+    "body": {},
+    "response": {
+      "object": "test",
+      "is_quota_exceeded": false,
+      "total": 1,
+      "data": []
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/groups/users",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "byUser",
+    "plane": "gateway",
+    "responseSchema": "UserGroupResponseSchema",
+    "queryType": "AIGatewayChartOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayChartOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.ByUser",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs/groups/status_code",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "byStatusCode",
+    "plane": "gateway",
+    "responseSchema": "GroupListResponseSchema",
+    "queryType": "AIGatewayGroupOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayGroupOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.ByStatusCode",
+    "body": {},
+    "response": {
+      "object": "test",
+      "is_quota_exceeded": false,
+      "total": 1,
+      "data": []
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.baseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/logs",
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "member": "logs",
+    "plane": "gateway",
+    "responseSchema": "GatewayLogsResponseSchema",
+    "queryType": "AIGatewayLogsOptions",
+    "className": "AIGatewayTelemetryClient",
+    "parameters": [
+      {
+        "name": "opts",
+        "type": "AIGatewayLogsOptions"
+      }
+    ],
+    "go": "gateway.TelemetryClient.Logs",
+    "body": {},
+    "response": {
+      "success": false,
+      "data": {
+        "records": [],
+        "total": 1,
+        "capturedTotal": 1,
+        "isQuotaExceeded": false
+      }
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.urlFor(options.plane)",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/workspaces",
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "member": "list",
+    "plane": "gateway",
+    "responseSchema": "ListWorkspacesResponseSchema",
+    "className": "AIGatewayWorkspacesClient",
+    "parameters": [
+      {
+        "name": "options",
+        "type": "AIGatewayWorkspaceListOptions"
+      }
+    ],
+    "go": "gateway.WorkspacesClient.List",
+    "body": {},
+    "response": {
+      "object": "test",
+      "total": 1,
+      "data": []
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.urlFor(options.plane)",
+    "gatewayOptionSpreads": [],
+    "method": "GET",
+    "path": "/workspaces/{workspaceRef}",
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "member": "get",
+    "plane": "gateway",
+    "responseSchema": "GatewayWorkspaceDetailSchema",
+    "className": "AIGatewayWorkspacesClient",
+    "parameters": [
+      {
+        "name": "workspaceRef",
+        "type": "string"
+      },
+      {
+        "name": "options",
+        "type": "AIGatewayWorkspaceGetOptions"
+      }
+    ],
+    "go": "gateway.WorkspacesClient.Get",
+    "body": {},
+    "response": {
+      "id": "test",
+      "name": "test",
+      "description": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "is_default": 1,
+      "slug": "test",
+      "icon": "test",
+      "defaults": {},
+      "usage_limits": [],
+      "rate_limits": []
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.adminBaseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "POST",
+    "path": "/workspaces",
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "member": "create",
+    "plane": "gateway",
+    "responseSchema": "GatewayWorkspaceCreateResponseSchema",
+    "requestSchema": "GatewayWorkspaceCreateRequestSchema",
+    "requestType": "GatewayWorkspaceCreateRequest",
+    "className": "AIGatewayWorkspacesClient",
+    "parameters": [
+      {
+        "name": "body",
+        "type": "GatewayWorkspaceCreateRequest"
+      }
+    ],
+    "go": "gateway.WorkspacesClient.Create",
+    "body": {
+      "name": "test",
+      "scope_name": "test"
+    },
+    "response": {
+      "id": "test",
+      "name": "test",
+      "slug": "test",
+      "description": "test",
+      "created_at": "test",
+      "last_updated_at": "test",
+      "scope_name": "test",
+      "object": "test"
+    }
+  },
+  {
+    "gatewayBaseUrl": "this.adminBaseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "PUT",
+    "path": "/workspaces/{workspaceRef}",
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "member": "update",
+    "plane": "gateway",
+    "responseSchema": "GatewayWriteResponseSchema",
+    "requestSchema": "GatewayWorkspaceUpdateRequestSchema",
+    "requestType": "GatewayWorkspaceUpdateRequest",
+    "className": "AIGatewayWorkspacesClient",
+    "parameters": [
+      {
+        "name": "workspaceRef",
+        "type": "string"
+      },
+      {
+        "name": "body",
+        "type": "GatewayWorkspaceUpdateRequest"
+      }
+    ],
+    "go": "gateway.WorkspacesClient.Update",
+    "body": {
+      "name": "updated"
+    },
+    "response": {}
+  },
+  {
+    "gatewayBaseUrl": "this.adminBaseUrl",
+    "gatewayOptionSpreads": [],
+    "method": "DELETE",
+    "path": "/workspaces/{workspaceRef}",
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "member": "delete",
+    "plane": "gateway",
+    "className": "AIGatewayWorkspacesClient",
+    "parameters": [
+      {
+        "name": "workspaceRef",
+        "type": "string"
+      }
+    ],
+    "go": "gateway.WorkspacesClient.Delete",
+    "body": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "path": "/scopes",
+    "source": "src/iam/scopes-client.ts",
+    "member": "list",
+    "plane": "other",
+    "responseSchema": "IamScopeListResponseSchema",
+    "className": "IamScopesClient",
+    "parameters": [],
+    "go": "gateway.IAMScopesClient.List",
+    "body": {},
+    "response": {
+      "count": 1,
+      "items": []
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/scopes/{name}",
+    "source": "src/iam/scopes-client.ts",
+    "member": "get",
+    "plane": "other",
+    "responseSchema": "IamScopeSchema",
+    "className": "IamScopesClient",
+    "parameters": [
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "go": "gateway.IAMScopesClient.Get",
+    "body": {},
+    "response": {
+      "name": "test",
+      "description": "test",
+      "resources": [],
+      "tsg_id": "test",
+      "id": "test"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/scopes",
+    "source": "src/iam/scopes-client.ts",
+    "member": "create",
+    "plane": "other",
+    "responseSchema": "IamScopeSchema",
+    "requestSchema": "IamScopeCreateRequestSchema",
+    "className": "IamScopesClient",
+    "parameters": [
+      {
+        "name": "input",
+        "type": "IamScopeCreateInput"
+      }
+    ],
+    "go": "gateway.IAMScopesClient.Create",
+    "body": {
+      "name": "test",
+      "description": "test",
+      "resources": []
+    },
+    "response": {
+      "name": "test",
+      "description": "test",
+      "resources": [],
+      "tsg_id": "test",
+      "id": "test"
+    }
+  },
+  {
+    "method": "PUT",
+    "path": "/scopes/{name}",
+    "source": "src/iam/scopes-client.ts",
+    "member": "update",
+    "plane": "other",
+    "responseSchema": "IamScopeSchema",
+    "requestSchema": "IamScopeUpdateRequestSchema",
+    "className": "IamScopesClient",
+    "parameters": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "input",
+        "type": "IamScopeUpdateInput"
+      }
+    ],
+    "go": "gateway.IAMScopesClient.Update",
+    "body": {
+      "name": "test",
+      "description": "test",
+      "resources": []
+    },
+    "response": {
+      "name": "test",
+      "description": "test",
+      "resources": [],
+      "tsg_id": "test",
+      "id": "test"
+    }
+  },
+  {
+    "method": "DELETE",
+    "path": "/scopes/{name}",
+    "source": "src/iam/scopes-client.ts",
+    "member": "delete",
+    "plane": "other",
+    "className": "IamScopesClient",
+    "parameters": [
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "go": "gateway.IAMScopesClient.Delete",
+    "body": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "path": "/v2/api/data-filtering-profiles",
+    "source": "src/management/dlp/data-filtering-profiles.ts",
+    "member": "list",
+    "plane": "management",
+    "responseSchema": "PageDataFilteringProfileResponseSchema",
+    "className": "DataFilteringProfilesClient",
+    "parameters": [
+      {
+        "name": "params",
+        "type": "DataFilteringProfileListParams"
+      }
+    ],
+    "go": "runtime.DataFilteringProfilesClient.List",
+    "body": {},
+    "response": {
+      "content": []
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/v2/api/data-filtering-profiles/{encodeURIComponent(resourceId)}",
+    "source": "src/management/dlp/data-filtering-profiles.ts",
+    "member": "get",
+    "plane": "management",
+    "responseSchema": "DataFilteringProfileResponseSchema",
+    "className": "DataFilteringProfilesClient",
+    "parameters": [
+      {
+        "name": "resourceId",
+        "type": "string"
+      }
+    ],
+    "go": "runtime.DataFilteringProfilesClient.Get",
+    "body": {},
+    "response": {}
+  },
+  {
+    "method": "PUT",
+    "path": "/v2/api/data-filtering-profiles/{encodeURIComponent(resourceId)}",
+    "source": "src/management/dlp/data-filtering-profiles.ts",
+    "member": "replace",
+    "plane": "management",
+    "responseSchema": "DataFilteringProfileResponseSchema",
+    "requestSchema": "DataFilteringProfileRequestSchema",
+    "requestType": "DataFilteringProfileRequest",
+    "className": "DataFilteringProfilesClient",
+    "parameters": [
+      {
+        "name": "resourceId",
+        "type": "string"
+      },
+      {
+        "name": "body",
+        "type": "DataFilteringProfileRequest"
+      }
+    ],
+    "go": "runtime.DataFilteringProfilesClient.Replace",
+    "body": {
+      "file_based": false,
+      "non_file_based": false
+    },
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "path": "/v2/api/data-patterns",
+    "source": "src/management/dlp/data-patterns.ts",
+    "member": "list",
+    "plane": "management",
+    "responseSchema": "PageDataPatternResponseSchema",
+    "className": "DataPatternsClient",
+    "parameters": [
+      {
+        "name": "params",
+        "type": "DataPatternListParams"
+      }
+    ],
+    "go": "runtime.DataPatternsClient.List",
+    "body": {},
+    "response": {
+      "content": []
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/v2/api/data-patterns",
+    "source": "src/management/dlp/data-patterns.ts",
+    "member": "create",
+    "plane": "management",
+    "responseSchema": "DataPatternResponseSchema",
+    "requestSchema": "DataPatternRequestSchema",
+    "requestType": "DataPatternRequest",
+    "className": "DataPatternsClient",
+    "parameters": [
+      {
+        "name": "body",
+        "type": "DataPatternRequest"
+      }
+    ],
+    "go": "runtime.DataPatternsClient.Create",
+    "body": {
+      "name": "test",
+      "type": "predefined",
+      "detection_config": {
+        "technique": "edm"
+      }
+    },
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "path": "/v2/api/data-patterns/{encodeURIComponent(resourceId)}",
+    "source": "src/management/dlp/data-patterns.ts",
+    "member": "get",
+    "plane": "management",
+    "responseSchema": "DataPatternResponseSchema",
+    "className": "DataPatternsClient",
+    "parameters": [
+      {
+        "name": "resourceId",
+        "type": "string"
+      }
+    ],
+    "go": "runtime.DataPatternsClient.Get",
+    "body": {},
+    "response": {}
+  },
+  {
+    "method": "PUT",
+    "path": "/v2/api/data-patterns/{encodeURIComponent(resourceId)}",
+    "source": "src/management/dlp/data-patterns.ts",
+    "member": "replace",
+    "plane": "management",
+    "responseSchema": "DataPatternResponseSchema",
+    "requestSchema": "DataPatternRequestSchema",
+    "requestType": "DataPatternRequest",
+    "className": "DataPatternsClient",
+    "parameters": [
+      {
+        "name": "resourceId",
+        "type": "string"
+      },
+      {
+        "name": "body",
+        "type": "DataPatternRequest"
+      }
+    ],
+    "go": "runtime.DataPatternsClient.Replace",
+    "body": {
+      "name": "test",
+      "type": "predefined",
+      "detection_config": {
+        "technique": "edm"
+      }
+    },
+    "response": {}
+  },
+  {
+    "method": "PATCH",
+    "path": "/v2/api/data-patterns/{encodeURIComponent(resourceId)}",
+    "source": "src/management/dlp/data-patterns.ts",
+    "member": "patch",
+    "plane": "management",
+    "responseSchema": "DataPatternResponseSchema",
+    "requestSchema": "DataPatternPatchRequestSchema",
+    "requestType": "DataPatternPatchRequest",
+    "className": "DataPatternsClient",
+    "parameters": [
+      {
+        "name": "resourceId",
+        "type": "string"
+      },
+      {
+        "name": "body",
+        "type": "DataPatternPatchRequest"
+      }
+    ],
+    "go": "runtime.DataPatternsClient.Patch",
+    "body": {
+      "name": "test",
+      "type": "predefined",
+      "detection_config": {
+        "technique": "edm"
+      }
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "path": "/v2/api/data-patterns/{encodeURIComponent(resourceId)}",
+    "source": "src/management/dlp/data-patterns.ts",
+    "member": "delete",
+    "plane": "management",
+    "className": "DataPatternsClient",
+    "parameters": [
+      {
+        "name": "resourceId",
+        "type": "string"
+      }
+    ],
+    "go": "runtime.DataPatternsClient.Delete",
+    "body": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "path": "/v2/api/data-profiles",
+    "source": "src/management/dlp/data-profiles.ts",
+    "member": "list",
+    "plane": "management",
+    "responseSchema": "PageDataProfileResponseSchema",
+    "className": "DataProfilesClient",
+    "parameters": [
+      {
+        "name": "params",
+        "type": "DataProfileListParams"
+      }
+    ],
+    "go": "runtime.DataProfilesClient.List",
+    "body": {},
+    "response": {
+      "content": []
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/v2/api/data-profiles",
+    "source": "src/management/dlp/data-profiles.ts",
+    "member": "create",
+    "plane": "management",
+    "responseSchema": "DataProfileResponseSchema",
+    "requestSchema": "AdvancedDataProfileRequestSchema",
+    "requestType": "AdvancedDataProfileRequest",
+    "className": "DataProfilesClient",
+    "parameters": [
+      {
+        "name": "body",
+        "type": "AdvancedDataProfileRequest"
+      }
+    ],
+    "go": "runtime.DataProfilesClient.Create",
+    "body": {
+      "name": "test",
+      "detection_rules": []
+    },
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "path": "/v2/api/data-profiles/{encodeURIComponent(resourceId)}",
+    "source": "src/management/dlp/data-profiles.ts",
+    "member": "get",
+    "plane": "management",
+    "responseSchema": "DataProfileResponseSchema",
+    "className": "DataProfilesClient",
+    "parameters": [
+      {
+        "name": "resourceId",
+        "type": "string"
+      }
+    ],
+    "go": "runtime.DataProfilesClient.Get",
+    "body": {},
+    "response": {}
+  },
+  {
+    "method": "PUT",
+    "path": "/v2/api/data-profiles/{encodeURIComponent(resourceId)}",
+    "source": "src/management/dlp/data-profiles.ts",
+    "member": "replace",
+    "plane": "management",
+    "responseSchema": "DataProfileResponseSchema",
+    "requestSchema": "AdvancedDataProfileRequestSchema",
+    "requestType": "AdvancedDataProfileRequest",
+    "className": "DataProfilesClient",
+    "parameters": [
+      {
+        "name": "resourceId",
+        "type": "string"
+      },
+      {
+        "name": "body",
+        "type": "AdvancedDataProfileRequest"
+      }
+    ],
+    "go": "runtime.DataProfilesClient.Replace",
+    "body": {
+      "name": "test",
+      "detection_rules": []
+    },
+    "response": {}
+  },
+  {
+    "method": "PATCH",
+    "path": "/v2/api/data-profiles/{encodeURIComponent(resourceId)}",
+    "source": "src/management/dlp/data-profiles.ts",
+    "member": "patch",
+    "plane": "management",
+    "responseSchema": "DataProfileResponseSchema",
+    "requestSchema": "DataProfilePatchRequestSchema",
+    "requestType": "DataProfilePatchRequest",
+    "className": "DataProfilesClient",
+    "parameters": [
+      {
+        "name": "resourceId",
+        "type": "string"
+      },
+      {
+        "name": "body",
+        "type": "DataProfilePatchRequest"
+      }
+    ],
+    "go": "runtime.DataProfilesClient.Patch",
+    "body": {
+      "name": "test",
+      "profile_type": "basic"
+    },
+    "response": {}
+  }
+]

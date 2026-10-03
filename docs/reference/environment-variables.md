@@ -21,6 +21,8 @@ Complete reference for all environment variables used by the SDK.
 | `PANW_MGMT_TSG_ID` | Yes | Tenant service group ID |
 | `PANW_MGMT_ENDPOINT` | No | Override management API endpoint |
 | `PANW_MGMT_TOKEN_ENDPOINT` | No | Override OAuth2 token endpoint |
+| `PANW_MGMT_DLP_ENDPOINT` | No | Unreleased DLP base; default `https://api.dlp.paloaltonetworks.com` |
+| `PANW_MGMT_DASHBOARD_ENDPOINT` | No | Unreleased dashboard base; defaults to the resolved management endpoint |
 
 ## Model Security API
 
@@ -62,10 +64,22 @@ endpoint overrides use only their service-specific variables.
 | `PANW_AI_GW_DATA_ENDPOINT` | — | CRUD data plane; default `https://api.apps.paloaltonetworks.com/ai_gw/v2` |
 | `PANW_AI_GW_ADMIN_ENDPOINT` | — | CRUD admin plane; default `https://api.apps.paloaltonetworks.com/ai_gw/admin/v2` |
 
+The following additions are **unreleased** and have no SCM credential fallback
+for inference. HTTPS is required except for local test endpoints.
+
+| Variable | Description |
+| --- | --- |
+| `PANW_IAM_ENDPOINT` | Workspace IAM base; default `https://api.apps.paloaltonetworks.com/iam/v1` |
+| `PANW_AI_GW_INFERENCE_ENDPOINT` | Explicit inference base URL; required without an option |
+| `PANW_AI_GW_INFERENCE_API_KEY` | Runtime API key; required without an option |
+
+The standalone pricing client requires `ModelPricingOpts.Endpoint` and sends no
+credentials. See [parity configuration](../developer/typescript-parity.md).
+
 Red Team also accepts `PANW_RED_TEAM_BROKER_ENDPOINT` for the independent
 Network Broker API base.
 
-## AgentGuard public preview (SCM OAuth)
+## Skill scanning (AgentGuard public preview) (SCM OAuth)
 
 Credentials and the token endpoint fall back to `PANW_MGMT_*`. Both API base
 URLs are required unless supplied through constructor options; the preview

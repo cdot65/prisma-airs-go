@@ -4,9 +4,11 @@ package redteam
 
 // RedTeamPagination holds pagination metadata.
 type RedTeamPagination struct {
-	Total int `json:"total"`
-	Skip  int `json:"skip"`
-	Limit int `json:"limit"`
+	Total int `json:"total,omitempty"`
+	// TotalItems is the current API total; Total accepts older envelopes.
+	TotalItems *int `json:"total_items,omitempty"`
+	Skip       int  `json:"skip"`
+	Limit      int  `json:"limit"`
 }
 
 // --- Job / Scan types ---

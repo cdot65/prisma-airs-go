@@ -6,7 +6,7 @@
 [![Go 1.22+](https://img.shields.io/badge/go-%3E%3D1.22-00ADD8)](https://go.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Go SDK for Palo Alto Networks **Prisma AIRS** — covering configuration management and operational scanning across **AI Runtime Security**, **Model Security**, **AI Red Teaming**, **AI Gateway Management**, and **AgentGuard public preview**.
+Go SDK for Palo Alto Networks **Prisma AIRS** — covering configuration management and operational scanning across **AI Runtime Security**, **Model Security**, **AI Red Teaming**, **AI Gateway**, and **skill scanning (AgentGuard public preview)**.
 
 ## Installation
 
@@ -15,6 +15,12 @@ go get github.com/cdot65/prisma-airs-go
 ```
 
 Requires Go 1.22+. Zero external dependencies (stdlib only).
+
+The TypeScript v0.34.0 parity additions on this branch are **unreleased**.
+They add Gateway workspace/IAM provisioning, inference and streaming, telemetry,
+Runtime DLP/dashboard APIs, and collection helpers. See
+[the coverage and verification record](docs/developer/typescript-parity.md);
+`go get` of the published v0.7.0 module does not include them.
 
 ## What's Included
 
@@ -25,7 +31,7 @@ Requires Go 1.22+. Zero external dependencies (stdlib only).
 | **Model Security**      | `modelsecurity.Client`  | OAuth2         | ML model scanning, security groups, rule management        |
 | **AI Red Teaming**      | `redteam.Client`        | OAuth2         | Automated red team scans, reports, targets, custom attacks |
 | **AI Gateway Management** | `gateway.Client` | OAuth2 + TSG | 12 CRUD families, bindings, policies, secrets, deployments |
-| **AgentGuard Public Preview** | `agentguard.Client` | SCM OAuth2 | Skill scans, findings, statistics, instances, rules, trusted skills |
+| **Skill scanning (AgentGuard preview)** | `agentguard.Client` | SCM OAuth2 | Skill scans, findings, statistics, instances, rules, trusted skills |
 
 All OAuth2 services share credentials and handle token lifecycle automatically (caching, proactive refresh, 401/403 auto-retry).
 

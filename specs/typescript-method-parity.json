@@ -1,0 +1,3159 @@
+[
+  {
+    "source": "src/agentguard/client.ts",
+    "className": "AgentGuardClient",
+    "member": "listScans",
+    "go": "agentguard.ScansClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/agentguard/client.ts",
+    "className": "AgentGuardClient",
+    "member": "getScanStats",
+    "go": "agentguard.StatisticsClient.Scans",
+    "implemented": true
+  },
+  {
+    "source": "src/agentguard/client.ts",
+    "className": "AgentGuardClient",
+    "member": "listScanVulnerabilities",
+    "go": "agentguard.ScansClient.ListVulnerabilities",
+    "implemented": true
+  },
+  {
+    "source": "src/agentguard/client.ts",
+    "className": "AgentGuardClient",
+    "member": "listRules",
+    "go": "agentguard.RulesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/admin-guardrails-client.ts",
+    "className": "AIGatewayAdminGuardrailsClient",
+    "member": "getMcpServers",
+    "go": "gateway.OrgGuardrailsClient.ListMCPServers",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/admin-guardrails-client.ts",
+    "className": "AIGatewayAdminGuardrailsClient",
+    "member": "syncMcpServers",
+    "go": "gateway.OrgGuardrailsClient.SetMCPServers",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/admin-guardrails-client.ts",
+    "className": "AIGatewayAdminGuardrailsClient",
+    "member": "upsertMcpServer",
+    "go": "gateway.OrgGuardrailsClient.UpsertMCPServer",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/admin-guardrails-client.ts",
+    "className": "AIGatewayAdminGuardrailsClient",
+    "member": "list",
+    "go": "gateway.OrgGuardrailsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/admin-guardrails-client.ts",
+    "className": "AIGatewayAdminGuardrailsClient",
+    "member": "get",
+    "go": "gateway.OrgGuardrailsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/admin-guardrails-client.ts",
+    "className": "AIGatewayAdminGuardrailsClient",
+    "member": "create",
+    "go": "gateway.OrgGuardrailsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/admin-guardrails-client.ts",
+    "className": "AIGatewayAdminGuardrailsClient",
+    "member": "update",
+    "go": "gateway.OrgGuardrailsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/admin-guardrails-client.ts",
+    "className": "AIGatewayAdminGuardrailsClient",
+    "member": "delete",
+    "go": "gateway.OrgGuardrailsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "listService",
+    "go": "gateway.APIKeysClient.ListForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "listUser",
+    "go": "gateway.APIKeysClient.ListForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "getService",
+    "go": "gateway.APIKeysClient.GetForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "getUser",
+    "go": "gateway.APIKeysClient.GetForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "deleteService",
+    "go": "gateway.APIKeysClient.DeleteForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "deleteUser",
+    "go": "gateway.APIKeysClient.DeleteForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "rotateService",
+    "go": "gateway.APIKeysClient.RotateForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "rotateUser",
+    "go": "gateway.APIKeysClient.RotateForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "createService",
+    "go": "gateway.APIKeysClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "createUser",
+    "go": "gateway.APIKeysClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "updateService",
+    "go": "gateway.APIKeysClient.UpdateForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/api-keys-client.ts",
+    "className": "AIGatewayApiKeysClient",
+    "member": "updateUser",
+    "go": "gateway.APIKeysClient.UpdateForKind",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/audit-logs-client.ts",
+    "className": "AIGatewayAuditLogsClient",
+    "member": "list",
+    "go": "gateway.AuditLogsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/configs-client.ts",
+    "className": "AIGatewayConfigsClient",
+    "member": "list",
+    "go": "gateway.ConfigsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/configs-client.ts",
+    "className": "AIGatewayConfigsClient",
+    "member": "get",
+    "go": "gateway.ConfigsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/configs-client.ts",
+    "className": "AIGatewayConfigsClient",
+    "member": "listVersions",
+    "go": "gateway.ConfigsClient.ListVersions",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/configs-client.ts",
+    "className": "AIGatewayConfigsClient",
+    "member": "create",
+    "go": "gateway.ConfigsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/configs-client.ts",
+    "className": "AIGatewayConfigsClient",
+    "member": "update",
+    "go": "gateway.ConfigsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/configs-client.ts",
+    "className": "AIGatewayConfigsClient",
+    "member": "delete",
+    "go": "gateway.ConfigsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/deployments-client.ts",
+    "className": "AIGatewayDeploymentsClient",
+    "member": "list",
+    "go": "gateway.DeploymentsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/deployments-client.ts",
+    "className": "AIGatewayDeploymentsClient",
+    "member": "get",
+    "go": "gateway.DeploymentsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/deployments-client.ts",
+    "className": "AIGatewayDeploymentsClient",
+    "member": "create",
+    "go": "gateway.DeploymentsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/deployments-client.ts",
+    "className": "AIGatewayDeploymentsClient",
+    "member": "update",
+    "go": "gateway.DeploymentsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/deployments-client.ts",
+    "className": "AIGatewayDeploymentsClient",
+    "member": "ping",
+    "go": "gateway.DeploymentsClient.Ping",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/deployments-client.ts",
+    "className": "AIGatewayDeploymentsClient",
+    "member": "delete",
+    "go": "gateway.DeploymentsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "className": "AIGatewayGuardrailsClient",
+    "member": "getCatalog",
+    "go": "gateway.GuardrailsClient.GetCatalog",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "className": "AIGatewayGuardrailsClient",
+    "member": "getMcpServers",
+    "go": "gateway.GuardrailsClient.ListMCPServers",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "className": "AIGatewayGuardrailsClient",
+    "member": "syncMcpServers",
+    "go": "gateway.GuardrailsClient.SetMCPServers",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "className": "AIGatewayGuardrailsClient",
+    "member": "upsertMcpServer",
+    "go": "gateway.GuardrailsClient.UpsertMCPServer",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "className": "AIGatewayGuardrailsClient",
+    "member": "list",
+    "go": "gateway.GuardrailsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "className": "AIGatewayGuardrailsClient",
+    "member": "get",
+    "go": "gateway.GuardrailsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "className": "AIGatewayGuardrailsClient",
+    "member": "create",
+    "go": "gateway.GuardrailsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "className": "AIGatewayGuardrailsClient",
+    "member": "update",
+    "go": "gateway.GuardrailsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/guardrails-client.ts",
+    "className": "AIGatewayGuardrailsClient",
+    "member": "delete",
+    "go": "gateway.GuardrailsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/inference-client.ts",
+    "className": "AIGatewayInferenceClient",
+    "member": "connectRealtime",
+    "go": "gateway.InferenceClient.ConnectRealtime",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/inference-client.ts",
+    "className": "AIGatewayInferenceClient",
+    "member": "createCompletion",
+    "go": "gateway.InferenceClient.CreateCompletion",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/inference-client.ts",
+    "className": "AIGatewayInferenceClient",
+    "member": "createPromptCompletion",
+    "go": "gateway.InferenceClient.CreatePromptCompletion",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/inference-client.ts",
+    "className": "AIGatewayInferenceClient",
+    "member": "createPromptRender",
+    "go": "gateway.InferenceClient.CreatePromptRender",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/inference-client.ts",
+    "className": "AIGatewayInferenceClient",
+    "member": "createChatCompletion",
+    "go": "gateway.InferenceClient.CreateChatCompletion",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/inference-client.ts",
+    "className": "AIGatewayInferenceClient",
+    "member": "createEmbedding",
+    "go": "gateway.InferenceClient.CreateEmbedding",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/inference-client.ts",
+    "className": "AIGatewayInferenceClient",
+    "member": "createResponse",
+    "go": "gateway.InferenceClient.CreateResponse",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "deleteModels",
+    "go": "gateway.IntegrationsClient.DeleteModels",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "catalog",
+    "go": "gateway.IntegrationsClient.Catalog",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "resolveProviderId",
+    "go": "gateway.IntegrationsClient.ResolveProviderID",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "list",
+    "go": "gateway.IntegrationsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "get",
+    "go": "gateway.IntegrationsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "create",
+    "go": "gateway.IntegrationsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "update",
+    "go": "gateway.IntegrationsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "delete",
+    "go": "gateway.IntegrationsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "getModels",
+    "go": "gateway.IntegrationsClient.ListModels",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "setModels",
+    "go": "gateway.IntegrationsClient.SetModels",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "getWorkspaces",
+    "go": "gateway.IntegrationsClient.ListWorkspaces",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/integrations-client.ts",
+    "className": "AIGatewayIntegrationsClient",
+    "member": "setWorkspaces",
+    "go": "gateway.IntegrationsClient.SetWorkspaces",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "className": "AIGatewayLogExportsClient",
+    "member": "list",
+    "go": "gateway.LogExportsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "className": "AIGatewayLogExportsClient",
+    "member": "create",
+    "go": "gateway.LogExportsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "className": "AIGatewayLogExportsClient",
+    "member": "get",
+    "go": "gateway.LogExportsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "className": "AIGatewayLogExportsClient",
+    "member": "update",
+    "go": "gateway.LogExportsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "className": "AIGatewayLogExportsClient",
+    "member": "start",
+    "go": "gateway.LogExportsClient.Start",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "className": "AIGatewayLogExportsClient",
+    "member": "cancel",
+    "go": "gateway.LogExportsClient.Cancel",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/log-exports-client.ts",
+    "className": "AIGatewayLogExportsClient",
+    "member": "download",
+    "go": "gateway.LogExportsClient.Download",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "getWorkspaces",
+    "go": "gateway.MCPIntegrationsClient.ListWorkspaces",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "list",
+    "go": "gateway.MCPIntegrationsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "get",
+    "go": "gateway.MCPIntegrationsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "getCapabilities",
+    "go": "gateway.MCPIntegrationsClient.ListCapabilities",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "getMetadata",
+    "go": "gateway.MCPIntegrationsClient.GetMetadata",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "create",
+    "go": "gateway.MCPIntegrationsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "update",
+    "go": "gateway.MCPIntegrationsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "delete",
+    "go": "gateway.MCPIntegrationsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "setCapabilities",
+    "go": "gateway.MCPIntegrationsClient.SetCapabilities",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-integrations-client.ts",
+    "className": "AIGatewayMcpIntegrationsClient",
+    "member": "setWorkspaces",
+    "go": "gateway.MCPIntegrationsClient.SetWorkspaces",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "list",
+    "go": "gateway.MCPServersClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "create",
+    "go": "gateway.MCPServersClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "get",
+    "go": "gateway.MCPServersClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "update",
+    "go": "gateway.MCPServersClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "delete",
+    "go": "gateway.MCPServersClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "test",
+    "go": "gateway.MCPServersClient.Test",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "getCapabilities",
+    "go": "gateway.MCPServersClient.ListCapabilities",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "updateCapabilities",
+    "go": "gateway.MCPServersClient.SetCapabilities",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "getUserAccess",
+    "go": "gateway.MCPServersClient.ListUserAccess",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "updateUserAccess",
+    "go": "gateway.MCPServersClient.SetUserAccess",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "getConnections",
+    "go": "gateway.MCPServersClient.ListConnections",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/mcp-servers-client.ts",
+    "className": "AIGatewayMcpServersClient",
+    "member": "deleteConnections",
+    "go": "gateway.MCPServersClient.DeleteConnections",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/model-pricing-client.ts",
+    "className": "AIGatewayModelPricingClient",
+    "member": "get",
+    "go": "gateway.ModelPricingClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/organisations-client.ts",
+    "className": "AIGatewayOrganisationsClient",
+    "member": "getInfo",
+    "go": "gateway.OrganisationsClient.GetInfo",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/organisations-client.ts",
+    "className": "AIGatewayOrganisationsClient",
+    "member": "getSelf",
+    "go": "gateway.OrganisationsClient.GetSelf",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/organisations-client.ts",
+    "className": "AIGatewayOrganisationsClient",
+    "member": "updateSelf",
+    "go": "gateway.OrganisationsClient.UpdateSelf",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/organisations-client.ts",
+    "className": "AIGatewayOrganisationsClient",
+    "member": "getAuthSettings",
+    "go": "gateway.OrganisationsClient.GetAuthSettings",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/organisations-client.ts",
+    "className": "AIGatewayOrganisationsClient",
+    "member": "updateAuthSettings",
+    "go": "gateway.OrganisationsClient.UpdateAuthSettings",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/plugins-client.ts",
+    "className": "AIGatewayPluginsClient",
+    "member": "list",
+    "go": "gateway.PluginsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/plugins-client.ts",
+    "className": "AIGatewayPluginsClient",
+    "member": "create",
+    "go": "gateway.PluginsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/providers-client.ts",
+    "className": "AIGatewayProvidersClient",
+    "member": "list",
+    "go": "gateway.ProvidersClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/providers-client.ts",
+    "className": "AIGatewayProvidersClient",
+    "member": "get",
+    "go": "gateway.ProvidersClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/providers-client.ts",
+    "className": "AIGatewayProvidersClient",
+    "member": "create",
+    "go": "gateway.ProvidersClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/providers-client.ts",
+    "className": "AIGatewayProvidersClient",
+    "member": "update",
+    "go": "gateway.ProvidersClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/providers-client.ts",
+    "className": "AIGatewayProvidersClient",
+    "member": "delete",
+    "go": "gateway.ProvidersClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/rate-limits-client.ts",
+    "className": "AIGatewayRateLimitsClient",
+    "member": "list",
+    "go": "gateway.RateLimitsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/rate-limits-client.ts",
+    "className": "AIGatewayRateLimitsClient",
+    "member": "create",
+    "go": "gateway.RateLimitsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/rate-limits-client.ts",
+    "className": "AIGatewayRateLimitsClient",
+    "member": "get",
+    "go": "gateway.RateLimitsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/rate-limits-client.ts",
+    "className": "AIGatewayRateLimitsClient",
+    "member": "update",
+    "go": "gateway.RateLimitsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/rate-limits-client.ts",
+    "className": "AIGatewayRateLimitsClient",
+    "member": "delete",
+    "go": "gateway.RateLimitsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createImage",
+    "go": "gateway.InferenceClient.CreateImage",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createImageEdit",
+    "go": "gateway.InferenceClient.CreateImageEdit",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createImageVariation",
+    "go": "gateway.InferenceClient.CreateImageVariation",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createRerank",
+    "go": "gateway.InferenceClient.CreateRerank",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createOcr",
+    "go": "gateway.InferenceClient.CreateOcr",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createSpeech",
+    "go": "gateway.InferenceClient.CreateSpeech",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createTranscription",
+    "go": "gateway.InferenceClient.CreateTranscription",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createTranslation",
+    "go": "gateway.InferenceClient.CreateTranslation",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listFiles",
+    "go": "gateway.InferenceClient.ListFiles",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createFile",
+    "go": "gateway.InferenceClient.CreateFile",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "deleteFile",
+    "go": "gateway.InferenceClient.DeleteFile",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "retrieveFile",
+    "go": "gateway.InferenceClient.RetrieveFile",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "downloadFile",
+    "go": "gateway.InferenceClient.DownloadFile",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createFineTuningJob",
+    "go": "gateway.InferenceClient.CreateFineTuningJob",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listPaginatedFineTuningJobs",
+    "go": "gateway.InferenceClient.ListPaginatedFineTuningJobs",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "retrieveFineTuningJob",
+    "go": "gateway.InferenceClient.RetrieveFineTuningJob",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listFineTuningEvents",
+    "go": "gateway.InferenceClient.ListFineTuningEvents",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "cancelFineTuningJob",
+    "go": "gateway.InferenceClient.CancelFineTuningJob",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listFineTuningJobCheckpoints",
+    "go": "gateway.InferenceClient.ListFineTuningJobCheckpoints",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listModels",
+    "go": "gateway.InferenceClient.ListModels",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "retrieveModel",
+    "go": "gateway.InferenceClient.RetrieveModel",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "deleteModel",
+    "go": "gateway.InferenceClient.DeleteModel",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createModeration",
+    "go": "gateway.InferenceClient.CreateModeration",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "getResponse",
+    "go": "gateway.InferenceClient.GetResponse",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "deleteResponse",
+    "go": "gateway.InferenceClient.DeleteResponse",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listInputItems",
+    "go": "gateway.InferenceClient.ListInputItems",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listVectorStores",
+    "go": "gateway.InferenceClient.ListVectorStores",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createVectorStore",
+    "go": "gateway.InferenceClient.CreateVectorStore",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "getVectorStore",
+    "go": "gateway.InferenceClient.GetVectorStore",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "modifyVectorStore",
+    "go": "gateway.InferenceClient.ModifyVectorStore",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "deleteVectorStore",
+    "go": "gateway.InferenceClient.DeleteVectorStore",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listVectorStoreFiles",
+    "go": "gateway.InferenceClient.ListVectorStoreFiles",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createVectorStoreFile",
+    "go": "gateway.InferenceClient.CreateVectorStoreFile",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "getVectorStoreFile",
+    "go": "gateway.InferenceClient.GetVectorStoreFile",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "deleteVectorStoreFile",
+    "go": "gateway.InferenceClient.DeleteVectorStoreFile",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createVectorStoreFileBatch",
+    "go": "gateway.InferenceClient.CreateVectorStoreFileBatch",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "getVectorStoreFileBatch",
+    "go": "gateway.InferenceClient.GetVectorStoreFileBatch",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "cancelVectorStoreFileBatch",
+    "go": "gateway.InferenceClient.CancelVectorStoreFileBatch",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listFilesInVectorStoreBatch",
+    "go": "gateway.InferenceClient.ListFilesInVectorStoreBatch",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createBatch",
+    "go": "gateway.InferenceClient.CreateBatch",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "listBatches",
+    "go": "gateway.InferenceClient.ListBatches",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "getBatchOutput",
+    "go": "gateway.InferenceClient.GetBatchOutput",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "retrieveBatch",
+    "go": "gateway.InferenceClient.RetrieveBatch",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "cancelBatch",
+    "go": "gateway.InferenceClient.CancelBatch",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createFeedback",
+    "go": "gateway.InferenceClient.CreateFeedback",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "updateFeedback",
+    "go": "gateway.InferenceClient.UpdateFeedback",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "createLogs",
+    "go": "gateway.InferenceClient.CreateLogs",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/runtime-resources-client.ts",
+    "className": "AIGatewayRuntimeResourcesClient",
+    "member": "getLog",
+    "go": "gateway.InferenceClient.GetLog",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/secret-references-client.ts",
+    "className": "AIGatewaySecretReferencesClient",
+    "member": "list",
+    "go": "gateway.SecretReferencesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/secret-references-client.ts",
+    "className": "AIGatewaySecretReferencesClient",
+    "member": "create",
+    "go": "gateway.SecretReferencesClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/secret-references-client.ts",
+    "className": "AIGatewaySecretReferencesClient",
+    "member": "get",
+    "go": "gateway.SecretReferencesClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/secret-references-client.ts",
+    "className": "AIGatewaySecretReferencesClient",
+    "member": "update",
+    "go": "gateway.SecretReferencesClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/secret-references-client.ts",
+    "className": "AIGatewaySecretReferencesClient",
+    "member": "delete",
+    "go": "gateway.SecretReferencesClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "errorCategoryTrends",
+    "go": "gateway.TelemetryClient.ErrorCategoryTrends",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "groupedErrors",
+    "go": "gateway.TelemetryClient.GroupedErrors",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "filterBoundaries",
+    "go": "gateway.TelemetryClient.FilterBoundaries",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "cost",
+    "go": "gateway.TelemetryClient.Cost",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "requests",
+    "go": "gateway.TelemetryClient.Requests",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "latency",
+    "go": "gateway.TelemetryClient.Latency",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "tokens",
+    "go": "gateway.TelemetryClient.Tokens",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "errors",
+    "go": "gateway.TelemetryClient.Errors",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "users",
+    "go": "gateway.TelemetryClient.Users",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "cacheSummary",
+    "go": "gateway.TelemetryClient.CacheSummary",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "cacheHitTrend",
+    "go": "gateway.TelemetryClient.CacheHitTrend",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "userTrends",
+    "go": "gateway.TelemetryClient.UserTrends",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "errorTrends",
+    "go": "gateway.TelemetryClient.ErrorTrends",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "rescuedRetries",
+    "go": "gateway.TelemetryClient.RescuedRetries",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "feedbackTrend",
+    "go": "gateway.TelemetryClient.FeedbackTrend",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "feedbackWeighted",
+    "go": "gateway.TelemetryClient.FeedbackWeighted",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "feedbackScoreDistribution",
+    "go": "gateway.TelemetryClient.FeedbackScoreDistribution",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "feedbackModels",
+    "go": "gateway.TelemetryClient.FeedbackModels",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "groupBy",
+    "go": "gateway.TelemetryClient.GroupBy",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "byUser",
+    "go": "gateway.TelemetryClient.ByUser",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "byStatusCode",
+    "go": "gateway.TelemetryClient.ByStatusCode",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/telemetry-client.ts",
+    "className": "AIGatewayTelemetryClient",
+    "member": "logs",
+    "go": "gateway.TelemetryClient.Logs",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/usage-limits-client.ts",
+    "className": "AIGatewayUsageLimitsClient",
+    "member": "list",
+    "go": "gateway.UsageLimitsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/usage-limits-client.ts",
+    "className": "AIGatewayUsageLimitsClient",
+    "member": "create",
+    "go": "gateway.UsageLimitsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/usage-limits-client.ts",
+    "className": "AIGatewayUsageLimitsClient",
+    "member": "get",
+    "go": "gateway.UsageLimitsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/usage-limits-client.ts",
+    "className": "AIGatewayUsageLimitsClient",
+    "member": "update",
+    "go": "gateway.UsageLimitsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/usage-limits-client.ts",
+    "className": "AIGatewayUsageLimitsClient",
+    "member": "delete",
+    "go": "gateway.UsageLimitsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/usage-limits-client.ts",
+    "className": "AIGatewayUsageLimitsClient",
+    "member": "listEntities",
+    "go": "gateway.UsageLimitsClient.ListEntities",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/usage-limits-client.ts",
+    "className": "AIGatewayUsageLimitsClient",
+    "member": "resetEntity",
+    "go": "gateway.UsageLimitsClient.ResetEntity",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "className": "AIGatewayWorkspacesClient",
+    "member": "list",
+    "go": "gateway.WorkspacesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "className": "AIGatewayWorkspacesClient",
+    "member": "get",
+    "go": "gateway.WorkspacesClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "className": "AIGatewayWorkspacesClient",
+    "member": "create",
+    "go": "gateway.WorkspacesClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "className": "AIGatewayWorkspacesClient",
+    "member": "provision",
+    "go": "gateway.WorkspacesClient.Provision",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "className": "AIGatewayWorkspacesClient",
+    "member": "update",
+    "go": "gateway.WorkspacesClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/ai-gateway/workspaces-client.ts",
+    "className": "AIGatewayWorkspacesClient",
+    "member": "delete",
+    "go": "gateway.WorkspacesClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/iam/scopes-client.ts",
+    "className": "IamScopesClient",
+    "member": "list",
+    "go": "gateway.IAMScopesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/iam/scopes-client.ts",
+    "className": "IamScopesClient",
+    "member": "get",
+    "go": "gateway.IAMScopesClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/iam/scopes-client.ts",
+    "className": "IamScopesClient",
+    "member": "create",
+    "go": "gateway.IAMScopesClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/iam/scopes-client.ts",
+    "className": "IamScopesClient",
+    "member": "update",
+    "go": "gateway.IAMScopesClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/iam/scopes-client.ts",
+    "className": "IamScopesClient",
+    "member": "bindWorkspace",
+    "go": "gateway.IAMScopesClient.BindWorkspace",
+    "implemented": true
+  },
+  {
+    "source": "src/iam/scopes-client.ts",
+    "className": "IamScopesClient",
+    "member": "delete",
+    "go": "gateway.IAMScopesClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/management/api-keys.ts",
+    "className": "ApiKeysClient",
+    "member": "listForToken",
+    "go": "runtime.ApiKeysClient.ListForToken",
+    "implemented": true
+  },
+  {
+    "source": "src/management/api-keys.ts",
+    "className": "ApiKeysClient",
+    "member": "create",
+    "go": "runtime.ApiKeysClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/management/api-keys.ts",
+    "className": "ApiKeysClient",
+    "member": "list",
+    "go": "runtime.ApiKeysClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/api-keys.ts",
+    "className": "ApiKeysClient",
+    "member": "listAll",
+    "go": "runtime.ApiKeysClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/management/api-keys.ts",
+    "className": "ApiKeysClient",
+    "member": "delete",
+    "go": "runtime.ApiKeysClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/management/api-keys.ts",
+    "className": "ApiKeysClient",
+    "member": "regenerate",
+    "go": "runtime.ApiKeysClient.Regenerate",
+    "implemented": true
+  },
+  {
+    "source": "src/management/customer-apps.ts",
+    "className": "CustomerAppsClient",
+    "member": "listForToken",
+    "go": "runtime.CustomerAppsClient.ListForToken",
+    "implemented": true
+  },
+  {
+    "source": "src/management/customer-apps.ts",
+    "className": "CustomerAppsClient",
+    "member": "get",
+    "go": "runtime.CustomerAppsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/management/customer-apps.ts",
+    "className": "CustomerAppsClient",
+    "member": "list",
+    "go": "runtime.CustomerAppsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/customer-apps.ts",
+    "className": "CustomerAppsClient",
+    "member": "listAll",
+    "go": "runtime.CustomerAppsClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/management/customer-apps.ts",
+    "className": "CustomerAppsClient",
+    "member": "update",
+    "go": "runtime.CustomerAppsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/management/customer-apps.ts",
+    "className": "CustomerAppsClient",
+    "member": "delete",
+    "go": "runtime.CustomerAppsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "application",
+    "go": "runtime.DashboardClient.Application",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "applicationRaw",
+    "go": "runtime.DashboardClient.ApplicationRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "applicationViolationBreakdown",
+    "go": "runtime.DashboardClient.ApplicationViolationBreakdown",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "applicationViolationBreakdownRaw",
+    "go": "runtime.DashboardClient.ApplicationViolationBreakdownRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "topApplicationsViolationsRaw",
+    "go": "runtime.DashboardClient.TopApplicationsViolationsRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "topApplicationsViolations",
+    "go": "runtime.DashboardClient.TopApplicationsViolations",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "applicationsViolationsTrendRaw",
+    "go": "runtime.DashboardClient.ApplicationsViolationsTrendRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "applicationsViolationsTrend",
+    "go": "runtime.DashboardClient.ApplicationsViolationsTrend",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "appsListRaw",
+    "go": "runtime.DashboardClient.AppsListRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "appsList",
+    "go": "runtime.DashboardClient.AppsList",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "sessionsChartRaw",
+    "go": "runtime.DashboardClient.SessionsChartRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "sessionsChart",
+    "go": "runtime.DashboardClient.SessionsChart",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "sessionsOverviewRaw",
+    "go": "runtime.DashboardClient.SessionsOverviewRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "sessionsOverview",
+    "go": "runtime.DashboardClient.SessionsOverview",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "sessionRaw",
+    "go": "runtime.DashboardClient.SessionRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "session",
+    "go": "runtime.DashboardClient.Session",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "sessionTransactionRaw",
+    "go": "runtime.DashboardClient.SessionTransactionRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "sessionTransaction",
+    "go": "runtime.DashboardClient.SessionTransaction",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "scanContentRaw",
+    "go": "runtime.DashboardClient.ScanContentRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "scanContent",
+    "go": "runtime.DashboardClient.ScanContent",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "applicationsOverview",
+    "go": "runtime.DashboardClient.ApplicationsOverview",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dashboard.ts",
+    "className": "DashboardClient",
+    "member": "applicationsOverviewRaw",
+    "go": "runtime.DashboardClient.ApplicationsOverviewRaw",
+    "implemented": true
+  },
+  {
+    "source": "src/management/deployment-profiles.ts",
+    "className": "DeploymentProfilesClient",
+    "member": "list",
+    "go": "runtime.DeploymentProfilesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-filtering-profiles.ts",
+    "className": "DataFilteringProfilesClient",
+    "member": "list",
+    "go": "runtime.DataFilteringProfilesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-filtering-profiles.ts",
+    "className": "DataFilteringProfilesClient",
+    "member": "listAll",
+    "go": "runtime.DataFilteringProfilesClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-filtering-profiles.ts",
+    "className": "DataFilteringProfilesClient",
+    "member": "get",
+    "go": "runtime.DataFilteringProfilesClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-filtering-profiles.ts",
+    "className": "DataFilteringProfilesClient",
+    "member": "replace",
+    "go": "runtime.DataFilteringProfilesClient.Replace",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-patterns.ts",
+    "className": "DataPatternsClient",
+    "member": "list",
+    "go": "runtime.DataPatternsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-patterns.ts",
+    "className": "DataPatternsClient",
+    "member": "listAll",
+    "go": "runtime.DataPatternsClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-patterns.ts",
+    "className": "DataPatternsClient",
+    "member": "create",
+    "go": "runtime.DataPatternsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-patterns.ts",
+    "className": "DataPatternsClient",
+    "member": "get",
+    "go": "runtime.DataPatternsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-patterns.ts",
+    "className": "DataPatternsClient",
+    "member": "replace",
+    "go": "runtime.DataPatternsClient.Replace",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-patterns.ts",
+    "className": "DataPatternsClient",
+    "member": "patch",
+    "go": "runtime.DataPatternsClient.Patch",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-patterns.ts",
+    "className": "DataPatternsClient",
+    "member": "delete",
+    "go": "runtime.DataPatternsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-profiles.ts",
+    "className": "DataProfilesClient",
+    "member": "list",
+    "go": "runtime.DataProfilesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-profiles.ts",
+    "className": "DataProfilesClient",
+    "member": "listAll",
+    "go": "runtime.DataProfilesClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-profiles.ts",
+    "className": "DataProfilesClient",
+    "member": "create",
+    "go": "runtime.DataProfilesClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-profiles.ts",
+    "className": "DataProfilesClient",
+    "member": "get",
+    "go": "runtime.DataProfilesClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-profiles.ts",
+    "className": "DataProfilesClient",
+    "member": "replace",
+    "go": "runtime.DataProfilesClient.Replace",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/data-profiles.ts",
+    "className": "DataProfilesClient",
+    "member": "patch",
+    "go": "runtime.DataProfilesClient.Patch",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/dictionaries.ts",
+    "className": "DictionariesClient",
+    "member": "list",
+    "go": "runtime.DictionariesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/dictionaries.ts",
+    "className": "DictionariesClient",
+    "member": "listAll",
+    "go": "runtime.DictionariesClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/dictionaries.ts",
+    "className": "DictionariesClient",
+    "member": "create",
+    "go": "runtime.DictionariesClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/dictionaries.ts",
+    "className": "DictionariesClient",
+    "member": "get",
+    "go": "runtime.DictionariesClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/dictionaries.ts",
+    "className": "DictionariesClient",
+    "member": "replace",
+    "go": "runtime.DictionariesClient.Replace",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/dictionaries.ts",
+    "className": "DictionariesClient",
+    "member": "patch",
+    "go": "runtime.DictionariesClient.Patch",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp/dictionaries.ts",
+    "className": "DictionariesClient",
+    "member": "delete",
+    "go": "runtime.DictionariesClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/management/dlp-profiles.ts",
+    "className": "DlpProfilesClient",
+    "member": "list",
+    "go": "runtime.DlpProfilesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/oauth-client.ts",
+    "className": "OAuthClient",
+    "member": "getToken",
+    "go": "runtime.OAuthClient.GetToken",
+    "implemented": true
+  },
+  {
+    "source": "src/management/oauth-client.ts",
+    "className": "OAuthClient",
+    "member": "clearToken",
+    "go": "runtime.OAuthClient.ClearToken",
+    "implemented": true
+  },
+  {
+    "source": "src/management/oauth-client.ts",
+    "className": "OAuthClient",
+    "member": "isTokenExpired",
+    "go": "runtime.OAuthClient.IsTokenExpired",
+    "implemented": true
+  },
+  {
+    "source": "src/management/oauth-client.ts",
+    "className": "OAuthClient",
+    "member": "isTokenExpiringSoon",
+    "go": "runtime.OAuthClient.IsTokenExpiringSoon",
+    "implemented": true
+  },
+  {
+    "source": "src/management/oauth-client.ts",
+    "className": "OAuthClient",
+    "member": "getTokenInfo",
+    "go": "runtime.OAuthClient.GetTokenInfo",
+    "implemented": true
+  },
+  {
+    "source": "src/management/oauth-management.ts",
+    "className": "OAuthManagementClient",
+    "member": "invalidateToken",
+    "go": "runtime.OAuthManagementClient.InvalidateTokenForApp",
+    "implemented": true
+  },
+  {
+    "source": "src/management/oauth-management.ts",
+    "className": "OAuthManagementClient",
+    "member": "getAccessToken",
+    "go": "runtime.OAuthManagementClient.GetToken",
+    "implemented": true
+  },
+  {
+    "source": "src/management/profiles.ts",
+    "className": "ProfilesClient",
+    "member": "listForToken",
+    "go": "runtime.ProfilesClient.ListForToken",
+    "implemented": true
+  },
+  {
+    "source": "src/management/profiles.ts",
+    "className": "ProfilesClient",
+    "member": "create",
+    "go": "runtime.ProfilesClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/management/profiles.ts",
+    "className": "ProfilesClient",
+    "member": "list",
+    "go": "runtime.ProfilesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/profiles.ts",
+    "className": "ProfilesClient",
+    "member": "listAll",
+    "go": "runtime.ProfilesClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/management/profiles.ts",
+    "className": "ProfilesClient",
+    "member": "get",
+    "go": "runtime.ProfilesClient.GetByID",
+    "implemented": true
+  },
+  {
+    "source": "src/management/profiles.ts",
+    "className": "ProfilesClient",
+    "member": "getByName",
+    "go": "runtime.ProfilesClient.GetByName",
+    "implemented": true
+  },
+  {
+    "source": "src/management/profiles.ts",
+    "className": "ProfilesClient",
+    "member": "update",
+    "go": "runtime.ProfilesClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/management/profiles.ts",
+    "className": "ProfilesClient",
+    "member": "delete",
+    "go": "runtime.ProfilesClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/management/profiles.ts",
+    "className": "ProfilesClient",
+    "member": "forceDelete",
+    "go": "runtime.ProfilesClient.ForceDelete",
+    "implemented": true
+  },
+  {
+    "source": "src/management/scan-logs.ts",
+    "className": "ScanLogsClient",
+    "member": "query",
+    "go": "runtime.ScanLogsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "listForToken",
+    "go": "runtime.TopicsClient.ListForToken",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "forceDeleteWithAudit",
+    "go": "runtime.TopicsClient.ForceDelete",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "create",
+    "go": "runtime.TopicsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "list",
+    "go": "runtime.TopicsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "listAll",
+    "go": "runtime.TopicsClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "get",
+    "go": "runtime.TopicsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "getByName",
+    "go": "runtime.TopicsClient.GetByName",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "update",
+    "go": "runtime.TopicsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "delete",
+    "go": "runtime.TopicsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/management/topics.ts",
+    "className": "TopicsClient",
+    "member": "forceDelete",
+    "go": "runtime.TopicsClient.ForceDelete",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/client.ts",
+    "className": "ModelSecurityClient",
+    "member": "getPyPIAuth",
+    "go": "modelsecurity.Client.GetPyPIAuth",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "list",
+    "go": "modelsecurity.CustomRulesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "listAll",
+    "go": "modelsecurity.CustomRulesClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "create",
+    "go": "modelsecurity.CustomRulesClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "get",
+    "go": "modelsecurity.CustomRulesClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "update",
+    "go": "modelsecurity.CustomRulesClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "archive",
+    "go": "modelsecurity.CustomRulesClient.Archive",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "unarchive",
+    "go": "modelsecurity.CustomRulesClient.Unarchive",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "listSecurityGroups",
+    "go": "modelsecurity.CustomRulesClient.ListSecurityGroups",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "assignSecurityGroups",
+    "go": "modelsecurity.CustomRulesClient.AssignSecurityGroups",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "removeAssignment",
+    "go": "modelsecurity.CustomRulesClient.RemoveAssignment",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "listVersions",
+    "go": "modelsecurity.CustomRulesClient.ListVersions",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/custom-rules-client.ts",
+    "className": "ModelSecurityCustomRulesClient",
+    "member": "listAllVersions",
+    "go": "modelsecurity.CustomRulesClient.ListAllVersions",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/models-client.ts",
+    "className": "ModelSecurityModelsClient",
+    "member": "listModels",
+    "go": "modelsecurity.ModelsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/models-client.ts",
+    "className": "ModelSecurityModelsClient",
+    "member": "listAllModels",
+    "go": "modelsecurity.ModelsClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/models-client.ts",
+    "className": "ModelSecurityModelsClient",
+    "member": "getModel",
+    "go": "modelsecurity.ModelsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/models-client.ts",
+    "className": "ModelSecurityModelsClient",
+    "member": "listModelVersions",
+    "go": "modelsecurity.ModelsClient.ListVersions",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/models-client.ts",
+    "className": "ModelSecurityModelsClient",
+    "member": "listAllModelVersions",
+    "go": "modelsecurity.ModelsClient.ListAllVersions",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/models-client.ts",
+    "className": "ModelSecurityModelsClient",
+    "member": "getModelVersion",
+    "go": "modelsecurity.ModelVersionsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/models-client.ts",
+    "className": "ModelSecurityModelsClient",
+    "member": "listModelVersionFiles",
+    "go": "modelsecurity.ModelVersionsClient.ListFiles",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/models-client.ts",
+    "className": "ModelSecurityModelsClient",
+    "member": "listAllModelVersionFiles",
+    "go": "modelsecurity.ModelVersionsClient.ListAllFiles",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "create",
+    "go": "modelsecurity.ScansClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "list",
+    "go": "modelsecurity.ScansClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "listAll",
+    "go": "modelsecurity.ScansClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "get",
+    "go": "modelsecurity.ScansClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "getEvaluations",
+    "go": "modelsecurity.ScansClient.GetEvaluations",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "getFiles",
+    "go": "modelsecurity.ScansClient.GetFiles",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "addLabels",
+    "go": "modelsecurity.ScansClient.AddLabels",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "setLabels",
+    "go": "modelsecurity.ScansClient.SetLabels",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "deleteLabels",
+    "go": "modelsecurity.ScansClient.DeleteLabels",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "getViolations",
+    "go": "modelsecurity.ScansClient.GetViolations",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "getLabelKeys",
+    "go": "modelsecurity.ScansClient.GetLabelKeys",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "getLabelValues",
+    "go": "modelsecurity.ScansClient.GetLabelValues",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "getEvaluation",
+    "go": "modelsecurity.ScansClient.GetEvaluation",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/scans-client.ts",
+    "className": "ModelSecurityScansClient",
+    "member": "getViolation",
+    "go": "modelsecurity.ScansClient.GetViolation",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "listRuleInstanceVersions",
+    "go": "modelsecurity.SecurityGroupsClient.ListRuleInstanceVersions",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "create",
+    "go": "modelsecurity.SecurityGroupsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "list",
+    "go": "modelsecurity.SecurityGroupsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "listAll",
+    "go": "modelsecurity.SecurityGroupsClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "get",
+    "go": "modelsecurity.SecurityGroupsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "update",
+    "go": "modelsecurity.SecurityGroupsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "delete",
+    "go": "modelsecurity.SecurityGroupsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "listRuleInstances",
+    "go": "modelsecurity.SecurityGroupsClient.ListRuleInstances",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "getRuleInstance",
+    "go": "modelsecurity.SecurityGroupsClient.GetRuleInstance",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-groups-client.ts",
+    "className": "ModelSecurityGroupsClient",
+    "member": "updateRuleInstance",
+    "go": "modelsecurity.SecurityGroupsClient.UpdateRuleInstance",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-rules-client.ts",
+    "className": "ModelSecurityRulesClient",
+    "member": "list",
+    "go": "modelsecurity.SecurityRulesClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-rules-client.ts",
+    "className": "ModelSecurityRulesClient",
+    "member": "listVersions",
+    "go": "modelsecurity.SecurityRulesClient.ListVersions",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-rules-client.ts",
+    "className": "ModelSecurityRulesClient",
+    "member": "listAll",
+    "go": "modelsecurity.SecurityRulesClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/model-security/security-rules-client.ts",
+    "className": "ModelSecurityRulesClient",
+    "member": "get",
+    "go": "modelsecurity.SecurityRulesClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/adapters-client.ts",
+    "className": "RedTeamAdaptersClient",
+    "member": "getConfig",
+    "go": "redteam.AdaptersClient.GetConfig",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/adapters-client.ts",
+    "className": "RedTeamAdaptersClient",
+    "member": "create",
+    "go": "redteam.AdaptersClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/adapters-client.ts",
+    "className": "RedTeamAdaptersClient",
+    "member": "list",
+    "go": "redteam.AdaptersClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/adapters-client.ts",
+    "className": "RedTeamAdaptersClient",
+    "member": "listAll",
+    "go": "redteam.AdaptersClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/adapters-client.ts",
+    "className": "RedTeamAdaptersClient",
+    "member": "get",
+    "go": "redteam.AdaptersClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/adapters-client.ts",
+    "className": "RedTeamAdaptersClient",
+    "member": "update",
+    "go": "redteam.AdaptersClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/adapters-client.ts",
+    "className": "RedTeamAdaptersClient",
+    "member": "delete",
+    "go": "redteam.AdaptersClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/adapters-client.ts",
+    "className": "RedTeamAdaptersClient",
+    "member": "validate",
+    "go": "redteam.AdaptersClient.Validate",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getScanMetadata",
+    "go": "redteam.Client.GetScanMetadata",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getGoalCategories",
+    "go": "redteam.Client.GetGoalCategories",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getScanStatistics",
+    "go": "redteam.Client.GetScanStatistics",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getScoreTrend",
+    "go": "redteam.Client.GetScoreTrend",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getQuota",
+    "go": "redteam.Client.GetQuota",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getQuotaSummary",
+    "go": "redteam.Client.GetQuota",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getErrorLogs",
+    "go": "redteam.Client.GetErrorLogs",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getTargetProfileErrorLogs",
+    "go": "redteam.Client.GetTargetProfileErrorLogs",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getLanguages",
+    "go": "redteam.Client.GetLanguages",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getManagementLanguages",
+    "go": "redteam.TargetsClient.GetLanguages",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "updateSentiment",
+    "go": "redteam.Client.UpdateSentiment",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getSentiment",
+    "go": "redteam.Client.GetSentiment",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/client.ts",
+    "className": "RedTeamClient",
+    "member": "getDashboardOverview",
+    "go": "redteam.Client.GetDashboardOverview",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attack-reports-client.ts",
+    "className": "RedTeamCustomAttackReportsClient",
+    "member": "getReport",
+    "go": "redteam.CustomAttackReportsClient.GetReport",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attack-reports-client.ts",
+    "className": "RedTeamCustomAttackReportsClient",
+    "member": "getPromptSets",
+    "go": "redteam.CustomAttackReportsClient.GetPromptSets",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attack-reports-client.ts",
+    "className": "RedTeamCustomAttackReportsClient",
+    "member": "getPromptsBySet",
+    "go": "redteam.CustomAttackReportsClient.GetPromptsBySet",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attack-reports-client.ts",
+    "className": "RedTeamCustomAttackReportsClient",
+    "member": "getPromptDetail",
+    "go": "redteam.CustomAttackReportsClient.GetPromptDetail",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attack-reports-client.ts",
+    "className": "RedTeamCustomAttackReportsClient",
+    "member": "listCustomAttacks",
+    "go": "redteam.CustomAttackReportsClient.ListCustomAttacks",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attack-reports-client.ts",
+    "className": "RedTeamCustomAttackReportsClient",
+    "member": "getAttackOutputs",
+    "go": "redteam.CustomAttackReportsClient.GetAttackOutputs",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attack-reports-client.ts",
+    "className": "RedTeamCustomAttackReportsClient",
+    "member": "getPropertyStats",
+    "go": "redteam.CustomAttackReportsClient.GetPropertyStats",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "createPromptSet",
+    "go": "redteam.CustomAttacksClient.CreatePromptSet",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "listPromptSets",
+    "go": "redteam.CustomAttacksClient.ListPromptSets",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "listAllPromptSets",
+    "go": "redteam.CustomAttacksClient.ListAllPromptSets",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "getPromptSet",
+    "go": "redteam.CustomAttacksClient.GetPromptSet",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "updatePromptSet",
+    "go": "redteam.CustomAttacksClient.UpdatePromptSet",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "archivePromptSet",
+    "go": "redteam.CustomAttacksClient.ArchivePromptSet",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "getPromptSetReference",
+    "go": "redteam.CustomAttacksClient.GetPromptSetReference",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "getPromptSetVersionInfo",
+    "go": "redteam.CustomAttacksClient.GetPromptSetVersionInfo",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "listActivePromptSets",
+    "go": "redteam.CustomAttacksClient.ListActivePromptSets",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "downloadTemplate",
+    "go": "redteam.CustomAttacksClient.DownloadTemplate",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "uploadPromptsCsv",
+    "go": "redteam.CustomAttacksClient.UploadPromptsCsv",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "createPrompt",
+    "go": "redteam.CustomAttacksClient.CreatePrompt",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "listPrompts",
+    "go": "redteam.CustomAttacksClient.ListPrompts",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "listAllPrompts",
+    "go": "redteam.CustomAttacksClient.ListAllPrompts",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "getPrompt",
+    "go": "redteam.CustomAttacksClient.GetPrompt",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "updatePrompt",
+    "go": "redteam.CustomAttacksClient.UpdatePrompt",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "deletePrompt",
+    "go": "redteam.CustomAttacksClient.DeletePrompt",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "getPropertyNames",
+    "go": "redteam.CustomAttacksClient.GetPropertyNames",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "createPropertyName",
+    "go": "redteam.CustomAttacksClient.CreatePropertyName",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "getPropertyValues",
+    "go": "redteam.CustomAttacksClient.GetPropertyValues",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "getPropertyValuesMultiple",
+    "go": "redteam.CustomAttacksClient.GetPropertyValuesMultiple",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/custom-attacks-client.ts",
+    "className": "RedTeamCustomAttacksClient",
+    "member": "createPropertyValue",
+    "go": "redteam.CustomAttacksClient.CreatePropertyValue",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/eula-client.ts",
+    "className": "RedTeamEulaClient",
+    "member": "getContent",
+    "go": "redteam.EulaClient.GetContent",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/eula-client.ts",
+    "className": "RedTeamEulaClient",
+    "member": "getStatus",
+    "go": "redteam.EulaClient.GetStatus",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/eula-client.ts",
+    "className": "RedTeamEulaClient",
+    "member": "accept",
+    "go": "redteam.EulaClient.Accept",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/instances-client.ts",
+    "className": "RedTeamInstancesClient",
+    "member": "createInstance",
+    "go": "redteam.InstancesClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/instances-client.ts",
+    "className": "RedTeamInstancesClient",
+    "member": "getInstance",
+    "go": "redteam.InstancesClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/instances-client.ts",
+    "className": "RedTeamInstancesClient",
+    "member": "updateInstance",
+    "go": "redteam.InstancesClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/instances-client.ts",
+    "className": "RedTeamInstancesClient",
+    "member": "deleteInstance",
+    "go": "redteam.InstancesClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/instances-client.ts",
+    "className": "RedTeamInstancesClient",
+    "member": "createDevices",
+    "go": "redteam.InstancesClient.CreateDevice",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/instances-client.ts",
+    "className": "RedTeamInstancesClient",
+    "member": "updateDevices",
+    "go": "redteam.InstancesClient.UpdateDevice",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/instances-client.ts",
+    "className": "RedTeamInstancesClient",
+    "member": "deleteDevices",
+    "go": "redteam.InstancesClient.DeleteDevice",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/instances-client.ts",
+    "className": "RedTeamInstancesClient",
+    "member": "getRegistryCredentials",
+    "go": "redteam.Client.GetRegistryCredentials",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/network-broker-client.ts",
+    "className": "RedTeamNetworkBrokerClient",
+    "member": "listChannels",
+    "go": "redteam.NetworkBrokerClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/network-broker-client.ts",
+    "className": "RedTeamNetworkBrokerClient",
+    "member": "createChannel",
+    "go": "redteam.NetworkBrokerClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/network-broker-client.ts",
+    "className": "RedTeamNetworkBrokerClient",
+    "member": "getChannelStats",
+    "go": "redteam.NetworkBrokerClient.GetStats",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/network-broker-client.ts",
+    "className": "RedTeamNetworkBrokerClient",
+    "member": "getChannel",
+    "go": "redteam.NetworkBrokerClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/network-broker-client.ts",
+    "className": "RedTeamNetworkBrokerClient",
+    "member": "updateChannel",
+    "go": "redteam.NetworkBrokerClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "listAttacks",
+    "go": "redteam.ReportsClient.ListAttacks",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "getAttackDetail",
+    "go": "redteam.ReportsClient.GetAttackDetail",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "getMultiTurnAttackDetail",
+    "go": "redteam.ReportsClient.GetMultiTurnAttackDetail",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "getStaticReport",
+    "go": "redteam.ReportsClient.GetStaticReport",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "getStaticRemediation",
+    "go": "redteam.ReportsClient.GetStaticRemediation",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "getStaticRuntimePolicy",
+    "go": "redteam.ReportsClient.GetStaticRuntimePolicy",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "getDynamicReport",
+    "go": "redteam.ReportsClient.GetDynamicReport",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "getDynamicRemediation",
+    "go": "redteam.ReportsClient.GetDynamicRemediation",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "getDynamicRuntimePolicy",
+    "go": "redteam.ReportsClient.GetDynamicRuntimePolicy",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "listGoals",
+    "go": "redteam.ReportsClient.ListGoals",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "listGoalStreams",
+    "go": "redteam.ReportsClient.ListGoalStreams",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "getStreamDetail",
+    "go": "redteam.ReportsClient.GetStreamDetail",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "downloadReport",
+    "go": "redteam.ReportsClient.DownloadReport",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/reports-client.ts",
+    "className": "RedTeamReportsClient",
+    "member": "generatePartialReport",
+    "go": "redteam.ReportsClient.GeneratePartialReport",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/scans-client.ts",
+    "className": "RedTeamScansClient",
+    "member": "create",
+    "go": "redteam.ScansClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/scans-client.ts",
+    "className": "RedTeamScansClient",
+    "member": "list",
+    "go": "redteam.ScansClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/scans-client.ts",
+    "className": "RedTeamScansClient",
+    "member": "listAll",
+    "go": "redteam.ScansClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/scans-client.ts",
+    "className": "RedTeamScansClient",
+    "member": "get",
+    "go": "redteam.ScansClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/scans-client.ts",
+    "className": "RedTeamScansClient",
+    "member": "abort",
+    "go": "redteam.ScansClient.Abort",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/scans-client.ts",
+    "className": "RedTeamScansClient",
+    "member": "getCategories",
+    "go": "redteam.ScansClient.GetCategories",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "startProfiling",
+    "go": "redteam.TargetsClient.StartProfiling",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "getCopilotAuthUrl",
+    "go": "redteam.TargetsClient.GetCopilotAuthURL",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "exchangeCopilotToken",
+    "go": "redteam.TargetsClient.ExchangeCopilotToken",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "deleteCopilotToken",
+    "go": "redteam.TargetsClient.DeleteCopilotToken",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "create",
+    "go": "redteam.TargetsClient.Create",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "list",
+    "go": "redteam.TargetsClient.List",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "listAll",
+    "go": "redteam.TargetsClient.ListAll",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "get",
+    "go": "redteam.TargetsClient.Get",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "update",
+    "go": "redteam.TargetsClient.Update",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "delete",
+    "go": "redteam.TargetsClient.Delete",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "probe",
+    "go": "redteam.TargetsClient.Probe",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "getProfile",
+    "go": "redteam.TargetsClient.GetProfile",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "updateProfile",
+    "go": "redteam.TargetsClient.UpdateProfile",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "validateAuth",
+    "go": "redteam.TargetsClient.ValidateAuth",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "getTargetMetadata",
+    "go": "redteam.Client.GetTargetMetadata",
+    "implemented": true
+  },
+  {
+    "source": "src/red-team/targets-client.ts",
+    "className": "RedTeamTargetsClient",
+    "member": "getTargetTemplates",
+    "go": "redteam.Client.GetTargetTemplates",
+    "implemented": true
+  },
+  {
+    "source": "src/scan/content.ts",
+    "className": "Content",
+    "member": "toJSON",
+    "go": "runtime.Content.ToJSON",
+    "implemented": true
+  },
+  {
+    "source": "src/scan/content.ts",
+    "className": "Content",
+    "member": "fromJSON",
+    "go": "runtime.ContentFromJSON",
+    "implemented": true
+  },
+  {
+    "source": "src/scan/content.ts",
+    "className": "Content",
+    "member": "fromJSONFile",
+    "go": "runtime.ContentFromJSONFile",
+    "implemented": true
+  },
+  {
+    "source": "src/scan/scanner.ts",
+    "className": "Scanner",
+    "member": "syncScan",
+    "go": "runtime.Scanner.SyncScan",
+    "implemented": true
+  },
+  {
+    "source": "src/scan/scanner.ts",
+    "className": "Scanner",
+    "member": "asyncScan",
+    "go": "runtime.Scanner.AsyncScan",
+    "implemented": true
+  },
+  {
+    "source": "src/scan/scanner.ts",
+    "className": "Scanner",
+    "member": "queryByScanIds",
+    "go": "runtime.Scanner.QueryByScanIDs",
+    "implemented": true
+  },
+  {
+    "source": "src/scan/scanner.ts",
+    "className": "Scanner",
+    "member": "queryByReportIds",
+    "go": "runtime.Scanner.QueryByReportIDs",
+    "implemented": true
+  }
+]

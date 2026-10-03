@@ -1,0 +1,2637 @@
+{
+  "source": {
+    "source": "TypeScript SDK captured/typed contracts; not an official OpenAPI publication",
+    "repository": "https://github.com/cdot65/prisma-airs-sdk",
+    "commit": "4a80dbdb3dc14365e1c25d838ac0bd139485d48c",
+    "version": "0.34.0",
+    "files": {
+      "src/ai-gateway/audit-logs-client.ts": "bcd0d339b0fd22a7967ed79c98ba6aedb306a45d32fc796d0e63e5f13c56b6cc",
+      "src/ai-gateway/guardrails-client.ts": "1604e4677c1819e42b9b3b077216472cf5b9072912848ab98ca2d30dd733c400",
+      "src/ai-gateway/inference-client.ts": "efb9dd2688f5a024cc0756c38174ad0556abe07e790d6bc6bcbad2e08869acf1",
+      "src/ai-gateway/integrations-client.ts": "1ada5cc9ad5c9b00c7c7e6586753f4179c4a12114b39a7dae7e924e3fc7a4dbe",
+      "src/ai-gateway/log-exports-client.ts": "813c9bf8aa35ceeba72bb73d528fb18bdc10026564d5ae7d27a7888e1e53e779",
+      "src/ai-gateway/model-pricing-client.ts": "fa4a4e706cb23100fc66a5c5cfa86f58349bc44bea287d6feb4a33ed48671c57",
+      "src/ai-gateway/organisations-client.ts": "2f27c725045637f497d5bb6996ddd106fc3f2ca16901edc768ebbe77e9d21154",
+      "src/ai-gateway/plugins-client.ts": "46f713f5bf1018294bbfd6287ce1129c677e1a39bb71f5ee3cd28f6dbe953e04",
+      "src/ai-gateway/runtime-resources-client.ts": "69367336719c9d815b4463e63921b4ec389053b54c19083d5307364616493132",
+      "src/ai-gateway/secret-fields.ts": "beec92da430ddf3df341a2994adcf3287e536fa5e9a253ce48c6645998f32a49",
+      "src/ai-gateway/telemetry-client.ts": "f36f049d8b483dc66e7541b69fe90312805453ac0aa5cafb439e3c949ad4a128",
+      "src/ai-gateway/workspaces-client.ts": "4ad671efaadc84da56e94c9306a507901bfbc1791737e2b3972db06d674ad669",
+      "src/constants.ts": "2ca2e1b9d1009ba0a86b9095cb6ecb9802294b620911b26935ed854be0b98838",
+      "src/iam/scopes-client.ts": "32e4eb1b5a7d29963cbb902da4208b02cfdd9e7cc1bcc8cdfe0a0bf0d5a20a50",
+      "src/management/dlp/data-filtering-profiles.ts": "51c69995de58036d0ce61c3ae0ed104ef89e31bd40f53b8e722c6baeb7563074",
+      "src/management/dlp/data-patterns.ts": "3fe357bd5f54d8d4bafcc682eb80237132393f9c9ec3746da1ff3a2ba7186c0a",
+      "src/management/dlp/data-profiles.ts": "3dbe5c7e2a21939bcde9fbfbd2e82c8bea4f38c1987db2ca1eb57e65fbec93b6",
+      "src/management/dlp/dictionaries.ts": "020fd8730cccbb9a158bad4f25fba95f87c074fe41c1934bee875b259c7b4a80",
+      "src/models/ai-gateway-dashboard.ts": "cf63cf5f6fcaa5236bfdedd750caa43e67258896f334b783acc6b47312ef51e8",
+      "src/models/ai-gateway-extensions.ts": "9da718c1cf3e2c55754c032fb4c868346beabaf7c47258001eb33d322bcf3cac",
+      "src/models/ai-gateway-inference.ts": "354d6e57d2b00faadf56ec8d23299806554a46889a3692b0326cc0c3caa98436",
+      "src/models/ai-gateway-model-pricing.ts": "736e8ceddf06e8c889bee6a52207fbd68a5db3c59ada6152e1eba7b9094d114c",
+      "src/models/ai-gateway-realtime.ts": "9a691cdf387ad2b51aa3a3c6386f0aaf773cacbde37eb1d193aa7ccbfee083e3",
+      "src/models/ai-gateway-requests.ts": "ae6ce10c73fb9eb8c97143783d384496155f3f40cb9bc55430f7f429e229b06e",
+      "src/models/ai-gateway.ts": "335212ba4fec9093b1730c28c0d8f3042a67c5681c66ef0659df7d272a3ca64d",
+      "src/models/dlp-data-filtering-profile.ts": "03569313794e0fc4f88350fd08b9f09969ee500c11fca442d320bae1eba7d22e",
+      "src/models/dlp-data-pattern.ts": "b66d7eb9b2b11406550606fdff38558af93da3972659de455b8d2b7635d157bd",
+      "src/models/dlp-data-profile.ts": "7f40647bf871f44fe7371a81fcd834460305cd19d8a492397f3c1660656f08f0",
+      "src/models/dlp-dictionary.ts": "41bf06db58e5f81f1c498f291e61d32cfd05f921650d9f29b0ae34736fa512f3",
+      "src/models/iam.ts": "efa5fa3ebb50a5f1a8486ea135484e0d906995bdbbe59fafc944037e9b841217",
+      "src/models/mgmt-dashboard-sessions.ts": "d258915c6e30e038375ab13338101cab654e5a54b6b59af43ece2076a8c16009",
+      "src/models/mgmt-dashboard.ts": "228cc8abcfd9835d85327805ecf02977bad70391731188b339697f2d9397855e"
+    }
+  },
+  "operations": [
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/audit-logs",
+      "source": "src/ai-gateway/audit-logs-client.ts",
+      "member": "list",
+      "plane": "gateway",
+      "responseSchema": "GatewayAuditLogsResponseSchema",
+      "queryType": "AIGatewayAuditLogListOptions",
+      "className": "AIGatewayAuditLogsClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayAuditLogListOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.adminBaseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/utils/static-resources/schema",
+      "source": "src/ai-gateway/guardrails-client.ts",
+      "member": "getCatalog",
+      "plane": "gateway",
+      "responseSchema": "GatewayGuardrailCatalogResponseSchema",
+      "className": "AIGatewayGuardrailsClient",
+      "parameters": []
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "transport": "websocket",
+      "method": "GET",
+      "path": "/realtime",
+      "source": "src/ai-gateway/inference-client.ts",
+      "member": "connectRealtime",
+      "plane": "gateway",
+      "queryType": "GatewayRealtimeConnectRequest",
+      "className": "AIGatewayInferenceClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "GatewayRealtimeConnectRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayRealtimeOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/completions",
+      "source": "src/ai-gateway/inference-client.ts",
+      "member": "createCompletion",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceCreateCompletionResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateCompletionRequestSchema",
+      "requestType": "GatewayInferenceInputCreateCompletionRequest",
+      "className": "AIGatewayInferenceClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateCompletionRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/prompts/{gatewayPathSegment(promptId)}/completions",
+      "source": "src/ai-gateway/inference-client.ts",
+      "member": "createPromptCompletion",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceCreatePromptCompletionResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreatePromptCompletionRequestSchema",
+      "requestType": "GatewayInferenceInputCreatePromptCompletionRequest",
+      "className": "AIGatewayInferenceClient",
+      "parameters": [
+        {
+          "name": "promptId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreatePromptCompletionRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/prompts/{gatewayPathSegment(promptId)}/render",
+      "source": "src/ai-gateway/inference-client.ts",
+      "member": "createPromptRender",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceCreatePromptRenderResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreatePromptRenderRequestSchema",
+      "requestType": "GatewayInferenceInputCreatePromptRenderRequest",
+      "className": "AIGatewayInferenceClient",
+      "parameters": [
+        {
+          "name": "promptId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreatePromptRenderRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/chat/completions",
+      "source": "src/ai-gateway/inference-client.ts",
+      "member": "createChatCompletion",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceCreateChatCompletionResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateChatCompletionRequestSchema",
+      "requestType": "GatewayChatCompletionRequest",
+      "className": "AIGatewayInferenceClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayChatCompletionRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/embeddings",
+      "source": "src/ai-gateway/inference-client.ts",
+      "member": "createEmbedding",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceCreateEmbeddingResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateEmbeddingRequestSchema",
+      "requestType": "GatewayEmbeddingRequest",
+      "className": "AIGatewayInferenceClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayEmbeddingRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/responses",
+      "source": "src/ai-gateway/inference-client.ts",
+      "member": "createResponse",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateResponseSchema",
+      "requestType": "GatewayInferenceInputCreateResponse",
+      "className": "AIGatewayInferenceClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateResponse"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/utils/static-resources/ai-providers",
+      "source": "src/ai-gateway/integrations-client.ts",
+      "member": "catalog",
+      "plane": "gateway",
+      "responseSchema": "ListCatalogProvidersResponseSchema",
+      "className": "AIGatewayIntegrationsClient",
+      "parameters": []
+    },
+    {
+      "gatewayBaseUrl": "this.options.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/exports",
+      "source": "src/ai-gateway/log-exports-client.ts",
+      "member": "list",
+      "plane": "gateway",
+      "responseSchema": "GatewayLogExportsClientListResponseSchema",
+      "queryType": "GatewayLogExportsClientListOptions",
+      "className": "AIGatewayLogExportsClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "GatewayLogExportsClientListOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.options.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "POST",
+      "path": "/logs/exports",
+      "source": "src/ai-gateway/log-exports-client.ts",
+      "member": "create",
+      "plane": "gateway",
+      "responseSchema": "GatewayLogExportsClientCreateResponseSchema",
+      "requestSchema": "GatewayLogExportsClientCreateRequestSchema",
+      "requestType": "GatewayLogExportsClientCreateRequest",
+      "className": "AIGatewayLogExportsClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayLogExportsClientCreateRequest"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.options.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/exports/{gatewayPathSegment(exportId)}",
+      "source": "src/ai-gateway/log-exports-client.ts",
+      "member": "get",
+      "plane": "gateway",
+      "responseSchema": "GatewayLogExportsClientGetResponseSchema",
+      "className": "AIGatewayLogExportsClient",
+      "parameters": [
+        {
+          "name": "exportId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.options.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "PUT",
+      "path": "/logs/exports/{gatewayPathSegment(exportId)}",
+      "source": "src/ai-gateway/log-exports-client.ts",
+      "member": "update",
+      "plane": "gateway",
+      "responseSchema": "GatewayLogExportsClientUpdateResponseSchema",
+      "requestSchema": "GatewayLogExportsClientUpdateRequestSchema",
+      "requestType": "GatewayLogExportsClientUpdateRequest",
+      "className": "AIGatewayLogExportsClient",
+      "parameters": [
+        {
+          "name": "exportId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "GatewayLogExportsClientUpdateRequest"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.options.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "POST",
+      "path": "/logs/exports/{gatewayPathSegment(exportId)}/start",
+      "source": "src/ai-gateway/log-exports-client.ts",
+      "member": "start",
+      "plane": "gateway",
+      "responseSchema": "GatewayLogExportsClientStartResponseSchema",
+      "className": "AIGatewayLogExportsClient",
+      "parameters": [
+        {
+          "name": "exportId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.options.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "POST",
+      "path": "/logs/exports/{gatewayPathSegment(exportId)}/cancel",
+      "source": "src/ai-gateway/log-exports-client.ts",
+      "member": "cancel",
+      "plane": "gateway",
+      "responseSchema": "GatewayLogExportsClientCancelResponseSchema",
+      "className": "AIGatewayLogExportsClient",
+      "parameters": [
+        {
+          "name": "exportId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.options.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/exports/{gatewayPathSegment(exportId)}/download",
+      "source": "src/ai-gateway/log-exports-client.ts",
+      "member": "download",
+      "plane": "gateway",
+      "responseSchema": "GatewayLogExportsClientDownloadResponseSchema",
+      "className": "AIGatewayLogExportsClient",
+      "parameters": [
+        {
+          "name": "exportId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/model-configs/pricing/{gatewayPathSegment(provider)}/{gatewayPathSegment(model)}",
+      "source": "src/ai-gateway/model-pricing-client.ts",
+      "member": "get",
+      "plane": "gateway",
+      "responseSchema": "GatewayModelPricingConfigSchema",
+      "className": "AIGatewayModelPricingClient",
+      "parameters": [
+        {
+          "name": "provider",
+          "type": "string"
+        },
+        {
+          "name": "model",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayModelPricingRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/organisations/{tsgId}/info",
+      "source": "src/ai-gateway/organisations-client.ts",
+      "member": "getInfo",
+      "plane": "gateway",
+      "responseSchema": "GatewayOrganisationInfoSchema",
+      "className": "AIGatewayOrganisationsClient",
+      "parameters": [
+        {
+          "name": "tsgId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/organisations/self",
+      "source": "src/ai-gateway/organisations-client.ts",
+      "member": "getSelf",
+      "plane": "gateway",
+      "responseSchema": "OrganisationSelfResponseSchema",
+      "className": "AIGatewayOrganisationsClient",
+      "parameters": []
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "PUT",
+      "path": "/organisations/self",
+      "source": "src/ai-gateway/organisations-client.ts",
+      "member": "updateSelf",
+      "plane": "gateway",
+      "responseSchema": "GatewayWriteResponseSchema",
+      "requestSchema": "GatewayOrganisationUpdateRequestSchema",
+      "requestType": "GatewayOrganisationUpdateRequest",
+      "className": "AIGatewayOrganisationsClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayOrganisationUpdateRequest"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/organisations/{tsgId}/auth-settings",
+      "source": "src/ai-gateway/organisations-client.ts",
+      "member": "getAuthSettings",
+      "plane": "gateway",
+      "responseSchema": "AuthSettingsResponseSchema",
+      "className": "AIGatewayOrganisationsClient",
+      "parameters": [
+        {
+          "name": "tsgId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "PUT",
+      "path": "/organisations/{tsgId}/auth-settings",
+      "source": "src/ai-gateway/organisations-client.ts",
+      "member": "updateAuthSettings",
+      "plane": "gateway",
+      "responseSchema": "GatewayWriteResponseSchema",
+      "requestSchema": "GatewayOrganisationAuthSettingsUpdateRequestSchema",
+      "requestType": "GatewayOrganisationAuthSettingsUpdateRequest",
+      "className": "AIGatewayOrganisationsClient",
+      "parameters": [
+        {
+          "name": "tsgId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "GatewayOrganisationAuthSettingsUpdateRequest"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/plugins",
+      "source": "src/ai-gateway/plugins-client.ts",
+      "member": "list",
+      "plane": "gateway",
+      "responseSchema": "ListPluginsResponseSchema",
+      "className": "AIGatewayPluginsClient",
+      "parameters": []
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "POST",
+      "path": "/plugins",
+      "source": "src/ai-gateway/plugins-client.ts",
+      "member": "create",
+      "plane": "gateway",
+      "responseSchema": "GatewayWriteResponseSchema",
+      "requestSchema": "GatewayPluginCreateRequestSchema",
+      "requestType": "GatewayPluginCreateRequest",
+      "className": "AIGatewayPluginsClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayPluginCreateRequest"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/images/generations",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createImage",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceImagesResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateImageRequestSchema",
+      "requestType": "GatewayInferenceInputCreateImageRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateImageRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/images/edits",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createImageEdit",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceImagesResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateImageEditRequestSchema",
+      "requestType": "GatewayInferenceInputCreateImageEditRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateImageEditRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/images/variations",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createImageVariation",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceImagesResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateImageVariationRequestSchema",
+      "requestType": "GatewayInferenceInputCreateImageVariationRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateImageVariationRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/rerank",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createRerank",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceCreateRerankResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateRerankRequestSchema",
+      "requestType": "GatewayInferenceInputCreateRerankRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateRerankRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/ocr",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createOcr",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceCreateOcrResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateOcrRequestSchema",
+      "requestType": "GatewayInferenceInputCreateOcrRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateOcrRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/audio/speech",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createSpeech",
+      "plane": "gateway",
+      "requestSchema": "GatewayInferenceInputCreateSpeechRequestSchema",
+      "requestType": "GatewayInferenceInputCreateSpeechRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateSpeechRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/audio/transcriptions",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createTranscription",
+      "plane": "gateway",
+      "responseSchema": "body?.response_format === 'verbose_json'\n          ? GatewayInferenceCreateTranscriptionResponseVerboseJsonSchema\n          : GatewayInferenceCreateTranscriptionResponseJsonSchema",
+      "requestSchema": "GatewayInferenceInputCreateTranscriptionRequestSchema",
+      "requestType": "GatewayInferenceInputCreateTranscriptionRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateTranscriptionRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/audio/translations",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createTranslation",
+      "plane": "gateway",
+      "responseSchema": "body?.response_format === 'verbose_json'\n          ? GatewayInferenceCreateTranslationResponseVerboseJsonSchema\n          : GatewayInferenceCreateTranslationResponseJsonSchema",
+      "requestSchema": "GatewayInferenceInputCreateTranslationRequestSchema",
+      "requestType": "GatewayInferenceInputCreateTranslationRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateTranslationRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/files",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listFiles",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceListFilesResponseSchema",
+      "queryType": "GatewayInferenceInputListFilesQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListFilesQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/files",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createFile",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceOpenAIFileSchema",
+      "requestSchema": "GatewayInferenceInputCreateFileRequestSchema",
+      "requestType": "GatewayInferenceInputCreateFileRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateFileRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "DELETE",
+      "path": "/files/{gatewayPathSegment(file_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "deleteFile",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceDeleteFileResponseSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "file_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/files/{gatewayPathSegment(file_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "retrieveFile",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceOpenAIFileSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "file_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/files/{gatewayPathSegment(file_id)}/content",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "downloadFile",
+      "plane": "gateway",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "file_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/fine_tuning/jobs",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createFineTuningJob",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceFineTuningJobSchema",
+      "requestSchema": "GatewayInferenceInputCreateFineTuningJobRequestSchema",
+      "requestType": "GatewayInferenceInputCreateFineTuningJobRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateFineTuningJobRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/fine_tuning/jobs",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listPaginatedFineTuningJobs",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceListPaginatedFineTuningJobsResponseSchema",
+      "queryType": "GatewayInferenceInputListPaginatedFineTuningJobsQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListPaginatedFineTuningJobsQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/fine_tuning/jobs/{gatewayPathSegment(fine_tuning_job_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "retrieveFineTuningJob",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceFineTuningJobSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "fine_tuning_job_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/fine_tuning/jobs/{gatewayPathSegment(fine_tuning_job_id)}/events",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listFineTuningEvents",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceListFineTuningJobEventsResponseSchema",
+      "queryType": "GatewayInferenceInputListFineTuningEventsQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "fine_tuning_job_id",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListFineTuningEventsQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/fine_tuning/jobs/{gatewayPathSegment(fine_tuning_job_id)}/cancel",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "cancelFineTuningJob",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceFineTuningJobSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "fine_tuning_job_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/fine_tuning/jobs/{gatewayPathSegment(fine_tuning_job_id)}/checkpoints",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listFineTuningJobCheckpoints",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceListFineTuningJobCheckpointsResponseSchema",
+      "queryType": "GatewayInferenceInputListFineTuningJobCheckpointsQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "fine_tuning_job_id",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListFineTuningJobCheckpointsQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/models",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listModels",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceListModelsResponseSchema",
+      "queryType": "GatewayInferenceInputListModelsQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListModelsQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/models/{gatewayPathSegment(model)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "retrieveModel",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceModelSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "DELETE",
+      "path": "/models/{gatewayPathSegment(model)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "deleteModel",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceDeleteModelResponseSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/moderations",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createModeration",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceCreateModerationResponseSchema",
+      "requestSchema": "GatewayInferenceInputCreateModerationRequestSchema",
+      "requestType": "GatewayInferenceInputCreateModerationRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateModerationRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/responses/{gatewayPathSegment(response_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "getResponse",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceResponseSchema",
+      "queryType": "GatewayInferenceInputGetResponseQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "response_id",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputGetResponseQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "DELETE",
+      "path": "/responses/{gatewayPathSegment(response_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "deleteResponse",
+      "plane": "gateway",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "response_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/responses/{gatewayPathSegment(response_id)}/input_items",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listInputItems",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceResponseItemListSchema",
+      "queryType": "GatewayInferenceInputListInputItemsQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "response_id",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListInputItemsQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/vector_stores",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listVectorStores",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceListVectorStoresResponseSchema",
+      "queryType": "GatewayInferenceInputListVectorStoresQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListVectorStoresQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/vector_stores",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createVectorStore",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceVectorStoreObjectSchema",
+      "requestSchema": "GatewayInferenceInputCreateVectorStoreRequestSchema",
+      "requestType": "GatewayInferenceInputCreateVectorStoreRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateVectorStoreRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "getVectorStore",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceVectorStoreObjectSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "modifyVectorStore",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceVectorStoreObjectSchema",
+      "requestSchema": "GatewayInferenceInputUpdateVectorStoreRequestSchema",
+      "requestType": "GatewayInferenceInputUpdateVectorStoreRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputUpdateVectorStoreRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "DELETE",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "deleteVectorStore",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceDeleteVectorStoreResponseSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}/files",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listVectorStoreFiles",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceListVectorStoreFilesResponseSchema",
+      "queryType": "GatewayInferenceInputListVectorStoreFilesQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListVectorStoreFilesQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}/files",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createVectorStoreFile",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceVectorStoreFileObjectSchema",
+      "requestSchema": "GatewayInferenceInputCreateVectorStoreFileRequestSchema",
+      "requestType": "GatewayInferenceInputCreateVectorStoreFileRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateVectorStoreFileRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}/files/{gatewayPathSegment(file_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "getVectorStoreFile",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceVectorStoreFileObjectSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "file_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "DELETE",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}/files/{gatewayPathSegment(file_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "deleteVectorStoreFile",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceDeleteVectorStoreFileResponseSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "file_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}/file_batches",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createVectorStoreFileBatch",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceVectorStoreFileBatchObjectSchema",
+      "requestSchema": "GatewayInferenceInputCreateVectorStoreFileBatchRequestSchema",
+      "requestType": "GatewayInferenceInputCreateVectorStoreFileBatchRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateVectorStoreFileBatchRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}/file_batches/{gatewayPathSegment(batch_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "getVectorStoreFileBatch",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceVectorStoreFileBatchObjectSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "batch_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}/file_batches/{gatewayPathSegment(batch_id)}/cancel",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "cancelVectorStoreFileBatch",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceVectorStoreFileBatchObjectSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "batch_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/vector_stores/{gatewayPathSegment(vector_store_id)}/file_batches/{gatewayPathSegment(batch_id)}/files",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listFilesInVectorStoreBatch",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceListVectorStoreFilesResponseSchema",
+      "queryType": "GatewayInferenceInputListFilesInVectorStoreBatchQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "vector_store_id",
+          "type": "string"
+        },
+        {
+          "name": "batch_id",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListFilesInVectorStoreBatchQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/batches",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createBatch",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceBatchSchema",
+      "requestSchema": "GatewayInferenceInputCreateBatchRequestSchema",
+      "requestType": "GatewayInferenceInputCreateBatchRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateBatchRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/batches",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "listBatches",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceListBatchesResponseSchema",
+      "queryType": "GatewayInferenceInputListBatchesQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputListBatchesQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/batches/{gatewayPathSegment(batch_id)}/output",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "getBatchOutput",
+      "plane": "gateway",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "batch_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/batches/{gatewayPathSegment(batch_id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "retrieveBatch",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceBatchSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "batch_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/batches/{gatewayPathSegment(batch_id)}/cancel",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "cancelBatch",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceBatchSchema",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "batch_id",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/feedback",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createFeedback",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceFeedbackResponseSchema",
+      "requestSchema": "GatewayInferenceInputFeedbackRequestSchema",
+      "requestType": "GatewayInferenceInputFeedbackRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputFeedbackRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "PUT",
+      "path": "/feedback/{gatewayPathSegment(id)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "updateFeedback",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceFeedbackResponseSchema",
+      "requestSchema": "GatewayInferenceInputFeedbackUpdateRequestSchema",
+      "requestType": "GatewayInferenceInputFeedbackUpdateRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputFeedbackUpdateRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "POST",
+      "path": "/logs",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "createLogs",
+      "plane": "gateway",
+      "requestSchema": "GatewayInferenceInputCreateLogsRequestSchema",
+      "requestType": "GatewayInferenceInputCreateLogsRequest",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayInferenceInputCreateLogsRequest"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayOptionSpreads": [
+        "this.runtimeRequestOptions(options)"
+      ],
+      "method": "GET",
+      "path": "/logs/{gatewayPathSegment(logId)}",
+      "source": "src/ai-gateway/runtime-resources-client.ts",
+      "member": "getLog",
+      "plane": "gateway",
+      "responseSchema": "GatewayInferenceLogObjectSchema",
+      "queryType": "GatewayInferenceInputGetLogQuery",
+      "className": "AIGatewayRuntimeResourcesClient",
+      "parameters": [
+        {
+          "name": "logId",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "GatewayInferenceInputGetLogQuery"
+        },
+        {
+          "name": "options",
+          "type": "GatewayInferenceRequestOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/error-category-trends",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "errorCategoryTrends",
+      "plane": "gateway",
+      "responseSchema": "ErrorCategoryTrendsResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/grouped-errors",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "groupedErrors",
+      "plane": "gateway",
+      "responseSchema": "GroupedErrorsResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/analytics/filter-boundaries",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "filterBoundaries",
+      "plane": "gateway",
+      "responseSchema": "GatewayFilterBoundariesResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/cost",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "cost",
+      "plane": "gateway",
+      "responseSchema": "CostChartResponseSchema",
+      "queryType": "AIGatewayChartOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayChartOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/requests",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "requests",
+      "plane": "gateway",
+      "responseSchema": "CountChartResponseSchema",
+      "queryType": "AIGatewayRequestChartOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayRequestChartOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/latency",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "latency",
+      "plane": "gateway",
+      "responseSchema": "LatencyChartResponseSchema",
+      "queryType": "AIGatewayChartOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayChartOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/tokens",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "tokens",
+      "plane": "gateway",
+      "responseSchema": "TokensChartResponseSchema",
+      "queryType": "AIGatewayChartOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayChartOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/errors",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "errors",
+      "plane": "gateway",
+      "responseSchema": "CountChartResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/users",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "users",
+      "plane": "gateway",
+      "responseSchema": "CountChartResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/cache-summary",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "cacheSummary",
+      "plane": "gateway",
+      "responseSchema": "CacheSummaryResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/cache-hit-trend",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "cacheHitTrend",
+      "plane": "gateway",
+      "responseSchema": "CacheHitTrendResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/user-trends",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "userTrends",
+      "plane": "gateway",
+      "responseSchema": "UserTrendsResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/error-trends",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "errorTrends",
+      "plane": "gateway",
+      "responseSchema": "ErrorTrendsResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/rescued-retries",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "rescuedRetries",
+      "plane": "gateway",
+      "responseSchema": "RescuedRetriesResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/feedback-trend",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "feedbackTrend",
+      "plane": "gateway",
+      "responseSchema": "CountChartResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/feedback-weighted",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "feedbackWeighted",
+      "plane": "gateway",
+      "responseSchema": "CountChartResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/feedback-score-distribution",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "feedbackScoreDistribution",
+      "plane": "gateway",
+      "responseSchema": "FeedbackScoreDistributionResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/charts/feedback-models",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "feedbackModels",
+      "plane": "gateway",
+      "responseSchema": "FeedbackModelsResponseSchema",
+      "queryType": "AIGatewayWindowOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayWindowOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/groups/{dimension}",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "groupBy",
+      "plane": "gateway",
+      "responseSchema": "GroupListResponseSchema",
+      "queryType": "AIGatewayGroupOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "dimension",
+          "type": "(typeof AI_GW_GROUP_DIMENSIONS)[number]"
+        },
+        {
+          "name": "opts",
+          "type": "AIGatewayGroupOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/groups/users",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "byUser",
+      "plane": "gateway",
+      "responseSchema": "UserGroupResponseSchema",
+      "queryType": "AIGatewayChartOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayChartOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs/groups/status_code",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "byStatusCode",
+      "plane": "gateway",
+      "responseSchema": "GroupListResponseSchema",
+      "queryType": "AIGatewayGroupOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayGroupOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.baseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/logs",
+      "source": "src/ai-gateway/telemetry-client.ts",
+      "member": "logs",
+      "plane": "gateway",
+      "responseSchema": "GatewayLogsResponseSchema",
+      "queryType": "AIGatewayLogsOptions",
+      "className": "AIGatewayTelemetryClient",
+      "parameters": [
+        {
+          "name": "opts",
+          "type": "AIGatewayLogsOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.urlFor(options.plane)",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/workspaces",
+      "source": "src/ai-gateway/workspaces-client.ts",
+      "member": "list",
+      "plane": "gateway",
+      "responseSchema": "ListWorkspacesResponseSchema",
+      "className": "AIGatewayWorkspacesClient",
+      "parameters": [
+        {
+          "name": "options",
+          "type": "AIGatewayWorkspaceListOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.urlFor(options.plane)",
+      "gatewayOptionSpreads": [],
+      "method": "GET",
+      "path": "/workspaces/{workspaceRef}",
+      "source": "src/ai-gateway/workspaces-client.ts",
+      "member": "get",
+      "plane": "gateway",
+      "responseSchema": "GatewayWorkspaceDetailSchema",
+      "className": "AIGatewayWorkspacesClient",
+      "parameters": [
+        {
+          "name": "workspaceRef",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "AIGatewayWorkspaceGetOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.adminBaseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "POST",
+      "path": "/workspaces",
+      "source": "src/ai-gateway/workspaces-client.ts",
+      "member": "create",
+      "plane": "gateway",
+      "responseSchema": "GatewayWorkspaceCreateResponseSchema",
+      "requestSchema": "GatewayWorkspaceCreateRequestSchema",
+      "requestType": "GatewayWorkspaceCreateRequest",
+      "className": "AIGatewayWorkspacesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "GatewayWorkspaceCreateRequest"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.adminBaseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "POST",
+      "path": "/workspaces",
+      "source": "src/ai-gateway/workspaces-client.ts",
+      "member": "provision",
+      "plane": "gateway",
+      "responseSchema": "GatewayWorkspaceCreateResponseSchema",
+      "requestSchema": "GatewayWorkspaceCreateRequestSchema",
+      "className": "AIGatewayWorkspacesClient",
+      "parameters": [
+        {
+          "name": "request",
+          "type": "GatewayWorkspaceProvisionRequest"
+        },
+        {
+          "name": "options",
+          "type": "AIGatewayWorkspaceProvisionOptions"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.adminBaseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "PUT",
+      "path": "/workspaces/{workspaceRef}",
+      "source": "src/ai-gateway/workspaces-client.ts",
+      "member": "update",
+      "plane": "gateway",
+      "responseSchema": "GatewayWriteResponseSchema",
+      "requestSchema": "GatewayWorkspaceUpdateRequestSchema",
+      "requestType": "GatewayWorkspaceUpdateRequest",
+      "className": "AIGatewayWorkspacesClient",
+      "parameters": [
+        {
+          "name": "workspaceRef",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "GatewayWorkspaceUpdateRequest"
+        }
+      ]
+    },
+    {
+      "gatewayBaseUrl": "this.adminBaseUrl",
+      "gatewayOptionSpreads": [],
+      "method": "DELETE",
+      "path": "/workspaces/{workspaceRef}",
+      "source": "src/ai-gateway/workspaces-client.ts",
+      "member": "delete",
+      "plane": "gateway",
+      "className": "AIGatewayWorkspacesClient",
+      "parameters": [
+        {
+          "name": "workspaceRef",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/scopes",
+      "source": "src/iam/scopes-client.ts",
+      "member": "list",
+      "plane": "other",
+      "responseSchema": "IamScopeListResponseSchema",
+      "className": "IamScopesClient",
+      "parameters": []
+    },
+    {
+      "method": "GET",
+      "path": "/scopes/{name}",
+      "source": "src/iam/scopes-client.ts",
+      "member": "get",
+      "plane": "other",
+      "responseSchema": "IamScopeSchema",
+      "className": "IamScopesClient",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/scopes",
+      "source": "src/iam/scopes-client.ts",
+      "member": "create",
+      "plane": "other",
+      "responseSchema": "IamScopeSchema",
+      "requestSchema": "IamScopeCreateRequestSchema",
+      "className": "IamScopesClient",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "IamScopeCreateInput"
+        }
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/scopes/{name}",
+      "source": "src/iam/scopes-client.ts",
+      "member": "update",
+      "plane": "other",
+      "responseSchema": "IamScopeSchema",
+      "requestSchema": "IamScopeUpdateRequestSchema",
+      "className": "IamScopesClient",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "input",
+          "type": "IamScopeUpdateInput"
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/scopes/{name}",
+      "source": "src/iam/scopes-client.ts",
+      "member": "delete",
+      "plane": "other",
+      "className": "IamScopesClient",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/api/data-filtering-profiles",
+      "source": "src/management/dlp/data-filtering-profiles.ts",
+      "member": "list",
+      "plane": "management",
+      "responseSchema": "PageDataFilteringProfileResponseSchema",
+      "className": "DataFilteringProfilesClient",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "DataFilteringProfileListParams"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/api/data-filtering-profiles/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/data-filtering-profiles.ts",
+      "member": "get",
+      "plane": "management",
+      "responseSchema": "DataFilteringProfileResponseSchema",
+      "className": "DataFilteringProfilesClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/api/data-filtering-profiles/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/data-filtering-profiles.ts",
+      "member": "replace",
+      "plane": "management",
+      "responseSchema": "DataFilteringProfileResponseSchema",
+      "requestSchema": "DataFilteringProfileRequestSchema",
+      "requestType": "DataFilteringProfileRequest",
+      "className": "DataFilteringProfilesClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "DataFilteringProfileRequest"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/api/data-patterns",
+      "source": "src/management/dlp/data-patterns.ts",
+      "member": "list",
+      "plane": "management",
+      "responseSchema": "PageDataPatternResponseSchema",
+      "className": "DataPatternsClient",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "DataPatternListParams"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/api/data-patterns",
+      "source": "src/management/dlp/data-patterns.ts",
+      "member": "create",
+      "plane": "management",
+      "responseSchema": "DataPatternResponseSchema",
+      "requestSchema": "DataPatternRequestSchema",
+      "requestType": "DataPatternRequest",
+      "className": "DataPatternsClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "DataPatternRequest"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/api/data-patterns/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/data-patterns.ts",
+      "member": "get",
+      "plane": "management",
+      "responseSchema": "DataPatternResponseSchema",
+      "className": "DataPatternsClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/api/data-patterns/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/data-patterns.ts",
+      "member": "replace",
+      "plane": "management",
+      "responseSchema": "DataPatternResponseSchema",
+      "requestSchema": "DataPatternRequestSchema",
+      "requestType": "DataPatternRequest",
+      "className": "DataPatternsClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "DataPatternRequest"
+        }
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/api/data-patterns/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/data-patterns.ts",
+      "member": "patch",
+      "plane": "management",
+      "responseSchema": "DataPatternResponseSchema",
+      "requestSchema": "DataPatternPatchRequestSchema",
+      "requestType": "DataPatternPatchRequest",
+      "className": "DataPatternsClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "DataPatternPatchRequest"
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/api/data-patterns/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/data-patterns.ts",
+      "member": "delete",
+      "plane": "management",
+      "className": "DataPatternsClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/api/data-profiles",
+      "source": "src/management/dlp/data-profiles.ts",
+      "member": "list",
+      "plane": "management",
+      "responseSchema": "PageDataProfileResponseSchema",
+      "className": "DataProfilesClient",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "DataProfileListParams"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/api/data-profiles",
+      "source": "src/management/dlp/data-profiles.ts",
+      "member": "create",
+      "plane": "management",
+      "responseSchema": "DataProfileResponseSchema",
+      "requestSchema": "AdvancedDataProfileRequestSchema",
+      "requestType": "AdvancedDataProfileRequest",
+      "className": "DataProfilesClient",
+      "parameters": [
+        {
+          "name": "body",
+          "type": "AdvancedDataProfileRequest"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/api/data-profiles/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/data-profiles.ts",
+      "member": "get",
+      "plane": "management",
+      "responseSchema": "DataProfileResponseSchema",
+      "className": "DataProfilesClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/api/data-profiles/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/data-profiles.ts",
+      "member": "replace",
+      "plane": "management",
+      "responseSchema": "DataProfileResponseSchema",
+      "requestSchema": "AdvancedDataProfileRequestSchema",
+      "requestType": "AdvancedDataProfileRequest",
+      "className": "DataProfilesClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "AdvancedDataProfileRequest"
+        }
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/api/data-profiles/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/data-profiles.ts",
+      "member": "patch",
+      "plane": "management",
+      "responseSchema": "DataProfileResponseSchema",
+      "requestSchema": "DataProfilePatchRequestSchema",
+      "requestType": "DataProfilePatchRequest",
+      "className": "DataProfilesClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "DataProfilePatchRequest"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/api/dictionaries",
+      "source": "src/management/dlp/dictionaries.ts",
+      "member": "list",
+      "plane": "management",
+      "responseSchema": "PageDictionaryResponseSchema",
+      "className": "DictionariesClient",
+      "parameters": [
+        {
+          "name": "params",
+          "type": "DictionaryListParams"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/api/dictionaries",
+      "source": "src/management/dlp/dictionaries.ts",
+      "member": "create",
+      "plane": "management",
+      "responseSchema": "DictionaryResponseSchema",
+      "className": "DictionariesClient",
+      "parameters": [
+        {
+          "name": "{\n    metadata,\n    file,\n    includeKeywords,\n  }",
+          "type": "DictionaryUploadParams"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/api/dictionaries/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/dictionaries.ts",
+      "member": "get",
+      "plane": "management",
+      "responseSchema": "DictionaryResponseSchema",
+      "className": "DictionariesClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "params",
+          "type": "DictionaryGetParams"
+        }
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/api/dictionaries/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/dictionaries.ts",
+      "member": "replace",
+      "plane": "management",
+      "responseSchema": "DictionaryResponseSchema.optional()",
+      "className": "DictionariesClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "{ metadata, file, includeKeywords }",
+          "type": "DictionaryUploadParams"
+        }
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/api/dictionaries/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/dictionaries.ts",
+      "member": "patch",
+      "plane": "management",
+      "responseSchema": "DictionaryResponseSchema",
+      "requestSchema": "DictionaryPatchRequestSchema",
+      "requestType": "DictionaryPatchRequest",
+      "className": "DictionariesClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "type": "DictionaryPatchRequest"
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/api/dictionaries/{encodeURIComponent(resourceId)}",
+      "source": "src/management/dlp/dictionaries.ts",
+      "member": "delete",
+      "plane": "management",
+      "className": "DictionariesClient",
+      "parameters": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

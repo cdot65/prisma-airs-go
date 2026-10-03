@@ -337,6 +337,14 @@ List calls the pinned Adapters contract.
 func (c *AdaptersClient) List(ctx context.Context, opts AdapterListOpts) (*schema.CustomTargetAdapterList, error)
 ```
 
+### AdaptersClient.ListAll
+
+ListAll collects adapter pages without losing filters or target-count options.
+
+```go
+func (c *AdaptersClient) ListAll(ctx context.Context, opts AdapterListOpts, bounds aisec.CollectOptions) ([]schema.CustomTargetAdapterListItem, error)
+```
+
 ### AdaptersClient.Update
 
 Update fully replaces the adapter; the variable list defines the complete desired key set and null values keep stored secrets.
@@ -452,6 +460,15 @@ GetRegistryCredentials gets or creates registry credentials from the mgmt plane.
 
 ```go
 func (c *Client) GetRegistryCredentials(ctx context.Context) (*RegistryCredentials, error)
+```
+
+### Client.GetScanMetadata
+
+GetScanMetadata reads the data-plane metadata route. On the TypeScript SDK's recorded 422
+routing incompatibility it falls back to the equivalent management target metadata endpoint.
+
+```go
+func (c *Client) GetScanMetadata(ctx context.Context) (map[string]any, error)
 ```
 
 ### Client.GetScanStatistics
@@ -864,6 +881,22 @@ ListActivePromptSetsDetails returns the complete current-schema response while t
 
 ```go
 func (c *CustomAttacksClient) ListActivePromptSetsDetails(ctx context.Context) (*schema.CustomPromptSetListActive, error)
+```
+
+### CustomAttacksClient.ListAllPromptSets
+
+ListAllPromptSets collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *CustomAttacksClient) ListAllPromptSets(ctx context.Context, opts PromptSetListOpts, bounds aisec.CollectOptions) ([]CustomPromptSetResponse, error)
+```
+
+### CustomAttacksClient.ListAllPrompts
+
+ListAllPrompts collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *CustomAttacksClient) ListAllPrompts(ctx context.Context, id string, opts PromptListOpts, bounds aisec.CollectOptions) ([]CustomPromptResponse, error)
 ```
 
 ### CustomAttacksClient.ListPromptSets
@@ -1428,6 +1461,14 @@ func (c *ScansClient) GetMetadata(ctx context.Context) (map[string]any, error)
 func (c *ScansClient) List(ctx context.Context, opts ScanListOpts) (*JobListResponse, error)
 ```
 
+### ScansClient.ListAll
+
+ListAll collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *ScansClient) ListAll(ctx context.Context, opts ScanListOpts, bounds aisec.CollectOptions) ([]JobResponse, error)
+```
+
 ### ScansClient.ListDetails
 
 ListDetails returns the complete current-schema response while the legacy method retains its existing type.
@@ -1538,6 +1579,14 @@ func (c *TargetsClient) GetProfileDetails(ctx context.Context, uuid string) (*sc
 
 ```go
 func (c *TargetsClient) List(ctx context.Context, opts TargetListOpts) (*TargetList, error)
+```
+
+### TargetsClient.ListAll
+
+ListAll collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *TargetsClient) ListAll(ctx context.Context, opts TargetListOpts, bounds aisec.CollectOptions) ([]TargetListItem, error)
 ```
 
 ### TargetsClient.ListDetails

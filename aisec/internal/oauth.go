@@ -38,16 +38,19 @@ type OAuthClientOpts struct {
 	TokenBufferMs int
 	// HTTPClient is used for token requests. Defaults to DefaultHTTPClient().
 	HTTPClient *http.Client
+	// OnTokenRefresh runs outside the token lock after a successful refresh.
+	OnTokenRefresh func(TokenInfo)
 }
 
 // OAuthClient manages OAuth2 client_credentials tokens with caching and proactive refresh.
 type OAuthClient struct {
-	clientID      string
-	clientSecret  string
-	tsgID         string
-	tokenEndpoint string
-	tokenBuffer   time.Duration
-	httpClient    *http.Client
+	clientID       string
+	clientSecret   string
+	tsgID          string
+	tokenEndpoint  string
+	tokenBuffer    time.Duration
+	httpClient     *http.Client
+	onTokenRefresh func(TokenInfo)
 
 	mu          sync.Mutex
 	accessToken string
@@ -81,12 +84,13 @@ func NewOAuthClient(opts OAuthClientOpts) *OAuthClient {
 	}
 
 	return &OAuthClient{
-		httpClient:    hc,
-		clientID:      opts.ClientID,
-		clientSecret:  opts.ClientSecret,
-		tsgID:         opts.TsgID,
-		tokenEndpoint: endpoint,
-		tokenBuffer:   time.Duration(bufferMs) * time.Millisecond,
+		httpClient:     hc,
+		onTokenRefresh: opts.OnTokenRefresh,
+		clientID:       opts.ClientID,
+		clientSecret:   opts.ClientSecret,
+		tsgID:          opts.TsgID,
+		tokenEndpoint:  endpoint,
+		tokenBuffer:    time.Duration(bufferMs) * time.Millisecond,
 	}
 }
 
@@ -333,6 +337,9 @@ func (c *OAuthClient) fetchToken(ctx context.Context) (string, error) {
 	c.accessToken = tokenResp.AccessToken
 	c.expiresAt = time.Now().Add(time.Duration(tokenResp.ExpiresIn) * time.Second)
 	c.mu.Unlock()
+	if c.onTokenRefresh != nil {
+		c.onTokenRefresh(c.GetTokenInfo())
+	}
 
 	return tokenResp.AccessToken, nil
 }

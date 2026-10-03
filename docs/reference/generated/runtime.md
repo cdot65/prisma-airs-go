@@ -83,6 +83,14 @@ ContentFromJSON creates a Content from an API response object.
 func ContentFromJSON(ci ContentInner) (*Content, error)
 ```
 
+### ContentFromJSONFile
+
+ContentFromJSONFile loads an API-shaped content document and applies NewContent validation.
+
+```go
+func ContentFromJSONFile(path string) (*Content, error)
+```
+
 ### NewClient
 
 NewClient creates a new Management API client.
@@ -97,6 +105,14 @@ NewContent creates a new Content with byte-length validation.
 
 ```go
 func NewContent(opts ContentOpts) (*Content, error)
+```
+
+### NewOAuthClient
+
+NewOAuthClient creates a standalone token manager without fetching a token.
+
+```go
+func NewOAuthClient(opts OAuthClientOptions) (*OAuthClient, error)
 ```
 
 ### NewScanner
@@ -133,6 +149,22 @@ func (c *ApiKeysClient) Delete(ctx context.Context, keyName, updatedBy string) (
 
 ```go
 func (c *ApiKeysClient) List(ctx context.Context, opts ListOpts) (*ApiKeyListResponse, error)
+```
+
+### ApiKeysClient.ListAll
+
+ListAll collects pages with caller-selected bounds and rejects nonprogressing cursors.
+
+```go
+func (c *ApiKeysClient) ListAll(ctx context.Context, opts ListOpts, bounds aisec.CollectOptions) ([]ApiKey, error)
+```
+
+### ApiKeysClient.ListForToken
+
+ListForToken uses the token-scoped OpenAPI route without a tenant path suffix.
+
+```go
+func (c *ApiKeysClient) ListForToken(ctx context.Context, opts ListOpts) (*ApiKeyListResponse, error)
 ```
 
 ### ApiKeysClient.Regenerate
@@ -249,12 +281,380 @@ func (c *CustomerAppsClient) Get(ctx context.Context, appName string) (*Customer
 func (c *CustomerAppsClient) List(ctx context.Context, opts ListOpts) (*CustomerAppListResponse, error)
 ```
 
+### CustomerAppsClient.ListAll
+
+ListAll collects pages with caller-selected bounds and rejects nonprogressing cursors.
+
+```go
+func (c *CustomerAppsClient) ListAll(ctx context.Context, opts ListOpts, bounds aisec.CollectOptions) ([]CustomerApp, error)
+```
+
+### CustomerAppsClient.ListForToken
+
+ListForToken uses the token-scoped OpenAPI route without a tenant path suffix.
+
+```go
+func (c *CustomerAppsClient) ListForToken(ctx context.Context, opts ListOpts) (*CustomerAppListResponse, error)
+```
+
 ### CustomerAppsClient.Update
 
 Update updates a customer app: PUT /v1/mgmt/customerapp?customer_app_id=
 
 ```go
 func (c *CustomerAppsClient) Update(ctx context.Context, customerAppID string, req UpdateAppRequest) (*CustomerApp, error)
+```
+
+## DashboardClient
+
+DashboardClient reads runtime application/session dashboards without changing other management routes.
+
+```go
+type DashboardClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### DashboardClient.Application
+
+Application reads /v1/mgmt/dashboard/v2/apps/application using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) Application(ctx context.Context, opts DashboardAppQuery) (*parity.DashboardApplication, error)
+```
+
+### DashboardClient.ApplicationRaw
+
+ApplicationRaw reads /v1/mgmt/dashboard/v2/apps/application without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) ApplicationRaw(ctx context.Context, opts DashboardAppQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.ApplicationViolationBreakdown
+
+ApplicationViolationBreakdown reads /v1/mgmt/dashboard/v2/apps/applicationviolationbreakdown using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) ApplicationViolationBreakdown(ctx context.Context, opts DashboardAppQuery) (*parity.DashboardApplicationViolationBreakdown, error)
+```
+
+### DashboardClient.ApplicationViolationBreakdownRaw
+
+ApplicationViolationBreakdownRaw reads /v1/mgmt/dashboard/v2/apps/applicationviolationbreakdown without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) ApplicationViolationBreakdownRaw(ctx context.Context, opts DashboardAppQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.ApplicationsOverview
+
+ApplicationsOverview reads /v1/mgmt/dashboard/v2/apps/applicationsoverview using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) ApplicationsOverview(ctx context.Context, opts DashboardOverviewQuery) (*parity.DashboardApplicationsOverview, error)
+```
+
+### DashboardClient.ApplicationsOverviewRaw
+
+ApplicationsOverviewRaw reads /v1/mgmt/dashboard/v2/apps/applicationsoverview without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) ApplicationsOverviewRaw(ctx context.Context, opts DashboardOverviewQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.ApplicationsViolationsTrend
+
+ApplicationsViolationsTrend reads /v1/mgmt/dashboard/v2/apps/applicationsviolationstrend using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) ApplicationsViolationsTrend(ctx context.Context, opts DashboardTimeRangeQuery) (*parity.DashboardApplicationsViolationsTrend, error)
+```
+
+### DashboardClient.ApplicationsViolationsTrendRaw
+
+ApplicationsViolationsTrendRaw reads /v1/mgmt/dashboard/v2/apps/applicationsviolationstrend without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) ApplicationsViolationsTrendRaw(ctx context.Context, opts DashboardTimeRangeQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.AppsList
+
+AppsList reads /v1/mgmt/dashboard/v2/apps/appslist using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) AppsList(ctx context.Context, opts DashboardTimeRangeQuery) (*parity.DashboardAppsList, error)
+```
+
+### DashboardClient.AppsListRaw
+
+AppsListRaw reads /v1/mgmt/dashboard/v2/apps/appslist without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) AppsListRaw(ctx context.Context, opts DashboardTimeRangeQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.ScanContent
+
+ScanContent reads /v1/mgmt/reports/scancontent using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) ScanContent(ctx context.Context, opts DashboardScanContentQuery) (*parity.DashboardScanContent, error)
+```
+
+### DashboardClient.ScanContentRaw
+
+ScanContentRaw reads /v1/mgmt/reports/scancontent without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) ScanContentRaw(ctx context.Context, opts DashboardScanContentQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.Session
+
+Session reads /v1/mgmt/dashboard/v2/sessions/session using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) Session(ctx context.Context, opts DashboardSessionQuery) (*parity.DashboardSession, error)
+```
+
+### DashboardClient.SessionRaw
+
+SessionRaw reads /v1/mgmt/dashboard/v2/sessions/session without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) SessionRaw(ctx context.Context, opts DashboardSessionQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.SessionTransaction
+
+SessionTransaction reads /v1/mgmt/dashboard/v2/sessions/sessiontransaction using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) SessionTransaction(ctx context.Context, opts DashboardTransactionQuery) (*parity.DashboardSessionTransaction, error)
+```
+
+### DashboardClient.SessionTransactionRaw
+
+SessionTransactionRaw reads /v1/mgmt/dashboard/v2/sessions/sessiontransaction without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) SessionTransactionRaw(ctx context.Context, opts DashboardTransactionQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.SessionsChart
+
+SessionsChart reads /v1/mgmt/dashboard/v2/sessions/sessionschart using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) SessionsChart(ctx context.Context, opts DashboardTimeRangeQuery) (*parity.DashboardSessionsChart, error)
+```
+
+### DashboardClient.SessionsChartRaw
+
+SessionsChartRaw reads /v1/mgmt/dashboard/v2/sessions/sessionschart without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) SessionsChartRaw(ctx context.Context, opts DashboardTimeRangeQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.SessionsOverview
+
+SessionsOverview reads /v1/mgmt/dashboard/v2/sessions/sessionsoverview using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) SessionsOverview(ctx context.Context, opts DashboardOverviewQuery) (*parity.DashboardSessionsOverview, error)
+```
+
+### DashboardClient.SessionsOverviewRaw
+
+SessionsOverviewRaw reads /v1/mgmt/dashboard/v2/sessions/sessionsoverview without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) SessionsOverviewRaw(ctx context.Context, opts DashboardOverviewQuery) (*json.RawMessage, error)
+```
+
+### DashboardClient.TopApplicationsViolations
+
+TopApplicationsViolations reads /v1/mgmt/dashboard/v2/apps/topapplicationsviolations using its pinned TypeScript response model.
+
+```go
+func (c *DashboardClient) TopApplicationsViolations(ctx context.Context, opts DashboardTimeRangeQuery) (*parity.DashboardTopApplicationsViolations, error)
+```
+
+### DashboardClient.TopApplicationsViolationsRaw
+
+TopApplicationsViolationsRaw reads /v1/mgmt/dashboard/v2/apps/topapplicationsviolations without imposing a response model; nil JSON means an empty body.
+
+```go
+func (c *DashboardClient) TopApplicationsViolationsRaw(ctx context.Context, opts DashboardTimeRangeQuery) (*json.RawMessage, error)
+```
+
+## DataFilteringProfilesClient
+
+DataFilteringProfilesClient manages the corresponding DLP resource through its published TypeScript contract.
+
+```go
+type DataFilteringProfilesClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### DataFilteringProfilesClient.Get
+
+Get calls GET /v2/api/data-filtering-profiles/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DataFilteringProfilesClient) Get(ctx context.Context, resourceId string) (*parity.DataFilteringProfileResponse, error)
+```
+
+### DataFilteringProfilesClient.List
+
+List calls GET /v2/api/data-filtering-profiles; deletes archive server-side where supported.
+
+```go
+func (c *DataFilteringProfilesClient) List(ctx context.Context, opts DLPListOptions) (*parity.PageDataFilteringProfileResponse, error)
+```
+
+### DataFilteringProfilesClient.ListAll
+
+ListAll follows server pagination with a maximum and a bounded page count.
+
+```go
+func (c *DataFilteringProfilesClient) ListAll(ctx context.Context, opts DLPListAllOptions) ([]parity.PageDataFilteringProfileResponseContentItem, error)
+```
+
+### DataFilteringProfilesClient.Replace
+
+Replace calls PUT /v2/api/data-filtering-profiles/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DataFilteringProfilesClient) Replace(ctx context.Context, resourceId string, body parity.DataFilteringProfileRequest) (*parity.DataFilteringProfileResponse, error)
+```
+
+## DataPatternsClient
+
+DataPatternsClient manages the corresponding DLP resource through its published TypeScript contract.
+
+```go
+type DataPatternsClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### DataPatternsClient.Create
+
+Create calls POST /v2/api/data-patterns; deletes archive server-side where supported.
+
+```go
+func (c *DataPatternsClient) Create(ctx context.Context, body parity.DataPatternRequest) (*parity.DataPatternResponse, error)
+```
+
+### DataPatternsClient.Delete
+
+Delete calls DELETE /v2/api/data-patterns/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DataPatternsClient) Delete(ctx context.Context, resourceId string) error
+```
+
+### DataPatternsClient.Get
+
+Get calls GET /v2/api/data-patterns/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DataPatternsClient) Get(ctx context.Context, resourceId string) (*parity.DataPatternResponse, error)
+```
+
+### DataPatternsClient.List
+
+List calls GET /v2/api/data-patterns; deletes archive server-side where supported.
+
+```go
+func (c *DataPatternsClient) List(ctx context.Context, opts DLPListOptions) (*parity.PageDataPatternResponse, error)
+```
+
+### DataPatternsClient.ListAll
+
+ListAll follows server pagination with a maximum and a bounded page count.
+
+```go
+func (c *DataPatternsClient) ListAll(ctx context.Context, opts DLPListAllOptions) ([]parity.PageDataPatternResponseContentItem, error)
+```
+
+### DataPatternsClient.Patch
+
+Patch calls PATCH /v2/api/data-patterns/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DataPatternsClient) Patch(ctx context.Context, resourceId string, body parity.DataPatternPatchRequest) (*parity.DataPatternResponse, error)
+```
+
+### DataPatternsClient.Replace
+
+Replace calls PUT /v2/api/data-patterns/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DataPatternsClient) Replace(ctx context.Context, resourceId string, body parity.DataPatternRequest) (*parity.DataPatternResponse, error)
+```
+
+## DataProfilesClient
+
+DataProfilesClient manages the corresponding DLP resource through its published TypeScript contract.
+
+```go
+type DataProfilesClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### DataProfilesClient.Create
+
+Create calls POST /v2/api/data-profiles; deletes archive server-side where supported.
+
+```go
+func (c *DataProfilesClient) Create(ctx context.Context, body parity.AdvancedDataProfileRequest) (*parity.DataProfileResponse, error)
+```
+
+### DataProfilesClient.Get
+
+Get calls GET /v2/api/data-profiles/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DataProfilesClient) Get(ctx context.Context, resourceId string) (*parity.DataProfileResponse, error)
+```
+
+### DataProfilesClient.List
+
+List calls GET /v2/api/data-profiles; deletes archive server-side where supported.
+
+```go
+func (c *DataProfilesClient) List(ctx context.Context, opts DLPListOptions) (*parity.PageDataProfileResponse, error)
+```
+
+### DataProfilesClient.ListAll
+
+ListAll follows server pagination with a maximum and a bounded page count.
+
+```go
+func (c *DataProfilesClient) ListAll(ctx context.Context, opts DLPListAllOptions) ([]parity.PageDataProfileResponseContentItem, error)
+```
+
+### DataProfilesClient.Patch
+
+Patch calls PATCH /v2/api/data-profiles/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DataProfilesClient) Patch(ctx context.Context, resourceId string, body parity.DataProfilePatchRequest) (*parity.DataProfileResponse, error)
+```
+
+### DataProfilesClient.Replace
+
+Replace calls PUT /v2/api/data-profiles/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DataProfilesClient) Replace(ctx context.Context, resourceId string, body parity.AdvancedDataProfileRequest) (*parity.DataProfileResponse, error)
 ```
 
 ## DeploymentProfilesClient
@@ -287,6 +687,72 @@ ListWithOptions selects activation state without changing legacy List calls.
 func (c *DeploymentProfilesClient) ListWithOptions(ctx context.Context, opts DeploymentProfileListOpts) (*DeploymentProfileListResponse, error)
 ```
 
+## DictionariesClient
+
+DictionariesClient manages the corresponding DLP resource through its published TypeScript contract.
+
+```go
+type DictionariesClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### DictionariesClient.Create
+
+Create uploads metadata.json and a keyword file through the shared management OAuth pipeline.
+
+```go
+func (c *DictionariesClient) Create(ctx context.Context, input DictionaryUpload) (*parity.DictionaryResponse, error)
+```
+
+### DictionariesClient.Delete
+
+Delete calls DELETE /v2/api/dictionaries/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DictionariesClient) Delete(ctx context.Context, resourceId string) error
+```
+
+### DictionariesClient.Get
+
+Get reads a dictionary, optionally with its keyword content.
+
+```go
+func (c *DictionariesClient) Get(ctx context.Context, id string, opts DictionaryGetOptions) (*parity.DictionaryResponse, error)
+```
+
+### DictionariesClient.List
+
+List calls GET /v2/api/dictionaries; deletes archive server-side where supported.
+
+```go
+func (c *DictionariesClient) List(ctx context.Context, opts DLPListOptions) (*parity.PageDictionaryResponse, error)
+```
+
+### DictionariesClient.ListAll
+
+ListAll follows server pagination with a maximum and a bounded page count.
+
+```go
+func (c *DictionariesClient) ListAll(ctx context.Context, opts DLPListAllOptions) ([]parity.PageDictionaryResponseContentItem, error)
+```
+
+### DictionariesClient.Patch
+
+Patch calls PATCH /v2/api/dictionaries/{resourceId}; deletes archive server-side where supported.
+
+```go
+func (c *DictionariesClient) Patch(ctx context.Context, resourceId string, body parity.DictionaryPatchRequest) (*parity.DictionaryResponse, error)
+```
+
+### DictionariesClient.Replace
+
+Replace replaces the dictionary; a valid 204 returns nil, nil, rather than inventing a record.
+
+```go
+func (c *DictionariesClient) Replace(ctx context.Context, id string, input DictionaryUpload) (*parity.DictionaryResponse, error)
+```
+
 ## DlpProfilesClient
 
 DlpProfilesClient provides read-only access to DLP profiles.
@@ -307,6 +773,64 @@ func (c *DlpProfilesClient) Get(ctx context.Context, profileID string) (*DlpProf
 
 ```go
 func (c *DlpProfilesClient) List(ctx context.Context, opts ListOpts) (*DlpProfileListResponse, error)
+```
+
+## OAuthClient
+
+OAuthClient manages client-credentials tokens with automatic refresh and concurrent request deduplication.
+
+```go
+type OAuthClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### OAuthClient.ClearToken
+
+ClearToken invalidates the cache; the next GetToken fetches a new token.
+
+```go
+func (c *OAuthClient) ClearToken()
+```
+
+### OAuthClient.GetToken
+
+GetToken returns a valid token, fetching or refreshing only when needed.
+
+```go
+func (c *OAuthClient) GetToken(ctx context.Context) (string, error)
+```
+
+### OAuthClient.GetTokenInfo
+
+GetTokenInfo returns token timing without the bearer value.
+
+```go
+func (c *OAuthClient) GetTokenInfo() TokenInfo
+```
+
+### OAuthClient.IsTokenExpired
+
+IsTokenExpired reports whether a token is absent or expired.
+
+```go
+func (c *OAuthClient) IsTokenExpired() bool
+```
+
+### OAuthClient.IsTokenExpiringSoon
+
+IsTokenExpiringSoon reports whether the cache is within the refresh buffer.
+
+```go
+func (c *OAuthClient) IsTokenExpiringSoon() bool
+```
+
+### OAuthClient.TokenEndpoint
+
+TokenEndpoint returns the configured OAuth endpoint.
+
+```go
+func (c *OAuthClient) TokenEndpoint() string
 ```
 
 ## OAuthManagementClient
@@ -337,6 +861,14 @@ func (c *OAuthManagementClient) GetTokenWithTTL(ctx context.Context, req OAuthTo
 
 ```go
 func (c *OAuthManagementClient) InvalidateToken(ctx context.Context) (*InvalidateTokenResponse, error)
+```
+
+### OAuthManagementClient.InvalidateTokenForApp
+
+InvalidateTokenForApp invalidates the supplied application token using its client/application body.
+
+```go
+func (c *OAuthManagementClient) InvalidateTokenForApp(ctx context.Context, token string, body OAuthTokenRequest) (string, error)
 ```
 
 ## ProfilesClient
@@ -393,6 +925,22 @@ func (c *ProfilesClient) GetByName(ctx context.Context, name string) (*SecurityP
 
 ```go
 func (c *ProfilesClient) List(ctx context.Context, opts ListOpts) (*SecurityProfileListResponse, error)
+```
+
+### ProfilesClient.ListAll
+
+ListAll collects pages with caller-selected bounds and rejects nonprogressing cursors.
+
+```go
+func (c *ProfilesClient) ListAll(ctx context.Context, opts ProfileListOpts, bounds aisec.CollectOptions) ([]SecurityProfile, error)
+```
+
+### ProfilesClient.ListForToken
+
+ListForToken uses the token-scoped OpenAPI route without a tenant path suffix.
+
+```go
+func (c *ProfilesClient) ListForToken(ctx context.Context, opts ProfileListOpts) (*SecurityProfileListResponse, error)
 ```
 
 ### ProfilesClient.ListWithOptions
@@ -500,10 +1048,42 @@ ForceDelete force-deletes a topic: DELETE /v1/mgmt/topic/{topic_id}/force?update
 func (c *TopicsClient) ForceDelete(ctx context.Context, topicID string, updatedBy string) (*DeleteTopicResponse, error)
 ```
 
+### TopicsClient.Get
+
+Get reads a custom topic by UUID using the supported paginated inventory.
+
+```go
+func (c *TopicsClient) Get(ctx context.Context, id string) (*CustomTopic, error)
+```
+
+### TopicsClient.GetByName
+
+GetByName reads a custom topic by its exact display name.
+
+```go
+func (c *TopicsClient) GetByName(ctx context.Context, name string) (*CustomTopic, error)
+```
+
 ### TopicsClient.List
 
 ```go
 func (c *TopicsClient) List(ctx context.Context, opts ListOpts) (*CustomTopicListResponse, error)
+```
+
+### TopicsClient.ListAll
+
+ListAll collects pages with caller-selected bounds and rejects nonprogressing cursors.
+
+```go
+func (c *TopicsClient) ListAll(ctx context.Context, opts ListOpts, bounds aisec.CollectOptions) ([]CustomTopic, error)
+```
+
+### TopicsClient.ListForToken
+
+ListForToken uses the token-scoped OpenAPI route without a tenant path suffix.
+
+```go
+func (c *TopicsClient) ListForToken(ctx context.Context, opts ListOpts) (*CustomTopicListResponse, error)
 ```
 
 ### TopicsClient.Update
@@ -556,11 +1136,24 @@ Each link opens the complete type declaration, fields, and methods.
 | `CustomerApp` | [CustomerApp](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#CustomerApp) |
 | `CustomerAppListResponse` | [CustomerAppListResponse](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#CustomerAppListResponse) |
 | `CustomerAppsClient` | [CustomerAppsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#CustomerAppsClient) |
+| `DLPClient` | [DLPClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DLPClient) |
 | `DLPDataProfileConfig` | [DLPDataProfileConfig](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DLPDataProfileConfig) |
+| `DLPListAllOptions` | [DLPListAllOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DLPListAllOptions) |
+| `DLPListOptions` | [DLPListOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DLPListOptions) |
 | `DSDetailResult` | [DSDetailResult](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DSDetailResult) |
 | `DSResultMetadata` | [DSResultMetadata](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DSResultMetadata) |
+| `DashboardAppQuery` | [DashboardAppQuery](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DashboardAppQuery) |
+| `DashboardClient` | [DashboardClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DashboardClient) |
+| `DashboardOverviewQuery` | [DashboardOverviewQuery](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DashboardOverviewQuery) |
+| `DashboardScanContentQuery` | [DashboardScanContentQuery](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DashboardScanContentQuery) |
+| `DashboardSessionQuery` | [DashboardSessionQuery](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DashboardSessionQuery) |
+| `DashboardTimeRangeQuery` | [DashboardTimeRangeQuery](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DashboardTimeRangeQuery) |
+| `DashboardTransactionQuery` | [DashboardTransactionQuery](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DashboardTransactionQuery) |
+| `DataFilteringProfilesClient` | [DataFilteringProfilesClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DataFilteringProfilesClient) |
 | `DataLeakDetectionConfig` | [DataLeakDetectionConfig](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DataLeakDetectionConfig) |
 | `DataLeakMember` | [DataLeakMember](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DataLeakMember) |
+| `DataPatternsClient` | [DataPatternsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DataPatternsClient) |
+| `DataProfilesClient` | [DataProfilesClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DataProfilesClient) |
 | `DataProtectionConfig` | [DataProtectionConfig](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DataProtectionConfig) |
 | `DatabaseSecurityConfig` | [DatabaseSecurityConfig](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DatabaseSecurityConfig) |
 | `DbsEntry` | [DbsEntry](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DbsEntry) |
@@ -575,6 +1168,9 @@ Each link opens the complete type declaration, fields, and methods.
 | `DetectionDetails` | [DetectionDetails](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DetectionDetails) |
 | `DetectionServiceName` | [DetectionServiceName](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DetectionServiceName) |
 | `DetectionServiceResult` | [DetectionServiceResult](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DetectionServiceResult) |
+| `DictionariesClient` | [DictionariesClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DictionariesClient) |
+| `DictionaryGetOptions` | [DictionaryGetOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DictionaryGetOptions) |
+| `DictionaryUpload` | [DictionaryUpload](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DictionaryUpload) |
 | `DlpPatternDetections` | [DlpPatternDetections](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DlpPatternDetections) |
 | `DlpProfile` | [DlpProfile](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DlpProfile) |
 | `DlpProfileListResponse` | [DlpProfileListResponse](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#DlpProfileListResponse) |
@@ -595,6 +1191,8 @@ Each link opens the complete type declaration, fields, and methods.
 | `Metadata` | [Metadata](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#Metadata) |
 | `ModelConfiguration` | [ModelConfiguration](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#ModelConfiguration) |
 | `ModelProtectionConfig` | [ModelProtectionConfig](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#ModelProtectionConfig) |
+| `OAuthClient` | [OAuthClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#OAuthClient) |
+| `OAuthClientOptions` | [OAuthClientOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#OAuthClientOptions) |
 | `OAuthManagementClient` | [OAuthManagementClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#OAuthManagementClient) |
 | `OAuthToken` | [OAuthToken](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#OAuthToken) |
 | `OAuthTokenRequest` | [OAuthTokenRequest](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#OAuthTokenRequest) |
@@ -627,6 +1225,7 @@ Each link opens the complete type declaration, fields, and methods.
 | `TcReport` | [TcReport](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#TcReport) |
 | `TgReport` | [TgReport](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#TgReport) |
 | `ThreatScanReport` | [ThreatScanReport](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#ThreatScanReport) |
+| `TokenInfo` | [TokenInfo](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#TokenInfo) |
 | `TokenTTLOpts` | [TokenTTLOpts](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#TokenTTLOpts) |
 | `ToolDetected` | [ToolDetected](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#ToolDetected) |
 | `ToolDetectionDetails` | [ToolDetectionDetails](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/runtime#ToolDetectionDetails) |

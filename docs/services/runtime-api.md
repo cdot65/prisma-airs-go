@@ -212,3 +212,29 @@ if err != nil {
     }
 }
 ```
+
+## DLP, dashboard and listing additions (unreleased)
+
+`Client.DLP` adds typed Data Filtering Profiles, Data Patterns, Data Profiles and
+Dictionaries at their separate DLP base URL. Use `DLPEndpoint` or
+`PANW_MGMT_DLP_ENDPOINT`; OAuth credentials and the token cache are shared.
+PATCH uses merge-patch JSON; nullable fields use `aisec.Optional[T]`. Dictionary
+uploads take typed `DictionaryUpload` metadata and file bytes. A successful
+replace returning 204 yields a nil record without synthesizing fields. No Data
+Profiles delete method is invented.
+
+`Client.Dashboard` reads application/session metrics, transactions and explicit
+scan content. `DashboardEndpoint` / `PANW_MGMT_DASHBOARD_ENDPOINT` overrides its
+base. Only dashboard calls add the tenant header; query names differ between
+application (`appid`, `appname`) and session (`app_id`, `app_name`) endpoints.
+Typed methods validate pinned response shapes; `Raw` variants preserve raw JSON.
+Scan-content reads are explicit and can contain sensitive content.
+
+`ListForToken` uses unqualified token-scoped routes; existing `List` methods keep
+their TSG-qualified routing. `ListAll` collects pages with `aisec.CollectOptions`: a
+nil maximum defaults to 10,000 records, and a pointer to zero removes the record
+cap. DLP uses `DLPListAllOptions` with Spring page/size semantics and the same cap.
+`NewOAuthClient` exposes standalone cache inspection/refresh and a refresh callback.
+`ContentFromJSONFile` loads a native API-shaped content document.
+
+See [TypeScript parity](../developer/typescript-parity.md) for release and verification status.

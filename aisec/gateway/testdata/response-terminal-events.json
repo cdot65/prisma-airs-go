@@ -1,0 +1,68 @@
+{
+  "response.completed": {
+    "type": "response.completed",
+    "response": {
+      "metadata": {},
+      "temperature": 1,
+      "top_p": 1,
+      "model": "test",
+      "instructions": "test",
+      "tools": [],
+      "tool_choice": "none",
+      "id": "test",
+      "object": "response",
+      "created_at": 1,
+      "error": {
+        "code": "server_error",
+        "message": "test"
+      },
+      "incomplete_details": {},
+      "output": [],
+      "parallel_tool_calls": false
+    }
+  },
+  "response.failed": {
+    "type": "response.failed",
+    "response": {
+      "metadata": {},
+      "temperature": 1,
+      "top_p": 1,
+      "model": "test",
+      "instructions": "test",
+      "tools": [],
+      "tool_choice": "none",
+      "id": "test",
+      "object": "response",
+      "created_at": 1,
+      "error": {
+        "code": "server_error",
+        "message": "test"
+      },
+      "incomplete_details": {},
+      "output": [],
+      "parallel_tool_calls": false
+    }
+  },
+  "response.incomplete": {
+    "type": "response.incomplete",
+    "response": {
+      "metadata": {},
+      "temperature": 1,
+      "top_p": 1,
+      "model": "test",
+      "instructions": "test",
+      "tools": [],
+      "tool_choice": "none",
+      "id": "test",
+      "object": "response",
+      "created_at": 1,
+      "error": {
+        "code": "server_error",
+        "message": "test"
+      },
+      "incomplete_details": {},
+      "output": [],
+      "parallel_tool_calls": false
+    }
+  }
+}

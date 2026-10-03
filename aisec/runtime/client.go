@@ -12,12 +12,14 @@ import (
 
 // Opts are options for creating a ManagementClient.
 type Opts struct {
-	ClientID      string
-	ClientSecret  string
-	TsgID         string
-	APIEndpoint   string
-	TokenEndpoint string
-	NumRetries    int
+	ClientID          string
+	ClientSecret      string
+	TsgID             string
+	APIEndpoint       string
+	TokenEndpoint     string
+	DashboardEndpoint string
+	DLPEndpoint       string
+	NumRetries        int
 	// HTTPClient overrides the HTTP client used for API and token requests
 	// (timeouts, proxies, transports, tracing). Defaults to the SDK client.
 	HTTPClient *http.Client
@@ -33,6 +35,8 @@ type Client struct {
 	DeploymentProfiles *DeploymentProfilesClient
 	ScanLogs           *ScanLogsClient
 	OAuth              *OAuthManagementClient
+	DLP                *DLPClient
+	Dashboard          *DashboardClient
 
 	svcCfg *internal.OAuthServiceConfig
 }
@@ -65,6 +69,23 @@ func NewClient(opts Opts) (*Client, error) {
 	c.DeploymentProfiles = &DeploymentProfilesClient{svcCfg: svcCfg}
 	c.ScanLogs = &ScanLogsClient{svcCfg: svcCfg}
 	c.OAuth = &OAuthManagementClient{svcCfg: svcCfg}
+	dlp := *svcCfg
+	dlp.BaseURL = internal.ResolveEndpoint(opts.DLPEndpoint, aisec.EnvDLPEndpoint, aisec.DefaultDLPEndpoint)
+	if err := internal.ValidateEndpoint(dlp.BaseURL); err != nil {
+		return nil, err
+	}
+	c.DLP = &DLPClient{DataFilteringProfiles: &DataFilteringProfilesClient{cfg: &dlp}, DataPatterns: &DataPatternsClient{cfg: &dlp}, DataProfiles: &DataProfilesClient{cfg: &dlp}, Dictionaries: &DictionariesClient{cfg: &dlp}}
+	dashboard := *svcCfg
+	dashboard.BaseURL = internal.ResolveEndpoint(opts.DashboardEndpoint, aisec.EnvDashboardEndpoint, svcCfg.BaseURL)
+	if err := internal.ValidateEndpoint(dashboard.BaseURL); err != nil {
+		return nil, err
+	}
+	dashboard.Headers = svcCfg.Headers.Clone()
+	if dashboard.Headers == nil {
+		dashboard.Headers = http.Header{}
+	}
+	dashboard.Headers.Set(aisec.HeaderTsgID, svcCfg.TsgID)
+	c.Dashboard = &DashboardClient{cfg: &dashboard}
 
 	return c, nil
 }

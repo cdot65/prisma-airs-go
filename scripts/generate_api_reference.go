@@ -34,6 +34,7 @@ var packages = []struct{ path, name, title string }{
 	{"aisec/redteam/schema", "redteam-schema", "Red Team schema"},
 	{"aisec/gateway/schema", "gateway-schema", "Gateway schema"},
 	{"aisec/agentguard/schema", "agentguard-schema", "AgentGuard schema"},
+	{"aisec/parity/schema", "parity-schema", "Recovered TypeScript schema (unreleased)"},
 }
 
 // AgentGuard renders complete model declarations locally as well as linking
