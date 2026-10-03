@@ -52,6 +52,13 @@ const (
 	GatewayRateLimitsPath		= "/policies/rate-limits"
 	GatewaySecretReferencesPath	= "/secret-references"
 	GatewayDeploymentsPath		= "/deployments"
+	DefaultIAMEndpoint		= "https://api.apps.paloaltonetworks.com/iam/v1"
+	EnvIAMEndpoint			= "PANW_IAM_ENDPOINT"
+	IAMScopesPath			= "/scopes"
+	GatewayWorkspacesPath		= "/workspaces"
+	DefaultDLPEndpoint		= "https://api.dlp.paloaltonetworks.com"
+	EnvGatewayInferenceEndpoint	= "PANW_AI_GW_INFERENCE_ENDPOINT"
+	EnvGatewayInferenceAPIKey	= "PANW_AI_GW_INFERENCE_API_KEY"
 )
 ```
 
@@ -81,6 +88,13 @@ const (
 	AgentGuardRulesPath		= "/v1/rules"
 	AgentGuardRuleInstancesPath	= "/v1/rule-instances"
 	AgentGuardSkillOverridesPath	= "/v1/skill-overrides"
+)
+```
+
+```go
+const (
+	EnvDLPEndpoint		= "PANW_MGMT_DLP_ENDPOINT"
+	EnvDashboardEndpoint	= "PANW_MGMT_DASHBOARD_ENDPOINT"
 )
 ```
 
@@ -128,6 +142,89 @@ var (
 ```
 
 ```go
+const (
+	GatewayAnalyticsFilterBoundariesPath				= "/analytics/filter-boundaries"
+	GatewayAuditLogsPath						= "/audit-logs"
+	GatewayAuthSettingsPath						= "/auth-settings"
+	GatewayCancelPath						= "/cancel"
+	GatewayDownloadPath						= "/download"
+	GatewayInferenceAudioSpeechPath					= "/audio/speech"
+	GatewayInferenceAudioTranscriptionsPath				= "/audio/transcriptions"
+	GatewayInferenceAudioTranslationsPath				= "/audio/translations"
+	GatewayInferenceBatchesPath					= "/batches"
+	GatewayInferenceCancelPath					= "/cancel"
+	GatewayInferenceChatCompletionsPath				= "/chat/completions"
+	GatewayInferenceCheckpointsPath					= "/checkpoints"
+	GatewayInferenceCompletionsPath					= "/completions"
+	GatewayInferenceContentPath					= "/content"
+	GatewayInferenceEmbeddingsPath					= "/embeddings"
+	GatewayInferenceEventsPath					= "/events"
+	GatewayInferenceFeedbackPath					= "/feedback"
+	GatewayInferenceFileBatchesPath					= "/file_batches"
+	GatewayInferenceFilesPath					= "/files"
+	GatewayInferenceFineTuningJobsPath				= "/fine_tuning/jobs"
+	GatewayInferenceImagesEditsPath					= "/images/edits"
+	GatewayInferenceImagesGenerationsPath				= "/images/generations"
+	GatewayInferenceImagesVariationsPath				= "/images/variations"
+	GatewayInferenceInputItemsPath					= "/input_items"
+	GatewayInferenceLogsPath					= "/logs"
+	GatewayInferenceModelsPath					= "/models"
+	GatewayInferenceModerationsPath					= "/moderations"
+	GatewayInferenceOcrPath						= "/ocr"
+	GatewayInferenceOutputPath					= "/output"
+	GatewayInferencePromptsPath					= "/prompts"
+	GatewayInferenceRealtimePath					= "/realtime"
+	GatewayInferenceRenderPath					= "/render"
+	GatewayInferenceRerankPath					= "/rerank"
+	GatewayInferenceResponsesPath					= "/responses"
+	GatewayInferenceVectorStoresPath				= "/vector_stores"
+	GatewayInfoPath							= "/info"
+	GatewayLogsChartsCacheHitTrendPath				= "/logs/charts/cache-hit-trend"
+	GatewayLogsChartsCacheSummaryPath				= "/logs/charts/cache-summary"
+	GatewayLogsChartsCostPath					= "/logs/charts/cost"
+	GatewayLogsChartsErrorCategoryTrendsPath			= "/logs/charts/error-category-trends"
+	GatewayLogsChartsErrorTrendsPath				= "/logs/charts/error-trends"
+	GatewayLogsChartsErrorsPath					= "/logs/charts/errors"
+	GatewayLogsChartsFeedbackModelsPath				= "/logs/charts/feedback-models"
+	GatewayLogsChartsFeedbackScoreDistributionPath			= "/logs/charts/feedback-score-distribution"
+	GatewayLogsChartsFeedbackTrendPath				= "/logs/charts/feedback-trend"
+	GatewayLogsChartsFeedbackWeightedPath				= "/logs/charts/feedback-weighted"
+	GatewayLogsChartsGroupedErrorsPath				= "/logs/charts/grouped-errors"
+	GatewayLogsChartsLatencyPath					= "/logs/charts/latency"
+	GatewayLogsChartsRequestsPath					= "/logs/charts/requests"
+	GatewayLogsChartsRescuedRetriesPath				= "/logs/charts/rescued-retries"
+	GatewayLogsChartsTokensPath					= "/logs/charts/tokens"
+	GatewayLogsChartsUserTrendsPath					= "/logs/charts/user-trends"
+	GatewayLogsChartsUsersPath					= "/logs/charts/users"
+	GatewayLogsExportsPath						= "/logs/exports"
+	GatewayLogsGroupsPath						= "/logs/groups"
+	GatewayLogsGroupsStatusCodePath					= "/logs/groups/status_code"
+	GatewayLogsGroupsUsersPath					= "/logs/groups/users"
+	GatewayLogsPath							= "/logs"
+	GatewayModelConfigsPricingPath					= "/model-configs/pricing"
+	GatewayOrganisationsPath					= "/organisations"
+	GatewayOrganisationsSelfPath					= "/organisations/self"
+	GatewayPluginsPath						= "/plugins"
+	GatewayStartPath						= "/start"
+	RuntimeV1MgmtDashboardV2AppsApplicationPath			= "/v1/mgmt/dashboard/v2/apps/application"
+	RuntimeV1MgmtDashboardV2AppsApplicationsoverviewPath		= "/v1/mgmt/dashboard/v2/apps/applicationsoverview"
+	RuntimeV1MgmtDashboardV2AppsApplicationsviolationstrendPath	= "/v1/mgmt/dashboard/v2/apps/applicationsviolationstrend"
+	RuntimeV1MgmtDashboardV2AppsApplicationviolationbreakdownPath	= "/v1/mgmt/dashboard/v2/apps/applicationviolationbreakdown"
+	RuntimeV1MgmtDashboardV2AppsAppslistPath			= "/v1/mgmt/dashboard/v2/apps/appslist"
+	RuntimeV1MgmtDashboardV2AppsTopapplicationsviolationsPath	= "/v1/mgmt/dashboard/v2/apps/topapplicationsviolations"
+	RuntimeV1MgmtDashboardV2SessionsSessionPath			= "/v1/mgmt/dashboard/v2/sessions/session"
+	RuntimeV1MgmtDashboardV2SessionsSessionschartPath		= "/v1/mgmt/dashboard/v2/sessions/sessionschart"
+	RuntimeV1MgmtDashboardV2SessionsSessionsoverviewPath		= "/v1/mgmt/dashboard/v2/sessions/sessionsoverview"
+	RuntimeV1MgmtDashboardV2SessionsSessiontransactionPath		= "/v1/mgmt/dashboard/v2/sessions/sessiontransaction"
+	RuntimeV1MgmtReportsScancontentPath				= "/v1/mgmt/reports/scancontent"
+	RuntimeV2ApiDataFilteringProfilesPath				= "/v2/api/data-filtering-profiles"
+	RuntimeV2ApiDataPatternsPath					= "/v2/api/data-patterns"
+	RuntimeV2ApiDataProfilesPath					= "/v2/api/data-profiles"
+	RuntimeV2ApiDictionariesPath					= "/v2/api/dictionaries"
+)
+```
+
+```go
 var HTTPForceRetryStatusCodes = []int{429, 500, 502, 503, 504}
 ```
 
@@ -160,6 +257,10 @@ const (
 	MaxContentResponseLength	= 2 * 1024 * 1024	// 2 MB
 	MaxContentContextLength		= 100 * 1024 * 1024	// 100 MB
 )
+```
+
+```go
+const MaxDottedArrayElements = 10000
 ```
 
 ```go
@@ -202,6 +303,17 @@ const (
 
 ```go
 const (
+	MgmtProfilesTokenPath		= "/v1/mgmt/profiles"
+	MgmtTopicsTokenPath		= "/v1/mgmt/topics"
+	MgmtAPIKeysTokenPath		= "/v1/mgmt/apikeys"
+	MgmtCustomerAppsTokenPath	= "/v1/mgmt/customerapps"
+	GatewayProviderCatalogPath	= "/utils/static-resources/ai-providers"
+	GatewayGuardrailCatalogPath	= "/utils/static-resources/schema"
+)
+```
+
+```go
+const (
 	ModelSecModelsPath		= "/v1/models"
 	ModelSecModelVersionsPath	= "/v1/model-versions"
 	ModelSecCustomRulesPath		= "/v1/custom-rules"
@@ -239,6 +351,7 @@ const (
 	RedTeamGoalCategoriesPath		= "/v1/goal-categories"
 	RedTeamReportV2Path			= "/v2/report"
 	RedTeamTargetProfileErrorLogPath	= "/v1/error-log/target-profile"
+	RedTeamScanMetadataPath			= "/v1/scan/scan-metadata"
 )
 ```
 
@@ -323,6 +436,15 @@ const (
 
 ## Functions
 
+### CollectAll
+
+CollectAll collects native cursor pages up to Max (nil:10,000; pointer to zero:unlimited).
+The page fetcher chooses page size; CollectOptions.Limit is not used by this cursor helper.
+
+```go
+func CollectAll[T any, C comparable](ctx context.Context, fetch func(context.Context, C) (CursorPage[T, C], error), initial C, opts CollectOptions) ([]T, error)
+```
+
 ### GeneratePayloadHash
 
 GeneratePayloadHash computes an HMAC-SHA256 hex digest for API key auth.
@@ -379,6 +501,15 @@ Null sets a field to JSON null, such as clearing a nullable configuration.
 
 ```go
 func Null[T any]() Optional[T]
+```
+
+### Paginate
+
+Paginate visits native cursor pages until Next is absent or yield returns false.
+Fetch must honor its context. Repeated cursors and more than 10,000 pages are errors.
+
+```go
+func Paginate[T any, C comparable](ctx context.Context, fetch func(context.Context, C) (CursorPage[T, C], error), initial C, yield func(T) bool) error
 ```
 
 ### ValidateJobID
@@ -618,8 +749,11 @@ Each link opens the complete type declaration, fields, and methods.
 | Type | Package declaration |
 | --- | --- |
 | `AISecSDKError` | [AISecSDKError](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec#AISecSDKError) |
+| `CollectOptions` | [CollectOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec#CollectOptions) |
 | `Config` | [Config](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec#Config) |
 | `ConfigOption` | [ConfigOption](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec#ConfigOption) |
+| `CursorPage` | [CursorPage](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec#CursorPage) |
 | `ErrorType` | [ErrorType](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec#ErrorType) |
+| `ListPage` | [ListPage](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec#ListPage) |
 | `Optional` | [Optional](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec#Optional) |
 | `RegionalEndpoints` | [RegionalEndpoints](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec#RegionalEndpoints) |

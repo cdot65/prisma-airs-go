@@ -12,7 +12,8 @@ A credential working on one path does not establish access to another.
 | Manage Runtime profiles, topics, and API keys | `runtime.Client` | OAuth client ID, secret, TSG ID |
 | Read models and scans; manage model policy | `modelsecurity.Client` | OAuth client ID, secret, TSG ID |
 | Manage red-team targets, jobs, reports, and brokers | `redteam.Client` | OAuth client ID, secret, TSG ID |
-| Manage Gateway resources in existing workspaces | `gateway.Client` | SCM OAuth client ID, secret, TSG ID |
+| Manage Gateway resources, workspace/IAM (unreleased) | `gateway.Client` | SCM OAuth client ID, secret, TSG ID |
+| Gateway inference, SSE, Realtime (unreleased) | `gateway.InferenceClient` | Explicit runtime endpoint and API key |
 | Scan skills and manage AgentGuard policy (preview) | `agentguard.Client` | SCM OAuth client ID, secret, TSG ID |
 
 ## Runtime scanning

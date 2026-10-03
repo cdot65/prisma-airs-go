@@ -46,6 +46,8 @@ type ScanFilter struct {
 
 // ScanListOpts filters and paginates scans.
 type ScanListOpts struct {
+	// IsBackgroundRefresh preserves the captured browser refresh flag, including false.
+	IsBackgroundRefresh *bool
 	ListOpts
 	ScanFilter
 }
@@ -108,6 +110,9 @@ func scanQuery(opts ScanFilter) url.Values {
 
 func scanListQuery(opts ScanListOpts) url.Values {
 	q := scanQuery(opts.ScanFilter)
+	if opts.IsBackgroundRefresh != nil {
+		q.Set("isBackgroundRefresh", strconv.FormatBool(*opts.IsBackgroundRefresh))
+	}
 	for key, values := range listQuery(opts.ListOpts) {
 		q[key] = values
 	}

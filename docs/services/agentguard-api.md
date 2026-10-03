@@ -1,4 +1,4 @@
-# AgentGuard API (public preview)
+# Skill scanning — AgentGuard API (public preview)
 
 The `aisec/agentguard` package implements all 21 operations in the supplied
 August 21, 2026 public preview schemas (version `0.1.0`). This support is
@@ -167,3 +167,7 @@ record because the preview exposes no scan deletion operation.
 PANW_AGENT_GUARD_TEST_ARCHIVE=/path/to/skill.zip \
   go test -race -v -tags=integration ./aisec/agentguard -run '^TestIntegration_ArchiveScan$'
 ```
+
+The unreleased parity update preserves TypeScript's `isBackgroundRefresh` scan
+query, including explicit false. All 21 Go preview operations remain available,
+beyond the four read operations currently exposed by the TypeScript client.

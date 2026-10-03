@@ -7,19 +7,19 @@ import styles from './index.module.css';
 const paths = [
   ['01', 'Send your first scan', 'Install the SDK, configure credentials, choose a profile, and verify a real response.', '/getting-started/'],
   ['02', 'Understand the SDK', 'Follow the service boundaries, authentication, request pipeline, and response contracts.', '/developer/architecture/'],
-  ['03', 'Manage your gateway', 'Use SCM OAuth for configurations, policies, integrations, and existing workspaces.', '/examples/gateway-crud/'],
-  ['04', 'Explore AgentGuard preview', 'Inspect skill scans, vulnerabilities, attack chains, and statistics with the public preview client.', '/examples/agentguard-scanning/'],
+  ['03', 'Manage your gateway', 'Provision workspaces, manage gateway policies, and use separately authenticated inference.', '/examples/gateway-crud/'],
+  ['04', 'Explore skill scanning', 'Inspect skill scans, vulnerabilities, attack chains, and statistics with the public preview client.', '/examples/agentguard-scanning/'],
 ];
 
 export default function Home(): ReactNode {
   return (
-    <Layout title="Go clients for Prisma AIRS" description="Prisma AIRS Go SDK: typed clients for Runtime Security, Model Security, Red Team, AI Gateway management, and AgentGuard public preview, using the Go standard library.">
+    <Layout title="Go clients for Prisma AIRS" description="Prisma AIRS Go SDK: typed clients for Runtime Security, Model Security, Red Team, AI Gateway, and AgentGuard public preview, using the Go standard library.">
       <main>
         <section className={styles.hero} aria-labelledby="hero-title">
           <div className={styles.heroCopy}>
             <p className={styles.eyebrow}>PRISMA AIRS / GO SDK</p>
             <h1 id="hero-title">Prisma AIRS.<br /><span>Typed Go clients.</span></h1>
-            <p className={styles.lead}>Typed Go clients for Runtime Security, Model Security, Red Team, AI Gateway management, and AgentGuard public preview. Build scanning and configuration workflows with Go 1.22+ and the standard library.</p>
+            <p className={styles.lead}>Typed Go clients for Runtime Security, Model Security, Red Team, AI Gateway, and AgentGuard public preview. Build scanning and configuration workflows with Go 1.22+ and the standard library.</p>
             <div className={styles.actions}>
               <Link className="button button--primary button--lg" to="/getting-started/">Get started →</Link>
               <Link className={styles.secondary} to="/developer/architecture/">Explore the architecture ↗</Link>

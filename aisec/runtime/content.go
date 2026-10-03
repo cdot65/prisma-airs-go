@@ -1,7 +1,11 @@
 package runtime
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/cdot65/prisma-airs-go/aisec"
+	"io"
+	"os"
 )
 
 // ContentOpts are options for creating a Content instance.
@@ -122,4 +126,23 @@ func (c *Content) ToJSON() ContentInner {
 // ContentFromJSON creates a Content from an API response object.
 func ContentFromJSON(ci ContentInner) (*Content, error) {
 	return NewContent(ContentOpts(ci))
+}
+
+// ContentFromJSONFile loads an API-shaped content document and applies NewContent validation.
+// Unlike the TypeScript file helper, it rejects unknown fields and trailing JSON to avoid silently dropping scan input.
+func ContentFromJSONFile(path string) (*Content, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, aisec.WrapError("cannot read content file", aisec.UserRequestPayloadError, err)
+	}
+	var content ContentInner
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err = decoder.Decode(&content); err != nil {
+		return nil, aisec.WrapError("invalid content JSON file", aisec.UserRequestPayloadError, err)
+	}
+	if decoder.Decode(new(any)) != io.EOF {
+		return nil, aisec.NewAISecSDKError("unexpected trailing content JSON", aisec.UserRequestPayloadError)
+	}
+	return ContentFromJSON(content)
 }

@@ -15,7 +15,8 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 DOMAINS = {"modelsecurity": ["model-data", "model-mgmt"],
            "redteam": ["redteam-data", "redteam-mgmt", "redteam-broker"], "gateway": ["gateway"],
-           "agentguard": ["agentguard-data", "agentguard-mgmt"]}
+           "agentguard": ["agentguard-data", "agentguard-mgmt"],
+           "parity": ["typescript-parity"]}
 INLINE_RESPONSES = {"redteam-broker": [("ChannelListResponse", "/v1/channels", "get", "200")]}
 INITIALISMS = {x: x.upper() for x in ["id", "uuid", "api", "url", "uri", "http", "https", "json", "csv", "tsg", "sdk", "asr", "mcp", "sha256", "pypi", "aws", "gcp", "ms", "llm", "dp", "ip", "kb"]}
 
@@ -33,7 +34,7 @@ def name(value):
 class Generator:
     def __init__(self, labels):
         self.extensible = "gateway" in labels
-        self.preserve_explicit_extras = "agentguard-data" in labels
+        self.preserve_explicit_extras = "agentguard-data" in labels or "typescript-parity" in labels
         self.schemas = {}
         self.names = {}
         for label in labels:
@@ -246,7 +247,7 @@ class Generator:
                 elif null: typ="*"+typ
                 if value.get("description"): fields.append(self.comment(value["description"]))
                 fields.append(field+" "+typ+" `json:"+json.dumps(tag)+"`")
-            extensible = self.extensible or (self.preserve_explicit_extras and schema.get("additionalProperties") is True)
+            extensible = self.extensible or (self.preserve_explicit_extras and (schema.get("additionalProperties") is True or isinstance(schema.get("additionalProperties"),dict)))
             if extensible:
                 self.imports.add("encoding/json")
                 fields.append('AdditionalFields map[string]json.RawMessage `json:"-"`')
@@ -297,8 +298,11 @@ def main():
         path=ROOT/"aisec"/domain/"schema/models_gen.go"
         if args.check:
             if not path.exists() or path.read_text()!=output:raise SystemExit("Stale schema models: "+domain)
+            if domain=="parity" and (path.parent/"contracts.json").read_bytes()!=(ROOT/"specs/contracts/typescript-parity.json").read_bytes():raise SystemExit("Stale embedded parity contracts")
         else:
             path.parent.mkdir(parents=True,exist_ok=True);path.write_text(output)
+            if domain=="parity":
+                (path.parent/"contracts.json").write_bytes((ROOT/"specs/contracts/typescript-parity.json").read_bytes())
         print(domain+": "+str(output.count("\ntype "))+" current-schema types")
 
 

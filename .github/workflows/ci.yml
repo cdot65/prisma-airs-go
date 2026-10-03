@@ -41,7 +41,9 @@ jobs:
         run: |
           python3 -m pip install PyYAML==6.0.2
           python3 scripts/spec_snapshot.py --check
-          python3 scripts/schema_models.py modelsecurity redteam gateway agentguard --check
+          python3 scripts/schema_models.py modelsecurity redteam gateway agentguard parity --check
+          python3 scripts/check_typescript_parity.py
+          python3 scripts/parity_fixtures.py --check
       - name: Compile integration tests without live calls
         run: go test -race -tags=integration -run '^$' ./...
       - name: Lint integration tests

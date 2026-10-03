@@ -19,7 +19,58 @@ const (
 )
 ```
 
+```go
+const GatewayRedacted = "[REDACTED]"
+```
+
+```go
+const (
+	WorkspaceData	WorkspacePlane	= "data"
+	WorkspaceAdmin	WorkspacePlane	= "admin"
+)
+```
+
 ## Functions
+
+### BuildDottedObject
+
+BuildDottedObject constructs a finite JSON object, rejecting duplicates, conflicts and sparse arrays.
+
+```go
+func BuildDottedObject(entries []DottedValueEntry) (map[string]any, error)
+```
+
+### CustomHostConfiguration
+
+CustomHostConfiguration builds integration settings for a self-hosted HTTP(S) endpoint.
+
+```go
+func CustomHostConfiguration(opts CustomHostConfigurationOptions) (map[string]any, error)
+```
+
+### GatewaySecretFields
+
+GatewaySecretFields returns a caller-owned copy of the pinned TypeScript secret catalog.
+
+```go
+func GatewaySecretFields() (map[string]GatewaySecretOperationMetadata, error)
+```
+
+### GenerateWorkspaceScopeName
+
+GenerateWorkspaceScopeName creates ws_<normalized-name>_<six random alphanumerics>, without contacting SCM.
+
+```go
+func GenerateWorkspaceScopeName(workspaceName string) (string, error)
+```
+
+### NewChatRequest
+
+NewChatRequest builds and validates a text-only chat request without JSON-string input.
+
+```go
+func NewChatRequest(model string, messages ...ChatTextMessage) (parity.GatewayInferenceInputCreateChatCompletionRequest, error)
+```
 
 ### NewClient
 
@@ -27,6 +78,39 @@ NewClient creates a Gateway management client using options, PANW_AI_GW or PANW_
 
 ```go
 func NewClient(opts Opts) (*Client, error)
+```
+
+### NewInferenceClient
+
+NewInferenceClient uses explicit options or PANW_AI_GW_INFERENCE_ENDPOINT/API_KEY only.
+
+```go
+func NewInferenceClient(opts InferenceOpts) (*InferenceClient, error)
+```
+
+### NewModelPricingClient
+
+NewModelPricingClient creates a standalone, unauthenticated catalog client with redirects disabled.
+
+```go
+func NewModelPricingClient(opts ModelPricingOpts) (*ModelPricingClient, error)
+```
+
+### RedactAIGatewaySecrets
+
+RedactAIGatewaySecrets returns a finite JSON clone with only the selected operation's secrets masked.
+Direction must be request or response. Returned SDK API values are not automatically redacted.
+
+```go
+func RedactAIGatewaySecrets(operation string, input any, direction string) (any, error)
+```
+
+### SetDottedValue
+
+SetDottedValue returns a cloned object with one value set, leaving input unchanged.
+
+```go
+func SetDottedValue(input map[string]any, path string, value any) (map[string]any, error)
 ```
 
 ## APIKeysClient
@@ -125,6 +209,63 @@ UpdateForKind uses the explicit SCM service/user route and updates supplied fiel
 
 ```go
 func (c *APIKeysClient) UpdateForKind(ctx context.Context, kind APIKeyKind, id string, req schema.UpdateAPIKeyObject) (*schema.APIKeysUpdateResponse, error)
+```
+
+## AuditLogsClient
+
+AuditLogsClient exposes the pinned TypeScript Gateway management surface.
+
+```go
+type AuditLogsClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### AuditLogsClient.List
+
+List calls GET /audit-logs on its explicitly configured SCM plane.
+
+```go
+func (c *AuditLogsClient) List(ctx context.Context, opts AuditLogListOptions) (*parity.GatewayAuditLogsResponse, error)
+```
+
+## Client
+
+Client exposes Gateway CRUD and explicit lifecycle operations.
+
+```go
+type Client struct {
+	Guardrails		*GuardrailsClient
+	OrgGuardrails		*OrgGuardrailsClient
+	Configs			*ConfigsClient
+	Integrations		*IntegrationsClient
+	Providers		*ProvidersClient
+	MCPIntegrations		*MCPIntegrationsClient
+	MCPServers		*MCPServersClient
+	APIKeys			*APIKeysClient
+	UsageLimits		*UsageLimitsClient
+	RateLimits		*RateLimitsClient
+	SecretReferences	*SecretReferencesClient
+	Deployments		*DeploymentsClient
+	Workspaces		*WorkspacesClient
+	IAMScopes		*IAMScopesClient
+	Organisations		*OrganisationsClient
+	Plugins			*PluginsClient
+	AuditLogs		*AuditLogsClient
+	LogExports		*LogExportsClient
+	Telemetry		*TelemetryClient
+	Inference		*InferenceClient
+	// contains filtered or unexported fields
+}
+```
+
+### Client.RuntimeInference
+
+RuntimeInference returns the configured inference client or a configuration error.
+Inference requires its own key and endpoint; SCM credentials are never reused.
+
+```go
+func (c *Client) RuntimeInference() (*InferenceClient, error)
 ```
 
 ## ConfigsClient
@@ -277,6 +418,14 @@ Get reads the resource.
 func (c *GuardrailsClient) Get(ctx context.Context, guardrailID string) (*schema.GuardrailDetails, error)
 ```
 
+### GuardrailsClient.GetCatalog
+
+GetCatalog returns available guardrail evaluators and parameter schemas, rather than configured instances.
+
+```go
+func (c *GuardrailsClient) GetCatalog(ctx context.Context) (*parity.GatewayGuardrailCatalogResponse, error)
+```
+
 ### GuardrailsClient.List
 
 List lists resources with explicit scope and pagination.
@@ -317,6 +466,633 @@ UpsertMCPServer calls the explicit UpsertMCPServer lifecycle operation.
 func (c *GuardrailsClient) UpsertMCPServer(ctx context.Context, guardrailID string, mcpServerID string, req schema.UpsertMCPServerMappingRequest) (*schema.UpsertMCPServerMappingResponse, error)
 ```
 
+## IAMScope
+
+IAMScope is keyed by Name; ID (name:tsg) is display-only.
+
+```go
+type IAMScope struct {
+	Name			string				`json:"name"`
+	Description		string				`json:"description"`
+	Resources		[]IAMScopeResource		`json:"resources"`
+	TSGID			string				`json:"tsg_id"`
+	ID			string				`json:"id"`
+	AdditionalFields	map[string]json.RawMessage	`json:"-"`
+}
+```
+
+### IAMScope.MarshalJSON
+
+```go
+func (x IAMScope) MarshalJSON() ([]byte, error)
+```
+
+### IAMScope.UnmarshalJSON
+
+```go
+func (x *IAMScope) UnmarshalJSON(data []byte) error
+```
+
+## IAMScopeListResponse
+
+IAMScopeListResponse preserves the observed, unpaginated list envelope.
+
+```go
+type IAMScopeListResponse struct {
+	Count			int				`json:"count"`
+	Items			[]IAMScope			`json:"items"`
+	AdditionalFields	map[string]json.RawMessage	`json:"-"`
+}
+```
+
+### IAMScopeListResponse.MarshalJSON
+
+```go
+func (x IAMScopeListResponse) MarshalJSON() ([]byte, error)
+```
+
+### IAMScopeListResponse.UnmarshalJSON
+
+```go
+func (x *IAMScopeListResponse) UnmarshalJSON(data []byte) error
+```
+
+## IAMScopeResource
+
+IAMScopeResource binds a resource to an SCM IAM scope. Workspace ResourceID is its slug, not UUID.
+
+```go
+type IAMScopeResource struct {
+	ResourceType		string				`json:"resource_type"`
+	ResourceID		string				`json:"resource_id"`
+	Metadata		[]any				`json:"metadata"`
+	AdditionalFields	map[string]json.RawMessage	`json:"-"`
+}
+```
+
+### IAMScopeResource.MarshalJSON
+
+```go
+func (x IAMScopeResource) MarshalJSON() ([]byte, error)
+```
+
+### IAMScopeResource.UnmarshalJSON
+
+```go
+func (x *IAMScopeResource) UnmarshalJSON(data []byte) error
+```
+
+## IAMScopesClient
+
+IAMScopesClient manages SCM IAM scopes using captured TypeScript SDK contracts, outside published Gateway coverage.
+
+```go
+type IAMScopesClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### IAMScopesClient.BindWorkspace
+
+BindWorkspace preserves existing bindings and description, then PUTs a binding by workspace slug.
+This read/replace operation is idempotent, but is not atomic with concurrent scope updates.
+It does not assign a service-account role or access policy.
+
+```go
+func (c *IAMScopesClient) BindWorkspace(ctx context.Context, name, workspaceSlug string) (*IAMScope, error)
+```
+
+### IAMScopesClient.Create
+
+Create creates an unbound scope unless explicit resource bindings are supplied.
+
+```go
+func (c *IAMScopesClient) Create(ctx context.Context, input IAMScopeCreateInput) (*IAMScope, error)
+```
+
+### IAMScopesClient.Delete
+
+Delete attempts the TypeScript SDK's inferred scope-delete route. This route is not live-verified.
+A 404/405 is returned as an error, not interpreted as successful cleanup.
+
+```go
+func (c *IAMScopesClient) Delete(ctx context.Context, name string) error
+```
+
+### IAMScopesClient.Get
+
+Get reads a scope by name, never by its composite ID.
+
+```go
+func (c *IAMScopesClient) Get(ctx context.Context, name string) (*IAMScope, error)
+```
+
+### IAMScopesClient.List
+
+List reads all scopes returned by the observed IAM list contract.
+
+```go
+func (c *IAMScopesClient) List(ctx context.Context) (*IAMScopeListResponse, error)
+```
+
+### IAMScopesClient.Update
+
+Update fully replaces a scope; use BindWorkspace for an additive binding.
+
+```go
+func (c *IAMScopesClient) Update(ctx context.Context, name string, input IAMScopeUpdateInput) (*IAMScope, error)
+```
+
+## InferenceClient
+
+InferenceClient provides the TypeScript SDK's runtime inference and HTTP resource surface.
+
+```go
+type InferenceClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### InferenceClient.CancelBatch
+
+CancelBatch calls POST /batches/{batch_id}/cancel using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CancelBatch(ctx context.Context, batch_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceBatch, error)
+```
+
+### InferenceClient.CancelFineTuningJob
+
+CancelFineTuningJob calls POST /fine_tuning/jobs/{fine_tuning_job_id}/cancel using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CancelFineTuningJob(ctx context.Context, fine_tuning_job_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceFineTuningJob, error)
+```
+
+### InferenceClient.CancelVectorStoreFileBatch
+
+CancelVectorStoreFileBatch calls POST /vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CancelVectorStoreFileBatch(ctx context.Context, vector_store_id string, batch_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceVectorStoreFileBatchObject, error)
+```
+
+### InferenceClient.ConnectRealtime
+
+ConnectRealtime uses runtime-key authentication and no retries or SCM OAuth.
+
+```go
+func (c *InferenceClient) ConnectRealtime(ctx context.Context, req RealtimeConnectRequest, opts RealtimeOptions) (*RealtimeConnection, error)
+```
+
+### InferenceClient.CreateBatch
+
+CreateBatch calls POST /batches using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateBatch(ctx context.Context, body parity.GatewayInferenceInputCreateBatchRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceBatch, error)
+```
+
+### InferenceClient.CreateChatCompletion
+
+CreateChatCompletion calls POST /chat/completions using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateChatCompletion(ctx context.Context, body parity.GatewayInferenceInputCreateChatCompletionRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceCreateChatCompletionResponse, error)
+```
+
+### InferenceClient.CreateCompletion
+
+CreateCompletion calls POST /completions using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateCompletion(ctx context.Context, body parity.GatewayInferenceInputCreateCompletionRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceCreateCompletionResponse, error)
+```
+
+### InferenceClient.CreateEmbedding
+
+CreateEmbedding calls POST /embeddings using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateEmbedding(ctx context.Context, body parity.GatewayInferenceInputCreateEmbeddingRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceCreateEmbeddingResponse, error)
+```
+
+### InferenceClient.CreateFeedback
+
+CreateFeedback calls POST /feedback using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateFeedback(ctx context.Context, body parity.GatewayInferenceInputFeedbackRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceFeedbackResponse, error)
+```
+
+### InferenceClient.CreateFile
+
+CreateFile calls POST /files using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateFile(ctx context.Context, body parity.GatewayInferenceInputCreateFileRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceOpenAIFile, error)
+```
+
+### InferenceClient.CreateFineTuningJob
+
+CreateFineTuningJob calls POST /fine_tuning/jobs using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateFineTuningJob(ctx context.Context, body parity.GatewayInferenceInputCreateFineTuningJobRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceFineTuningJob, error)
+```
+
+### InferenceClient.CreateImage
+
+CreateImage calls POST /images/generations using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateImage(ctx context.Context, body parity.GatewayInferenceInputCreateImageRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceImagesResponse, error)
+```
+
+### InferenceClient.CreateImageEdit
+
+CreateImageEdit calls POST /images/edits using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateImageEdit(ctx context.Context, body parity.GatewayInferenceInputCreateImageEditRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceImagesResponse, error)
+```
+
+### InferenceClient.CreateImageVariation
+
+CreateImageVariation calls POST /images/variations using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateImageVariation(ctx context.Context, body parity.GatewayInferenceInputCreateImageVariationRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceImagesResponse, error)
+```
+
+### InferenceClient.CreateLogs
+
+CreateLogs calls POST /logs using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateLogs(ctx context.Context, body parity.GatewayInferenceInputCreateLogsRequest, opts InferenceRequestOptions) (*string, error)
+```
+
+### InferenceClient.CreateModeration
+
+CreateModeration calls POST /moderations using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateModeration(ctx context.Context, body parity.GatewayInferenceInputCreateModerationRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceCreateModerationResponse, error)
+```
+
+### InferenceClient.CreateOcr
+
+CreateOcr calls POST /ocr using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateOcr(ctx context.Context, body parity.GatewayInferenceInputCreateOcrRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceCreateOcrResponse, error)
+```
+
+### InferenceClient.CreatePromptCompletion
+
+CreatePromptCompletion calls POST /prompts/{promptId}/completions using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreatePromptCompletion(ctx context.Context, promptId string, body parity.GatewayInferenceInputCreatePromptCompletionRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceCreatePromptCompletionResponse, error)
+```
+
+### InferenceClient.CreatePromptRender
+
+CreatePromptRender calls POST /prompts/{promptId}/render using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreatePromptRender(ctx context.Context, promptId string, body parity.GatewayInferenceInputCreatePromptRenderRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceCreatePromptRenderResponse, error)
+```
+
+### InferenceClient.CreateRerank
+
+CreateRerank calls POST /rerank using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateRerank(ctx context.Context, body parity.GatewayInferenceInputCreateRerankRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceCreateRerankResponse, error)
+```
+
+### InferenceClient.CreateResponse
+
+CreateResponse calls POST /responses using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateResponse(ctx context.Context, body parity.GatewayInferenceInputCreateResponse, opts InferenceRequestOptions) (*parity.GatewayInferenceResponse, error)
+```
+
+### InferenceClient.CreateSpeech
+
+CreateSpeech calls POST /audio/speech using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateSpeech(ctx context.Context, body parity.GatewayInferenceInputCreateSpeechRequest, opts InferenceRequestOptions) (*BinaryResponse, error)
+```
+
+### InferenceClient.CreateTranscription
+
+CreateTranscription calls POST /audio/transcriptions using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateTranscription(ctx context.Context, body parity.GatewayInferenceInputCreateTranscriptionRequest, opts InferenceRequestOptions) (*AudioResponse, error)
+```
+
+### InferenceClient.CreateTranslation
+
+CreateTranslation calls POST /audio/translations using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateTranslation(ctx context.Context, body parity.GatewayInferenceInputCreateTranslationRequest, opts InferenceRequestOptions) (*AudioResponse, error)
+```
+
+### InferenceClient.CreateVectorStore
+
+CreateVectorStore calls POST /vector_stores using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateVectorStore(ctx context.Context, body parity.GatewayInferenceInputCreateVectorStoreRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceVectorStoreObject, error)
+```
+
+### InferenceClient.CreateVectorStoreFile
+
+CreateVectorStoreFile calls POST /vector_stores/{vector_store_id}/files using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateVectorStoreFile(ctx context.Context, vector_store_id string, body parity.GatewayInferenceInputCreateVectorStoreFileRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceVectorStoreFileObject, error)
+```
+
+### InferenceClient.CreateVectorStoreFileBatch
+
+CreateVectorStoreFileBatch calls POST /vector_stores/{vector_store_id}/file_batches using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) CreateVectorStoreFileBatch(ctx context.Context, vector_store_id string, body parity.GatewayInferenceInputCreateVectorStoreFileBatchRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceVectorStoreFileBatchObject, error)
+```
+
+### InferenceClient.DeleteFile
+
+DeleteFile calls DELETE /files/{file_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) DeleteFile(ctx context.Context, file_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceDeleteFileResponse, error)
+```
+
+### InferenceClient.DeleteModel
+
+DeleteModel calls DELETE /models/{model} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) DeleteModel(ctx context.Context, model string, opts InferenceRequestOptions) (*parity.GatewayInferenceDeleteModelResponse, error)
+```
+
+### InferenceClient.DeleteResponse
+
+DeleteResponse deletes a runtime response; successful bodies are discarded.
+
+```go
+func (c *InferenceClient) DeleteResponse(ctx context.Context, response_id string, opts InferenceRequestOptions) error
+```
+
+### InferenceClient.DeleteVectorStore
+
+DeleteVectorStore calls DELETE /vector_stores/{vector_store_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) DeleteVectorStore(ctx context.Context, vector_store_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceDeleteVectorStoreResponse, error)
+```
+
+### InferenceClient.DeleteVectorStoreFile
+
+DeleteVectorStoreFile calls DELETE /vector_stores/{vector_store_id}/files/{file_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) DeleteVectorStoreFile(ctx context.Context, vector_store_id string, file_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceDeleteVectorStoreFileResponse, error)
+```
+
+### InferenceClient.DownloadFile
+
+DownloadFile calls GET /files/{file_id}/content using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) DownloadFile(ctx context.Context, file_id string, opts InferenceRequestOptions) (*BinaryResponse, error)
+```
+
+### InferenceClient.GetBatchOutput
+
+GetBatchOutput calls GET /batches/{batch_id}/output using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) GetBatchOutput(ctx context.Context, batch_id string, opts InferenceRequestOptions) (*BinaryResponse, error)
+```
+
+### InferenceClient.GetLog
+
+GetLog calls GET /logs/{logId} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) GetLog(ctx context.Context, logId string, queryOpts parity.GatewayInferenceInputGetLogQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceLogObject, error)
+```
+
+### InferenceClient.GetResponse
+
+GetResponse calls GET /responses/{response_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) GetResponse(ctx context.Context, response_id string, queryOpts parity.GatewayInferenceInputGetResponseQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceResponse, error)
+```
+
+### InferenceClient.GetVectorStore
+
+GetVectorStore calls GET /vector_stores/{vector_store_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) GetVectorStore(ctx context.Context, vector_store_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceVectorStoreObject, error)
+```
+
+### InferenceClient.GetVectorStoreFile
+
+GetVectorStoreFile calls GET /vector_stores/{vector_store_id}/files/{file_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) GetVectorStoreFile(ctx context.Context, vector_store_id string, file_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceVectorStoreFileObject, error)
+```
+
+### InferenceClient.GetVectorStoreFileBatch
+
+GetVectorStoreFileBatch calls GET /vector_stores/{vector_store_id}/file_batches/{batch_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) GetVectorStoreFileBatch(ctx context.Context, vector_store_id string, batch_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceVectorStoreFileBatchObject, error)
+```
+
+### InferenceClient.ListBatches
+
+ListBatches calls GET /batches using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListBatches(ctx context.Context, queryOpts parity.GatewayInferenceInputListBatchesQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceListBatchesResponse, error)
+```
+
+### InferenceClient.ListFiles
+
+ListFiles calls GET /files using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListFiles(ctx context.Context, queryOpts parity.GatewayInferenceInputListFilesQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceListFilesResponse, error)
+```
+
+### InferenceClient.ListFilesInVectorStoreBatch
+
+ListFilesInVectorStoreBatch calls GET /vector_stores/{vector_store_id}/file_batches/{batch_id}/files using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListFilesInVectorStoreBatch(ctx context.Context, vector_store_id string, batch_id string, queryOpts parity.GatewayInferenceInputListFilesInVectorStoreBatchQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceListVectorStoreFilesResponse, error)
+```
+
+### InferenceClient.ListFineTuningEvents
+
+ListFineTuningEvents calls GET /fine_tuning/jobs/{fine_tuning_job_id}/events using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListFineTuningEvents(ctx context.Context, fine_tuning_job_id string, queryOpts parity.GatewayInferenceInputListFineTuningEventsQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceListFineTuningJobEventsResponse, error)
+```
+
+### InferenceClient.ListFineTuningJobCheckpoints
+
+ListFineTuningJobCheckpoints calls GET /fine_tuning/jobs/{fine_tuning_job_id}/checkpoints using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListFineTuningJobCheckpoints(ctx context.Context, fine_tuning_job_id string, queryOpts parity.GatewayInferenceInputListFineTuningJobCheckpointsQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceListFineTuningJobCheckpointsResponse, error)
+```
+
+### InferenceClient.ListInputItems
+
+ListInputItems calls GET /responses/{response_id}/input_items using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListInputItems(ctx context.Context, response_id string, queryOpts parity.GatewayInferenceInputListInputItemsQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceResponseItemList, error)
+```
+
+### InferenceClient.ListModels
+
+ListModels calls GET /models using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListModels(ctx context.Context, queryOpts parity.GatewayInferenceInputListModelsQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceListModelsResponse, error)
+```
+
+### InferenceClient.ListPaginatedFineTuningJobs
+
+ListPaginatedFineTuningJobs calls GET /fine_tuning/jobs using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListPaginatedFineTuningJobs(ctx context.Context, queryOpts parity.GatewayInferenceInputListPaginatedFineTuningJobsQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceListPaginatedFineTuningJobsResponse, error)
+```
+
+### InferenceClient.ListVectorStoreFiles
+
+ListVectorStoreFiles calls GET /vector_stores/{vector_store_id}/files using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListVectorStoreFiles(ctx context.Context, vector_store_id string, queryOpts parity.GatewayInferenceInputListVectorStoreFilesQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceListVectorStoreFilesResponse, error)
+```
+
+### InferenceClient.ListVectorStores
+
+ListVectorStores calls GET /vector_stores using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ListVectorStores(ctx context.Context, queryOpts parity.GatewayInferenceInputListVectorStoresQuery, opts InferenceRequestOptions) (*parity.GatewayInferenceListVectorStoresResponse, error)
+```
+
+### InferenceClient.ModifyVectorStore
+
+ModifyVectorStore calls POST /vector_stores/{vector_store_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) ModifyVectorStore(ctx context.Context, vector_store_id string, body parity.GatewayInferenceInputUpdateVectorStoreRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceVectorStoreObject, error)
+```
+
+### InferenceClient.RetrieveBatch
+
+RetrieveBatch calls GET /batches/{batch_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) RetrieveBatch(ctx context.Context, batch_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceBatch, error)
+```
+
+### InferenceClient.RetrieveFile
+
+RetrieveFile calls GET /files/{file_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) RetrieveFile(ctx context.Context, file_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceOpenAIFile, error)
+```
+
+### InferenceClient.RetrieveFineTuningJob
+
+RetrieveFineTuningJob calls GET /fine_tuning/jobs/{fine_tuning_job_id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) RetrieveFineTuningJob(ctx context.Context, fine_tuning_job_id string, opts InferenceRequestOptions) (*parity.GatewayInferenceFineTuningJob, error)
+```
+
+### InferenceClient.RetrieveModel
+
+RetrieveModel calls GET /models/{model} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) RetrieveModel(ctx context.Context, model string, opts InferenceRequestOptions) (*parity.GatewayInferenceModel, error)
+```
+
+### InferenceClient.StreamChatCompletion
+
+StreamChatCompletion streams typed chat deltas, terminating at [DONE].
+
+```go
+func (c *InferenceClient) StreamChatCompletion(ctx context.Context, body parity.GatewayInferenceInputCreateChatCompletionRequest, opts InferenceRequestOptions) (*Stream[parity.GatewayInferenceCreateChatCompletionStreamResponse], error)
+```
+
+### InferenceClient.StreamCompletion
+
+StreamCompletion streams legacy text completion events.
+
+```go
+func (c *InferenceClient) StreamCompletion(ctx context.Context, body parity.GatewayInferenceInputCreateCompletionRequest, opts InferenceRequestOptions) (*Stream[parity.GatewayInferenceCreateCompletionResponse], error)
+```
+
+### InferenceClient.StreamPromptCompletion
+
+StreamPromptCompletion streams a saved prompt's native chat or completion events.
+
+```go
+func (c *InferenceClient) StreamPromptCompletion(ctx context.Context, id string, body parity.GatewayInferenceInputCreatePromptCompletionRequest, opts InferenceRequestOptions) (*Stream[parity.GatewayInferenceCreatePromptCompletionStreamResponse], error)
+```
+
+### InferenceClient.StreamResponse
+
+StreamResponse emits Responses events through response.completed/failed/incomplete, then releases the body.
+
+```go
+func (c *InferenceClient) StreamResponse(ctx context.Context, body parity.GatewayInferenceInputCreateResponse, opts InferenceRequestOptions) (*Stream[parity.GatewayInferenceResponseStreamEvent], error)
+```
+
+### InferenceClient.String
+
+String never exposes runtime authentication material.
+
+```go
+func (c *InferenceClient) String() string
+```
+
+### InferenceClient.UpdateFeedback
+
+UpdateFeedback calls PUT /feedback/{id} using the explicitly configured runtime key.
+
+```go
+func (c *InferenceClient) UpdateFeedback(ctx context.Context, id string, body parity.GatewayInferenceInputFeedbackUpdateRequest, opts InferenceRequestOptions) (*parity.GatewayInferenceFeedbackResponse, error)
+```
+
 ## IntegrationsClient
 
 IntegrationsClient manages Integrations resources.
@@ -325,6 +1101,14 @@ IntegrationsClient manages Integrations resources.
 type IntegrationsClient struct {
 	// contains filtered or unexported fields
 }
+```
+
+### IntegrationsClient.Catalog
+
+Catalog lists provider definitions accepted by integration creation.
+
+```go
+func (c *IntegrationsClient) Catalog(ctx context.Context) (*parity.ListCatalogProvidersResponse, error)
 ```
 
 ### IntegrationsClient.Create
@@ -383,6 +1167,14 @@ ListWorkspaces calls the explicit ListWorkspaces lifecycle operation.
 func (c *IntegrationsClient) ListWorkspaces(ctx context.Context, slug string) (*schema.IntegrationWorkspacesResponse, error)
 ```
 
+### IntegrationsClient.ResolveProviderID
+
+ResolveProviderID accepts a UUID directly, or resolves a provider slug case-insensitively.
+
+```go
+func (c *IntegrationsClient) ResolveProviderID(ctx context.Context, ref string) (string, error)
+```
+
 ### IntegrationsClient.SetModels
 
 SetModels calls the explicit SetModels lifecycle operation.
@@ -405,6 +1197,72 @@ Update updates supplied fields; nested documents may replace stored values.
 
 ```go
 func (c *IntegrationsClient) Update(ctx context.Context, slug string, req schema.UpdateIntegrationRequest) (*schema.IntegrationsUpdateResponse, error)
+```
+
+## LogExportsClient
+
+LogExportsClient exposes the pinned TypeScript Gateway management surface.
+
+```go
+type LogExportsClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### LogExportsClient.Cancel
+
+Cancel calls POST /logs/exports/{exportId}/cancel on its explicitly configured SCM plane.
+
+```go
+func (c *LogExportsClient) Cancel(ctx context.Context, exportId string) (*parity.GatewayLogExportsClientCancelResponse, error)
+```
+
+### LogExportsClient.Create
+
+Create calls POST /logs/exports on its explicitly configured SCM plane.
+
+```go
+func (c *LogExportsClient) Create(ctx context.Context, body parity.GatewayLogExportsClientCreateRequest) (*parity.GatewayLogExportsClientCreateResponse, error)
+```
+
+### LogExportsClient.Download
+
+Download calls GET /logs/exports/{exportId}/download on its explicitly configured SCM plane.
+
+```go
+func (c *LogExportsClient) Download(ctx context.Context, exportId string) (*parity.GatewayLogExportsClientDownloadResponse, error)
+```
+
+### LogExportsClient.Get
+
+Get calls GET /logs/exports/{exportId} on its explicitly configured SCM plane.
+
+```go
+func (c *LogExportsClient) Get(ctx context.Context, exportId string) (*parity.GatewayLogExportsClientGetResponse, error)
+```
+
+### LogExportsClient.List
+
+List calls GET /logs/exports on its explicitly configured SCM plane.
+
+```go
+func (c *LogExportsClient) List(ctx context.Context, opts parity.GatewayLogExportsClientListOptions) (*parity.GatewayLogExportsClientListResponse, error)
+```
+
+### LogExportsClient.Start
+
+Start calls POST /logs/exports/{exportId}/start on its explicitly configured SCM plane.
+
+```go
+func (c *LogExportsClient) Start(ctx context.Context, exportId string) (*parity.GatewayLogExportsClientStartResponse, error)
+```
+
+### LogExportsClient.Update
+
+Update calls PUT /logs/exports/{exportId} on its explicitly configured SCM plane.
+
+```go
+func (c *LogExportsClient) Update(ctx context.Context, exportId string, body parity.GatewayLogExportsClientUpdateRequest) (*parity.GatewayLogExportsClientUpdateResponse, error)
 ```
 
 ## MCPIntegrationsClient
@@ -603,6 +1461,24 @@ Update updates supplied fields; nested documents may replace stored values.
 func (c *MCPServersClient) Update(ctx context.Context, mcpServerID string, req schema.UpdateMCPServer) (*schema.MCPServersUpdateResponse, error)
 ```
 
+## ModelPricingClient
+
+ModelPricingClient reads upstream catalog prices, rather than effective tenant billing or SCM cost telemetry.
+
+```go
+type ModelPricingClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### ModelPricingClient.Get
+
+Get reads provider/model rates and unevaluated expressions without altering currencies or formulas.
+
+```go
+func (c *ModelPricingClient) Get(ctx context.Context, provider, model string) (*parity.GatewayModelPricingConfig, error)
+```
+
 ## OrgGuardrailsClient
 
 OrgGuardrailsClient manages OrgGuardrails resources.
@@ -675,6 +1551,82 @@ UpsertMCPServer calls the explicit UpsertMCPServer lifecycle operation.
 
 ```go
 func (c *OrgGuardrailsClient) UpsertMCPServer(ctx context.Context, guardrailID string, mcpServerID string, req schema.UpsertMCPServerMappingRequest) (*schema.UpsertMCPServerMappingResponse, error)
+```
+
+## OrganisationsClient
+
+OrganisationsClient exposes the pinned TypeScript Gateway management surface.
+
+```go
+type OrganisationsClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### OrganisationsClient.GetAuthSettings
+
+GetAuthSettings calls GET /organisations/{tsgId}/auth-settings on its explicitly configured SCM plane.
+
+```go
+func (c *OrganisationsClient) GetAuthSettings(ctx context.Context, tsgId string) (*parity.AuthSettingsResponse, error)
+```
+
+### OrganisationsClient.GetInfo
+
+GetInfo calls GET /organisations/{tsgId}/info on its explicitly configured SCM plane.
+
+```go
+func (c *OrganisationsClient) GetInfo(ctx context.Context, tsgId string) (*parity.GatewayOrganisationInfo, error)
+```
+
+### OrganisationsClient.GetSelf
+
+GetSelf calls GET /organisations/self on its explicitly configured SCM plane.
+
+```go
+func (c *OrganisationsClient) GetSelf(ctx context.Context) (*parity.OrganisationSelfResponse, error)
+```
+
+### OrganisationsClient.UpdateAuthSettings
+
+UpdateAuthSettings calls PUT /organisations/{tsgId}/auth-settings on its explicitly configured SCM plane.
+
+```go
+func (c *OrganisationsClient) UpdateAuthSettings(ctx context.Context, tsgId string, body parity.GatewayOrganisationAuthSettingsUpdateRequest) (*parity.GatewayWriteResponse, error)
+```
+
+### OrganisationsClient.UpdateSelf
+
+UpdateSelf calls PUT /organisations/self on its explicitly configured SCM plane.
+
+```go
+func (c *OrganisationsClient) UpdateSelf(ctx context.Context, body parity.GatewayOrganisationUpdateRequest) (*parity.GatewayWriteResponse, error)
+```
+
+## PluginsClient
+
+PluginsClient exposes the pinned TypeScript Gateway management surface.
+
+```go
+type PluginsClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### PluginsClient.Create
+
+Create calls POST /plugins on its explicitly configured SCM plane.
+
+```go
+func (c *PluginsClient) Create(ctx context.Context, body parity.GatewayPluginCreateRequest) (*parity.GatewayWriteResponse, error)
+```
+
+### PluginsClient.List
+
+List calls GET /plugins on its explicitly configured SCM plane.
+
+```go
+func (c *PluginsClient) List(ctx context.Context) (*parity.ListPluginsResponse, error)
 ```
 
 ## ProvidersClient
@@ -777,6 +1729,66 @@ Update updates supplied fields; nested documents may replace stored values.
 func (c *RateLimitsClient) Update(ctx context.Context, rateLimitsPolicyID string, req schema.UpdateRateLimitsPolicyRequest) (*schema.RateLimitsUpdateResponse, error)
 ```
 
+## RealtimeConnection
+
+RealtimeConnection owns a bounded event queue and closes its socket on deadline, cancellation or overflow.
+Provider errors remain events; the SDK does not convert an upgrade into a successful model session.
+
+```go
+type RealtimeConnection struct {
+	// contains filtered or unexported fields
+}
+```
+
+### RealtimeConnection.Close
+
+Close cancels the owned socket, even if event consumption has not started.
+
+```go
+func (c *RealtimeConnection) Close() error
+```
+
+### RealtimeConnection.Next
+
+Next reads one queued event; io.EOF follows draining a normally closed socket.
+Transport failures are sticky and discard queued events, matching the TypeScript client.
+
+```go
+func (c *RealtimeConnection) Next(ctx context.Context) (*RealtimeEvent, error)
+```
+
+### RealtimeConnection.Send
+
+Send validates one finite JSON event and reports transport failures through both Send and Next.
+
+```go
+func (c *RealtimeConnection) Send(ctx context.Context, event RealtimeEvent) error
+```
+
+## RealtimeEvent
+
+RealtimeEvent is an extensible, finite JSON event with a required Type.
+Fields cannot overwrite the event type.
+
+```go
+type RealtimeEvent struct {
+	Type	string
+	Fields	map[string]any
+}
+```
+
+### RealtimeEvent.MarshalJSON
+
+```go
+func (e RealtimeEvent) MarshalJSON() ([]byte, error)
+```
+
+### RealtimeEvent.UnmarshalJSON
+
+```go
+func (e *RealtimeEvent) UnmarshalJSON(data []byte) error
+```
+
 ## SecretReferencesClient
 
 SecretReferencesClient manages SecretReferences resources.
@@ -825,6 +1837,219 @@ Update updates supplied fields; nested documents may replace stored values.
 
 ```go
 func (c *SecretReferencesClient) Update(ctx context.Context, secretReferenceID string, req schema.UpdateSecretReferenceRequest) (*schema.SecretReferencesUpdateResponse, error)
+```
+
+## Stream
+
+Stream is a bounded SSE reader. Call Close when ending consumption before the terminal event.
+Next calls are serialized; Close may cancel a blocked read concurrently.
+
+```go
+type Stream[T any] struct {
+	// contains filtered or unexported fields
+}
+```
+
+### Stream.Close
+
+Close releases the response body and deadline, even before the first Next.
+
+```go
+func (s *Stream[T]) Close() error
+```
+
+### Stream.Next
+
+Next returns one validated event, or io.EOF after the expected terminator.
+
+```go
+func (s *Stream[T]) Next() (*T, error)
+```
+
+## TelemetryClient
+
+TelemetryClient exposes SCM observability queries, independently of runtime inference.
+
+```go
+type TelemetryClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### TelemetryClient.ByStatusCode
+
+ByStatusCode queries /logs/groups/status_code with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) ByStatusCode(ctx context.Context, opts GroupOptions) (*parity.GroupListResponse, error)
+```
+
+### TelemetryClient.ByUser
+
+ByUser queries /logs/groups/users with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) ByUser(ctx context.Context, opts ChartOptions) (*parity.UserGroupResponse, error)
+```
+
+### TelemetryClient.CacheHitTrend
+
+CacheHitTrend queries /logs/charts/cache-hit-trend with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) CacheHitTrend(ctx context.Context, opts TelemetryWindow) (*parity.CacheHitTrendResponse, error)
+```
+
+### TelemetryClient.CacheSummary
+
+CacheSummary queries /logs/charts/cache-summary with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) CacheSummary(ctx context.Context, opts TelemetryWindow) (*parity.CacheSummaryResponse, error)
+```
+
+### TelemetryClient.Cost
+
+Cost queries /logs/charts/cost with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) Cost(ctx context.Context, opts ChartOptions) (*parity.CostChartResponse, error)
+```
+
+### TelemetryClient.ErrorCategoryTrends
+
+ErrorCategoryTrends queries /logs/charts/error-category-trends with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) ErrorCategoryTrends(ctx context.Context, opts TelemetryWindow) (*parity.ErrorCategoryTrendsResponse, error)
+```
+
+### TelemetryClient.ErrorTrends
+
+ErrorTrends queries /logs/charts/error-trends with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) ErrorTrends(ctx context.Context, opts TelemetryWindow) (*parity.ErrorTrendsResponse, error)
+```
+
+### TelemetryClient.Errors
+
+Errors queries /logs/charts/errors with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) Errors(ctx context.Context, opts TelemetryWindow) (*parity.CountChartResponse, error)
+```
+
+### TelemetryClient.FeedbackModels
+
+FeedbackModels queries /logs/charts/feedback-models with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) FeedbackModels(ctx context.Context, opts TelemetryWindow) (*parity.FeedbackModelsResponse, error)
+```
+
+### TelemetryClient.FeedbackScoreDistribution
+
+FeedbackScoreDistribution queries /logs/charts/feedback-score-distribution with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) FeedbackScoreDistribution(ctx context.Context, opts TelemetryWindow) (*parity.FeedbackScoreDistributionResponse, error)
+```
+
+### TelemetryClient.FeedbackTrend
+
+FeedbackTrend queries /logs/charts/feedback-trend with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) FeedbackTrend(ctx context.Context, opts TelemetryWindow) (*parity.CountChartResponse, error)
+```
+
+### TelemetryClient.FeedbackWeighted
+
+FeedbackWeighted queries /logs/charts/feedback-weighted with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) FeedbackWeighted(ctx context.Context, opts TelemetryWindow) (*parity.CountChartResponse, error)
+```
+
+### TelemetryClient.FilterBoundaries
+
+FilterBoundaries queries /analytics/filter-boundaries with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) FilterBoundaries(ctx context.Context, opts TelemetryWindow) (*parity.GatewayFilterBoundariesResponse, error)
+```
+
+### TelemetryClient.GroupBy
+
+GroupBy queries /logs/groups/{dimension} with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) GroupBy(ctx context.Context, dimension string, opts GroupOptions) (*parity.GroupListResponse, error)
+```
+
+### TelemetryClient.GroupedErrors
+
+GroupedErrors queries /logs/charts/grouped-errors with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) GroupedErrors(ctx context.Context, opts TelemetryWindow) (*parity.GroupedErrorsResponse, error)
+```
+
+### TelemetryClient.Latency
+
+Latency queries /logs/charts/latency with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) Latency(ctx context.Context, opts ChartOptions) (*parity.LatencyChartResponse, error)
+```
+
+### TelemetryClient.Logs
+
+Logs queries /logs with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) Logs(ctx context.Context, opts LogsOptions) (*parity.GatewayLogsResponse, error)
+```
+
+### TelemetryClient.Requests
+
+Requests queries /logs/charts/requests with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) Requests(ctx context.Context, opts ChartOptions) (*parity.CountChartResponse, error)
+```
+
+### TelemetryClient.RescuedRetries
+
+RescuedRetries queries /logs/charts/rescued-retries with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) RescuedRetries(ctx context.Context, opts TelemetryWindow) (*parity.RescuedRetriesResponse, error)
+```
+
+### TelemetryClient.Tokens
+
+Tokens queries /logs/charts/tokens with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) Tokens(ctx context.Context, opts ChartOptions) (*parity.TokensChartResponse, error)
+```
+
+### TelemetryClient.UserTrends
+
+UserTrends queries /logs/charts/user-trends with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) UserTrends(ctx context.Context, opts TelemetryWindow) (*parity.UserTrendsResponse, error)
+```
+
+### TelemetryClient.Users
+
+Users queries /logs/charts/users with validated SCM query names and time offsets.
+
+```go
+func (c *TelemetryClient) Users(ctx context.Context, opts TelemetryWindow) (*parity.CountChartResponse, error)
 ```
 
 ## UsageLimitsClient
@@ -893,6 +2118,96 @@ Update updates supplied fields; nested documents may replace stored values.
 func (c *UsageLimitsClient) Update(ctx context.Context, policyUsageLimitsID string, req schema.UpdateUsageLimitsPolicyRequest) (*schema.UsageLimitsUpdateResponse, error)
 ```
 
+## WorkspaceProvisionError
+
+WorkspaceProvisionError identifies the failed stage and any best-effort cleanup result.
+Unwrap preserves errors.Is/As for the underlying HTTP or transport failure.
+
+```go
+type WorkspaceProvisionError struct {
+	Stage			string
+	Result			*WorkspaceProvisionResult
+	Cause			error
+	CleanupAttempted	bool
+	CleanupError		error
+}
+```
+
+### WorkspaceProvisionError.Error
+
+```go
+func (e *WorkspaceProvisionError) Error() string
+```
+
+### WorkspaceProvisionError.Unwrap
+
+```go
+func (e *WorkspaceProvisionError) Unwrap() error
+```
+
+## WorkspacesClient
+
+WorkspacesClient handles management reads, admin writes and IAM-first provisioning.
+
+```go
+type WorkspacesClient struct {
+	// contains filtered or unexported fields
+}
+```
+
+### WorkspacesClient.Create
+
+Create creates an admin-plane workspace using an existing IAM scope.
+
+```go
+func (c *WorkspacesClient) Create(ctx context.Context, req WorkspaceCreateRequest) (*WorkspaceCreateResponse, error)
+```
+
+### WorkspacesClient.Delete
+
+Delete archives a workspace, rather than hard-deleting it. Archived list rows remain available.
+
+```go
+func (c *WorkspacesClient) Delete(ctx context.Context, ref string) error
+```
+
+### WorkspacesClient.Get
+
+Get reads a workspace UUID or slug; archived workspaces return 404 in recorded traffic.
+
+```go
+func (c *WorkspacesClient) Get(ctx context.Context, ref string, opts WorkspaceGetOptions) (*WorkspaceDetail, error)
+```
+
+### WorkspacesClient.List
+
+List reads scoped workspaces, or tenant workspaces on the admin plane.
+It preserves Total and HasMore; the captured contract provides no paging parameters.
+
+```go
+func (c *WorkspacesClient) List(ctx context.Context, opts WorkspaceListOptions) (*WorkspaceListResponse, error)
+```
+
+### WorkspacesClient.Provision
+
+Provision creates/reuses an IAM scope, creates the workspace, then binds its slug.
+No role assignment is made. Writes are not automatically replayed. On an explicit client rejection,
+a newly created scope is cleaned up best-effort through the unverified IAM DELETE route. Ambiguous
+creation outcomes retain the scope. Binding failures retain both objects and report their identities.
+
+```go
+func (c *WorkspacesClient) Provision(ctx context.Context, req WorkspaceCreateRequest, opts WorkspaceProvisionOptions) (*WorkspaceProvisionResult, error)
+```
+
+### WorkspacesClient.Update
+
+Update sends an admin-plane partial update. The recorded response is an empty JSON acknowledgement;
+Get on the admin plane obtains the resulting settings.
+
+```go
+func (c *WorkspacesClient) Update(ctx context.Context, ref string, req WorkspaceUpdateRequest) error
+```
+
 ## Types and models
 
 Each link opens the complete type declaration, fields, and methods.
@@ -901,16 +2216,67 @@ Each link opens the complete type declaration, fields, and methods.
 | --- | --- |
 | `APIKeyKind` | [APIKeyKind](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#APIKeyKind) |
 | `APIKeysClient` | [APIKeysClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#APIKeysClient) |
+| `AudioResponse` | [AudioResponse](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#AudioResponse) |
+| `AuditLogListOptions` | [AuditLogListOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#AuditLogListOptions) |
+| `AuditLogsClient` | [AuditLogsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#AuditLogsClient) |
+| `BinaryResponse` | [BinaryResponse](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#BinaryResponse) |
+| `ChartOptions` | [ChartOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#ChartOptions) |
+| `ChatTextMessage` | [ChatTextMessage](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#ChatTextMessage) |
 | `Client` | [Client](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#Client) |
 | `ConfigsClient` | [ConfigsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#ConfigsClient) |
+| `CustomHostConfigurationOptions` | [CustomHostConfigurationOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#CustomHostConfigurationOptions) |
 | `DeploymentsClient` | [DeploymentsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#DeploymentsClient) |
+| `DottedValueEntry` | [DottedValueEntry](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#DottedValueEntry) |
+| `GatewaySecretFieldRule` | [GatewaySecretFieldRule](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#GatewaySecretFieldRule) |
+| `GatewaySecretOperationMetadata` | [GatewaySecretOperationMetadata](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#GatewaySecretOperationMetadata) |
+| `GroupOptions` | [GroupOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#GroupOptions) |
 | `GuardrailsClient` | [GuardrailsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#GuardrailsClient) |
+| `IAMScope` | [IAMScope](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#IAMScope) |
+| `IAMScopeCreateInput` | [IAMScopeCreateInput](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#IAMScopeCreateInput) |
+| `IAMScopeListResponse` | [IAMScopeListResponse](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#IAMScopeListResponse) |
+| `IAMScopeResource` | [IAMScopeResource](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#IAMScopeResource) |
+| `IAMScopeUpdateInput` | [IAMScopeUpdateInput](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#IAMScopeUpdateInput) |
+| `IAMScopesClient` | [IAMScopesClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#IAMScopesClient) |
+| `InferenceClient` | [InferenceClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#InferenceClient) |
+| `InferenceOpts` | [InferenceOpts](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#InferenceOpts) |
+| `InferenceRequestOptions` | [InferenceRequestOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#InferenceRequestOptions) |
 | `IntegrationsClient` | [IntegrationsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#IntegrationsClient) |
+| `LogExportsClient` | [LogExportsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#LogExportsClient) |
+| `LogsOptions` | [LogsOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#LogsOptions) |
 | `MCPIntegrationsClient` | [MCPIntegrationsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#MCPIntegrationsClient) |
 | `MCPServersClient` | [MCPServersClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#MCPServersClient) |
+| `ModelPricingClient` | [ModelPricingClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#ModelPricingClient) |
+| `ModelPricingOpts` | [ModelPricingOpts](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#ModelPricingOpts) |
 | `Opts` | [Opts](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#Opts) |
 | `OrgGuardrailsClient` | [OrgGuardrailsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#OrgGuardrailsClient) |
+| `OrganisationsClient` | [OrganisationsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#OrganisationsClient) |
+| `PluginsClient` | [PluginsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#PluginsClient) |
 | `ProvidersClient` | [ProvidersClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#ProvidersClient) |
+| `QueryOptions` | [QueryOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#QueryOptions) |
 | `RateLimitsClient` | [RateLimitsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#RateLimitsClient) |
+| `RealtimeConnectRequest` | [RealtimeConnectRequest](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#RealtimeConnectRequest) |
+| `RealtimeConnection` | [RealtimeConnection](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#RealtimeConnection) |
+| `RealtimeEvent` | [RealtimeEvent](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#RealtimeEvent) |
+| `RealtimeOptions` | [RealtimeOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#RealtimeOptions) |
+| `RuntimeFile` | [RuntimeFile](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#RuntimeFile) |
 | `SecretReferencesClient` | [SecretReferencesClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#SecretReferencesClient) |
+| `Stream` | [Stream](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#Stream) |
+| `TelemetryClient` | [TelemetryClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#TelemetryClient) |
+| `TelemetryWindow` | [TelemetryWindow](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#TelemetryWindow) |
 | `UsageLimitsClient` | [UsageLimitsClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#UsageLimitsClient) |
+| `WebSocket` | [WebSocket](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WebSocket) |
+| `WebSocketDialOptions` | [WebSocketDialOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WebSocketDialOptions) |
+| `WebSocketFactory` | [WebSocketFactory](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WebSocketFactory) |
+| `WebSocketFrame` | [WebSocketFrame](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WebSocketFrame) |
+| `WorkspaceCreateRequest` | [WorkspaceCreateRequest](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceCreateRequest) |
+| `WorkspaceCreateResponse` | [WorkspaceCreateResponse](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceCreateResponse) |
+| `WorkspaceDetail` | [WorkspaceDetail](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceDetail) |
+| `WorkspaceGetOptions` | [WorkspaceGetOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceGetOptions) |
+| `WorkspaceListOptions` | [WorkspaceListOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceListOptions) |
+| `WorkspaceListResponse` | [WorkspaceListResponse](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceListResponse) |
+| `WorkspacePlane` | [WorkspacePlane](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspacePlane) |
+| `WorkspaceProvisionError` | [WorkspaceProvisionError](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceProvisionError) |
+| `WorkspaceProvisionOptions` | [WorkspaceProvisionOptions](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceProvisionOptions) |
+| `WorkspaceProvisionResult` | [WorkspaceProvisionResult](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceProvisionResult) |
+| `WorkspaceUpdateRequest` | [WorkspaceUpdateRequest](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspaceUpdateRequest) |
+| `WorkspacesClient` | [WorkspacesClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec/gateway#WorkspacesClient) |

@@ -81,6 +81,7 @@ func TestSpecConformance_PlanesVerbsAndPaths(t *testing.T) {
 		path   string
 	}{
 		// ---- data plane: redteam-service.yaml ----
+		{"GetScanMetadata", func(c *Client) { _, _ = c.GetScanMetadata(ctx) }, "data", "GET", "/v1/scan/scan-metadata"},
 		{"GetScanStatistics", func(c *Client) { _, _ = c.GetScanStatistics(ctx, nil) }, "data", "GET", "/v1/dashboard/scan-statistics"},
 		{"GetScoreTrend", func(c *Client) { _, _ = c.GetScoreTrend(ctx, u) }, "data", "GET", "/v1/dashboard/score-trend"},
 		{"GetQuota", func(c *Client) { _, _ = c.GetQuota(ctx) }, "data", "GET", "/v1/metering/quota"}, // DELIBERATE spec deviation: spec says POST, live tenant returns 403 for POST and serves GET (verified 2026-10-01)

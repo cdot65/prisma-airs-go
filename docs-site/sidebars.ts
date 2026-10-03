@@ -18,7 +18,7 @@ const sidebars: SidebarsConfig = {
       'examples/index', 'examples/runtime-scanning', 'examples/profile-crud',
       'examples/topic-crud', 'examples/api-key-rotation', 'examples/model-security',
       'examples/red-team-inventory', 'examples/red-team-scanning', 'examples/gateway-crud',
-      'examples/agentguard-scanning',
+      'examples/agentguard-scanning', 'examples/gateway-workspaces-inference',
     ]},
     {type: 'category', label: 'Validation and troubleshooting', items: [
       'developer/live-verification', 'guides/troubleshooting', 'reference/error-handling',
@@ -34,13 +34,13 @@ const sidebars: SidebarsConfig = {
     ]},
     {type: 'category', label: 'Schema catalogs', items: [
       'reference/generated/modelsecurity-schema', 'reference/generated/redteam-schema',
-      'reference/generated/gateway-schema', 'reference/generated/agentguard-schema',
+      'reference/generated/gateway-schema', 'reference/generated/agentguard-schema', 'reference/generated/parity-schema',
     ]},
     'reference/environment-variables', 'reference/error-handling',
   ],
   developers: [
     'developer/development', 'developer/architecture', 'developer/design-parity',
-    'developer/live-verification', 'developer/feature-quality', 'developer/releases',
+    'developer/live-verification', 'developer/feature-quality', 'developer/typescript-parity', 'developer/releases',
   ],
 };
 export default sidebars;

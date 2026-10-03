@@ -268,6 +268,22 @@ List calls the current CustomRules API contract.
 func (c *CustomRulesClient) List(ctx context.Context, opts CustomRuleListOpts) (*schema.ListCustomRulesResponse, error)
 ```
 
+### CustomRulesClient.ListAll
+
+ListAll collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *CustomRulesClient) ListAll(ctx context.Context, opts CustomRuleListOpts, bounds aisec.CollectOptions) ([]schema.CustomRuleListItem, error)
+```
+
+### CustomRulesClient.ListAllVersions
+
+ListAllVersions walks custom-rule snapshot versions using opaque cursors, never item offsets.
+
+```go
+func (c *CustomRulesClient) ListAllVersions(ctx context.Context, opts SnapshotListOpts, bounds aisec.CollectOptions) ([]schema.SnapshotVersion, error)
+```
+
 ### CustomRulesClient.ListSecurityGroups
 
 ListSecurityGroups calls the current CustomRules API contract.
@@ -326,6 +342,14 @@ Get calls the current ModelVersions API contract.
 func (c *ModelVersionsClient) Get(ctx context.Context, uuid string) (*schema.ModelVersionResponse, error)
 ```
 
+### ModelVersionsClient.ListAllFiles
+
+ListAllFiles collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *ModelVersionsClient) ListAllFiles(ctx context.Context, id string, opts PageOpts, bounds aisec.CollectOptions) ([]schema.FileResponse, error)
+```
+
 ### ModelVersionsClient.ListFiles
 
 ListFiles calls the current ModelVersions API contract.
@@ -358,6 +382,22 @@ List calls the current Models API contract.
 
 ```go
 func (c *ModelsClient) List(ctx context.Context, opts ModelListOpts) (*schema.ModelList, error)
+```
+
+### ModelsClient.ListAll
+
+ListAll collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *ModelsClient) ListAll(ctx context.Context, opts ModelListOpts, bounds aisec.CollectOptions) ([]schema.ModelResponse, error)
+```
+
+### ModelsClient.ListAllVersions
+
+ListAllVersions collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *ModelsClient) ListAllVersions(ctx context.Context, id string, opts ModelVersionListOpts, bounds aisec.CollectOptions) ([]schema.ModelVersionResponse, error)
 ```
 
 ### ModelsClient.ListVersions
@@ -466,6 +506,14 @@ func (c *ScansClient) GetViolations(ctx context.Context, scanUUID string, opts V
 func (c *ScansClient) List(ctx context.Context, opts ScanListOpts) (*ScanList, error)
 ```
 
+### ScansClient.ListAll
+
+ListAll collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *ScansClient) ListAll(ctx context.Context, opts ScanListOpts, bounds aisec.CollectOptions) ([]ScanBaseResponse, error)
+```
+
 ### ScansClient.ListDetails
 
 ListDetails calls the current Scans API contract.
@@ -526,6 +574,14 @@ func (c *SecurityGroupsClient) GetRuleInstanceDetails(ctx context.Context, sgUUI
 
 ```go
 func (c *SecurityGroupsClient) List(ctx context.Context, opts GroupListOpts) (*ListModelSecurityGroupsResponse, error)
+```
+
+### SecurityGroupsClient.ListAll
+
+ListAll collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *SecurityGroupsClient) ListAll(ctx context.Context, opts GroupListOpts, bounds aisec.CollectOptions) ([]ModelSecurityGroupResponse, error)
 ```
 
 ### SecurityGroupsClient.ListRuleInstanceDetails
@@ -598,6 +654,14 @@ func (c *SecurityRulesClient) Get(ctx context.Context, uuid string) (*ModelSecur
 
 ```go
 func (c *SecurityRulesClient) List(ctx context.Context, opts RuleListOpts) (*ListModelSecurityRulesResponse, error)
+```
+
+### SecurityRulesClient.ListAll
+
+ListAll collects offset pages with caller-selected bounds and the server total.
+
+```go
+func (c *SecurityRulesClient) ListAll(ctx context.Context, opts RuleListOpts, bounds aisec.CollectOptions) ([]ModelSecurityRuleResponse, error)
 ```
 
 ### SecurityRulesClient.ListVersions

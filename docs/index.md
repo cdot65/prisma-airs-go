@@ -4,7 +4,7 @@ slug: /overview
 ---
 
 Typed Go clients for Runtime Security, Model Security, Red Team, AI Gateway
-management, and AgentGuard public preview. The SDK uses the standard library, supports Go 1.22+, and is a
+management and inference, and skill scanning (AgentGuard public preview). The SDK uses the standard library, supports Go 1.22+, and is a
 foundation for applications and Terraform providers.
 
 ```sh
@@ -50,9 +50,9 @@ contexts and owns application policy, reconciliation, and state.
 | Which operations have live evidence? | [Live verification](developer/live-verification.md) |
 | How are specs, code, documentation, and releases validated? | [Development](developer/development.md) |
 
-Gateway supports management CRUD and lifecycle operations in existing
-workspaces. Inference, streaming, and workspace provisioning are outside this
-client's scope. The SDK performs explicit requests; a Terraform provider owns
+The unreleased TypeScript parity additions include Gateway workspace/IAM
+provisioning, inference, streaming, telemetry, and Runtime DLP/dashboard clients.
+See [parity status](developer/typescript-parity.md) for installation and verification. The SDK performs explicit requests; a Terraform provider owns
 refresh, reconciliation, dependency ordering, timeouts, and state.
 
 The surrounding toolchain includes the [TypeScript SDK](https://cdot65.github.io/prisma-airs-sdk/),

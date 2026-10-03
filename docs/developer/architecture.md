@@ -1,7 +1,7 @@
 # SDK architecture
 
 The Go SDK provides independent clients for Runtime Security, Model Security,
-Red Team, AI Gateway management, and AgentGuard public preview. Import only the packages your application
+Red Team, AI Gateway, and skill scanning (AgentGuard public preview). Import only the packages your application
 needs; the runtime module uses the Go standard library and supports Go 1.22+.
 
 ```mermaid
@@ -11,6 +11,8 @@ flowchart LR
     App --> Model[Model Security Client]
     App --> RedTeam[Red Team Client]
     App --> Gateway[Gateway management Client]
+    App --> Inference[Gateway InferenceClient]
+    Inference --> RuntimeKey[Explicit runtime API key]
     App --> AgentGuard[AgentGuard preview Client]
     Scan --> HMAC[API key or bearer transport]
     Runtime --> OAuth[Shared OAuth request pipeline]
@@ -26,7 +28,7 @@ Runtime scans accept API keys or bearer tokens. Management clients use OAuth2
 client credentials with shared token caching, proactive refresh, concurrent
 deduplication, and bounded authorization retries. Gateway uses SCM OAuth with
 an `x-tsg-id` header on API requests. Its data and admin planes share the token
-cache; Red Team's Network Broker has an independent API endpoint.
+cache with its unreleased IAM plane; Red Team's Network Broker has an independent API endpoint.
 
 Constructor options override service-specific environment variables, followed
 by management fallbacks where supported. Every request accepts a context, and
@@ -51,11 +53,13 @@ See [API reference](../reference/api-reference.md) and
 
 ## SDK and provider responsibilities
 
-SDK methods perform explicit API operations. The caller owns refresh,
-reconciliation, timeouts, dependency ordering, and state. Gateway workspaces
-must already exist; this client covers management CRUD and lifecycle helpers.
-Inference, streaming, workspace provisioning, and Terraform resource
-implementation are separate concerns.
+SDK methods perform explicit API operations. The caller owns reconciliation,
+dependency ordering and Terraform state. The unreleased parity candidate adds
+workspace provisioning: create an IAM scope, create the workspace, then bind
+its slug. Partial failures expose completed steps and cleanup outcomes; binding
+does not grant roles. Inference uses a separate explicit API key, SSE owns a
+bounded response stream, and Realtime uses a caller-provided socket adapter.
+See [TypeScript parity](typescript-parity.md) for contract provenance and limits.
 
 Before adding a capability, consult the pinned inputs in `specs/manifest.json`
 and the public HTTP contract tests. Current evidence is recorded separately in

@@ -10,14 +10,14 @@ test('existing guide, example, reference, and release URLs remain readable', asy
     'examples/runtime-scanning/', 'examples/profile-crud/', 'examples/topic-crud/',
     'examples/red-team-scanning/', 'examples/api-key-rotation/',
     'reference/api-reference/', 'reference/environment-variables/', 'reference/error-handling/',
-    'developer/live-verification/', 'developer/feature-quality/', 'developer/releases/',
+    'developer/live-verification/', 'developer/feature-quality/', 'developer/typescript-parity/', 'developer/releases/',
     'about/release-notes/', 'about/license/',
     'overview/', 'getting-started/', 'getting-started/authentication/', 'examples/',
     'examples/model-security/', 'examples/red-team-inventory/', 'examples/gateway-crud/',
-    'examples/agentguard-scanning/',
+    'examples/agentguard-scanning/', 'examples/gateway-workspaces-inference/',
     'guides/provider-patterns/', 'guides/troubleshooting/', 'developer/development/', 'developer/design-parity/',
     ...['aisec', 'runtime', 'modelsecurity', 'redteam', 'gateway', 'modelsecurity-schema',
-      'redteam-schema', 'gateway-schema', 'agentguard', 'agentguard-schema'].map(name => `reference/generated/${name}/`),
+      'redteam-schema', 'gateway-schema', 'agentguard', 'agentguard-schema', 'parity-schema'].map(name => `reference/generated/${name}/`),
   ];
   for (const path of paths) {
     const response = await request.get(new URL(path, baseURL).href);
@@ -36,7 +36,7 @@ test('homepage links reach Go-specific guides without browser errors', async ({p
   await expect(page.locator('#hero-title')).toHaveText('Prisma AIRS.Typed Go clients.');
   await expect(page.locator('main > section').first()).toHaveAttribute('aria-labelledby', 'hero-title');
   await expect(page.locator('main > section').nth(1).locator('a')).toHaveCount(4);
-  await expect(page.getByRole('link', {name: /Explore AgentGuard preview/})).toHaveAttribute('href', '/prisma-airs-go/examples/agentguard-scanning/');
+  await expect(page.getByRole('link', {name: /Explore skill scanning/})).toHaveAttribute('href', '/prisma-airs-go/examples/agentguard-scanning/');
   await expect(page.locator('.theme-doc-sidebar-container')).toHaveCount(0);
   await page.getByRole('link', {name: 'Get started →', exact: true}).click();
   await expect(page.getByRole('heading', {name: 'Getting started', exact: true})).toBeVisible();
