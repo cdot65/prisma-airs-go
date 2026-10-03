@@ -232,3 +232,31 @@ this UUID to verify reads without creating another scan. The resume check passed
 with the race detector. Attack-chain detail was not exercised because there
 were no chains. Management operations, lookup, CSV, and statistics remain
 mock-only in this Go verification run.
+
+### Workspace/IAM and settings clearing (2026-10-03, v0.8.1)
+
+Disposable tenant scopes passed create/get/bind/delete and post-delete GET
+confirmation. Workspaces passed admin create/get, label rename with stable UUID
+and slug, settings updates, archive and archived-list confirmation. Child config
+create/get/delete passed with the existing tenant-root account. No new access
+policies, human-user assignments or invitations were created. Dedicated-scope
+cleanup is verified; shared scopes and access-policy dependencies are not.
+
+The typed ClearSettings helper was exercised after populated settings were read
+back. Per-field before/after receipts verify default config selection/metadata,
+usage policies, rate policies and icon. A defaults-only clear preserves the other
+settings. Supported clear bodies are defaults {config_id:null, metadata:{}},
+usage_limits:null, rate_limits:[], icon:"". Observed blank description writes
+preserve the old description; allow_config_override is not echoed and is outside
+the clear contract. All owned child/config and scope cleanup checks passed;
+archived workspace records remain by design.
+
+Clearing verifies workspace settings and policy association removal; hidden policy
+record deletion is not asserted by the workspace contract. The inline policy UUID
+is not readable through the standalone usage-policy GET, even before clearing.
+
+Private source-hashed evidence: sdk081-live-receipt.json, probe-workspace-*.json
+(rename, archived lists and active child-config reads), and SDK check/review logs
+in /tmp/prisma-airs-provider-sdk080/. This verification supersedes the initial
+parity pass's inferred IAM DELETE status, without adding routes to the published
+vendor OpenAPI coverage denominator.

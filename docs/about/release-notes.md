@@ -1,5 +1,9 @@
 # Release Notes
 
+## v0.8.1
+
+Add typed workspace settings clearing for native Terraform ownership: default config/metadata, usage limits, rate limits and icon. Explicit null writes supplement the captured non-nullable update schema. Disposable SCM HTTP verification establishes clearing, label identity, workspace archival and dedicated IAM cleanup; existing-user access-policy management remains separate.
+
 ## v0.8.0
 
 - Match TypeScript SDK v0.34.0 functionality with native Go inputs and no external

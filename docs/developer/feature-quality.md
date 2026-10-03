@@ -35,3 +35,15 @@ Final Gateway reviews found no required findings. Optional improvements concern
 Gateway normalization locality, coordinated operation-wrapper/fixture
 maintenance, and more direct typed helpers for flexible configuration documents.
 These do not change recorded wire compatibility or the agreed release scope.
+
+## v0.8.1 workspace clearing review
+
+The owner requires at least **9.1/10 on both axes** for this integration.
+The first actual Claude Code review identified evidence/coverage/documentation
+gaps; corrections were independently re-reviewed through four rounds before publication.
+
+| Feature | Standards | Spec | Evidence |
+|---|---:|---:|---|
+| Typed workspace settings clearing | 9.4/10 | 9.4/10 | Selective wire bodies, validation and typed HTTP errors |
+| Workspace clearing tests and live verification | 9.2/10 | 9.5/10 | Per-field populated-to-cleared receipts and independent cleanup |
+| v0.8.1 documentation and release preparation | 9.3/10 | 9.3/10 | Go checks, generated references, browser and pixel checks |

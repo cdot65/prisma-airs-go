@@ -178,8 +178,10 @@ func (c *WorkspacesClient) Delete(ctx context.Context, ref string) error {
 }
 
 // Provision creates/reuses an IAM scope, creates the workspace, then binds its slug.
-// No role assignment is made. Writes are not automatically replayed. On an explicit client rejection,
-// a newly created scope is cleaned up best-effort through the unverified IAM DELETE route. Ambiguous
+// No role assignment is made. Ambiguous POST failures are not automatically replayed;
+// the shared OAuth transport may refresh and retry once after a 401/403. On an explicit
+// client rejection, a newly created scope is cleaned up best-effort through the IAM
+// DELETE route verified for disposable dedicated scopes on 2026-10-03. Ambiguous
 // creation outcomes retain the scope. Binding failures retain both objects and report their identities.
 func (c *WorkspacesClient) Provision(ctx context.Context, req WorkspaceCreateRequest, opts WorkspaceProvisionOptions) (*WorkspaceProvisionResult, error) {
 	if req.Name == "" {

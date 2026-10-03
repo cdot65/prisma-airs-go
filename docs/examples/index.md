@@ -31,7 +31,7 @@ Create a Go module, install the pinned SDK, and copy a complete example into
 
 ```sh
 go mod init example.com/airs-example
-go get github.com/cdot65/prisma-airs-go@v0.8.0
+go get github.com/cdot65/prisma-airs-go@v0.8.1
 go run .
 ```
 
@@ -44,7 +44,7 @@ SCM OAuth credentials and explicit data-plane and management-plane endpoints.
 
 ## Use the shipped executables
 
-The v0.8.0 release includes `basic-scan`, `profile-crud`, and `gateway-read`
+Each release, including v0.8.1, includes `basic-scan`, `profile-crud`, and `gateway-read`
 executables for Linux, macOS, and Windows, on amd64 and arm64. Start with `-help`
 and `-version` after [verifying the release checksums](../developer/releases.md).
 The Go source lives under `examples/` in the SDK repository.

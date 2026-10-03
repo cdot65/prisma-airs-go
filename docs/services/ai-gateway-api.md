@@ -110,12 +110,12 @@ until the caller receives its scope grant.
 
 These routes were recovered from TypeScript v0.34.0 and earlier vendor Git history.
 The vendor removed workspace/SCIM paths “per engineering”; this surface is kept
-separate from current OpenAPI coverage. IAM DELETE remains unverified.
+separate from current OpenAPI coverage. IAM DELETE was verified for disposable dedicated scopes on 2026-10-03; scopes with unrelated bindings or access policies require separate lifecycle verification.
 
 Provision failures return both a partial `WorkspaceProvisionResult` and a
 `WorkspaceProvisionError` with the failed stage and cleanup outcome. Definite
 workspace rejection permits best-effort cleanup of a newly created scope; ambiguous
-outcomes retain it, and binding failures retain both objects. Writes are not replayed.
+outcomes retain it, and binding failures retain both objects. Ambiguous POST outcomes are not retried; the shared OAuth transport may refresh and replay once after explicit 401/403 rejection.
 
 Workspace reads default to the data plane; use `WorkspaceAdmin` for tenant-wide reads.
 Delete archives the workspace. List with `Status: "archived"` to inspect it; detail
@@ -168,3 +168,9 @@ clone; API return values are not automatically redacted.
 
 See [TypeScript parity and verification](../developer/typescript-parity.md) and
 [workspace and inference examples](../examples/gateway-workspaces-inference.md).
+
+## Clearing workspace settings (v0.8.1)
+
+Use `Workspaces.ClearSettings(ctx, workspaceID, WorkspaceClearSettingsRequest{Defaults: true, UsageLimits: true, RateLimits: true, Icon: true})` to clear selected settings owned by the caller. Refetch to verify normalization. The verified admin-plane bodies are `defaults: {config_id: null, metadata: {}}`, `usage_limits: null`, `rate_limits: []`, and `icon: ""`. The defaults contract covers config_id and metadata only; unreadable controls such as allow_config_override are not included. The helper does not delete routing configs or standalone policies. Observed blank description updates preserve the previous description on the observed deployment, so description clearing is not offered.
+
+Disposable SCM HTTP verification on 2026-10-03 established these bodies, workspace label renaming with stable UUID/slug, workspace archival, dedicated IAM scope deletion, and child-config access using the existing tenant-root account. Access-policy assignments remain separate prerequisites; no user invitations or assignments were performed.
