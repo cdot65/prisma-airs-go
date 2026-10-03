@@ -9,8 +9,9 @@ Remsburg (project-owned additions and modifications):
 - `src/theme/DocItem/Layout/` and the adapted Docusaurus configuration.
 - `design/harness/reference.tar.gz`, containing the pinned originals for verification.
 
-The brand logo is copied unchanged from the same checkout at the owner's
-request. Product names and logos do not receive trademark rights under the
+The original harness logo is retained in the reference archive. The active logo
+is the owner-supplied Go SDK artwork selected on 2026-10-03, pinned in
+`design/harness/source.json` as an asset override. Product names and logos do not receive trademark rights under the
 software license. Applicable source notices are preserved verbatim in `NOTICE`;
 the Apache-2.0 text is in `LICENSE-APACHE-2.0`.
 

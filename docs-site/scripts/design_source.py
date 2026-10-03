@@ -32,6 +32,11 @@ def reference_files():
                 raise ValueError(f"Missing text replacement in {path}: {before}")
             content = content.replace(before, after)
         files[path] = content.encode()
+    for path, override in manifest.get("assetOverrides", {}).items():
+        content = (SITE / path).read_bytes()
+        if hashlib.sha256(content).hexdigest() != override["sha256"]:
+            raise ValueError(f"Owner-selected asset hash mismatch: {path}")
+        files[path] = content
     return manifest, files
 
 
