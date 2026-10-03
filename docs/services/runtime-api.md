@@ -235,6 +235,8 @@ their TSG-qualified routing. `ListAll` collects pages with `aisec.CollectOptions
 nil maximum defaults to 10,000 records, and a pointer to zero removes the record
 cap. DLP uses `DLPListAllOptions` with Spring page/size semantics and the same cap.
 `NewOAuthClient` exposes standalone cache inspection/refresh and a refresh callback.
-`ContentFromJSONFile` loads a native API-shaped content document.
+`ContentFromJSONFile` loads a native API-shaped content document. Unlike the
+TypeScript helper, it rejects unknown fields and trailing JSON so supplied scan
+content cannot be silently dropped.
 
 See [TypeScript parity](../developer/typescript-parity.md) for release and verification status.

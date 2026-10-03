@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -78,23 +79,62 @@ func TestSSERejectsTruncationErrorsAndOversizedEvents(t *testing.T) {
 		})
 	}
 }
+
+type readStarted struct {
+	io.Reader
+	started chan struct{}
+	once    sync.Once
+}
+
+func (r *readStarted) Read(p []byte) (int, error) {
+	r.once.Do(func() { close(r.started) })
+	return r.Reader.Read(p)
+}
 func TestSSECloseUnblocksRead(t *testing.T) {
-	c := inferenceTestClient(t, func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/event-stream")
-		w.(http.Flusher).Flush()
-		<-r.Context().Done()
-	})
-	stream, err := c.StreamChatCompletion(context.Background(), chatRequest(t), InferenceRequestOptions{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	done := make(chan struct{})
-	go func() { _, _ = stream.Next(); close(done) }()
-	_ = stream.Close()
-	select {
-	case <-done:
-	case <-time.After(time.Second):
-		t.Fatal("Close did not unblock Next")
+	for _, operation := range []string{"close", "cancel"} {
+		t.Run(operation, func(t *testing.T) {
+			c := inferenceTestClient(t, func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Content-Type", "text/event-stream")
+				w.(http.Flusher).Flush()
+				<-r.Context().Done()
+			})
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+			stream, err := c.StreamChatCompletion(ctx, chatRequest(t), InferenceRequestOptions{})
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer func() { _ = stream.Close() }()
+			started := make(chan struct{})
+			stream.reader = bufio.NewReader(&readStarted{Reader: stream.body, started: started})
+			done := make(chan error, 1)
+			go func() { _, err := stream.Next(); done <- err }()
+			select {
+			case <-started:
+			case <-time.After(time.Second):
+				t.Fatal("Next did not start its read")
+			}
+			if operation == "close" {
+				_ = stream.Close()
+			} else {
+				cancel()
+			}
+			select {
+			case err = <-done:
+			case <-time.After(time.Second):
+				t.Fatal("read was not unblocked")
+			}
+			if operation == "close" && err != io.EOF {
+				t.Fatalf("explicit Close must return EOF: %v", err)
+			}
+			if operation == "cancel" && !errors.Is(err, context.Canceled) {
+				t.Fatalf("caller cancellation must remain an error: %v", err)
+			}
+			_, again := stream.Next()
+			if again != err {
+				t.Fatalf("termination changed: %v -> %v", err, again)
+			}
+		})
 	}
 }
 func TestRuntimeRedirectNeverLeaksKey(t *testing.T) {

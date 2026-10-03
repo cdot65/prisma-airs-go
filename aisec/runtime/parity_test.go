@@ -299,3 +299,19 @@ func TestDashboardUsesIndependentEndpointAndSharedOAuth(t *testing.T) {
 		t.Fatal("dashboard did not share cached OAuth")
 	}
 }
+
+func TestDLPCollectionOverreportedTotalPagesRetainsRecords(t *testing.T) {
+	calls := 0
+	c := runtimeParityClient(t, func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		if r.URL.Query().Get("page") == "0" {
+			_, _ = io.WriteString(w, `{"content":[{"name":"a"}],"totalPages":5}`)
+		} else {
+			_, _ = io.WriteString(w, `{"content":[],"totalPages":5}`)
+		}
+	})
+	records, err := c.DLP.DataPatterns.ListAll(context.Background(), DLPListAllOptions{Size: 2})
+	if err != nil || len(records) != 1 || calls != 2 {
+		t.Fatalf("records=%v calls=%d err=%v", records, calls, err)
+	}
+}

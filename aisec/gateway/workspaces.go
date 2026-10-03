@@ -101,9 +101,6 @@ func (c *WorkspacesClient) List(ctx context.Context, opts WorkspaceListOptions) 
 	}
 	params := map[string]string{}
 	if opts.Status != "" {
-		if opts.Status != "active" && opts.Status != "archived" {
-			return nil, invalidInput("workspace status must be active or archived")
-		}
 		params["status"] = opts.Status
 	}
 	r, err := typedhttp.Do[WorkspaceListResponse](ctx, cfg, typedhttp.Options{MgmtRequestOptions: internal.MgmtRequestOptions{Method: http.MethodGet, Path: aisec.GatewayWorkspacesPath, Params: params}, ResponseSchema: "ListWorkspacesResponseSchema"})

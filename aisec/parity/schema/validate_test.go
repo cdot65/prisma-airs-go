@@ -38,3 +38,17 @@ func TestNullableUnknownFieldsAndTypedAdditionalProperties(t *testing.T) {
 		t.Fatal("accepted nonstring realtime parameter")
 	}
 }
+
+func TestPinnedPatternCacheRetainsSuccessAndCompileErrors(t *testing.T) {
+	for i := 0; i < 2; i++ {
+		if ok, err := matchPattern(`^abc$`, "abc"); !ok || err != nil {
+			t.Fatalf("matched=%v err=%v", ok, err)
+		}
+		if ok, err := matchPattern(`^abc$`, "def"); ok || err != nil {
+			t.Fatalf("matched=%v err=%v", ok, err)
+		}
+		if _, err := matchPattern(`(?=unsupported)`, "test"); err == nil {
+			t.Fatal("unsupported pinned pattern accepted")
+		}
+	}
+}

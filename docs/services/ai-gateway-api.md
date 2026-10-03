@@ -129,6 +129,11 @@ provides no paging parameters.
 `Integrations.Catalog` and `ResolveProviderID` resolve provider catalog UUIDs.
 `CustomHostConfiguration` builds typed integration settings for a self-hosted model.
 
+Audit log `request_body` is **unredacted** and can contain API keys or private keys;
+masked `request_headers` do not protect it. Avoid logging or forwarding complete
+audit records. Parse request bodies and apply the matching operation's
+`RedactAIGatewaySecrets` rules before displaying them.
+
 Telemetry includes charts, grouping, filter boundaries and logs. Use a workspace
 **slug**, numeric tenant ID, and `TelemetryWindow`. Time strings carry numeric
 offsets; costs are in cents. Pointer filters preserve explicit zero; metadata is a

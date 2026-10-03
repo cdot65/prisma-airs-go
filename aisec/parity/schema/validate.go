@@ -185,7 +185,7 @@ func validate(raw, value any, depth int) error {
 		}
 		switch s["format"] {
 		case "uuid":
-			if ok, _ := regexp.MatchString(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`, str); !ok {
+			if ok, _ := matchPattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`, str); !ok {
 				return fmt.Errorf("invalid UUID")
 			}
 		case "date-time":
@@ -205,7 +205,7 @@ func validate(raw, value any, depth int) error {
 			return fmt.Errorf("string is too long")
 		}
 		if p, ok := s["pattern"].(string); ok {
-			matched, err := regexp.MatchString(p, str)
+			matched, err := matchPattern(p, str)
 			if err != nil {
 				return fmt.Errorf("pinned schema has an unsupported regex")
 			}
@@ -252,4 +252,24 @@ func equalValue(a, b any) bool {
 		}
 	}
 	return reflect.DeepEqual(a, b)
+}
+
+var patternCache sync.Map
+
+type cachedPattern struct {
+	compiled *regexp.Regexp
+	err      error
+}
+
+func matchPattern(pattern, value string) (bool, error) {
+	entry, found := patternCache.Load(pattern)
+	if !found {
+		compiled, err := regexp.Compile(pattern)
+		entry, _ = patternCache.LoadOrStore(pattern, cachedPattern{compiled: compiled, err: err})
+	}
+	cached := entry.(cachedPattern)
+	if cached.err != nil {
+		return false, cached.err
+	}
+	return cached.compiled.MatchString(value), nil
 }

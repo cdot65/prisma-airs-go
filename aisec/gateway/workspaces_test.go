@@ -205,3 +205,24 @@ func TestWorkspacePlanesAndArchiveEnvelope(t *testing.T) {
 		t.Fatal(calls)
 	}
 }
+
+func TestWorkspaceListPassesThroughFutureStatus(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/token" {
+			_, _ = w.Write([]byte(`{"access_token":"token","expires_in":3600}`))
+			return
+		}
+		if r.Method != "GET" || r.URL.Path != "/workspaces" || r.URL.Query().Get("status") != "future-status" {
+			t.Error(r.URL)
+		}
+		_, _ = w.Write([]byte(`{"data":[],"object":"list","total":0,"has_more":false}`))
+	}))
+	defer server.Close()
+	c, err := NewClient(Opts{ClientID: "id", ClientSecret: "secret", TsgID: "123", DataEndpoint: server.URL, AdminEndpoint: server.URL, IAMEndpoint: server.URL, TokenEndpoint: server.URL + "/token"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = c.Workspaces.List(context.Background(), WorkspaceListOptions{Status: "future-status"}); err != nil {
+		t.Fatal(err)
+	}
+}

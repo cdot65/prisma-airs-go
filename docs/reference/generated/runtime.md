@@ -86,6 +86,7 @@ func ContentFromJSON(ci ContentInner) (*Content, error)
 ### ContentFromJSONFile
 
 ContentFromJSONFile loads an API-shaped content document and applies NewContent validation.
+Unlike the TypeScript file helper, it rejects unknown fields and trailing JSON to avoid silently dropping scan input.
 
 ```go
 func ContentFromJSONFile(path string) (*Content, error)

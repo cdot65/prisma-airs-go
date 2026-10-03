@@ -22,7 +22,6 @@ type OAuthClientOptions struct {
 	HTTPClient                                   *http.Client
 	// OnTokenRefresh runs synchronously after refresh, before waiting token calls return.
 	// It must return promptly; panics propagate to the refreshing caller.
-
 	OnTokenRefresh func(TokenInfo)
 }
 

@@ -285,6 +285,9 @@ func collectDLP[T any](ctx context.Context, opts DLPListAllOptions, fetch func(c
 		if maximum > 0 && len(items) >= maximum {
 			return items, nil
 		}
+		if p.last == nil && len(p.items) == 0 {
+			return items, nil
+		}
 		final := false
 		if p.last != nil {
 			final = *p.last

@@ -58,6 +58,11 @@ func (s *Stream[T]) Next() (*T, error) {
 		for {
 			b, err := s.reader.ReadByte()
 			if err != nil {
+				select {
+				case <-s.closed:
+					return nil, io.EOF
+				default:
+				}
 				if err == io.EOF {
 					return fail(aisec.NewAISecSDKError("event stream ended before its terminator", aisec.AISecSDKInternalError))
 				}
