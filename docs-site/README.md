@@ -1,9 +1,11 @@
 # Go SDK documentation
 
 Docusaurus at https://cdot65.github.io/prisma-airs-go/.
-The harness checkout is the exact design authority. The logo, global CSS, Prism
+The harness checkout is the exact design authority. Global CSS, Prism
 palette, hero CSS, and DocItem layout are copied unchanged. Go guides live in
 `../docs`. Private Node tooling does not change the SDK's stdlib-only Go module.
+The navbar, homepage, and favicon use the owner-supplied Go SDK logo selected
+on 2026-10-03. Its hash is pinned as an asset override in `design/harness/source.json`.
 
 Use Node 24, Go 1.22+, and Python 3.12+ (CI uses Go 1.24.6):
 
@@ -22,7 +24,7 @@ serves the production build. On Alpine use system Chromium and
 The pixel check builds an independent reference from
 `design/harness/reference.tar.gz` using the harness’s own locked Docusaurus 3.10.1 dependencies and the explicit
 Go text/link adaptations in
-`copy.json`. Homepage and article screenshots must match exactly at desktop,
+`copy.json` and the same owner-selected logo override. Homepage and article screenshots must match exactly at desktop,
 tablet, and mobile sizes. Failures retain reference/actual/diff PNGs in
 `test-results/`, which CI uploads. The temporary reference is removed afterward.
 

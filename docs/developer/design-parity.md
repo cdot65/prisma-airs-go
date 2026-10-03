@@ -1,16 +1,20 @@
 # Harness design parity
 
 The owner selected Prisma AIRS Harness as the documentation design authority.
-The Go site copies its brand logo, global CSS, Prism theme, hero CSS, and article
+The Go site copies its global CSS, Prism theme, hero CSS, and article
 layout exactly. The landing-page structure and configuration are adapted only
 for Go product text, links, routes, and Go syntax highlighting.
+The owner-selected Go SDK logo replaces the harness artwork in the navbar,
+homepage, and favicon.
 
 ## Pinned source
 
 The source is [Prisma AIRS Harness commit 1885e40](https://github.com/cdot65/prisma-airs-harness/tree/1885e40eb1dc493ad5b47757694d077011afa431/docs-site).
 `docs-site/design/harness/source.json` records the full commit and SHA-256 hashes
-for every input. The reference archive contains the original files and harness package lockfile. The logo
-is the same image, including its existing artwork and text.
+for every input. The reference archive contains the original files and harness package lockfile.
+The original harness logo remains archived. `assetOverrides` pins the exact
+owner-supplied `/var/tmp/go.png` selected on 2026-10-03; reference rendering uses
+that same Go SDK image while retaining the harness layout.
 
 | Design surface | Source file |
 | --- | --- |
@@ -18,7 +22,7 @@ is the same image, including its existing artwork and text.
 | Code token colors | `src/css/prism-airs.ts` |
 | Hero, paths, cards, responsive layout | `src/pages/index.module.css` |
 | Article width and mobile contents navigation | `src/theme/DocItem/Layout/` |
-| Brand image | `static/img/brand-logo.png` |
+| Brand image (owner-selected Go SDK override) | `static/img/brand-logo.png` |
 | Page structure | `src/pages/index.tsx` |
 
 The source uses Inter and JetBrains Mono. Desktop articles have the harness's
@@ -38,9 +42,10 @@ npm run test:parity
 Source checks require the copied files to match their pinned hashes. The
 landing page and config must match the reference after the explicit text/link
 replacements in `design/harness/copy.json`.
+Owner-selected asset overrides must match their separately recorded hashes.
 
 The pixel check builds an independent site from the archived harness source,
-using its own locked Docusaurus 3.10.1 dependencies, with the same Go copy and
+using its own locked Docusaurus 3.10.1 dependencies, with the same Go logo, copy, and
 navigation inputs. It compares homepage, getting
 started, and provider-pattern pages at desktop, tablet, and mobile sizes using
 the same browser. Every pixel must match. Both images and any diff are written

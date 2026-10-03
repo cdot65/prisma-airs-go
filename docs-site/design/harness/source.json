@@ -31,7 +31,7 @@
     {
       "path": "static/img/brand-logo.png",
       "sha256": "9f3c2588c304132c96dd9377fd6a7fcb015d538dee10eba1160268541bfc6c43",
-      "copiedUnchanged": true
+      "copiedUnchanged": false
     },
     {
       "path": "src/pages/index.tsx",
@@ -54,5 +54,12 @@
       "referenceOnly": true
     }
   ],
-  "referenceDocusaurusVersion": "3.10.1"
+  "referenceDocusaurusVersion": "3.10.1",
+  "assetOverrides": {
+    "static/img/brand-logo.png": {
+      "sha256": "9aada06655f28f69e82a4e7d626d888716dc945d7800e2f3712cd495e47775d4",
+      "source": "Owner-supplied /var/tmp/go.png",
+      "selected": "2026-10-03"
+    }
+  }
 }
