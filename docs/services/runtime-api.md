@@ -234,6 +234,9 @@ Scan-content reads are explicit and can contain sensitive content.
 their TSG-qualified routing. `ListAll` collects pages with `aisec.CollectOptions`: a
 nil maximum defaults to 10,000 records, and a pointer to zero removes the record
 cap. DLP uses `DLPListAllOptions` with Spring page/size semantics and the same cap.
+When `last` is absent, an empty DLP page ends collection and preserves collected
+records even if `totalPages` over-reports; the TypeScript Spring collector raises
+an empty non-final-page error instead.
 `NewOAuthClient` exposes standalone cache inspection/refresh and a refresh callback.
 `ContentFromJSONFile` loads a native API-shaped content document. Unlike the
 TypeScript helper, it rejects unknown fields and trailing JSON so supplied scan
