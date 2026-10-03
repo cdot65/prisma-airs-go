@@ -213,7 +213,7 @@ if err != nil {
 }
 ```
 
-## DLP, dashboard and listing additions (unreleased)
+## DLP, dashboard and listing additions (v0.8.0)
 
 `Client.DLP` adds typed Data Filtering Profiles, Data Patterns, Data Profiles and
 Dictionaries at their separate DLP base URL. Use `DLPEndpoint` or

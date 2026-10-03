@@ -28,7 +28,7 @@ Runtime scans accept API keys or bearer tokens. Management clients use OAuth2
 client credentials with shared token caching, proactive refresh, concurrent
 deduplication, and bounded authorization retries. Gateway uses SCM OAuth with
 an `x-tsg-id` header on API requests. Its data and admin planes share the token
-cache with its unreleased IAM plane; Red Team's Network Broker has an independent API endpoint.
+cache with its IAM plane (v0.8.0); Red Team's Network Broker has an independent API endpoint.
 
 Constructor options override service-specific environment variables, followed
 by management fallbacks where supported. Every request accepts a context, and
@@ -54,7 +54,7 @@ See [API reference](../reference/api-reference.md) and
 ## SDK and provider responsibilities
 
 SDK methods perform explicit API operations. The caller owns reconciliation,
-dependency ordering and Terraform state. The unreleased parity candidate adds
+dependency ordering and Terraform state. SDK v0.8.0 adds
 workspace provisioning: create an IAM scope, create the workspace, then bind
 its slug. Partial failures expose completed steps and cleanup outcomes; binding
 does not grant roles. Inference uses a separate explicit API key, SSE owns a

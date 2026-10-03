@@ -2,7 +2,7 @@
 
 `aisec/gateway` covers twelve resource families and all 88 CRUD/lifecycle
 operations selected from the pinned October 2026 Gateway specification. It uses
-SCM OAuth with the `x-tsg-id` header. Existing resource methods remain available. The unreleased TypeScript parity
+SCM OAuth with the `x-tsg-id` header. Existing resource methods remain available. The v0.8.0 TypeScript parity
 additions below add workspace/IAM provisioning and separately authenticated inference. Credentials resolve from constructor options, then
 `PANW_AI_GW_*`, then `PANW_MGMT_*`.
 
@@ -99,7 +99,7 @@ management and IAM; it is never sent to the inference endpoint.
 CRUD verification from mock-only helpers requiring traffic, real third-party
 credentials, connected infrastructure or user consent.
 
-## Workspace and IAM provisioning (unreleased)
+## Workspace and IAM provisioning (v0.8.0)
 
 `Workspaces.Provision` creates an IAM scope, creates the admin-plane workspace,
 then binds the workspace **slug** to the scope. `ScopeName` can be generated;
@@ -122,7 +122,7 @@ Delete archives the workspace. List with `Status: "archived"` to inspect it; det
 reads may return 404. The list preserves `Total`/`HasMore`; the captured contract
 provides no paging parameters.
 
-## Other management and telemetry additions (unreleased)
+## Other management and telemetry additions (v0.8.0)
 
 `Organisations`, `Plugins` and `AuditLogs` use the admin plane. `LogExports` and
 `Telemetry` use the data plane. `Guardrails.GetCatalog` returns evaluator definitions;
@@ -139,7 +139,7 @@ Telemetry includes charts, grouping, filter boundaries and logs. Use a workspace
 offsets; costs are in cents. Pointer filters preserve explicit zero; metadata is a
 native map. Log pages use `CurrentPage`/`PageSize`, not offset aliases.
 
-## Inference, streams and realtime (unreleased)
+## Inference, streams and realtime (v0.8.0)
 
 `NewInferenceClient` requires its own endpoint and runtime key, supplied explicitly
 or through `PANW_AI_GW_INFERENCE_ENDPOINT` / `PANW_AI_GW_INFERENCE_API_KEY`.

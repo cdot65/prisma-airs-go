@@ -16,11 +16,10 @@ go get github.com/cdot65/prisma-airs-go
 
 Requires Go 1.22+. Zero external dependencies (stdlib only).
 
-The TypeScript v0.34.0 parity additions on this branch are **unreleased**.
-They add Gateway workspace/IAM provisioning, inference and streaming, telemetry,
-Runtime DLP/dashboard APIs, and collection helpers. See
-[the coverage and verification record](docs/developer/typescript-parity.md);
-`go get` of the published v0.7.0 module does not include them.
+SDK **v0.8.0** adds TypeScript v0.34.0 feature parity: Gateway workspace/IAM
+provisioning, inference and streaming, telemetry, Runtime DLP/dashboard APIs,
+and collection helpers. See the
+[coverage and verification record](docs/developer/typescript-parity.md).
 
 ## What's Included
 
@@ -195,8 +194,8 @@ models preserve legacy interfaces through opt-in methods; see
 [live verification](docs/developer/live-verification.md) for evidence and limits.
 
 Download checksummed cross-platform example binaries from the
-[v0.7.0 release](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.7.0), or
-install with `go get github.com/cdot65/prisma-airs-go@v0.7.0`. See
+[v0.8.0 release](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.8.0), or
+install with `go get github.com/cdot65/prisma-airs-go@v0.8.0`. See
 [artifact usage and reproducible builds](docs/developer/releases.md).
 
 ## Documentation development

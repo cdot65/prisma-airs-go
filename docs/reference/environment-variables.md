@@ -21,8 +21,8 @@ Complete reference for all environment variables used by the SDK.
 | `PANW_MGMT_TSG_ID` | Yes | Tenant service group ID |
 | `PANW_MGMT_ENDPOINT` | No | Override management API endpoint |
 | `PANW_MGMT_TOKEN_ENDPOINT` | No | Override OAuth2 token endpoint |
-| `PANW_MGMT_DLP_ENDPOINT` | No | Unreleased DLP base; default `https://api.dlp.paloaltonetworks.com` |
-| `PANW_MGMT_DASHBOARD_ENDPOINT` | No | Unreleased dashboard base; defaults to the resolved management endpoint |
+| `PANW_MGMT_DLP_ENDPOINT` | No | DLP base (v0.8.0); default `https://api.dlp.paloaltonetworks.com` |
+| `PANW_MGMT_DASHBOARD_ENDPOINT` | No | Dashboard base (v0.8.0); defaults to the resolved management endpoint |
 
 ## Model Security API
 
@@ -64,7 +64,7 @@ endpoint overrides use only their service-specific variables.
 | `PANW_AI_GW_DATA_ENDPOINT` | — | CRUD data plane; default `https://api.apps.paloaltonetworks.com/ai_gw/v2` |
 | `PANW_AI_GW_ADMIN_ENDPOINT` | — | CRUD admin plane; default `https://api.apps.paloaltonetworks.com/ai_gw/admin/v2` |
 
-The following additions are **unreleased** and have no SCM credential fallback
+The following additions are available in **v0.8.0** and have no SCM credential fallback
 for inference. HTTPS is required except for local test endpoints.
 
 | Variable | Description |

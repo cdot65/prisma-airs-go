@@ -1,9 +1,12 @@
-# TypeScript SDK parity (unreleased)
+# TypeScript SDK parity (v0.8.0)
 
-This candidate tracks TypeScript SDK v0.34.0, commit
+Go SDK **v0.8.0** tracks TypeScript SDK v0.34.0, commit
 `4a80dbdb` (full source revision and SHA-256 hashes in
-`specs/typescript-parity.json`). These additions are not in the published v0.7.0
-Go module. Build this checkout or use a local module replacement to evaluate them.
+`specs/typescript-parity.json`). Install the complete release with:
+
+```sh
+go get github.com/cdot65/prisma-airs-go@v0.8.0
+```
 
 ## Product coverage
 
