@@ -8,7 +8,7 @@ management and inference, and skill scanning (AgentGuard public preview). The SD
 foundation for applications and Terraform providers.
 
 ```sh
-go get github.com/cdot65/prisma-airs-go@v0.7.0
+go get github.com/cdot65/prisma-airs-go@v0.8.0
 ```
 
 These docs cover two kinds of work: understanding the service boundaries and
@@ -50,7 +50,7 @@ contexts and owns application policy, reconciliation, and state.
 | Which operations have live evidence? | [Live verification](developer/live-verification.md) |
 | How are specs, code, documentation, and releases validated? | [Development](developer/development.md) |
 
-The unreleased TypeScript parity additions include Gateway workspace/IAM
+The v0.8.0 TypeScript parity additions include Gateway workspace/IAM
 provisioning, inference, streaming, telemetry, and Runtime DLP/dashboard clients.
 See [parity status](developer/typescript-parity.md) for installation and verification. The SDK performs explicit requests; a Terraform provider owns
 refresh, reconciliation, dependency ordering, timeouts, and state.

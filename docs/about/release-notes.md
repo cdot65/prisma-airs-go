@@ -1,5 +1,26 @@
 # Release Notes
 
+## v0.8.0
+
+- Match TypeScript SDK v0.34.0 functionality with native Go inputs and no external
+  runtime dependencies. Add Gateway IAM scopes and workspace lifecycle/provisioning,
+  organization/plugins/audit/log-export clients, catalogs, telemetry, inference,
+  binary/multipart requests, SSE, a caller-supplied Realtime adapter and public pricing.
+- Add Runtime DLP patterns/profiles/dictionaries, application/session dashboards,
+  token-scoped lists, OAuth cache/callback helpers and strict content-file input.
+  Add bounded all-page and native cursor helpers for Runtime, Model Security and
+  Red Team, plus the scan-metadata 422 fallback.
+- Retain all 21 skill-scanning (AgentGuard preview) operations and preserve the
+  `isBackgroundRefresh` query flag. Update guides, examples and generated API
+  references to v0.8.0.
+- Preserve explicit credential separation, nullable update intent and partial
+  provisioning results. IAM DELETE remains inferred/unverified; scope binding
+  does not assign roles. New routes have offline contract/transport verification,
+  not fresh tenant verification. See [parity evidence](../developer/typescript-parity.md).
+- Actual Claude Code reviews score all nine implementation tasks 9/10 on both
+  Standards and Spec. Go 1.22–1.24 race tests, contract pins and documentation
+  browser/design checks pass.
+
 ## v0.7.0
 
 - Add `aisec/agentguard` for all 21 AgentGuard public preview operations: scans,

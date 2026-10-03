@@ -36,7 +36,7 @@ import (
 | Gateway management | [CRUD requests, receipts, reads, documents, and unions](generated/gateway-schema.md) |
 | Skill scanning (AgentGuard preview) | [Scans, findings, instances, rules, and overrides](generated/agentguard-schema.md) |
 
-| TypeScript parity (unreleased) | [Workspace/IAM, inference, telemetry, DLP and dashboard models](generated/parity-schema.md) |
+| TypeScript parity (v0.8.0) | [Workspace/IAM, inference, telemetry, DLP and dashboard models](generated/parity-schema.md) |
 
 Generated current-schema models preserve nullable values and unknown fields
 where the contract allows them. Read [provider patterns](../guides/provider-patterns.md)
@@ -61,7 +61,7 @@ Established convenience interfaces remain available. Additive methods returning
 complete schema responses are listed beside them in the generated service
 reference. Use the return type that covers the service fields your caller needs.
 
-The unreleased parity candidate adds Gateway workspace/IAM provisioning,
+SDK v0.8.0 adds Gateway workspace/IAM provisioning,
 telemetry, inference, SSE and a caller-supplied Realtime socket adapter.
 Runtime adds DLP and dashboard clients. These APIs are separate from Terraform
 resource reconciliation. See the [parity coverage record](../developer/typescript-parity.md)
@@ -80,5 +80,5 @@ The [live verification record](../developer/live-verification.md) and
 
 `go run scripts/generate_api_reference.go` regenerates these pages from the
 checked-in source. Documentation CI runs the same tool with `-check` to catch
-stale output. The public [Go package documentation](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.7.0/aisec)
+stale output. The public [Go package documentation](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.0/aisec)
 provides complete source-linked declarations for the published release.

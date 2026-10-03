@@ -168,6 +168,6 @@ PANW_AGENT_GUARD_TEST_ARCHIVE=/path/to/skill.zip \
   go test -race -v -tags=integration ./aisec/agentguard -run '^TestIntegration_ArchiveScan$'
 ```
 
-The unreleased parity update preserves TypeScript's `isBackgroundRefresh` scan
+The v0.8.0 parity update preserves TypeScript's `isBackgroundRefresh` scan
 query, including explicit false. All 21 Go preview operations remain available,
 beyond the four read operations currently exposed by the TypeScript client.

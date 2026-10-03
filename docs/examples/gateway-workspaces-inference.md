@@ -1,6 +1,6 @@
-# Gateway workspaces and inference (unreleased)
+# Gateway workspaces and inference (v0.8.0)
 
-Use the unreleased parity checkout described in [parity status](../developer/typescript-parity.md).
+Install SDK v0.8.0 as described in [parity status](../developer/typescript-parity.md).
 SCM management credentials and the inference runtime key are separate.
 
 ## Provision an IAM-bound workspace
