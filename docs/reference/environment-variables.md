@@ -65,6 +65,23 @@ endpoint overrides use only their service-specific variables.
 Red Team also accepts `PANW_RED_TEAM_BROKER_ENDPOINT` for the independent
 Network Broker API base.
 
+## AgentGuard public preview (SCM OAuth)
+
+Credentials and the token endpoint fall back to `PANW_MGMT_*`. Both API base
+URLs are required unless supplied through constructor options; the preview
+schemas omit server URLs.
+
+| Variable | Fallback | Description |
+| --- | --- | --- |
+| `PANW_AGENT_GUARD_CLIENT_ID` | `PANW_MGMT_CLIENT_ID` | SCM OAuth client ID |
+| `PANW_AGENT_GUARD_CLIENT_SECRET` | `PANW_MGMT_CLIENT_SECRET` | SCM OAuth client secret |
+| `PANW_AGENT_GUARD_TSG_ID` | `PANW_MGMT_TSG_ID` | Tenant service group ID; sent as `x-tsg-id` on API requests |
+| `PANW_AGENT_GUARD_TOKEN_ENDPOINT` | `PANW_MGMT_TOKEN_ENDPOINT` | OAuth token endpoint |
+| `PANW_AGENT_GUARD_DATA_ENDPOINT` | — | Required data-plane base URL |
+| `PANW_AGENT_GUARD_MGMT_ENDPOINT` | — | Required management-plane base URL |
+
+See [AgentGuard](../services/agentguard-api.md) for operations and preview limits.
+
 ## Examples
 
 | Variable | Description |

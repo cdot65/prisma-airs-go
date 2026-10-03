@@ -1,5 +1,22 @@
 # Release Notes
 
+## v0.7.0
+
+- Add `aisec/agentguard` for all 21 AgentGuard public preview operations: scans,
+  attack chains, findings, CSV, statistics, tenant instances, rules, rule
+  configuration, and skill overrides. Both planes share SCM OAuth and support
+  `PANW_AGENT_GUARD_*` credentials with `PANW_MGMT_*` fallback. Explicit service
+  endpoints are required because the supplied schemas omit server URLs.
+- Pin the supplied `0.1.0` contracts and generate complete nullable models with
+  extensible instance metadata. Add per-operation HTTP contract tests and public
+  API references. Add the required `x-tsg-id` API header, verified without leaking
+  it to OAuth requests. A live opaque ZIP upload reached `COMPLETED` / `ALLOWED`
+  with zero findings/chains; add an opt-in archive integration test with an
+  existing-scan resume option. Other operations retain mock-only verification.
+  See [AgentGuard](../services/agentguard-api.md).
+- Publish AgentGuard service and scanning guides, complete model declarations,
+  and Docusaurus navigation. Update installation and package links to v0.7.0.
+
 ## v0.6.1
 
 - Fix customer-app updates to carry the deployment authentication code required by the live API. Add optional `UpdateAppRequest.AuthCode`, with paginated unambiguous recovery when omitted and typed missing/ambiguity errors.

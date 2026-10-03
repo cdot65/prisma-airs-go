@@ -14,7 +14,8 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 DOMAINS = {"modelsecurity": ["model-data", "model-mgmt"],
-           "redteam": ["redteam-data", "redteam-mgmt", "redteam-broker"], "gateway": ["gateway"]}
+           "redteam": ["redteam-data", "redteam-mgmt", "redteam-broker"], "gateway": ["gateway"],
+           "agentguard": ["agentguard-data", "agentguard-mgmt"]}
 INLINE_RESPONSES = {"redteam-broker": [("ChannelListResponse", "/v1/channels", "get", "200")]}
 INITIALISMS = {x: x.upper() for x in ["id", "uuid", "api", "url", "uri", "http", "https", "json", "csv", "tsg", "sdk", "asr", "mcp", "sha256", "pypi", "aws", "gcp", "ms", "llm", "dp", "ip", "kb"]}
 
@@ -32,6 +33,7 @@ def name(value):
 class Generator:
     def __init__(self, labels):
         self.extensible = "gateway" in labels
+        self.preserve_explicit_extras = "agentguard-data" in labels
         self.schemas = {}
         self.names = {}
         for label in labels:
@@ -244,11 +246,12 @@ class Generator:
                 elif null: typ="*"+typ
                 if value.get("description"): fields.append(self.comment(value["description"]))
                 fields.append(field+" "+typ+" `json:"+json.dumps(tag)+"`")
-            if self.extensible:
+            extensible = self.extensible or (self.preserve_explicit_extras and schema.get("additionalProperties") is True)
+            if extensible:
                 self.imports.add("encoding/json")
                 fields.append('AdditionalFields map[string]json.RawMessage `json:"-"`')
             lines=[description,"type "+typename+" struct {","\n".join(fields),"}"]
-            if self.extensible:
+            if extensible:
                 known="[]string{"+",".join(json.dumps(k)for k in schema["properties"])+"}"
                 lines.append(f"func (x {typename}) MarshalJSON()([]byte,error){{type alias {typename};return marshalFields(alias(x),x.AdditionalFields,{known})}}")
                 lines.append(f"func (x *{typename}) UnmarshalJSON(data []byte)error{{type alias {typename};var candidate alias;extra,err:=unmarshalFields(data,&candidate,{known});if err!=nil{{return err}};candidate.AdditionalFields=extra;*x={typename}(candidate);return nil}}")

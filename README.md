@@ -6,7 +6,7 @@
 [![Go 1.22+](https://img.shields.io/badge/go-%3E%3D1.22-00ADD8)](https://go.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Go SDK for Palo Alto Networks **Prisma AIRS** — covering the full lifecycle from configuration management to operational scanning across four service domains: **AI Runtime Security**, **Model Security**, **AI Red Teaming**, and **AI Gateway Management**.
+Go SDK for Palo Alto Networks **Prisma AIRS** — covering configuration management and operational scanning across **AI Runtime Security**, **Model Security**, **AI Red Teaming**, **AI Gateway Management**, and **AgentGuard public preview**.
 
 ## Installation
 
@@ -25,6 +25,7 @@ Requires Go 1.22+. Zero external dependencies (stdlib only).
 | **Model Security**      | `modelsecurity.Client`  | OAuth2         | ML model scanning, security groups, rule management        |
 | **AI Red Teaming**      | `redteam.Client`        | OAuth2         | Automated red team scans, reports, targets, custom attacks |
 | **AI Gateway Management** | `gateway.Client` | OAuth2 + TSG | 12 CRUD families, bindings, policies, secrets, deployments |
+| **AgentGuard Public Preview** | `agentguard.Client` | SCM OAuth2 | Skill scans, findings, statistics, instances, rules, trusted skills |
 
 All OAuth2 services share credentials and handle token lifecycle automatically (caching, proactive refresh, 401/403 auto-retry).
 
@@ -188,16 +189,25 @@ models preserve legacy interfaces through opt-in methods; see
 [live verification](docs/developer/live-verification.md) for evidence and limits.
 
 Download checksummed cross-platform example binaries from the
-[v0.6.1 release](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.6.1), or
-install with `go get github.com/cdot65/prisma-airs-go@v0.6.1`. See
+[v0.7.0 release](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.7.0), or
+install with `go get github.com/cdot65/prisma-airs-go@v0.7.0`. See
 [artifact usage and reproducible builds](docs/developer/releases.md).
 
 ## Documentation development
 
 The [documentation site](https://cdot65.github.io/prisma-airs-go/) uses the
 harness’s exact Docusaurus logo, hero, fonts, colors, and article layout. It
-includes a numbered getting-started guide, examples for all four services,
+includes a numbered getting-started guide, service guides and examples,
 and a generated public method reference. Guides
 remain in `docs/`; site configuration and private Node dependencies live in
 `docs-site/`. See [the site README](docs-site/README.md) for local development
 and checks. These dependencies do not affect the Go module.
+
+### AgentGuard public preview
+
+The new `aisec/agentguard` package supports all 21 operations in the supplied
+August 21, 2026 preview contracts. It shares SCM OAuth across data and management
+planes, with `PANW_AGENT_GUARD_*` credentials falling back to `PANW_MGMT_*`.
+Set both `PANW_AGENT_GUARD_DATA_ENDPOINT` and `PANW_AGENT_GUARD_MGMT_ENDPOINT`,
+or pass them in `agentguard.Opts`: the schemas supply no default server URLs.
+See [the AgentGuard guide](docs/services/agentguard-api.md) for usage and models.

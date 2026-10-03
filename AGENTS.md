@@ -24,6 +24,7 @@ aisec/                      # Core package: constants, config, errors, utils
   modelsecurity/            # Model Security API — 6 sub-clients, dual endpoint (OAuth2)
   redteam/                  # Red Team API — 9 sub-clients, dual endpoint (OAuth2)
   gateway/                  # AI Gateway — 12 CRUD families, SCM OAuth, data/admin planes
+  agentguard/               # AgentGuard preview — 6 sub-clients, 21 operations, SCM OAuth
 docs/                       # Docusaurus Markdown/MDX source
 docs-site/                  # Private Node tooling, exact harness design, pixel/browser checks
 .github/workflows/          # CI (lint/test), test matrix (Go 1.22-1.24), Docusaurus deploy, release
@@ -32,7 +33,7 @@ examples/                   # Usage examples
 
 ## Architecture
 
-Four service domains, two auth methods:
+Five service domains, two auth methods:
 
 | Domain | Package | Auth | Entry Point |
 |--------|---------|------|-------------|
@@ -41,6 +42,7 @@ Four service domains, two auth methods:
 | Model Security | `aisec/modelsecurity` | OAuth2 client_credentials | `modelsecurity.NewClient(opts)` |
 | Red Team | `aisec/redteam` | OAuth2 client_credentials | `redteam.NewClient(opts)` |
 | AI Gateway management | `aisec/gateway` | SCM OAuth2 + tenant header | `gateway.NewClient(opts)` |
+| AgentGuard public preview | `aisec/agentguard` | SCM OAuth2 | `agentguard.NewClient(opts)` |
 
 OAuth2 services use dual endpoints (data plane + management plane) where applicable. Token lifecycle is automatic: caching, proactive refresh (30s buffer), concurrent deduplication, 401/403 auto-retry.
 
@@ -76,6 +78,7 @@ Credentials resolve in order: constructor options → service-specific env → f
 | `PANW_MODEL_SEC_` | Model Security | `PANW_MGMT_` |
 | `PANW_RED_TEAM_` | Red Team | `PANW_MGMT_` |
 | `PANW_AI_GW_` | AI Gateway management | `PANW_MGMT_` |
+| `PANW_AGENT_GUARD_` | AgentGuard public preview | `PANW_MGMT_` |
 
 Suffixes: `_CLIENT_ID`, `_CLIENT_SECRET`, `_TSG_ID`, `_TOKEN_ENDPOINT`, `_DATA_ENDPOINT`, `_MGMT_ENDPOINT`. Gateway uses `_ADMIN_ENDPOINT` for its admin plane; Red Team also has `_BROKER_ENDPOINT`.
 
@@ -128,7 +131,7 @@ All API paths, endpoints, env var names, and limits live in `aisec/constants.go`
 
 `specs/manifest.json` records source hashes and commits. `scripts/spec_snapshot.py
 --check` verifies snapshots; `scripts/schema_models.py modelsecurity redteam
-gateway --check` verifies model generation. Gateway selection/routing is declared
+gateway agentguard --check` verifies model generation. Gateway selection/routing is declared
 in `specs/gateway_scope.json`; curations are documented in `API_ISSUES.md`.
 Gateway operations are management CRUD/lifecycle only, with existing workspaces.
 The provider owns reconciliation and state. See `docs/developer/live-verification.md`
@@ -141,3 +144,10 @@ Run `make docs-install`, then source/reference/example/build/browser/pixel
 checks with `make docs-check` (install Chromium first as described in
 `docs-site/README.md`). Preserve published guide URLs and keep Go API scope
 accurate; TypeScript/CLI/harness capabilities are not automatically Go features.
+
+For AgentGuard preview changes, read `docs/services/agentguard-api.md`. Its
+contracts omit servers/auth: SCM OAuth is owner-confirmed, and both API endpoints
+must be configured explicitly. All 21 operations are pinned in
+`aisec/agentguard/client_test.go`. Refresh only its supplied snapshots with
+`scripts/spec_snapshot.py --agentguard /path/to/preview`; existing service pins
+remain intact.

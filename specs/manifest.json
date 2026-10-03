@@ -80,6 +80,26 @@
       "sha256": "58146a40cd134c08372283432b5f1d6978656ff5404b6f53caa5b03de972308c",
       "version": "3.0.0",
       "operations": 188
+    },
+    {
+      "file": "agentguard-data-plane.json",
+      "contract": "agentguard-data.json",
+      "source": "/var/tmp/agentguard-openapi-specs-public-preview-08212026/agentguard-data-plane.json",
+      "provenance": "User-supplied public preview 08212026",
+      "captured": "2026-10-03",
+      "sha256": "b0789c8a58667f77bda3c7152edf08e7c12a446328883dd99abc3a9a84cddf87",
+      "version": "0.1.0",
+      "operations": 11
+    },
+    {
+      "file": "agentguard-mgmt-plane.json",
+      "contract": "agentguard-mgmt.json",
+      "source": "/var/tmp/agentguard-openapi-specs-public-preview-08212026/agentguard-mgmt-plane.json",
+      "provenance": "User-supplied public preview 08212026",
+      "captured": "2026-10-03",
+      "sha256": "65b36d13fc67c6b8c0081592bac75b3ce322c2767d29a43d9e534c38bd839228",
+      "version": "0.1.0",
+      "operations": 10
     }
   ]
 }

@@ -7,7 +7,7 @@
 ## Install
 
 ```bash
-go get github.com/cdot65/prisma-airs-go@v0.6.0
+go get github.com/cdot65/prisma-airs-go@v0.7.0
 ```
 
 ## Import

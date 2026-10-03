@@ -64,7 +64,8 @@ python3 scripts/check_doc_examples.py
 The reference includes every exported service method and package function,
 with catalogs linking public models to their full versioned declaration. Edit
 the Go declaration or comment and regenerate; generated pages are not the
-source of truth.
+source of truth. AgentGuard also renders its model declarations directly in
+these pages. Package links use the current `aisec.Version`.
 
 ## 4. Verify the site
 

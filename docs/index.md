@@ -3,12 +3,12 @@ title: Prisma AIRS Go SDK
 slug: /overview
 ---
 
-Typed Go clients for Runtime Security, Model Security, Red Team, and AI Gateway
-management. The SDK uses the standard library, supports Go 1.22+, and is a
+Typed Go clients for Runtime Security, Model Security, Red Team, AI Gateway
+management, and AgentGuard public preview. The SDK uses the standard library, supports Go 1.22+, and is a
 foundation for applications and Terraform providers.
 
 ```sh
-go get github.com/cdot65/prisma-airs-go@v0.6.0
+go get github.com/cdot65/prisma-airs-go@v0.7.0
 ```
 
 These docs cover two kinds of work: understanding the service boundaries and
@@ -29,6 +29,8 @@ an AIRS tenant, access to the service you plan to use, and its credentials.
 | Inspect models and scan results | [Model Security example](examples/model-security.md) |
 | Launch a red-team job and read reports | [Red Team scanning](examples/red-team-scanning.md) |
 | Create, read, update, and delete a Gateway configuration | [Gateway CRUD](examples/gateway-crud.md) |
+| Scan skills and manage AgentGuard policy (public preview) | [AgentGuard](services/agentguard-api.md) |
+| Inspect existing AgentGuard skill scans and findings | [AgentGuard scanning example](examples/agentguard-scanning.md) |
 | Handle omission, null, false, zero, and empty collections | [Updates and provider state](guides/provider-patterns.md) |
 | Download examples or reproduce a build | [Release artifacts](developer/releases.md) |
 | Diagnose a failed request | [Troubleshooting](guides/troubleshooting.md) |

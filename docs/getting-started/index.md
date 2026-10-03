@@ -25,7 +25,7 @@ In a new directory:
 mkdir airs-first-scan
 cd airs-first-scan
 go mod init example.com/airs-first-scan
-go get github.com/cdot65/prisma-airs-go@v0.6.0
+go get github.com/cdot65/prisma-airs-go@v0.7.0
 ```
 
 The SDK uses the Go standard library. Your application does not need Node or the
@@ -95,7 +95,7 @@ Run it:
 go run .
 ```
 
-You should see SDK version `0.6.0`, a scan ID, a category, and an action. The
+You should see SDK version `0.7.0`, a scan ID, a category, and an action. The
 category and action depend on your profile and the service verdict; a successful
 request does not imply an `allow` action. Use the verdict in your application's
 policy. For a failure, start with [troubleshooting](../guides/troubleshooting.md).
@@ -136,6 +136,7 @@ store. See [OAuth lifecycle](../services/oauth-lifecycle.md).
 | Inspect model inventory and scan outcomes | [Model Security](../examples/model-security.md) |
 | Run red-team assessments | [Red Team scanning](../examples/red-team-scanning.md) |
 | Manage an existing Gateway workspace | [Gateway CRUD](../examples/gateway-crud.md) |
+| Inspect skill scans in the AgentGuard preview | [AgentGuard scanning](../examples/agentguard-scanning.md) |
 | Build a Terraform provider | [Update and state patterns](../guides/provider-patterns.md) |
 
 The [example catalog](../examples/index.md) distinguishes complete programs from

@@ -1,8 +1,29 @@
 package aisec
 
+// Environment variable names and paths for the AgentGuard public preview.
+// The preview does not declare server URLs; endpoints must be configured.
+const (
+	EnvAgentGuardClientID        = "PANW_AGENT_GUARD_CLIENT_ID"
+	EnvAgentGuardClientSecret    = "PANW_AGENT_GUARD_CLIENT_SECRET"
+	EnvAgentGuardTsgID           = "PANW_AGENT_GUARD_TSG_ID"
+	EnvAgentGuardTokenEndpoint   = "PANW_AGENT_GUARD_TOKEN_ENDPOINT"
+	EnvAgentGuardDataEndpoint    = "PANW_AGENT_GUARD_DATA_ENDPOINT"
+	EnvAgentGuardMgmtEndpoint    = "PANW_AGENT_GUARD_MGMT_ENDPOINT"
+	AgentGuardScansPath          = "/v1/scans"
+	AgentGuardScanCSVPath        = "/v1/scans/csv"
+	AgentGuardScanLookupPath     = "/v1/scans/lookup"
+	AgentGuardUploadURLPath      = "/v1/scans/upload-url"
+	AgentGuardRuleStatsPath      = "/v1/stats/rules"
+	AgentGuardScanStatsPath      = "/v1/stats/scans"
+	AgentGuardInstancesPath      = "/v1/instances"
+	AgentGuardRulesPath          = "/v1/rules"
+	AgentGuardRuleInstancesPath  = "/v1/rule-instances"
+	AgentGuardSkillOverridesPath = "/v1/skill-overrides"
+)
+
 // Version and user agent.
 const (
-	Version   = "0.6.1"
+	Version   = "0.7.0"
 	UserAgent = "PAN-AIRS/" + Version + "-go-sdk"
 )
 

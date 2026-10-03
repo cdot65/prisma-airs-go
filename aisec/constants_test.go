@@ -182,3 +182,28 @@ func TestConstants_Gateway(t *testing.T) {
 		}
 	}
 }
+
+func TestConstants_AgentGuard(t *testing.T) {
+	for _, tc := range []struct{ name, got, want string }{
+		{"EnvAgentGuardClientID", EnvAgentGuardClientID, "PANW_AGENT_GUARD_CLIENT_ID"},
+		{"EnvAgentGuardClientSecret", EnvAgentGuardClientSecret, "PANW_AGENT_GUARD_CLIENT_SECRET"},
+		{"EnvAgentGuardTsgID", EnvAgentGuardTsgID, "PANW_AGENT_GUARD_TSG_ID"},
+		{"EnvAgentGuardTokenEndpoint", EnvAgentGuardTokenEndpoint, "PANW_AGENT_GUARD_TOKEN_ENDPOINT"},
+		{"EnvAgentGuardDataEndpoint", EnvAgentGuardDataEndpoint, "PANW_AGENT_GUARD_DATA_ENDPOINT"},
+		{"EnvAgentGuardMgmtEndpoint", EnvAgentGuardMgmtEndpoint, "PANW_AGENT_GUARD_MGMT_ENDPOINT"},
+		{"AgentGuardScansPath", AgentGuardScansPath, "/v1/scans"},
+		{"AgentGuardScanCSVPath", AgentGuardScanCSVPath, "/v1/scans/csv"},
+		{"AgentGuardScanLookupPath", AgentGuardScanLookupPath, "/v1/scans/lookup"},
+		{"AgentGuardUploadURLPath", AgentGuardUploadURLPath, "/v1/scans/upload-url"},
+		{"AgentGuardRuleStatsPath", AgentGuardRuleStatsPath, "/v1/stats/rules"},
+		{"AgentGuardScanStatsPath", AgentGuardScanStatsPath, "/v1/stats/scans"},
+		{"AgentGuardInstancesPath", AgentGuardInstancesPath, "/v1/instances"},
+		{"AgentGuardRulesPath", AgentGuardRulesPath, "/v1/rules"},
+		{"AgentGuardRuleInstancesPath", AgentGuardRuleInstancesPath, "/v1/rule-instances"},
+		{"AgentGuardSkillOverridesPath", AgentGuardSkillOverridesPath, "/v1/skill-overrides"},
+	} {
+		if tc.got != tc.want {
+			t.Errorf("%s=%q; want %q", tc.name, tc.got, tc.want)
+		}
+	}
+}

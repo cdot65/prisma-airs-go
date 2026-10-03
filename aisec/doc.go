@@ -1,11 +1,13 @@
 // Package aisec provides a Go SDK for Palo Alto Networks Prisma AI Runtime Security (AIRS).
 //
-// The SDK covers four service domains:
+// The SDK covers five service domains:
 //
 //   - Runtime API — Scan (API key auth): real-time content scanning
 //   - Runtime API — Management (OAuth2): security profile and topic CRUD
 //   - Model Security API (OAuth2): ML model scanning and security rules
 //   - Red Team API (OAuth2): automated attack testing and reporting
+//   - AI Gateway management (SCM OAuth2): management CRUD and lifecycle
+//   - AgentGuard public preview (SCM OAuth2): skill scans and security policy
 //
 // # Quick Start
 //

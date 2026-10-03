@@ -1,7 +1,7 @@
 # SDK architecture
 
 The Go SDK provides independent clients for Runtime Security, Model Security,
-Red Team, and AI Gateway management. Import only the packages your application
+Red Team, AI Gateway management, and AgentGuard public preview. Import only the packages your application
 needs; the runtime module uses the Go standard library and supports Go 1.22+.
 
 ```mermaid
@@ -11,11 +11,13 @@ flowchart LR
     App --> Model[Model Security Client]
     App --> RedTeam[Red Team Client]
     App --> Gateway[Gateway management Client]
+    App --> AgentGuard[AgentGuard preview Client]
     Scan --> HMAC[API key or bearer transport]
     Runtime --> OAuth[Shared OAuth request pipeline]
     Model --> OAuth
     RedTeam --> OAuth
     Gateway --> OAuth
+    AgentGuard --> OAuth
 ```
 
 ## Authentication and transport
@@ -60,3 +62,8 @@ and the public HTTP contract tests. Current evidence is recorded separately in
 [live verification](live-verification.md) and [feature reviews](feature-quality.md).
 The [release guide](releases.md) explains source, example binaries, checksums,
 and reproducible builds.
+
+AgentGuard has six sub-clients across two explicitly configured planes. The
+owner confirmed SCM OAuth for this preview; its schemas omit servers and security
+definitions. All 21 operations use the shared OAuth pipeline. Signed archive
+uploads and polling remain caller operations. See [AgentGuard](../services/agentguard-api.md).

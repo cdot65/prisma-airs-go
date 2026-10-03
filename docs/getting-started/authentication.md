@@ -13,6 +13,7 @@ A credential working on one path does not establish access to another.
 | Read models and scans; manage model policy | `modelsecurity.Client` | OAuth client ID, secret, TSG ID |
 | Manage red-team targets, jobs, reports, and brokers | `redteam.Client` | OAuth client ID, secret, TSG ID |
 | Manage Gateway resources in existing workspaces | `gateway.Client` | SCM OAuth client ID, secret, TSG ID |
+| Scan skills and manage AgentGuard policy (preview) | `agentguard.Client` | SCM OAuth client ID, secret, TSG ID |
 
 ## Runtime scanning
 
@@ -40,6 +41,7 @@ fallbacks:
 | `modelsecurity.NewClient` | `PANW_MODEL_SEC_` | `PANW_MGMT_` |
 | `redteam.NewClient` | `PANW_RED_TEAM_` | `PANW_MGMT_` |
 | `gateway.NewClient` | `PANW_AI_GW_` | `PANW_MGMT_` |
+| `agentguard.NewClient` | `PANW_AGENT_GUARD_` | `PANW_MGMT_` |
 
 Explicit constructor values take precedence. A management token-endpoint override
 is also a fallback for the other OAuth services. API endpoint overrides remain
@@ -56,6 +58,10 @@ if err != nil {
 Gateway uses SCM OAuth and adds `x-tsg-id` to API requests. Data and admin planes
 share the same token cache. Your TSG and workspace scope must authorize the
 requested operation; the SDK does not grant access or create workspaces.
+
+AgentGuard also includes `x-tsg-id` on its data and management requests. Its
+signed archive storage upload is separate and carries neither the OAuth token
+nor the tenant header. See [AgentGuard](../services/agentguard-api.md).
 
 ## Keep credentials separate from examples
 

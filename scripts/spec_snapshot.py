@@ -38,6 +38,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pan", type=Path, help="pan.dev checkout")
     parser.add_argument("--gateway", type=Path, help="PaloAltoNetworks/openapi checkout")
+    parser.add_argument("--agentguard", type=Path, help="supplied AgentGuard preview schema directory")
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     manifest_path = ROOT / "specs/manifest.json"
@@ -52,16 +53,21 @@ def main():
                 raise SystemExit("Stale normalized contract: " + entry["contract"])
         print("All pinned inputs and normalized contracts match")
         return
-    if args.pan is None or args.gateway is None:
+    if not args.agentguard and (args.pan is None or args.gateway is None):
         parser.error("--pan and --gateway are required when refreshing")
-    checkouts = {"pan": args.pan, "gateway": args.gateway}
+    if (args.pan is None) != (args.gateway is None):
+        parser.error("--pan and --gateway must be supplied together")
+    checkouts = {key: path for key, path in {"pan": args.pan, "gateway": args.gateway}.items() if path is not None}
     commits = {key: subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=path, text=True).strip()
                for key, path in checkouts.items()}
     repositories = {"pan": "https://github.com/PaloAltoNetworks/pan.dev",
                     "gateway": "https://github.com/PaloAltoNetworks/openapi"}
     (ROOT / "specs/contracts").mkdir(parents=True, exist_ok=True)
-    entries = []
-    for filename, label, checkout, relative in INPUTS:
+    existing = json.loads(manifest_path.read_text())
+    entries = [entry for entry in existing["inputs"] if
+               not (entry["file"] in {item[0] for item in INPUTS} and checkouts) and
+               not (entry["file"].startswith("agentguard-") and args.agentguard)]
+    for filename, label, checkout, relative in (INPUTS if checkouts else []):
         source = checkouts[checkout] / ("openapi-specs" if checkout == "pan" else "") / relative
         raw = source.read_bytes()
         doc = yaml.safe_load(raw)
@@ -73,11 +79,24 @@ def main():
                             source=("openapi-specs/" if checkout == "pan" else "") + relative,
                             commit=commits[checkout], sha256=digest(raw), version=doc["info"]["version"],
                             operations=operations))
-    manifest_path.write_bytes(canonical(dict(captured="2026-10-01", inputs=entries)))
+    if args.agentguard:
+        for source_name, label in [("agentguard-data-plane.json", "agentguard-data"),
+                                   ("agentguard-mgmt-plane.json", "agentguard-mgmt")]:
+            source = args.agentguard / source_name
+            raw = source.read_bytes()
+            doc = json.loads(raw)
+            (ROOT / "specs" / source_name).write_bytes(raw)
+            (ROOT / "specs/contracts" / (label + ".json")).write_bytes(canonical(doc))
+            operations = sum(method in {"get", "put", "post", "delete", "patch", "head", "options"}
+                             for item in doc["paths"].values() for method in item)
+            entries.append(dict(file=source_name, contract=label + ".json", source=str(source),
+                                provenance="User-supplied public preview 08212026", captured="2026-10-03",
+                                sha256=digest(raw), version=doc["info"]["version"], operations=operations))
+    manifest_path.write_bytes(canonical({**existing, "inputs": entries}))
     # Retain the historical filename consumed by Red Team conformance checks.
     redteam = next(x for x in entries if x["file"] == "redteam-mgmt.yaml")
     (ROOT / "specs/redteam-mgmt.json").write_bytes((ROOT / "specs/contracts" / redteam["contract"]).read_bytes())
-    print("Pinned", len(entries), "inputs with source commits and SHA-256 hashes")
+    print("Pinned", len(entries), "inputs with source provenance and SHA-256 hashes")
 
 
 if __name__ == "__main__":

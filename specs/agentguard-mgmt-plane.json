@@ -1,0 +1,1313 @@
+{
+  "components": {
+    "schemas": {
+      "DeploymentProfileSchema": {
+        "description": "Schema for deployment profile in instance response",
+        "properties": {
+          "activated_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Activation timestamp in ISO format",
+            "title": "Activated At"
+          },
+          "auth_code": {
+            "description": "Authorization code",
+            "title": "Auth Code",
+            "type": "string"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "",
+            "description": "Creator email or empty string",
+            "title": "Created By"
+          },
+          "dp_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Deployment profile name",
+            "title": "Dp Name"
+          },
+          "license_expiration": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "License expiration in ISO format",
+            "title": "License Expiration"
+          },
+          "serial_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": "",
+            "description": "Device serial number",
+            "title": "Serial Number"
+          },
+          "status": {
+            "description": "Human-readable status",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "auth_code",
+          "status"
+        ],
+        "title": "DeploymentProfileSchema",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InstanceCreateModelSchema": {
+        "additionalProperties": true,
+        "description": "Schema for creating a new instance",
+        "properties": {
+          "auth_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auth Code"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "csp_tenant_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Csp Tenant Id"
+          },
+          "entitlements": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entitlements"
+          },
+          "extra": {
+            "additionalProperties": true,
+            "title": "Extra",
+            "type": "object"
+          },
+          "iam_controlled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iam Controlled"
+          },
+          "license_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "License Name"
+          },
+          "platform_region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Platform Region"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "serial_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Serial Number"
+          },
+          "support_account_id": {
+            "title": "Support Account Id",
+            "type": "string"
+          },
+          "support_account_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Support Account Name"
+          },
+          "tenant_id": {
+            "title": "Tenant Id",
+            "type": "string"
+          },
+          "tenant_instance_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tenant Instance Name"
+          },
+          "tsg_id": {
+            "title": "Tsg Id",
+            "type": "string"
+          },
+          "tsg_instances": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tsg Instances"
+          }
+        },
+        "required": [
+          "tsg_id",
+          "created_by",
+          "support_account_id",
+          "tenant_id"
+        ],
+        "title": "InstanceCreateModelSchema",
+        "type": "object"
+      },
+      "InstanceResponseModelSchema": {
+        "properties": {
+          "is_success": {
+            "title": "Is Success",
+            "type": "boolean"
+          },
+          "tenant_id": {
+            "title": "Tenant Id",
+            "type": "string"
+          },
+          "tsg_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tsg Id"
+          }
+        },
+        "required": [
+          "is_success",
+          "tenant_id"
+        ],
+        "title": "InstanceResponseModelSchema",
+        "type": "object"
+      },
+      "InstanceSchema": {
+        "description": "Schema for instance details with deployment profiles",
+        "properties": {
+          "created_by": {
+            "default": "",
+            "description": "Creator email or empty string",
+            "title": "Created By",
+            "type": "string"
+          },
+          "deployment_profiles": {
+            "description": "List of deployment profiles",
+            "items": {
+              "$ref": "#/components/schemas/DeploymentProfileSchema"
+            },
+            "title": "Deployment Profiles",
+            "type": "array"
+          },
+          "support_account_id": {
+            "description": "CSP ID",
+            "title": "Support Account Id",
+            "type": "string"
+          },
+          "support_account_name": {
+            "default": "",
+            "description": "Support account name or empty",
+            "title": "Support Account Name",
+            "type": "string"
+          },
+          "tenant_id": {
+            "description": "Tenant ID",
+            "title": "Tenant Id",
+            "type": "string"
+          },
+          "tsg_id": {
+            "description": "TSG ID",
+            "title": "Tsg Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "support_account_id",
+          "tenant_id",
+          "tsg_id"
+        ],
+        "title": "InstanceSchema",
+        "type": "object"
+      },
+      "ListSkillOverridesResponseSchema": {
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationSchema"
+          },
+          "skill_overrides": {
+            "items": {
+              "$ref": "#/components/schemas/SkillOverrideResponseSchema"
+            },
+            "title": "Skill Overrides",
+            "type": "array"
+          }
+        },
+        "required": [
+          "pagination",
+          "skill_overrides"
+        ],
+        "title": "ListSkillOverridesResponseSchema",
+        "type": "object"
+      },
+      "ListSkillSecurityRuleInstancesResponseSchema": {
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationSchema"
+          },
+          "rule_instances": {
+            "items": {
+              "$ref": "#/components/schemas/SkillSecurityRuleInstanceResponseSchema"
+            },
+            "title": "Rule Instances",
+            "type": "array"
+          }
+        },
+        "required": [
+          "pagination",
+          "rule_instances"
+        ],
+        "title": "ListSkillSecurityRuleInstancesResponseSchema",
+        "type": "object"
+      },
+      "ListSkillSecurityRulesResponseSchema": {
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationSchema"
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/SkillSecurityRuleResponseSchema"
+            },
+            "title": "Rules",
+            "type": "array"
+          }
+        },
+        "required": [
+          "pagination",
+          "rules"
+        ],
+        "title": "ListSkillSecurityRulesResponseSchema",
+        "type": "object"
+      },
+      "OverrideDecision": {
+        "enum": [
+          "ALLOW"
+        ],
+        "title": "OverrideDecision",
+        "type": "string"
+      },
+      "PaginationSchema": {
+        "properties": {
+          "total_items": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Items"
+          }
+        },
+        "title": "PaginationSchema",
+        "type": "object"
+      },
+      "RuleState": {
+        "description": "Rule evaluation states.",
+        "enum": [
+          "DISABLED",
+          "ALLOWING",
+          "BLOCKING"
+        ],
+        "title": "RuleState",
+        "type": "string"
+      },
+      "SkillOverrideCreateRequestSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/OverrideDecision"
+          },
+          "fingerprint": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "original_scan_uuid": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Scan Uuid"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "maxLength": 1024,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "skill_name": {
+            "maxLength": 256,
+            "title": "Skill Name",
+            "type": "string"
+          },
+          "trusted_by": {
+            "maxLength": 256,
+            "title": "Trusted By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "skill_name",
+          "fingerprint",
+          "decision",
+          "trusted_by"
+        ],
+        "title": "SkillOverrideCreateRequestSchema",
+        "type": "object"
+      },
+      "SkillOverrideResponseSchema": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "format": "uuid",
+            "title": "Created By",
+            "type": "string"
+          },
+          "decision": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverrideDecision"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Decision"
+          },
+          "fingerprint": {
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "original_scan_uuid": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Scan Uuid"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "skill_name": {
+            "title": "Skill Name",
+            "type": "string"
+          },
+          "trusted_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trusted By"
+          },
+          "tsg_id": {
+            "maxLength": 64,
+            "title": "Tsg Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "uuid": {
+            "format": "uuid",
+            "title": "Uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "uuid",
+          "tsg_id",
+          "created_at",
+          "updated_at",
+          "skill_name",
+          "fingerprint",
+          "decision",
+          "reason",
+          "original_scan_uuid",
+          "created_by",
+          "trusted_by"
+        ],
+        "title": "SkillOverrideResponseSchema",
+        "type": "object"
+      },
+      "SkillSecurityRuleConfigurationSchema": {
+        "description": "Desired state for a single rule in a rule-instances update request.",
+        "properties": {
+          "state": {
+            "$ref": "#/components/schemas/RuleState"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "title": "SkillSecurityRuleConfigurationSchema",
+        "type": "object"
+      },
+      "SkillSecurityRuleInstanceResponseSchema": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "rule": {
+            "$ref": "#/components/schemas/SkillSecurityRuleResponseSchema"
+          },
+          "rule_uuid": {
+            "format": "uuid",
+            "title": "Rule Uuid",
+            "type": "string"
+          },
+          "security_group_uuid": {
+            "format": "uuid",
+            "title": "Security Group Uuid",
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RuleState"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "State"
+          },
+          "tsg_id": {
+            "maxLength": 64,
+            "title": "Tsg Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "uuid": {
+            "format": "uuid",
+            "title": "Uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "uuid",
+          "tsg_id",
+          "created_at",
+          "updated_at",
+          "security_group_uuid",
+          "rule_uuid",
+          "state",
+          "rule"
+        ],
+        "title": "SkillSecurityRuleInstanceResponseSchema",
+        "type": "object"
+      },
+      "SkillSecurityRuleInstancesUpdateRequestSchema": {
+        "additionalProperties": false,
+        "description": "Atomically update rule-instance state for one or more rules, keyed by\nrule_uuid, in the tenant's singleton skill-security-group.",
+        "properties": {
+          "rule_configurations": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/SkillSecurityRuleConfigurationSchema"
+            },
+            "description": "Map of rule_uuid -> desired state.",
+            "maxProperties": 100,
+            "minProperties": 1,
+            "propertyNames": {
+              "format": "uuid"
+            },
+            "title": "Rule Configurations",
+            "type": "object"
+          }
+        },
+        "required": [
+          "rule_configurations"
+        ],
+        "title": "SkillSecurityRuleInstancesUpdateRequestSchema",
+        "type": "object"
+      },
+      "SkillSecurityRuleResponseSchema": {
+        "properties": {
+          "default_state": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RuleState"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Default State"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "remediation": {
+            "title": "Remediation",
+            "type": "string"
+          },
+          "uuid": {
+            "format": "uuid",
+            "title": "Uuid",
+            "type": "string"
+          },
+          "vulnerability_types": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Vulnerability Types",
+            "type": "array"
+          }
+        },
+        "required": [
+          "uuid",
+          "name",
+          "vulnerability_types",
+          "default_state",
+          "description",
+          "remediation"
+        ],
+        "title": "SkillSecurityRuleResponseSchema",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "AgentGuard Management Plane API - Policy controls for skill scanning",
+    "title": "AgentGuard Management Plane API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/instances": {
+      "post": {
+        "description": "Activate a tenant instance from its deployment profiles",
+        "operationId": "create_instance_v1_instances_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstanceCreateModelSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstanceResponseModelSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Instance",
+        "tags": [
+          "Instances"
+        ]
+      }
+    },
+    "/v1/instances/{tenant_id}": {
+      "delete": {
+        "description": "Deactivate all of a tenant's active deployment profiles",
+        "operationId": "delete_instance_v1_instances__tenant_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstanceResponseModelSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Instance",
+        "tags": [
+          "Instances"
+        ]
+      },
+      "get": {
+        "description": "Get license/instance info for a tenant",
+        "operationId": "get_instance_v1_instances__tenant_id__get",
+        "parameters": [
+          {
+            "description": "Tenant ID",
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "description": "Tenant ID",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstanceSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Instance",
+        "tags": [
+          "Instances"
+        ]
+      },
+      "put": {
+        "description": "Update a tenant instance: reactivate, deactivate removed profiles, or refresh expirations",
+        "operationId": "update_instance_v1_instances__tenant_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstanceCreateModelSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstanceResponseModelSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Instance",
+        "tags": [
+          "Instances"
+        ]
+      }
+    },
+    "/v1/rule-instances": {
+      "get": {
+        "operationId": "list_rule_instances_v1_rule_instances_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "title": "Skip",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSkillSecurityRuleInstancesResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Rule Instances",
+        "tags": [
+          "Skill Security Rule Instances"
+        ]
+      },
+      "put": {
+        "description": "Update rule instances",
+        "operationId": "update_rule_instances_v1_rule_instances_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SkillSecurityRuleInstancesUpdateRequestSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSkillSecurityRuleInstancesResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Rule Instances",
+        "tags": [
+          "Skill Security Rule Instances"
+        ]
+      }
+    },
+    "/v1/rules": {
+      "get": {
+        "operationId": "list_rules_v1_rules_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "title": "Skip",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSkillSecurityRulesResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Rules",
+        "tags": [
+          "Skill Security Rules"
+        ]
+      }
+    },
+    "/v1/skill-overrides": {
+      "get": {
+        "operationId": "list_skill_overrides_v1_skill_overrides_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Skip",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter by skill name (case-insensitive substring)",
+            "in": "query",
+            "name": "skill_name",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by skill name (case-insensitive substring)",
+              "title": "Skill Name"
+            }
+          },
+          {
+            "description": "Filter by exact fingerprint",
+            "in": "query",
+            "name": "fingerprint",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by exact fingerprint",
+              "title": "Fingerprint"
+            }
+          },
+          {
+            "description": "Filter by the email that trusted the skill (case-insensitive substring)",
+            "in": "query",
+            "name": "trusted_by",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by the email that trusted the skill (case-insensitive substring)",
+              "title": "Trusted By"
+            }
+          },
+          {
+            "description": "Single-box search: matches skill name OR trusting email (case-insensitive substring; broadens, unlike the typed filters which narrow). Minimum 3 characters \u2014 shorter terms cannot use the trigram index and are rejected.",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minLength": 3,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Single-box search: matches skill name OR trusting email (case-insensitive substring; broadens, unlike the typed filters which narrow). Minimum 3 characters \u2014 shorter terms cannot use the trigram index and are rejected.",
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSkillOverridesResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Skill Overrides",
+        "tags": [
+          "Skill Overrides"
+        ]
+      },
+      "post": {
+        "description": "Create a skill override",
+        "operationId": "create_skill_override_v1_skill_overrides_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SkillOverrideCreateRequestSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillOverrideResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Skill Override",
+        "tags": [
+          "Skill Overrides"
+        ]
+      }
+    },
+    "/v1/skill-overrides/{override_uuid}": {
+      "delete": {
+        "description": "Delete a skill override",
+        "operationId": "delete_skill_override_v1_skill_overrides__override_uuid__delete",
+        "parameters": [
+          {
+            "description": "Skill override UUID",
+            "in": "path",
+            "name": "override_uuid",
+            "required": true,
+            "schema": {
+              "description": "Skill override UUID",
+              "format": "uuid",
+              "title": "Override Uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Skill Override",
+        "tags": [
+          "Skill Overrides"
+        ]
+      }
+    }
+  }
+}

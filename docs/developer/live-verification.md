@@ -173,3 +173,62 @@ The required provider handoff is
 [sdk-update-005.md](https://github.com/cdot65/prisma-airs-go/blob/main/sdk-update-005.md).
 The upstream Red Team metadata HTTP 422 and mock-only helper limits above remain
 unchanged by successful release publication.
+
+## AgentGuard public preview — 2026-10-03
+
+All 21 operations are verified against pinned preview contracts using mock token
+and API servers, including data/management routing, response field preservation,
+repeated filters, CSV bytes, upload completion, and empty override deletion.
+SCM OAuth was confirmed by the owner. The supplied contracts omit URLs and
+security definitions; explicit service endpoints are required. Initial
+implementation checks used mock services. The subsequent live check below used
+the configured CLI tenant and endpoint evidence from the local TypeScript SDK.
+
+`make check` passed on Go 1.25.6; all-package race tests also passed on Go
+1.22.12. Integration-tag compilation and lint passed without making live calls.
+Snapshot/hash checks and all four generated-schema checks passed. Documentation
+source/reference/example checks, TypeScript, strict production build, browser
+navigation, and nine harness pixel comparisons passed (`make docs-check`).
+
+### Live public skill ZIP scan
+
+On 2026-10-03, the owner requested a public zipped skill submitted without local
+extraction. Downloaded the [Spriterrific API skill release ZIP](https://github.com/chongdashu/spriterrific-skills/releases/latest/download/spriterrific-api-skill.zip)
+unchanged: **23,400 bytes**, SHA-256
+`006ec198f5966d355c56f77afb4e712f880c3f2f9fbad0a0f59b64c934b0c2de`,
+CRC32C `Ff6nYQ==`. The archive was never unpacked or its entries opened locally.
+
+The Go client used the existing configured CLI OAuth credentials and tenant
+without modifying their configuration. Endpoints were taken from the local
+TypeScript SDK's AgentGuard client:
+`https://api.apps.paloaltonetworks.com/aiag/{data,mgmt}`. Live work exercised
+only the data-plane API. The Go client now includes `x-tsg-id` on both API
+planes, matching that client; regression tests assert the header across all
+operations and its absence on token requests.
+
+| Step | Observed result |
+| --- | --- |
+| `Scans.UploadURL` | 200, scan UUID and signed GCS URL |
+| Storage `PUT` of original ZIP | 200; response CRC32C matches original bytes |
+| `Scans.UploadComplete` with checksum | 201, `CLASSIFYING` |
+| `Scans.Get` polling | `ANALYZING` → `COMPLETED` |
+| `Scans.ListVulnerabilities` | 200, zero vulnerabilities |
+| `Scans.ListAttackChains` | 200, zero attack chains |
+| Final policy result | `ALLOWED` |
+
+Scan UUID: `35f902a2-8b23-4d44-8e6b-466c4d927534`. A first storage attempt added
+an unsigned `x-goog-hash` header and returned 400 `MalformedSecurityHeader`.
+The signed URL covered only `content-type;host`; retrying with just
+`Content-Type: application/zip` succeeded. CRC32C was checked against the
+storage receipt and provided in the completion payload. OAuth and tenant headers
+were never sent to storage.
+
+The submitted scan is retained: the preview exposes no scan deletion endpoint.
+Evidence, original ZIP, and result JSON are under
+`/var/tmp/agentguard-live-scan-2026-10-03/`; signed URL state is private mode 0600
+and is excluded from repository artifacts. The opt-in
+`TestIntegration_ArchiveScan` can submit an explicitly supplied archive or resume
+this UUID to verify reads without creating another scan. The resume check passed
+with the race detector. Attack-chain detail was not exercised because there
+were no chains. Management operations, lookup, CSV, and statistics remain
+mock-only in this Go verification run.
