@@ -12,12 +12,13 @@ const sidebars: SidebarsConfig = {
     ]},
     {type: 'category', label: 'Service guides', items: [
       'services/scan-api', 'services/runtime-api', 'services/model-security-api',
-      'services/red-team-api', 'services/ai-gateway-api',
+      'services/red-team-api', 'services/ai-gateway-api', 'services/agentguard-api',
     ]},
     {type: 'category', label: 'Hands-on examples', items: [
       'examples/index', 'examples/runtime-scanning', 'examples/profile-crud',
       'examples/topic-crud', 'examples/api-key-rotation', 'examples/model-security',
       'examples/red-team-inventory', 'examples/red-team-scanning', 'examples/gateway-crud',
+      'examples/agentguard-scanning',
     ]},
     {type: 'category', label: 'Validation and troubleshooting', items: [
       'developer/live-verification', 'guides/troubleshooting', 'reference/error-handling',
@@ -29,11 +30,11 @@ const sidebars: SidebarsConfig = {
     'reference/api-reference',
     {type: 'category', label: 'Clients and methods', collapsed: false, items: [
       'reference/generated/aisec', 'reference/generated/runtime', 'reference/generated/modelsecurity',
-      'reference/generated/redteam', 'reference/generated/gateway',
+      'reference/generated/redteam', 'reference/generated/gateway', 'reference/generated/agentguard',
     ]},
     {type: 'category', label: 'Schema catalogs', items: [
       'reference/generated/modelsecurity-schema', 'reference/generated/redteam-schema',
-      'reference/generated/gateway-schema',
+      'reference/generated/gateway-schema', 'reference/generated/agentguard-schema',
     ]},
     'reference/environment-variables', 'reference/error-handling',
   ],

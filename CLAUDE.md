@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Go SDK for Palo Alto Networks Prisma AIRS — covers the full lifecycle across four service domains (AI Runtime Security, Model Security, AI Red Teaming, AI Gateway Management). Port of the TypeScript `@cdot65/prisma-airs-sdk`. Zero external dependencies (stdlib only). Foundation for a Terraform provider.
+Go SDK for Palo Alto Networks Prisma AIRS — covers the full lifecycle across five service domains (AI Runtime Security, Model Security, AI Red Teaming, AI Gateway Management, AgentGuard public preview). Port of the TypeScript `@cdot65/prisma-airs-sdk`. Zero external dependencies (stdlib only). Foundation for a Terraform provider.
 
 ## Commands
 
@@ -27,7 +27,7 @@ go test -v ./... -run "TestName"
 
 ## Architecture
 
-**4 service domains**, 2 auth methods:
+**5 service domains**, 2 auth methods:
 
 - **Runtime API — Scan** (API Key): `runtime.NewScanner(cfg)` → SyncScan, AsyncScan, QueryByScanIDs, QueryByReportIDs
 - **Runtime API — Management** (OAuth2): `runtime.NewClient(opts)` → 8 sub-clients (profiles, topics, apikeys, apps, dlp, deployment, scanlogs, oauth)
@@ -35,6 +35,7 @@ go test -v ./... -run "TestName"
 - **Red Team API** (OAuth2): `redteam.NewClient(opts)` → 9 sub-clients including adapters and Network Broker, with management/data/broker routing
 
 - **AI Gateway management** (SCM OAuth): `gateway.NewClient(opts)` → 12 CRUD families, existing workspaces, data/admin routing
+- **AgentGuard public preview** (SCM OAuth): `agentguard.NewClient(opts)` → 6 sub-clients, 21 operations; explicit data/management endpoints. See `docs/services/agentguard-api.md`.
 
 Key packages:
 

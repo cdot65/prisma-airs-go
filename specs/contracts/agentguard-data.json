@@ -1,0 +1,2343 @@
+{
+  "components": {
+    "schemas": {
+      "AgentGuardAttackChainListSchema": {
+        "properties": {
+          "attack_chains": {
+            "items": {
+              "$ref": "#/components/schemas/AgentGuardAttackChainSummaryResponseSchema"
+            },
+            "title": "Attack Chains",
+            "type": "array"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationSchema"
+          }
+        },
+        "required": [
+          "pagination",
+          "attack_chains"
+        ],
+        "title": "AgentGuardAttackChainListSchema",
+        "type": "object"
+      },
+      "AgentGuardAttackChainResponseSchema": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "impact": {
+            "title": "Impact",
+            "type": "string"
+          },
+          "remediation_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remediation Summary"
+          },
+          "scan_uuid": {
+            "format": "uuid",
+            "title": "Scan Uuid",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/AgentGuardAttackChainStepSchema"
+            },
+            "title": "Steps",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "tsg_id": {
+            "maxLength": 64,
+            "title": "Tsg Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "uuid": {
+            "format": "uuid",
+            "title": "Uuid",
+            "type": "string"
+          },
+          "vulnerability_count": {
+            "title": "Vulnerability Count",
+            "type": "integer"
+          },
+          "vulnerability_uuids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Vulnerability Uuids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "uuid",
+          "tsg_id",
+          "created_at",
+          "updated_at",
+          "scan_uuid",
+          "title",
+          "description",
+          "impact",
+          "vulnerability_count",
+          "vulnerability_uuids",
+          "steps"
+        ],
+        "title": "AgentGuardAttackChainResponseSchema",
+        "type": "object"
+      },
+      "AgentGuardAttackChainStepSchema": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "impact_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Impact Description"
+          },
+          "node_id": {
+            "title": "Node Id",
+            "type": "string"
+          },
+          "node_name": {
+            "title": "Node Name",
+            "type": "string"
+          },
+          "node_type": {
+            "$ref": "#/components/schemas/NodeType"
+          },
+          "step_number": {
+            "title": "Step Number",
+            "type": "integer"
+          },
+          "step_type": {
+            "$ref": "#/components/schemas/StepType"
+          },
+          "vulnerability_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vulnerability Title"
+          },
+          "vulnerability_uuid": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vulnerability Uuid"
+          }
+        },
+        "required": [
+          "step_number",
+          "step_type",
+          "node_id",
+          "node_type",
+          "node_name",
+          "description"
+        ],
+        "title": "AgentGuardAttackChainStepSchema",
+        "type": "object"
+      },
+      "AgentGuardAttackChainSummaryResponseSchema": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "impact": {
+            "title": "Impact",
+            "type": "string"
+          },
+          "remediation_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remediation Summary"
+          },
+          "scan_uuid": {
+            "format": "uuid",
+            "title": "Scan Uuid",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "tsg_id": {
+            "maxLength": 64,
+            "title": "Tsg Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "uuid": {
+            "format": "uuid",
+            "title": "Uuid",
+            "type": "string"
+          },
+          "vulnerability_count": {
+            "title": "Vulnerability Count",
+            "type": "integer"
+          },
+          "vulnerability_uuids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Vulnerability Uuids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "uuid",
+          "tsg_id",
+          "created_at",
+          "updated_at",
+          "scan_uuid",
+          "title",
+          "description",
+          "impact",
+          "vulnerability_count",
+          "vulnerability_uuids"
+        ],
+        "title": "AgentGuardAttackChainSummaryResponseSchema",
+        "type": "object"
+      },
+      "AgentGuardBatchSummarySchema": {
+        "description": "Counts rolled up from a batch parent's child scans.",
+        "properties": {
+          "allowed": {
+            "title": "Allowed",
+            "type": "integer"
+          },
+          "blocked": {
+            "title": "Blocked",
+            "type": "integer"
+          },
+          "completed": {
+            "title": "Completed",
+            "type": "integer"
+          },
+          "failed": {
+            "title": "Failed",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "completed",
+          "failed",
+          "blocked",
+          "allowed"
+        ],
+        "title": "AgentGuardBatchSummarySchema",
+        "type": "object"
+      },
+      "AgentGuardEvalDetailsSchema": {
+        "properties": {
+          "rule_outcomes": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/AgentGuardRuleOutcomeSchema"
+            },
+            "title": "Rule Outcomes",
+            "type": "array"
+          },
+          "skill_override_applied": {
+            "default": false,
+            "title": "Skill Override Applied",
+            "type": "boolean"
+          },
+          "unknown_findings": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Unknown Findings",
+            "type": "array"
+          }
+        },
+        "title": "AgentGuardEvalDetailsSchema",
+        "type": "object"
+      },
+      "AgentGuardEvalSummarySchema": {
+        "properties": {
+          "allowed": {
+            "title": "Allowed",
+            "type": "integer"
+          },
+          "blocked": {
+            "title": "Blocked",
+            "type": "integer"
+          },
+          "total_rules": {
+            "title": "Total Rules",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_rules",
+          "blocked",
+          "allowed"
+        ],
+        "title": "AgentGuardEvalSummarySchema",
+        "type": "object"
+      },
+      "AgentGuardRuleOutcomeSchema": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "outcome": {
+            "title": "Outcome",
+            "type": "string"
+          },
+          "remediation": {
+            "title": "Remediation",
+            "type": "string"
+          },
+          "rule_instance_uuid": {
+            "title": "Rule Instance Uuid",
+            "type": "string"
+          },
+          "rule_name": {
+            "title": "Rule Name",
+            "type": "string"
+          },
+          "state": {
+            "title": "State",
+            "type": "string"
+          },
+          "vulnerability_count": {
+            "title": "Vulnerability Count",
+            "type": "integer"
+          },
+          "vulnerability_types": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Vulnerability Types",
+            "type": "array"
+          }
+        },
+        "required": [
+          "rule_instance_uuid",
+          "rule_name",
+          "vulnerability_types",
+          "state",
+          "outcome",
+          "description",
+          "remediation",
+          "vulnerability_count"
+        ],
+        "title": "AgentGuardRuleOutcomeSchema",
+        "type": "object"
+      },
+      "AgentGuardScanListSchema": {
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationSchema"
+          },
+          "scans": {
+            "items": {
+              "$ref": "#/components/schemas/AgentGuardScanResponseSchema"
+            },
+            "title": "Scans",
+            "type": "array"
+          }
+        },
+        "required": [
+          "pagination",
+          "scans"
+        ],
+        "title": "AgentGuardScanListSchema",
+        "type": "object"
+      },
+      "AgentGuardScanResponseSchema": {
+        "properties": {
+          "artifact_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Artifact Type"
+          },
+          "batch_summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentGuardBatchSummarySchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "child_scan_uuids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Child Scan Uuids",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "device_metadata": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeviceMetadataSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "duration_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Seconds"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "eval_details": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentGuardEvalDetailsSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eval_outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvalOutcome"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eval Outcome"
+          },
+          "eval_summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentGuardEvalSummarySchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fingerprint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fingerprint"
+          },
+          "git_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Git Url"
+          },
+          "is_batch": {
+            "default": false,
+            "title": "Is Batch",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "parent_uuid": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Uuid"
+          },
+          "scanner_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scanner Version"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AgentGuardScanStatus"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentGuardScanSummarySchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tsg_id": {
+            "maxLength": 64,
+            "title": "Tsg Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "uuid": {
+            "format": "uuid",
+            "title": "Uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "uuid",
+          "tsg_id",
+          "created_at",
+          "updated_at",
+          "name",
+          "status"
+        ],
+        "title": "AgentGuardScanResponseSchema",
+        "type": "object"
+      },
+      "AgentGuardScanStatsResponseSchema": {
+        "description": "Summary cards for the skill scans page.\n\nThe three numbers deliberately use different grains: the first counts distinct\nskills, the other two count per scan. A skill scanned thirty times with four\nfindings each is 1 unique skill and 120 findings.",
+        "properties": {
+          "top_vulnerability": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentGuardTopVulnerabilitySchema"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The most frequently found vulnerability type in the window, or null when nothing was found."
+          },
+          "total_vulnerabilities_found": {
+            "$ref": "#/components/schemas/StatWithChangeSchema",
+            "description": "Findings across all scans in the window, counted per scan rather than per distinct skill, so a skill scanned repeatedly contributes its findings each time."
+          },
+          "unique_skills_scanned": {
+            "$ref": "#/components/schemas/StatWithChangeSchema",
+            "description": "Distinct skills scanned in the window, counted by fingerprint, with the change against the preceding window of equal length. A skill scanned many times counts once. Windows are whole UTC days."
+          }
+        },
+        "required": [
+          "unique_skills_scanned",
+          "total_vulnerabilities_found"
+        ],
+        "title": "AgentGuardScanStatsResponseSchema",
+        "type": "object"
+      },
+      "AgentGuardScanStatus": {
+        "description": "Status of an AgentGuard scan.",
+        "enum": [
+          "UPLOADING",
+          "CLASSIFYING",
+          "ANALYZING",
+          "COMPLETED",
+          "FAILED",
+          "ERROR"
+        ],
+        "title": "AgentGuardScanStatus",
+        "type": "string"
+      },
+      "AgentGuardScanSummarySchema": {
+        "properties": {
+          "attack_chain_count": {
+            "title": "Attack Chain Count",
+            "type": "integer"
+          },
+          "vulnerability_count": {
+            "title": "Vulnerability Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "vulnerability_count",
+          "attack_chain_count"
+        ],
+        "title": "AgentGuardScanSummarySchema",
+        "type": "object"
+      },
+      "AgentGuardSkillStatsResponseSchema": {
+        "description": "Summary cards for the Skill Scanning Rules tab.",
+        "properties": {
+          "most_violated_rules": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/MostBlockedRuleSchema"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Catalog rules ranked by failures in the window, highest first, filtered to rules that are still enabled, capped at 10. Null when the rule configuration could not be read, since neither filtering nor naming is possible; an empty list means the tenant genuinely tripped no enabled rules. Counts here need not sum to total_rule_violations: failures attributed to rules that have since been disabled stay in the total but drop out of this list, as do any beyond the tenth.",
+            "title": "Most Violated Rules"
+          },
+          "total_enabled_rules": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Distinct skill rules currently switched on for the tenant, counting both blocking and alert-only rules. Null when the rule configuration could not be read, which is distinct from 0 -- 0 means the tenant genuinely has no rules enabled.",
+            "title": "Total Enabled Rules"
+          },
+          "total_rule_violations": {
+            "$ref": "#/components/schemas/StatWithChangeSchema",
+            "description": "Failed rule evaluations in the requested window, with the change against the preceding window of equal length. Skills the tenant has trusted via a skill override are excluded."
+          }
+        },
+        "required": [
+          "total_rule_violations",
+          "total_enabled_rules"
+        ],
+        "title": "AgentGuardSkillStatsResponseSchema",
+        "type": "object"
+      },
+      "AgentGuardTopVulnerabilitySchema": {
+        "description": "The vulnerability type found most often in the window.",
+        "properties": {
+          "finding_count": {
+            "description": "Findings of this type across all scans in the window",
+            "title": "Finding Count",
+            "type": "integer"
+          },
+          "vulnerability_type": {
+            "description": "Vulnerability type, e.g. CODE_EXECUTION",
+            "maxLength": 256,
+            "title": "Vulnerability Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "vulnerability_type",
+          "finding_count"
+        ],
+        "title": "AgentGuardTopVulnerabilitySchema",
+        "type": "object"
+      },
+      "AgentGuardUploadCompleteRequestSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "checksum_crc32c": {
+            "anyOf": [
+              {
+                "pattern": "^[A-Za-z0-9+/]{5}[AQgw]==$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Base64-encoded CRC32C of the uploaded archive (4 bytes, big-endian) - the canonical GCS representation, e.g. 'yZRlqg=='.",
+            "title": "Checksum Crc32C"
+          },
+          "device_metadata": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeviceMetadataSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "git_url": {
+            "anyOf": [
+              {
+                "maxLength": 1024,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Git Url"
+          },
+          "name": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "AgentGuardUploadCompleteRequestSchema",
+        "type": "object"
+      },
+      "AgentGuardUploadCompleteResponseSchema": {
+        "properties": {
+          "artifact_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Artifact Type"
+          },
+          "batch_summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentGuardBatchSummarySchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "child_scan_uuids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Child Scan Uuids",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "device_metadata": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeviceMetadataSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "duration_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Seconds"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "eval_details": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentGuardEvalDetailsSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eval_outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvalOutcome"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eval Outcome"
+          },
+          "eval_summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentGuardEvalSummarySchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fingerprint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fingerprint"
+          },
+          "git_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Git Url"
+          },
+          "is_batch": {
+            "default": false,
+            "title": "Is Batch",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "parent_uuid": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Uuid"
+          },
+          "scanner_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scanner Version"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AgentGuardScanStatus"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentGuardScanSummarySchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tsg_id": {
+            "maxLength": 64,
+            "title": "Tsg Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "uuid": {
+            "format": "uuid",
+            "title": "Uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "uuid",
+          "tsg_id",
+          "created_at",
+          "updated_at",
+          "name",
+          "status"
+        ],
+        "title": "AgentGuardUploadCompleteResponseSchema",
+        "type": "object"
+      },
+      "AgentGuardUploadUrlResponseSchema": {
+        "properties": {
+          "scan_uuid": {
+            "format": "uuid",
+            "title": "Scan Uuid",
+            "type": "string"
+          },
+          "upload_expires_at": {
+            "format": "date-time",
+            "title": "Upload Expires At",
+            "type": "string"
+          },
+          "upload_url": {
+            "title": "Upload Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scan_uuid",
+          "upload_url",
+          "upload_expires_at"
+        ],
+        "title": "AgentGuardUploadUrlResponseSchema",
+        "type": "object"
+      },
+      "AgentGuardVulnerabilityListSchema": {
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationSchema"
+          },
+          "vulnerabilities": {
+            "items": {
+              "$ref": "#/components/schemas/AgentGuardVulnerabilityResponseSchema"
+            },
+            "title": "Vulnerabilities",
+            "type": "array"
+          }
+        },
+        "required": [
+          "pagination",
+          "vulnerabilities"
+        ],
+        "title": "AgentGuardVulnerabilityListSchema",
+        "type": "object"
+      },
+      "AgentGuardVulnerabilityResponseSchema": {
+        "properties": {
+          "attack_chain_count": {
+            "title": "Attack Chain Count",
+            "type": "integer"
+          },
+          "attack_chain_uuids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Attack Chain Uuids",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "file_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Path"
+          },
+          "node_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Node Id"
+          },
+          "node_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Node Name"
+          },
+          "node_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NodeType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "original_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Code"
+          },
+          "remediation_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remediation Description"
+          },
+          "scan_uuid": {
+            "format": "uuid",
+            "title": "Scan Uuid",
+            "type": "string"
+          },
+          "suggested_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suggested Code"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "tsg_id": {
+            "maxLength": 64,
+            "title": "Tsg Id",
+            "type": "string"
+          },
+          "type_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "readOnly": true,
+            "title": "Type Description"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "uuid": {
+            "format": "uuid",
+            "title": "Uuid",
+            "type": "string"
+          },
+          "vulnerability_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VulnerabilityType"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Vulnerability Type"
+          }
+        },
+        "required": [
+          "uuid",
+          "tsg_id",
+          "created_at",
+          "updated_at",
+          "scan_uuid",
+          "title",
+          "description",
+          "vulnerability_type",
+          "attack_chain_count",
+          "attack_chain_uuids",
+          "type_description"
+        ],
+        "title": "AgentGuardVulnerabilityResponseSchema",
+        "type": "object"
+      },
+      "ArtifactType": {
+        "description": "Types of artifacts in AgentGuard.",
+        "enum": [
+          "AGENT",
+          "SKILL"
+        ],
+        "title": "ArtifactType",
+        "type": "string"
+      },
+      "DeviceMetadataSchema": {
+        "properties": {
+          "device_id": {
+            "maxLength": 255,
+            "title": "Device Id",
+            "type": "string"
+          },
+          "os": {
+            "maxLength": 255,
+            "title": "Os",
+            "type": "string"
+          },
+          "tool": {
+            "maxLength": 255,
+            "title": "Tool",
+            "type": "string"
+          },
+          "username": {
+            "maxLength": 255,
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "device_id",
+          "username",
+          "os",
+          "tool"
+        ],
+        "title": "DeviceMetadataSchema",
+        "type": "object"
+      },
+      "EvalOutcome": {
+        "enum": [
+          "PENDING",
+          "ALLOWED",
+          "BLOCKED",
+          "ERROR"
+        ],
+        "title": "EvalOutcome",
+        "type": "string"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "MostBlockedRuleSchema": {
+        "description": "Information about the most frequently blocking rule template.",
+        "properties": {
+          "rule_name": {
+            "description": "Name of the rule template",
+            "maxLength": 256,
+            "title": "Rule Name",
+            "type": "string"
+          },
+          "rule_uuid": {
+            "description": "UUID of the rule template (aggregated across all security groups)",
+            "format": "uuid",
+            "title": "Rule Uuid",
+            "type": "string"
+          },
+          "violation_count": {
+            "description": "Total number of violations caused by this rule template across ALL security groups",
+            "title": "Violation Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rule_uuid",
+          "rule_name",
+          "violation_count"
+        ],
+        "title": "MostBlockedRuleSchema",
+        "type": "object"
+      },
+      "NodeType": {
+        "description": "Types of nodes in an agent architecture graph.",
+        "enum": [
+          "AGENT",
+          "TOOL",
+          "DATA_SOURCE",
+          "DATA_ASSET",
+          "MEMORY"
+        ],
+        "title": "NodeType",
+        "type": "string"
+      },
+      "PaginationSchema": {
+        "properties": {
+          "total_items": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Items"
+          }
+        },
+        "title": "PaginationSchema",
+        "type": "object"
+      },
+      "SortDirection": {
+        "enum": [
+          "asc",
+          "desc"
+        ],
+        "title": "SortDirection",
+        "type": "string"
+      },
+      "StatWithChangeSchema": {
+        "description": "Statistic value with percentage change from previous period.",
+        "properties": {
+          "count": {
+            "description": "Current count for this statistic",
+            "title": "Count",
+            "type": "integer"
+          },
+          "percent_change": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Percentage change from previous equivalent time period. None if no previous data exists.",
+            "title": "Percent Change"
+          }
+        },
+        "required": [
+          "count",
+          "percent_change"
+        ],
+        "title": "StatWithChangeSchema",
+        "type": "object"
+      },
+      "StepType": {
+        "description": "Types of steps in an attack path.",
+        "enum": [
+          "VULNERABILITY",
+          "NORMAL",
+          "IMPACT"
+        ],
+        "title": "StepType",
+        "type": "string"
+      },
+      "TimePeriod": {
+        "description": "Time period options for statistics queries.\n\nEach period has an associated stats_step (the bucket granularity to query)\nand time_delta (the lookback duration from reference time).",
+        "enum": [
+          "1_HOUR",
+          "3_HOURS",
+          "24_HOURS",
+          "7_DAYS",
+          "30_DAYS",
+          "ALL_TIME"
+        ],
+        "title": "TimePeriod",
+        "type": "string"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VulnerabilityType": {
+        "description": "Types of vulnerabilities detected in agent scans.",
+        "enum": [
+          "PROMPT_INJECTION",
+          "CODE_EXECUTION",
+          "NETWORK_EXPOSURE",
+          "DATA_EXFILTRATION",
+          "PRIVILEGE_ESCALATION",
+          "AUTHENTICATION_BYPASS",
+          "XSS",
+          "SSRF",
+          "SQL_INJECTION",
+          "PATH_TRAVERSAL",
+          "INFORMATION_DISCLOSURE",
+          "DENIAL_OF_SERVICE",
+          "SUPPLY_CHAIN",
+          "SECRET_EXPOSURE",
+          "MEMORY_POISONING",
+          "SILENT_OPERATION",
+          "BEHAVIOR_MANIPULATION",
+          "UNSAFE_AUTONOMY",
+          "API_PROXY_ATTACK"
+        ],
+        "title": "VulnerabilityType",
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "AgentGuard Data Plane API - Code scanning and analysis",
+    "title": "AgentGuard Data Plane API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/scans": {
+      "get": {
+        "description": "List scans",
+        "operationId": "list_scans_v1_scans_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Skip",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort_order",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/SortDirection",
+              "default": "desc"
+            }
+          },
+          {
+            "description": "Search by scan name or UUID",
+            "in": "query",
+            "name": "search_query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 256,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Search by scan name or UUID",
+              "title": "Search Query"
+            }
+          },
+          {
+            "description": "Filter by scan status",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/AgentGuardScanStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by scan status",
+              "title": "Status"
+            }
+          },
+          {
+            "description": "Filter by artifact type",
+            "in": "query",
+            "name": "artifact_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ArtifactType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by artifact type",
+              "title": "Artifact Type"
+            }
+          },
+          {
+            "description": "Filter by scan statuses",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/AgentGuardScanStatus"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by scan statuses",
+              "title": "Statuses"
+            }
+          },
+          {
+            "description": "Filter by artifact types",
+            "in": "query",
+            "name": "artifact_types",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/ArtifactType"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by artifact types",
+              "title": "Artifact Types"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start_time",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start Time"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_time",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End Time"
+            }
+          },
+          {
+            "description": "Filter by exact fingerprint",
+            "in": "query",
+            "name": "fingerprint",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 256,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by exact fingerprint",
+              "title": "Fingerprint"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardScanListSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Scans",
+        "tags": [
+          "Scans"
+        ]
+      }
+    },
+    "/v1/scans/csv": {
+      "get": {
+        "description": "Export scans as CSV",
+        "operationId": "export_scans_csv_v1_scans_csv_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "sort_order",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/SortDirection",
+              "default": "desc"
+            }
+          },
+          {
+            "description": "Search by scan name or UUID",
+            "in": "query",
+            "name": "search_query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 256,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Search by scan name or UUID",
+              "title": "Search Query"
+            }
+          },
+          {
+            "description": "Filter by scan status",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/AgentGuardScanStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by scan status",
+              "title": "Status"
+            }
+          },
+          {
+            "description": "Filter by artifact type",
+            "in": "query",
+            "name": "artifact_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ArtifactType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by artifact type",
+              "title": "Artifact Type"
+            }
+          },
+          {
+            "description": "Filter by scan statuses",
+            "in": "query",
+            "name": "statuses",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/AgentGuardScanStatus"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by scan statuses",
+              "title": "Statuses"
+            }
+          },
+          {
+            "description": "Filter by artifact types",
+            "in": "query",
+            "name": "artifact_types",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/ArtifactType"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by artifact types",
+              "title": "Artifact Types"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start_time",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start Time"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_time",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End Time"
+            }
+          },
+          {
+            "description": "Filter by exact fingerprint",
+            "in": "query",
+            "name": "fingerprint",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 256,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by exact fingerprint",
+              "title": "Fingerprint"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/csv": {}
+            },
+            "description": "CSV file containing scan data (gzip compressed)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Export Scans Csv",
+        "tags": [
+          "Scans"
+        ]
+      }
+    },
+    "/v1/scans/lookup": {
+      "get": {
+        "description": "Look up a previously scanned skill by fingerprint",
+        "operationId": "lookup_scan_v1_scans_lookup_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "fingerprint",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Fingerprint",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardScanResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Lookup Scan",
+        "tags": [
+          "Scans"
+        ]
+      }
+    },
+    "/v1/scans/upload-url": {
+      "post": {
+        "description": "Request a signed upload URL and scan UUID (no DB write)",
+        "operationId": "get_upload_url_v1_scans_upload_url_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardUploadUrlResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Upload Url",
+        "tags": [
+          "Scans"
+        ]
+      }
+    },
+    "/v1/scans/{scan_uuid}": {
+      "get": {
+        "description": "Get a scan by UUID",
+        "operationId": "get_scan_v1_scans__scan_uuid__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scan_uuid",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scan Uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardScanResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Scan",
+        "tags": [
+          "Scans"
+        ]
+      }
+    },
+    "/v1/scans/{scan_uuid}/attack-chains": {
+      "get": {
+        "description": "List attack chains for a scan",
+        "operationId": "list_attack_chains_v1_scans__scan_uuid__attack_chains_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scan_uuid",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scan Uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Skip",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardAttackChainListSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Attack Chains",
+        "tags": [
+          "Scans"
+        ]
+      }
+    },
+    "/v1/scans/{scan_uuid}/attack-chains/{chain_uuid}": {
+      "get": {
+        "description": "Get an attack chain with full step details",
+        "operationId": "get_attack_chain_v1_scans__scan_uuid__attack_chains__chain_uuid__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scan_uuid",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scan Uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "chain_uuid",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Chain Uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardAttackChainResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Attack Chain",
+        "tags": [
+          "Scans"
+        ]
+      }
+    },
+    "/v1/scans/{scan_uuid}/upload-complete": {
+      "post": {
+        "description": "Confirm upload, consume quota, create scan row, trigger analysis. Returns 201 when the scan row is created; idempotent per scan_uuid — a repeat call returns the existing scan with 200. No row is created if any step fails.",
+        "operationId": "upload_complete_v1_scans__scan_uuid__upload_complete_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scan_uuid",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scan Uuid",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Artifact type (skip auto-detection)",
+            "in": "query",
+            "name": "artifact_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ArtifactType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Artifact type (skip auto-detection)",
+              "title": "Artifact Type"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentGuardUploadCompleteRequestSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardUploadCompleteResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload Complete",
+        "tags": [
+          "Scans"
+        ]
+      }
+    },
+    "/v1/scans/{scan_uuid}/vulnerabilities": {
+      "get": {
+        "description": "List vulnerabilities for a scan",
+        "operationId": "list_vulnerabilities_v1_scans__scan_uuid__vulnerabilities_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scan_uuid",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Scan Uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Skip",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter by vulnerability type",
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/VulnerabilityType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by vulnerability type",
+              "title": "Type"
+            }
+          },
+          {
+            "description": "Filter vulnerabilities that are part of an attack chain",
+            "in": "query",
+            "name": "in_chain",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter vulnerabilities that are part of an attack chain",
+              "title": "In Chain"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardVulnerabilityListSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Vulnerabilities",
+        "tags": [
+          "Scans"
+        ]
+      }
+    },
+    "/v1/stats/rules": {
+      "get": {
+        "description": "Skill scanning summary cards for the requested window",
+        "operationId": "get_skill_stats_v1_stats_rules_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "time_period",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/TimePeriod",
+              "default": "30_DAYS"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardSkillStatsResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Skill Stats",
+        "tags": [
+          "Statistics"
+        ]
+      }
+    },
+    "/v1/stats/scans": {
+      "get": {
+        "description": "Skill scanning summary cards for the scans page",
+        "operationId": "get_scan_stats_v1_stats_scans_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "time_period",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/TimePeriod",
+              "default": "30_DAYS"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentGuardScanStatsResponseSchema"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Scan Stats",
+        "tags": [
+          "Statistics"
+        ]
+      }
+    }
+  }
+}

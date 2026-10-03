@@ -6,6 +6,7 @@ test('existing guide, example, reference, and release URLs remain readable', asy
     'getting-started/installation/', 'getting-started/configuration/', 'getting-started/quick-start/',
     'services/scan-api/', 'services/runtime-api/', 'services/oauth-lifecycle/',
     'services/model-security-api/', 'services/red-team-api/', 'services/ai-gateway-api/',
+    'services/agentguard-api/',
     'examples/runtime-scanning/', 'examples/profile-crud/', 'examples/topic-crud/',
     'examples/red-team-scanning/', 'examples/api-key-rotation/',
     'reference/api-reference/', 'reference/environment-variables/', 'reference/error-handling/',
@@ -13,9 +14,10 @@ test('existing guide, example, reference, and release URLs remain readable', asy
     'about/release-notes/', 'about/license/',
     'overview/', 'getting-started/', 'getting-started/authentication/', 'examples/',
     'examples/model-security/', 'examples/red-team-inventory/', 'examples/gateway-crud/',
+    'examples/agentguard-scanning/',
     'guides/provider-patterns/', 'guides/troubleshooting/', 'developer/development/', 'developer/design-parity/',
     ...['aisec', 'runtime', 'modelsecurity', 'redteam', 'gateway', 'modelsecurity-schema',
-      'redteam-schema', 'gateway-schema'].map(name => `reference/generated/${name}/`),
+      'redteam-schema', 'gateway-schema', 'agentguard', 'agentguard-schema'].map(name => `reference/generated/${name}/`),
   ];
   for (const path of paths) {
     const response = await request.get(new URL(path, baseURL).href);
@@ -34,10 +36,11 @@ test('homepage links reach Go-specific guides without browser errors', async ({p
   await expect(page.locator('#hero-title')).toHaveText('Local control.Gateway intelligence.');
   await expect(page.locator('main > section').first()).toHaveAttribute('aria-labelledby', 'hero-title');
   await expect(page.locator('main > section').nth(1).locator('a')).toHaveCount(4);
+  await expect(page.getByRole('link', {name: /Explore AgentGuard preview/})).toHaveAttribute('href', '/prisma-airs-go/examples/agentguard-scanning/');
   await expect(page.locator('.theme-doc-sidebar-container')).toHaveCount(0);
   await page.getByRole('link', {name: 'Get started →', exact: true}).click();
   await expect(page.getByRole('heading', {name: 'Getting started', exact: true})).toBeVisible();
-  await expect(page.locator('pre').first()).toContainText('go get github.com/cdot65/prisma-airs-go@v0.6.0');
+  await expect(page.locator('pre').first()).toContainText('go get github.com/cdot65/prisma-airs-go@v0.7.0');
   expect(errors).toEqual([]);
 });
 
@@ -80,6 +83,11 @@ test('reference includes all service clients and schema catalogs', async ({page}
   await expect(page.getByRole('heading', {name: 'NetworkBrokerClient', level: 2})).toBeVisible();
   await page.goto('reference/generated/modelsecurity/');
   await expect(page.locator('#modelsclientlist')).toBeVisible();
+  await page.goto('reference/generated/agentguard/');
+  await expect(page.getByRole('heading', {name: 'ScansClient.UploadComplete'})).toBeVisible();
+  await expect(page.getByRole('heading', {name: 'RuleInstancesClient.Update'})).toBeVisible();
+  await page.goto('examples/agentguard-scanning/');
+  await expect(page.locator('pre.language-go').first()).toContainText('agentguard.NewClient');
 });
 
 for (const viewport of [{width: 1440, height: 1000}, {width: 1024, height: 768}, {width: 390, height: 844}]) {

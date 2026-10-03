@@ -21,6 +21,7 @@ checks.
 | Inspect red-team targets | [Red Team inventory](red-team-inventory.md) | Complete read program before launching an assessment |
 | Run red-team jobs | [Red Team scanning](red-team-scanning.md) | Targets, job progress, reports, and remediation |
 | Manage Gateway configuration | [Gateway CRUD](gateway-crud.md) | Full create/read/update/delete flow for an owned test configuration |
+| Inspect AgentGuard skill scans (public preview) | [AgentGuard scanning](agentguard-scanning.md) | Complete read program for scans, findings, attack chains, and statistics |
 | Prepare provider updates | [Provider patterns](../guides/provider-patterns.md) | Nullable values, empty collections, reads, and state |
 
 ## Run a complete program
@@ -30,7 +31,7 @@ Create a Go module, install the pinned SDK, and copy a complete example into
 
 ```sh
 go mod init example.com/airs-example
-go get github.com/cdot65/prisma-airs-go@v0.6.0
+go get github.com/cdot65/prisma-airs-go@v0.7.0
 go run .
 ```
 
@@ -38,9 +39,12 @@ Set only the credentials and identifiers that the guide names. Read examples do
 not create resources. CRUD and assessment examples make the operations described
 in their steps; use resources you own and retain their returned identifiers.
 
+AgentGuard public preview support is included in v0.7.0. Its example requires
+SCM OAuth credentials and explicit data-plane and management-plane endpoints.
+
 ## Use the shipped executables
 
-The v0.6.0 release includes `basic-scan`, `profile-crud`, and `gateway-read`
+The v0.7.0 release includes `basic-scan`, `profile-crud`, and `gateway-read`
 executables for Linux, macOS, and Windows, on amd64 and arm64. Start with `-help`
 and `-version` after [verifying the release checksums](../developer/releases.md).
 The Go source lives under `examples/` in the SDK repository.

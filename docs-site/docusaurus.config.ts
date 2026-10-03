@@ -4,7 +4,7 @@ import airsTheme from './src/css/prism-airs';
 
 const config: Config = {
   title: 'Prisma AIRS Go SDK',
-  tagline: 'Go clients for Prisma AIRS security and AI Gateway management',
+  tagline: 'Go clients for Prisma AIRS security, AI Gateway management, and AgentGuard preview',
   favicon: 'img/brand-logo.png',
   url: 'https://cdot65.github.io',
   baseUrl: '/prisma-airs-go/',

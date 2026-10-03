@@ -35,7 +35,7 @@ hc := &http.Client{Timeout: 45 * time.Second}
 
 scanner := runtime.NewScanner(aisec.NewConfig(aisec.WithHTTPClient(hc)))
 client, err := runtime.NewClient(runtime.Opts{HTTPClient: hc})
-// modelsecurity.Opts, redteam.Opts, and gateway.Opts share this HTTPClient field.
+// modelsecurity.Opts, redteam.Opts, gateway.Opts, and agentguard.Opts share this field.
 ```
 
 Endpoint resolution for the OAuth services is: option → environment variable → default, and
@@ -113,3 +113,11 @@ CRUD planes. Workspaces must already exist; the SDK does not provision them.
 See [Gateway management](../services/ai-gateway-api.md) for schemas and lifecycle
 semantics and [environment variables](../reference/environment-variables.md) for
 all overrides.
+
+## AgentGuard public preview (SCM OAuth)
+
+Use `agentguard.NewClient(agentguard.Opts{})` with both service base URLs in
+`PANW_AGENT_GUARD_DATA_ENDPOINT` and `PANW_AGENT_GUARD_MGMT_ENDPOINT`, or set
+`DataEndpoint` and `MgmtEndpoint` explicitly. The preview has no URL defaults.
+Credentials use `PANW_AGENT_GUARD_*` with `PANW_MGMT_*` fallback; API endpoint
+overrides are service-specific. See [AgentGuard](../services/agentguard-api.md).
