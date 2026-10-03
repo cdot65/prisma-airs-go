@@ -33,7 +33,7 @@ test('homepage links reach Go-specific guides without browser errors', async ({p
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('./');
-  await expect(page.locator('#hero-title')).toHaveText('Local control.Gateway intelligence.');
+  await expect(page.locator('#hero-title')).toHaveText('Prisma AIRS.Typed Go clients.');
   await expect(page.locator('main > section').first()).toHaveAttribute('aria-labelledby', 'hero-title');
   await expect(page.locator('main > section').nth(1).locator('a')).toHaveCount(4);
   await expect(page.getByRole('link', {name: /Explore AgentGuard preview/})).toHaveAttribute('href', '/prisma-airs-go/examples/agentguard-scanning/');
