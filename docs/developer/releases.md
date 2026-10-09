@@ -3,7 +3,7 @@
 Install the SDK in a Go application or Terraform provider:
 
 ```sh
-go get github.com/cdot65/prisma-airs-go@v0.8.1
+go get github.com/cdot65/prisma-airs-go@v0.9.0
 ```
 
 The GitHub release supplies the committed source, build provenance, SHA-256
@@ -16,7 +16,7 @@ arm64. Each platform archive contains all three executables:
 | `basic-scan` | Submit sample synchronous and asynchronous scans | `PANW_AI_SEC_API_KEY`, `PANW_AI_SEC_PROFILE_NAME` |
 | `profile-crud` | Create, read, update, and force-delete an example profile | `PANW_MGMT_*` |
 
-Windows executables have an `.exe` suffix. Run `-version` to verify v0.8.1 or
+Windows executables have an `.exe` suffix. Run `-version` to verify v0.9.0 or
 `-help` for usage without making API requests. The scanning and profile examples
 perform the operations listed above when invoked normally. Gateway output
 contains only a page count; it does not print resource configuration or keys.
@@ -27,7 +27,7 @@ Download `SHA256SUMS` alongside the desired asset. For example, on Linux:
 
 ```sh
 sha256sum --ignore-missing -c SHA256SUMS
-tar -xzf prisma-airs-go-v0.8.1_linux_amd64.tar.gz
+tar -xzf prisma-airs-go-v0.9.0_linux_amd64.tar.gz
 ./gateway-read -version
 ./gateway-read -workspace-id YOUR_EXISTING_WORKSPACE_ID
 ```
@@ -43,9 +43,9 @@ Use Python 3, Git, and Go 1.24.6. Start with a clean checkout of the release tag
 the output directory must be empty and outside the checkout.
 
 ```sh
-git checkout v0.8.1
+git checkout v0.9.0
 GOTOOLCHAIN=go1.24.6 python3 scripts/release_artifacts.py \
-  --version v0.8.1 --output /tmp/prisma-airs-v0.8.1
+  --version v0.9.0 --output /tmp/prisma-airs-v0.9.0
 ```
 
 The script validates the version and clean working tree, disables CGO, strips

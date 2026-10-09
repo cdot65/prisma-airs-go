@@ -194,8 +194,8 @@ models preserve legacy interfaces through opt-in methods; see
 [live verification](docs/developer/live-verification.md) for evidence and limits.
 
 Download checksummed cross-platform example binaries from the
-[v0.8.1 release](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.8.1), or
-install with `go get github.com/cdot65/prisma-airs-go@v0.8.1`. See
+[v0.9.0 release](https://github.com/cdot65/prisma-airs-go/releases/tag/v0.9.0), or
+install with `go get github.com/cdot65/prisma-airs-go@v0.9.0`. See
 [artifact usage and reproducible builds](docs/developer/releases.md).
 
 ## Documentation development

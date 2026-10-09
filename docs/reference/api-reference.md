@@ -80,5 +80,5 @@ The [live verification record](../developer/live-verification.md) and
 
 `go run scripts/generate_api_reference.go` regenerates these pages from the
 checked-in source. Documentation CI runs the same tool with `-check` to catch
-stale output. The public [Go package documentation](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec)
+stale output. The public [Go package documentation](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.9.0/aisec)
 provides complete source-linked declarations for the published release.

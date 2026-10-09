@@ -1,5 +1,24 @@
 # Release Notes
 
+## v0.9.0 — directional security profiles
+
+- Preserve legacy and observed prompt/response/tool-call/tool-response layouts
+  with typed protection settings, severities, toxicity confidence overrides,
+  source-code detection, conversation inspection, and optional DLP tenant metadata.
+- Preserve omitted/false/null/empty values and future additive fields during
+  profile edits. Existing keyed literals and constructed false masking booleans
+  remain compatible; new presence helpers support faithful Terraform state.
+- Verify public presence/extension APIs from an external Go package, including
+  policy persistence across separate processes, rebuilt nested objects, isolated
+  response-toxicity edits, and managed-detector removal without resurrection.
+- Validate locally malformed profile payloads before OAuth/API I/O. Mocked
+  fixture replay establishes offline compatibility; OpenAPI pins are unchanged.
+- See [consumer migration](../developer/directional-security-profiles.md).
+  Terraform consumers can depend on `github.com/cdot65/prisma-airs-go@v0.9.0`.
+- Actual Claude Code consumer reviews score implementation standards 9.5/10,
+  spec fulfillment 9.6/10, and documentation 9.5/10. See
+  [review evidence](../developer/feature-quality.md).
+
 ## v0.8.1
 
 Add typed workspace settings clearing for native Terraform ownership: default config/metadata, usage limits, rate limits and icon. Explicit null writes supplement the captured non-nullable update schema. Disposable SCM HTTP verification establishes clearing, label identity, workspace archival and dedicated IAM cleanup; existing-user access-policy management remains separate.

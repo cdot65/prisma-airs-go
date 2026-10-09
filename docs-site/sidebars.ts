@@ -9,6 +9,7 @@ const sidebars: SidebarsConfig = {
     ]},
     {type: 'category', label: 'Architecture and contracts', items: [
       'developer/architecture', 'services/oauth-lifecycle', 'guides/provider-patterns',
+      'developer/directional-security-profiles',
     ]},
     {type: 'category', label: 'Service guides', items: [
       'services/scan-api', 'services/runtime-api', 'services/model-security-api',

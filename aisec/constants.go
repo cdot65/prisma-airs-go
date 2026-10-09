@@ -23,7 +23,7 @@ const (
 
 // Version and user agent.
 const (
-	Version   = "0.8.1"
+	Version   = "0.9.0"
 	UserAgent = "PAN-AIRS/" + Version + "-go-sdk"
 )
 
