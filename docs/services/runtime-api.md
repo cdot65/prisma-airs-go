@@ -243,3 +243,13 @@ TypeScript helper, it rejects unknown fields and trailing JSON so supplied scan
 content cannot be silently dropped.
 
 See [TypeScript parity](../developer/typescript-parity.md) for release and verification status.
+
+## Directional security profile compatibility
+
+Profile CRUD supports both legacy protections under `model-configuration` and
+independent directions under `content-type-configurations`. See the
+[directional examples](../examples/profile-crud.md#directional-profiles) and
+[presence/Terraform migration guide](../developer/directional-security-profiles.md)
+for typed settings, null/empty/false preservation, forward fields, and observed
+contract provenance. This extension does not add routes or change frozen OpenAPI
+coverage.

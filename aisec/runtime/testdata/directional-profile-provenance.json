@@ -1,0 +1,15 @@
+{
+  "observed_date": "2026-10-09",
+  "reference_repository": "github.com/cdot65/prisma-airs-sdk",
+  "reference_checkout_head": "4a80dbdb3dc14365e1c25d838ac0bd139485d48c",
+  "reference_state": "Working-tree additions/changes; these file hashes, not checkout HEAD alone, identify the observed contract.",
+  "files": {
+    "src/models/mgmt-security-profile.ts": "1d2fb2e9eef85e77cf6b8a5c7f7a5271808e3214c6c09ae921b0333040cefa7e",
+    "test/models/directional-security-profile.spec.ts": "caca0fe4ae257f5fcca0c5d95ce1dcb41984cb66c79858d6fed835495c3b8e6d",
+    "test/models/fixtures/directional-security-profile.json": "681aeb3e5dcb5cc61687118328f5b75527a9ee7d6dc9b1e94da7be4d2349622b",
+    "docs-site/docs/guides/management-api.mdx": "4668959ae6c628c116202bdecfe86e9bde17216e39b9cc9b39b772e779855c31"
+  },
+  "fixture": "directional-security-profile.json",
+  "fixture_origin": "Complete sanitized supplied POST response; GET shape removes dlp_tenant_id. Supplied create request was truncated.",
+  "verification": "Offline response replay and mocked OAuth transport; no independent live certification. Published OpenAPI pins are unchanged."
+}

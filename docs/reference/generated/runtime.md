@@ -42,6 +42,17 @@ const (
 
 ```go
 const (
+	// JSONOmitted means the field is absent from the JSON object.
+	JSONOmitted	JSONPresence	= iota
+	// JSONNull means an explicitly null nullable field.
+	JSONNull
+	// JSONPresent includes false, zero, empty strings, objects, and arrays.
+	JSONPresent
+)
+```
+
+```go
+const (
 	ProfileActionAllow	ProfileAction	= "allow"
 	ProfileActionBlock	ProfileAction	= "block"
 	ProfileActionAlert	ProfileAction	= "alert"
@@ -124,6 +135,92 @@ NewScanner creates a new Scanner with the given configuration.
 func NewScanner(cfg *aisec.Config) *Scanner
 ```
 
+## AgentProtectionConfig
+
+AgentProtectionConfig holds agent protection configuration.
+
+```go
+type AgentProtectionConfig struct {
+	Severity	string	`json:"severity,omitempty"`
+	ProfileJSON	`json:"-"`
+	Name		string		`json:"name"`
+	Action		ProfileAction	`json:"action"`
+}
+```
+
+### AgentProtectionConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v AgentProtectionConfig) FieldPresence(name string) JSONPresence
+```
+
+### AgentProtectionConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v AgentProtectionConfig) HasField(name string) bool
+```
+
+### AgentProtectionConfig.MarshalJSON
+
+```go
+func (v AgentProtectionConfig) MarshalJSON() ([]byte, error)
+```
+
+### AgentProtectionConfig.UnmarshalJSON
+
+```go
+func (v *AgentProtectionConfig) UnmarshalJSON(data []byte) error
+```
+
+## AiSecurityProfileConfig
+
+AiSecurityProfileConfig is one entry in the ai-security-profiles array.
+
+```go
+type AiSecurityProfileConfig struct {
+	ContentTypeMode			string				`json:"content-type-mode,omitempty"`
+	ContentTypeConfigurations	*ContentTypeConfigurations	`json:"content-type-configurations,omitempty"`
+	ProfileJSON			`json:"-"`
+	ModelType			string			`json:"model-type,omitempty"`
+	ContentType			string			`json:"content-type,omitempty"`
+	ModelConfiguration		*ModelConfiguration	`json:"model-configuration,omitempty"`
+}
+```
+
+### AiSecurityProfileConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v AiSecurityProfileConfig) FieldPresence(name string) JSONPresence
+```
+
+### AiSecurityProfileConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v AiSecurityProfileConfig) HasField(name string) bool
+```
+
+### AiSecurityProfileConfig.MarshalJSON
+
+```go
+func (v AiSecurityProfileConfig) MarshalJSON() ([]byte, error)
+```
+
+### AiSecurityProfileConfig.UnmarshalJSON
+
+```go
+func (v *AiSecurityProfileConfig) UnmarshalJSON(data []byte) error
+```
+
 ## ApiKeysClient
 
 ApiKeysClient provides API key lifecycle operations.
@@ -172,6 +269,52 @@ func (c *ApiKeysClient) ListForToken(ctx context.Context, opts ListOpts) (*ApiKe
 
 ```go
 func (c *ApiKeysClient) Regenerate(ctx context.Context, keyID string, req RegenerateKeyRequest) (*ApiKey, error)
+```
+
+## AppProtectionConfig
+
+AppProtectionConfig holds app protection URL category configuration.
+
+```go
+type AppProtectionConfig struct {
+	UrlDetectedSeverity	string	`json:"url-detected-severity,omitempty"`
+	ProfileJSON		`json:"-"`
+	AlertURLCategory	*URLCategoryMember		`json:"alert-url-category,omitempty"`
+	BlockURLCategory	*URLCategoryMember		`json:"block-url-category,omitempty"`
+	AllowURLCategory	*URLCategoryMember		`json:"allow-url-category,omitempty"`
+	DefaultURLCategory	*URLCategoryMember		`json:"default-url-category,omitempty"`
+	UrlDetectedAction	string				`json:"url-detected-action,omitempty"`
+	MaliciousCodeProtection	*MaliciousCodeProtectionConfig	`json:"malicious-code-protection,omitempty"`
+}
+```
+
+### AppProtectionConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v AppProtectionConfig) FieldPresence(name string) JSONPresence
+```
+
+### AppProtectionConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v AppProtectionConfig) HasField(name string) bool
+```
+
+### AppProtectionConfig.MarshalJSON
+
+```go
+func (v AppProtectionConfig) MarshalJSON() ([]byte, error)
+```
+
+### AppProtectionConfig.UnmarshalJSON
+
+```go
+func (v *AppProtectionConfig) UnmarshalJSON(data []byte) error
 ```
 
 ## Content
@@ -249,6 +392,100 @@ ToolEvent returns the tool event.
 func (c *Content) ToolEvent() *ToolEvent
 ```
 
+## ContentTypeConfigurations
+
+ContentTypeConfigurations holds independent directional protections.
+Extensions on ProfileJSON preserve future direction keys without conversion.
+
+```go
+type ContentTypeConfigurations struct {
+	ProfileJSON	`json:"-"`
+	Prompt		*ProtectionConfiguration	`json:"prompt,omitempty"`
+	Response	*ProtectionConfiguration	`json:"response,omitempty"`
+	ToolCall	*ProtectionConfiguration	`json:"tool-call,omitempty"`
+	ToolResponse	*ProtectionConfiguration	`json:"tool-response,omitempty"`
+}
+```
+
+### ContentTypeConfigurations.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v ContentTypeConfigurations) FieldPresence(name string) JSONPresence
+```
+
+### ContentTypeConfigurations.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v ContentTypeConfigurations) HasField(name string) bool
+```
+
+### ContentTypeConfigurations.MarshalJSON
+
+```go
+func (v ContentTypeConfigurations) MarshalJSON() ([]byte, error)
+```
+
+### ContentTypeConfigurations.UnmarshalJSON
+
+```go
+func (v *ContentTypeConfigurations) UnmarshalJSON(data []byte) error
+```
+
+## CreateProfileRequest
+
+CreateProfileRequest is the request to create a profile.
+
+```go
+type CreateProfileRequest struct {
+	DLPTenantID	string	`json:"dlp_tenant_id,omitempty"`
+	CspID		string	`json:"csp_id,omitempty"`
+	TsgID		string	`json:"tsg_id,omitempty"`
+	ProfileJSON	`json:"-"`
+	ProfileID	string		`json:"profile_id,omitempty"`
+	ProfileName	string		`json:"profile_name"`
+	Policy		*ProfilePolicy	`json:"policy,omitempty"`
+	Revision	*int32		`json:"revision,omitempty"`
+	Active		*bool		`json:"active,omitempty"`
+	CreatedBy	string		`json:"created_by,omitempty"`
+	UpdatedBy	string		`json:"updated_by,omitempty"`
+	LastModifiedTs	string		`json:"last_modified_ts,omitempty"`
+}
+```
+
+### CreateProfileRequest.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v CreateProfileRequest) FieldPresence(name string) JSONPresence
+```
+
+### CreateProfileRequest.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v CreateProfileRequest) HasField(name string) bool
+```
+
+### CreateProfileRequest.MarshalJSON
+
+```go
+func (v CreateProfileRequest) MarshalJSON() ([]byte, error)
+```
+
+### CreateProfileRequest.UnmarshalJSON
+
+```go
+func (v *CreateProfileRequest) UnmarshalJSON(data []byte) error
+```
+
 ## CustomerAppsClient
 
 CustomerAppsClient provides customer app management.
@@ -304,6 +541,55 @@ Update updates a customer app: PUT /v1/mgmt/customerapp?customer_app_id=
 
 ```go
 func (c *CustomerAppsClient) Update(ctx context.Context, customerAppID string, req UpdateAppRequest) (*CustomerApp, error)
+```
+
+## DLPDataProfileConfig
+
+DLPDataProfileConfig is one entry in the dlp-data-profiles array.
+
+```go
+type DLPDataProfileConfig struct {
+	Description	string	`json:"description,omitempty"`
+	ProfileJSON	`json:"-"`
+	Name		string		`json:"name,omitempty"`
+	UUID		string		`json:"uuid,omitempty"`
+	ID		string		`json:"id,omitempty"`
+	Version		string		`json:"version,omitempty"`
+	Rule1		map[string]any	`json:"rule1,omitempty"`
+	Rule2		map[string]any	`json:"rule2,omitempty"`
+	LogSeverity	string		`json:"log-severity,omitempty"`
+	NonFileBased	string		`json:"non-file-based,omitempty"`
+	FileBased	string		`json:"file-based,omitempty"`
+}
+```
+
+### DLPDataProfileConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v DLPDataProfileConfig) FieldPresence(name string) JSONPresence
+```
+
+### DLPDataProfileConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v DLPDataProfileConfig) HasField(name string) bool
+```
+
+### DLPDataProfileConfig.MarshalJSON
+
+```go
+func (v DLPDataProfileConfig) MarshalJSON() ([]byte, error)
+```
+
+### DLPDataProfileConfig.UnmarshalJSON
+
+```go
+func (v *DLPDataProfileConfig) UnmarshalJSON(data []byte) error
 ```
 
 ## DashboardClient
@@ -534,6 +820,98 @@ Replace calls PUT /v2/api/data-filtering-profiles/{resourceId}; deletes archive 
 func (c *DataFilteringProfilesClient) Replace(ctx context.Context, resourceId string, body parity.DataFilteringProfileRequest) (*parity.DataFilteringProfileResponse, error)
 ```
 
+## DataLeakDetectionConfig
+
+DataLeakDetectionConfig holds data leak detection configuration.
+
+```go
+type DataLeakDetectionConfig struct {
+	ProfileJSON	`json:"-"`
+	Member		[]DataLeakMember	`json:"member" profile:"nullable"`
+	Action		ProfileAction		`json:"action"`
+	MaskDataInline	bool			`json:"mask-data-inline"`
+}
+```
+
+### DataLeakDetectionConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v DataLeakDetectionConfig) FieldPresence(name string) JSONPresence
+```
+
+### DataLeakDetectionConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v DataLeakDetectionConfig) HasField(name string) bool
+```
+
+### DataLeakDetectionConfig.MarshalJSON
+
+```go
+func (v DataLeakDetectionConfig) MarshalJSON() ([]byte, error)
+```
+
+### DataLeakDetectionConfig.SetMaskDataInline
+
+SetMaskDataInline preserves an explicitly supplied false as well as true.
+
+```go
+func (v *DataLeakDetectionConfig) SetMaskDataInline(value bool)
+```
+
+### DataLeakDetectionConfig.UnmarshalJSON
+
+```go
+func (v *DataLeakDetectionConfig) UnmarshalJSON(data []byte) error
+```
+
+## DataLeakMember
+
+DataLeakMember is a DLP data leak member entry.
+
+```go
+type DataLeakMember struct {
+	ProfileJSON	`json:"-"`
+	Text		string	`json:"text"`
+	ID		string	`json:"id,omitempty"`
+	Version		string	`json:"version,omitempty"`
+}
+```
+
+### DataLeakMember.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v DataLeakMember) FieldPresence(name string) JSONPresence
+```
+
+### DataLeakMember.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v DataLeakMember) HasField(name string) bool
+```
+
+### DataLeakMember.MarshalJSON
+
+```go
+func (v DataLeakMember) MarshalJSON() ([]byte, error)
+```
+
+### DataLeakMember.UnmarshalJSON
+
+```go
+func (v *DataLeakMember) UnmarshalJSON(data []byte) error
+```
+
 ## DataPatternsClient
 
 DataPatternsClient manages the corresponding DLP resource through its published TypeScript contract.
@@ -658,6 +1036,90 @@ Replace calls PUT /v2/api/data-profiles/{resourceId}; deletes archive server-sid
 func (c *DataProfilesClient) Replace(ctx context.Context, resourceId string, body parity.AdvancedDataProfileRequest) (*parity.DataProfileResponse, error)
 ```
 
+## DataProtectionConfig
+
+DataProtectionConfig holds data protection configuration.
+
+```go
+type DataProtectionConfig struct {
+	SourceCodeDetection	*SourceCodeDetectionConfig	`json:"source-code-detection,omitempty"`
+	ProfileJSON		`json:"-"`
+	DataLeakDetection	*DataLeakDetectionConfig	`json:"data-leak-detection,omitempty"`
+	DatabaseSecurity	[]DatabaseSecurityConfig	`json:"database-security,omitempty" profile:"nullable"`
+}
+```
+
+### DataProtectionConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v DataProtectionConfig) FieldPresence(name string) JSONPresence
+```
+
+### DataProtectionConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v DataProtectionConfig) HasField(name string) bool
+```
+
+### DataProtectionConfig.MarshalJSON
+
+```go
+func (v DataProtectionConfig) MarshalJSON() ([]byte, error)
+```
+
+### DataProtectionConfig.UnmarshalJSON
+
+```go
+func (v *DataProtectionConfig) UnmarshalJSON(data []byte) error
+```
+
+## DatabaseSecurityConfig
+
+DatabaseSecurityConfig holds a database security CRUD action entry.
+
+```go
+type DatabaseSecurityConfig struct {
+	Severity	string	`json:"severity,omitempty"`
+	ProfileJSON	`json:"-"`
+	Name		string	`json:"name"`
+	Action		string	`json:"action"`
+}
+```
+
+### DatabaseSecurityConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v DatabaseSecurityConfig) FieldPresence(name string) JSONPresence
+```
+
+### DatabaseSecurityConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v DatabaseSecurityConfig) HasField(name string) bool
+```
+
+### DatabaseSecurityConfig.MarshalJSON
+
+```go
+func (v DatabaseSecurityConfig) MarshalJSON() ([]byte, error)
+```
+
+### DatabaseSecurityConfig.UnmarshalJSON
+
+```go
+func (v *DatabaseSecurityConfig) UnmarshalJSON(data []byte) error
+```
+
 ## DeploymentProfilesClient
 
 DeploymentProfilesClient provides read-only access to deployment profiles.
@@ -776,6 +1238,191 @@ func (c *DlpProfilesClient) Get(ctx context.Context, profileID string) (*DlpProf
 func (c *DlpProfilesClient) List(ctx context.Context, opts ListOpts) (*DlpProfileListResponse, error)
 ```
 
+## LatencyConfig
+
+LatencyConfig holds latency configuration for an AI security profile.
+
+```go
+type LatencyConfig struct {
+	ProfileJSON		`json:"-"`
+	InlineTimeoutAction	ProfileAction	`json:"inline-timeout-action,omitempty"`
+	MaxInlineLatency	int32		`json:"max-inline-latency,omitempty"`
+}
+```
+
+### LatencyConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v LatencyConfig) FieldPresence(name string) JSONPresence
+```
+
+### LatencyConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v LatencyConfig) HasField(name string) bool
+```
+
+### LatencyConfig.MarshalJSON
+
+```go
+func (v LatencyConfig) MarshalJSON() ([]byte, error)
+```
+
+### LatencyConfig.UnmarshalJSON
+
+```go
+func (v *LatencyConfig) UnmarshalJSON(data []byte) error
+```
+
+## MaliciousCodeProtectionConfig
+
+MaliciousCodeProtectionConfig holds malicious code protection configuration.
+
+```go
+type MaliciousCodeProtectionConfig struct {
+	Severity	string	`json:"severity,omitempty"`
+	ProfileJSON	`json:"-"`
+	Name		string	`json:"name"`
+	Action		string	`json:"action"`
+}
+```
+
+### MaliciousCodeProtectionConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v MaliciousCodeProtectionConfig) FieldPresence(name string) JSONPresence
+```
+
+### MaliciousCodeProtectionConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v MaliciousCodeProtectionConfig) HasField(name string) bool
+```
+
+### MaliciousCodeProtectionConfig.MarshalJSON
+
+```go
+func (v MaliciousCodeProtectionConfig) MarshalJSON() ([]byte, error)
+```
+
+### MaliciousCodeProtectionConfig.UnmarshalJSON
+
+```go
+func (v *MaliciousCodeProtectionConfig) UnmarshalJSON(data []byte) error
+```
+
+## ModelConfiguration
+
+ModelConfiguration holds the model-configuration section of a security profile.
+
+```go
+type ModelConfiguration struct {
+	EnableFullConversationInspection	*bool	`json:"enable-full-conversation-inspection,omitempty"`
+	ProfileJSON				`json:"-"`
+	MaskDataInStorage			bool			`json:"mask-data-in-storage"`
+	Latency					*LatencyConfig		`json:"latency,omitempty"`
+	DataProtection				*DataProtectionConfig	`json:"data-protection,omitempty"`
+	AppProtection				*AppProtectionConfig	`json:"app-protection,omitempty"`
+	ModelProtection				[]ModelProtectionConfig	`json:"model-protection,omitempty"`
+	AgentProtection				[]AgentProtectionConfig	`json:"agent-protection,omitempty"`
+}
+```
+
+### ModelConfiguration.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v ModelConfiguration) FieldPresence(name string) JSONPresence
+```
+
+### ModelConfiguration.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v ModelConfiguration) HasField(name string) bool
+```
+
+### ModelConfiguration.MarshalJSON
+
+```go
+func (v ModelConfiguration) MarshalJSON() ([]byte, error)
+```
+
+### ModelConfiguration.SetMaskDataInStorage
+
+SetMaskDataInStorage preserves an explicitly supplied false as well as true.
+
+```go
+func (v *ModelConfiguration) SetMaskDataInStorage(value bool)
+```
+
+### ModelConfiguration.UnmarshalJSON
+
+```go
+func (v *ModelConfiguration) UnmarshalJSON(data []byte) error
+```
+
+## ModelProtectionConfig
+
+ModelProtectionConfig holds model protection configuration.
+
+```go
+type ModelProtectionConfig struct {
+	Options			[]json.RawMessage	`json:"options,omitempty"`
+	SeverityByConfidence	*SeverityByConfidence	`json:"severity-by-confidence,omitempty"`
+	Severity		string			`json:"severity,omitempty"`
+	ProfileJSON		`json:"-"`
+	Name			string			`json:"name,omitempty"`
+	Action			ProfileAction		`json:"action,omitempty"`
+	ToxicCategoryList	[]ToxicCategoryConfig	`json:"toxic-category-list,omitempty"`
+	// Upstream ModelProtectionObject places topic-list.items in a sibling
+	// property named items. Preserve the intended topic-list wire format.
+	TopicList	[]TopicArrayConfig	`json:"topic-list,omitempty"`
+}
+```
+
+### ModelProtectionConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v ModelProtectionConfig) FieldPresence(name string) JSONPresence
+```
+
+### ModelProtectionConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v ModelProtectionConfig) HasField(name string) bool
+```
+
+### ModelProtectionConfig.MarshalJSON
+
+```go
+func (v ModelProtectionConfig) MarshalJSON() ([]byte, error)
+```
+
+### ModelProtectionConfig.UnmarshalJSON
+
+```go
+func (v *ModelProtectionConfig) UnmarshalJSON(data []byte) error
+```
+
 ## OAuthClient
 
 OAuthClient manages client-credentials tokens with automatic refresh and concurrent request deduplication.
@@ -872,6 +1519,90 @@ InvalidateTokenForApp invalidates the supplied application token using its clien
 func (c *OAuthManagementClient) InvalidateTokenForApp(ctx context.Context, token string, body OAuthTokenRequest) (string, error)
 ```
 
+## ProfileJSON
+
+ProfileJSON preserves additive fields and explicit JSON presence within profiles.
+Extensions cannot shadow typed fields, even when the typed field is omitted.
+Treat a profile and its maps/slices as owned by one editor; copy before sharing.
+
+```go
+type ProfileJSON struct {
+	Extensions map[string]json.RawMessage `json:"-"`
+	// contains filtered or unexported fields
+}
+```
+
+### ProfileJSON.ResetFieldPresence
+
+ResetFieldPresence removes an explicit override and infers presence from the
+typed value. On a decoded object, zero scalar values then become omitted.
+
+```go
+func (p *ProfileJSON) ResetFieldPresence(name string)
+```
+
+### ProfileJSON.SetExtension
+
+SetExtension adds a future field, initializing extension storage as needed.
+It copies the map and input bytes; known typed fields still take precedence.
+
+```go
+func (p *ProfileJSON) SetExtension(name string, value json.RawMessage) error
+```
+
+### ProfileJSON.SetFieldPresence
+
+SetFieldPresence controls a known field using its JSON name. JSONPresent forces
+emission of zero values; JSONNull requires a nullable nil field; JSONOmitted
+suppresses the field. Invalid names/states are rejected at marshal/submission.
+Value fields remain authoritative: assigning a non-nil value after decoding a
+null array emits that value. To remove an override, use ResetFieldPresence.
+
+```go
+func (p *ProfileJSON) SetFieldPresence(name string, presence JSONPresence)
+```
+
+## ProfilePolicy
+
+ProfilePolicy is the typed policy object inside a SecurityProfile.
+
+```go
+type ProfilePolicy struct {
+	ProfileJSON		`json:"-"`
+	DlpDataProfiles		[]DLPDataProfileConfig		`json:"dlp-data-profiles,omitempty"`
+	AiSecurityProfiles	[]AiSecurityProfileConfig	`json:"ai-security-profiles,omitempty"`
+}
+```
+
+### ProfilePolicy.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v ProfilePolicy) FieldPresence(name string) JSONPresence
+```
+
+### ProfilePolicy.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v ProfilePolicy) HasField(name string) bool
+```
+
+### ProfilePolicy.MarshalJSON
+
+```go
+func (v ProfilePolicy) MarshalJSON() ([]byte, error)
+```
+
+### ProfilePolicy.UnmarshalJSON
+
+```go
+func (v *ProfilePolicy) UnmarshalJSON(data []byte) error
+```
+
 ## ProfilesClient
 
 ProfilesClient provides CRUD for security profiles.
@@ -959,6 +1690,50 @@ func (c *ProfilesClient) ListWithOptions(ctx context.Context, opts ProfileListOp
 func (c *ProfilesClient) Update(ctx context.Context, profileID string, req UpdateProfileRequest) (*SecurityProfile, error)
 ```
 
+## ProtectionConfiguration
+
+ProtectionConfiguration contains the four protection families for one direction.
+ModelConfiguration retains its own direct fields for legacy keyed literals.
+
+```go
+type ProtectionConfiguration struct {
+	ProfileJSON	`json:"-"`
+	DataProtection	*DataProtectionConfig	`json:"data-protection,omitempty"`
+	AppProtection	*AppProtectionConfig	`json:"app-protection,omitempty"`
+	ModelProtection	[]ModelProtectionConfig	`json:"model-protection,omitempty"`
+	AgentProtection	[]AgentProtectionConfig	`json:"agent-protection,omitempty"`
+}
+```
+
+### ProtectionConfiguration.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v ProtectionConfiguration) FieldPresence(name string) JSONPresence
+```
+
+### ProtectionConfiguration.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v ProtectionConfiguration) HasField(name string) bool
+```
+
+### ProtectionConfiguration.MarshalJSON
+
+```go
+func (v ProtectionConfiguration) MarshalJSON() ([]byte, error)
+```
+
+### ProtectionConfiguration.UnmarshalJSON
+
+```go
+func (v *ProtectionConfiguration) UnmarshalJSON(data []byte) error
+```
+
 ## ScanLogsClient
 
 ScanLogsClient provides access to scan logs.
@@ -1017,6 +1792,262 @@ SyncScan performs a synchronous content scan.
 
 ```go
 func (s *Scanner) SyncScan(ctx context.Context, profile AiProfile, content *Content, opts ...SyncScanOpts) (*ScanResponse, error)
+```
+
+## SecurityProfile
+
+SecurityProfile represents an AI security profile.
+
+```go
+type SecurityProfile struct {
+	DLPTenantID	string	`json:"dlp_tenant_id,omitempty"`
+	CspID		string	`json:"csp_id,omitempty"`
+	TsgID		string	`json:"tsg_id,omitempty"`
+	ProfileJSON	`json:"-"`
+	ProfileID	string		`json:"profile_id,omitempty"`
+	ProfileName	string		`json:"profile_name,omitempty"`
+	Revision	int32		`json:"revision,omitempty"`
+	Active		bool		`json:"active"`
+	Policy		*ProfilePolicy	`json:"policy,omitempty"`
+	CreatedBy	string		`json:"created_by,omitempty"`
+	UpdatedBy	string		`json:"updated_by,omitempty"`
+	LastModifiedTs	string		`json:"last_modified_ts,omitempty"`
+}
+```
+
+### SecurityProfile.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v SecurityProfile) FieldPresence(name string) JSONPresence
+```
+
+### SecurityProfile.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v SecurityProfile) HasField(name string) bool
+```
+
+### SecurityProfile.MarshalJSON
+
+```go
+func (v SecurityProfile) MarshalJSON() ([]byte, error)
+```
+
+### SecurityProfile.UnmarshalJSON
+
+```go
+func (v *SecurityProfile) UnmarshalJSON(data []byte) error
+```
+
+## SecurityProfileListResponse
+
+SecurityProfileListResponse is the list response for profiles.
+
+```go
+type SecurityProfileListResponse struct {
+	ProfileJSON	`json:"-"`
+	Items		[]SecurityProfile	`json:"ai_profiles" profile:"nullable"`
+	NextOffset	int			`json:"next_offset,omitempty"`
+}
+```
+
+### SecurityProfileListResponse.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v SecurityProfileListResponse) FieldPresence(name string) JSONPresence
+```
+
+### SecurityProfileListResponse.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+
+```go
+func (v SecurityProfileListResponse) HasField(name string) bool
+```
+
+### SecurityProfileListResponse.MarshalJSON
+
+```go
+func (v SecurityProfileListResponse) MarshalJSON() ([]byte, error)
+```
+
+### SecurityProfileListResponse.UnmarshalJSON
+
+```go
+func (v *SecurityProfileListResponse) UnmarshalJSON(data []byte) error
+```
+
+## SeverityByConfidence
+
+SeverityByConfidence holds optional, open-ended toxicity severity overrides.
+
+```go
+type SeverityByConfidence struct {
+	ProfileJSON	`json:"-"`
+	High		string	`json:"high,omitempty"`
+	Moderate	string	`json:"moderate,omitempty"`
+}
+```
+
+### SeverityByConfidence.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v SeverityByConfidence) FieldPresence(name string) JSONPresence
+```
+
+### SeverityByConfidence.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v SeverityByConfidence) HasField(name string) bool
+```
+
+### SeverityByConfidence.MarshalJSON
+
+```go
+func (v SeverityByConfidence) MarshalJSON() ([]byte, error)
+```
+
+### SeverityByConfidence.UnmarshalJSON
+
+```go
+func (v *SeverityByConfidence) UnmarshalJSON(data []byte) error
+```
+
+## SourceCodeDetectionConfig
+
+SourceCodeDetectionConfig holds observed source-code detection settings.
+
+```go
+type SourceCodeDetectionConfig struct {
+	ProfileJSON	`json:"-"`
+	Action		ProfileAction	`json:"action,omitempty"`
+	Severity	string		`json:"severity,omitempty"`
+}
+```
+
+### SourceCodeDetectionConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v SourceCodeDetectionConfig) FieldPresence(name string) JSONPresence
+```
+
+### SourceCodeDetectionConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v SourceCodeDetectionConfig) HasField(name string) bool
+```
+
+### SourceCodeDetectionConfig.MarshalJSON
+
+```go
+func (v SourceCodeDetectionConfig) MarshalJSON() ([]byte, error)
+```
+
+### SourceCodeDetectionConfig.UnmarshalJSON
+
+```go
+func (v *SourceCodeDetectionConfig) UnmarshalJSON(data []byte) error
+```
+
+## TopicArrayConfig
+
+TopicArrayConfig holds a topic guardrail action + topic list.
+
+```go
+type TopicArrayConfig struct {
+	ProfileJSON	`json:"-"`
+	Action		ProfileAction	`json:"action"`
+	Topic		[]TopicRef	`json:"topic" profile:"nullable"`
+}
+```
+
+### TopicArrayConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v TopicArrayConfig) FieldPresence(name string) JSONPresence
+```
+
+### TopicArrayConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v TopicArrayConfig) HasField(name string) bool
+```
+
+### TopicArrayConfig.MarshalJSON
+
+```go
+func (v TopicArrayConfig) MarshalJSON() ([]byte, error)
+```
+
+### TopicArrayConfig.UnmarshalJSON
+
+```go
+func (v *TopicArrayConfig) UnmarshalJSON(data []byte) error
+```
+
+## TopicRef
+
+TopicRef references a custom topic by name, ID, and revision.
+
+```go
+type TopicRef struct {
+	Severity	string	`json:"severity,omitempty"`
+	ProfileJSON	`json:"-"`
+	TopicName	string	`json:"topic_name"`
+	TopicID		string	`json:"topic_id"`
+	Revision	int64	`json:"revision"`
+}
+```
+
+### TopicRef.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v TopicRef) FieldPresence(name string) JSONPresence
+```
+
+### TopicRef.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v TopicRef) HasField(name string) bool
+```
+
+### TopicRef.MarshalJSON
+
+```go
+func (v TopicRef) MarshalJSON() ([]byte, error)
+```
+
+### TopicRef.UnmarshalJSON
+
+```go
+func (v *TopicRef) UnmarshalJSON(data []byte) error
 ```
 
 ## TopicsClient
@@ -1101,6 +2132,138 @@ UpdateFields updates a topic while preserving explicit empty/false values.
 func (c *TopicsClient) UpdateFields(ctx context.Context, id string, req UpdateTopicFieldsRequest) (*CustomTopic, error)
 ```
 
+## ToxicCategoryConfig
+
+ToxicCategoryConfig holds per-category toxic content configuration.
+
+```go
+type ToxicCategoryConfig struct {
+	SeverityByConfidence	*SeverityByConfidence	`json:"severity-by-confidence,omitempty"`
+	ProfileJSON		`json:"-"`
+	Category		string	`json:"category"`
+	Action			string	`json:"action"`
+}
+```
+
+### ToxicCategoryConfig.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v ToxicCategoryConfig) FieldPresence(name string) JSONPresence
+```
+
+### ToxicCategoryConfig.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v ToxicCategoryConfig) HasField(name string) bool
+```
+
+### ToxicCategoryConfig.MarshalJSON
+
+```go
+func (v ToxicCategoryConfig) MarshalJSON() ([]byte, error)
+```
+
+### ToxicCategoryConfig.UnmarshalJSON
+
+```go
+func (v *ToxicCategoryConfig) UnmarshalJSON(data []byte) error
+```
+
+## URLCategoryMember
+
+URLCategoryMember holds URL category member list.
+
+```go
+type URLCategoryMember struct {
+	ProfileJSON	`json:"-"`
+	Member		[]string	`json:"member,omitempty" profile:"nullable"`
+}
+```
+
+### URLCategoryMember.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v URLCategoryMember) FieldPresence(name string) JSONPresence
+```
+
+### URLCategoryMember.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v URLCategoryMember) HasField(name string) bool
+```
+
+### URLCategoryMember.MarshalJSON
+
+```go
+func (v URLCategoryMember) MarshalJSON() ([]byte, error)
+```
+
+### URLCategoryMember.UnmarshalJSON
+
+```go
+func (v *URLCategoryMember) UnmarshalJSON(data []byte) error
+```
+
+## UpdateProfileRequest
+
+UpdateProfileRequest is the request to update a profile.
+
+```go
+type UpdateProfileRequest struct {
+	DLPTenantID	string	`json:"dlp_tenant_id,omitempty"`
+	CspID		string	`json:"csp_id,omitempty"`
+	TsgID		string	`json:"tsg_id,omitempty"`
+	ProfileJSON	`json:"-"`
+	ProfileID	string		`json:"profile_id,omitempty"`
+	ProfileName	string		`json:"profile_name,omitempty"`
+	Policy		*ProfilePolicy	`json:"policy,omitempty"`
+	Revision	*int32		`json:"revision,omitempty"`
+	Active		*bool		`json:"active,omitempty"`
+	UpdatedBy	string		`json:"updated_by,omitempty"`
+	CreatedBy	string		`json:"created_by,omitempty"`
+	LastModifiedTs	string		`json:"last_modified_ts,omitempty"`
+}
+```
+
+### UpdateProfileRequest.FieldPresence
+
+FieldPresence reports the current wire presence of a field by its JSON name.
+
+```go
+func (v UpdateProfileRequest) FieldPresence(name string) JSONPresence
+```
+
+### UpdateProfileRequest.HasField
+
+HasField recognizes a typed JSON name (even when omitted) or a stored extension.
+Check it before FieldPresence to distinguish omission from a field-name typo.
+
+```go
+func (v UpdateProfileRequest) HasField(name string) bool
+```
+
+### UpdateProfileRequest.MarshalJSON
+
+```go
+func (v UpdateProfileRequest) MarshalJSON() ([]byte, error)
+```
+
+### UpdateProfileRequest.UnmarshalJSON
+
+```go
+func (v *UpdateProfileRequest) UnmarshalJSON(data []byte) error
+```
+
 ## Types and models
 
 Each link opens the complete type declaration, fields, and methods.
@@ -1129,6 +2292,7 @@ Each link opens the complete type declaration, fields, and methods.
 | `ContentErrorType` | [ContentErrorType](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ContentErrorType) |
 | `ContentInner` | [ContentInner](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ContentInner) |
 | `ContentOpts` | [ContentOpts](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ContentOpts) |
+| `ContentTypeConfigurations` | [ContentTypeConfigurations](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ContentTypeConfigurations) |
 | `CreateApiKeyRequest` | [CreateApiKeyRequest](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#CreateApiKeyRequest) |
 | `CreateProfileRequest` | [CreateProfileRequest](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#CreateProfileRequest) |
 | `CreateTopicRequest` | [CreateTopicRequest](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#CreateTopicRequest) |
@@ -1182,6 +2346,7 @@ Each link opens the complete type declaration, fields, and methods.
 | `ErrorStatus` | [ErrorStatus](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ErrorStatus) |
 | `IODetected` | [IODetected](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#IODetected) |
 | `InvalidateTokenResponse` | [InvalidateTokenResponse](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#InvalidateTokenResponse) |
+| `JSONPresence` | [JSONPresence](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#JSONPresence) |
 | `LatencyConfig` | [LatencyConfig](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#LatencyConfig) |
 | `ListOpts` | [ListOpts](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ListOpts) |
 | `MaliciousCodeProtectionConfig` | [MaliciousCodeProtectionConfig](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#MaliciousCodeProtectionConfig) |
@@ -1203,11 +2368,13 @@ Each link opens the complete type declaration, fields, and methods.
 | `PiReport` | [PiReport](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#PiReport) |
 | `PolicyPayload` | [PolicyPayload](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#PolicyPayload) |
 | `ProfileAction` | [ProfileAction](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ProfileAction) |
+| `ProfileJSON` | [ProfileJSON](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ProfileJSON) |
 | `ProfileListOpts` | [ProfileListOpts](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ProfileListOpts) |
 | `ProfilePayload` | [ProfilePayload](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ProfilePayload) |
 | `ProfilePolicy` | [ProfilePolicy](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ProfilePolicy) |
 | `ProfilesClient` | [ProfilesClient](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ProfilesClient) |
 | `PromptDetected` | [PromptDetected](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#PromptDetected) |
+| `ProtectionConfiguration` | [ProtectionConfiguration](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ProtectionConfiguration) |
 | `RegenerateKeyRequest` | [RegenerateKeyRequest](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#RegenerateKeyRequest) |
 | `ResponseDetected` | [ResponseDetected](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ResponseDetected) |
 | `ScanIDResult` | [ScanIDResult](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#ScanIDResult) |
@@ -1222,6 +2389,8 @@ Each link opens the complete type declaration, fields, and methods.
 | `Scanner` | [Scanner](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#Scanner) |
 | `SecurityProfile` | [SecurityProfile](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#SecurityProfile) |
 | `SecurityProfileListResponse` | [SecurityProfileListResponse](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#SecurityProfileListResponse) |
+| `SeverityByConfidence` | [SeverityByConfidence](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#SeverityByConfidence) |
+| `SourceCodeDetectionConfig` | [SourceCodeDetectionConfig](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#SourceCodeDetectionConfig) |
 | `SyncScanOpts` | [SyncScanOpts](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#SyncScanOpts) |
 | `TcReport` | [TcReport](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#TcReport) |
 | `TgReport` | [TgReport](https://pkg.go.dev/github.com/cdot65/prisma-airs-go@v0.8.1/aisec/runtime#TgReport) |

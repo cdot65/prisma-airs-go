@@ -271,3 +271,109 @@ Based on the live API, these are the valid names for each protection type:
 | `database-security-read` | `block`, `allow` |
 | `database-security-update` | `block`, `allow` |
 | `database-security-delete` | `block`, `allow` |
+
+## Directional profiles
+
+Shared latency and storage settings stay in `ModelConfiguration`. For the
+observed `per_content_type` layout, place each direction's protections in
+`ContentTypeConfigurations`. Response protections are independent of prompt
+protections. Legacy profiles continue to use the existing model configuration.
+
+This complete program makes no network requests. It constructs both layouts,
+serializes a directional request, and edits only the response detector:
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "log"
+
+    "github.com/cdot65/prisma-airs-go/aisec/runtime"
+)
+
+func main() {
+    legacy := runtime.CreateProfileRequest{
+        ProfileName: "legacy",
+        Policy: &runtime.ProfilePolicy{
+            AiSecurityProfiles: []runtime.AiSecurityProfileConfig{{
+                ModelType: "default",
+                ModelConfiguration: &runtime.ModelConfiguration{
+                    MaskDataInStorage: false,
+                    ModelProtection: []runtime.ModelProtectionConfig{
+                        {Name: "prompt-injection", Action: runtime.ProfileActionBlock},
+                    },
+                },
+            }},
+        },
+    }
+    flag := false
+    member := runtime.DataLeakMember{Text: "sensitive content", ID: "", Version: "2"}
+    member.SetFieldPresence("id", runtime.JSONPresent)
+    dlp := &runtime.DataLeakDetectionConfig{
+        Member: []runtime.DataLeakMember{member}, Action: runtime.ProfileActionBlock,
+    }
+    dlp.SetMaskDataInline(false)
+    data := &runtime.DataProtectionConfig{DataLeakDetection: dlp}
+    data.SetFieldPresence("database-security", runtime.JSONNull)
+    directional := runtime.CreateProfileRequest{
+        ProfileName: "directional",
+        DLPTenantID: "8259670718644550000",
+        Policy: &runtime.ProfilePolicy{
+            DlpDataProfiles: []runtime.DLPDataProfileConfig{},
+            AiSecurityProfiles: []runtime.AiSecurityProfileConfig{{
+                ModelType: "default",
+                ContentTypeMode: "per_content_type",
+                ModelConfiguration: &runtime.ModelConfiguration{
+                    EnableFullConversationInspection: &flag,
+                    MaskDataInStorage: false,
+                    Latency: &runtime.LatencyConfig{
+                        InlineTimeoutAction: runtime.ProfileActionBlock,
+                        MaxInlineLatency: 5,
+                    },
+                },
+                ContentTypeConfigurations: &runtime.ContentTypeConfigurations{
+                    Prompt: &runtime.ProtectionConfiguration{
+                        DataProtection: data,
+                        ModelProtection: []runtime.ModelProtectionConfig{
+                            {Name: "prompt-injection", Action: runtime.ProfileActionBlock, Severity: "medium"},
+                        },
+                        AgentProtection: []runtime.AgentProtectionConfig{},
+                    },
+                    Response: &runtime.ProtectionConfiguration{
+                        ModelProtection: []runtime.ModelProtectionConfig{{
+                            Name: "toxic-content",
+                            Action: runtime.ProfileAction(runtime.ToxicContentHighBlockModerateAllow),
+                            SeverityByConfidence: &runtime.SeverityByConfidence{High: "medium", Moderate: "low"},
+                        }},
+                    },
+                    ToolCall: &runtime.ProtectionConfiguration{},
+                    ToolResponse: &runtime.ProtectionConfiguration{},
+                },
+            }},
+        },
+    }
+    for _, req := range []runtime.CreateProfileRequest{legacy, directional} {
+        body, err := json.Marshal(req)
+        if err != nil { log.Fatal(err) }
+        fmt.Println(string(body))
+    }
+    body, err := json.Marshal(directional)
+    if err != nil { log.Fatal(err) }
+    var edit runtime.UpdateProfileRequest
+    if err := json.Unmarshal(body, &edit); err != nil { log.Fatal(err) }
+    response := edit.Policy.AiSecurityProfiles[0].ContentTypeConfigurations.Response
+    response.ModelProtection[0].SeverityByConfidence.Moderate = "medium"
+    changed, err := json.Marshal(edit)
+    if err != nil { log.Fatal(err) }
+    fmt.Println(string(changed))
+    fmt.Println(data.FieldPresence("database-security") == runtime.JSONNull)
+}
+```
+
+For Terraform, inspect `FieldPresence` and preserve `ProfileJSON.Extensions` when
+reading and rebuilding state. A decoded omitted `MaskDataInline` requires its
+setter to express an explicit false. See the
+[presence and migration guide](../developer/directional-security-profiles.md)
+for omitted/null/empty mapping, metadata, provenance, and the pending tagged release.

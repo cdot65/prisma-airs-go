@@ -107,8 +107,12 @@ type ProfilesClient struct {
 }
 
 func (c *ProfilesClient) Create(ctx context.Context, req CreateProfileRequest) (*SecurityProfile, error) {
+	body, err := marshalProfileRequest(req)
+	if err != nil {
+		return nil, aisec.WrapError("invalid profile payload", aisec.UserRequestPayloadError, err)
+	}
 	resp, err := internal.DoMgmtRequest[SecurityProfile](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPost, Path: aisec.MgmtProfilePath, Body: req,
+		Method: http.MethodPost, Path: aisec.MgmtProfilePath, Body: body,
 	})
 	if err != nil {
 		return nil, err
@@ -121,8 +125,12 @@ func (c *ProfilesClient) List(ctx context.Context, opts ListOpts) (*SecurityProf
 }
 
 func (c *ProfilesClient) Update(ctx context.Context, profileID string, req UpdateProfileRequest) (*SecurityProfile, error) {
+	body, err := marshalProfileRequest(req)
+	if err != nil {
+		return nil, aisec.WrapError("invalid profile payload", aisec.UserRequestPayloadError, err)
+	}
 	resp, err := internal.DoMgmtRequest[SecurityProfile](ctx, c.svcCfg, internal.MgmtRequestOptions{
-		Method: http.MethodPut, Path: aisec.MgmtProfilePath + "/uuid/" + seg(profileID), Body: req,
+		Method: http.MethodPut, Path: aisec.MgmtProfilePath + "/uuid/" + seg(profileID), Body: body,
 	})
 	if err != nil {
 		return nil, err

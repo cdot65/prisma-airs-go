@@ -10,7 +10,7 @@ test('existing guide, example, reference, and release URLs remain readable', asy
     'examples/runtime-scanning/', 'examples/profile-crud/', 'examples/topic-crud/',
     'examples/red-team-scanning/', 'examples/api-key-rotation/',
     'reference/api-reference/', 'reference/environment-variables/', 'reference/error-handling/',
-    'developer/live-verification/', 'developer/feature-quality/', 'developer/typescript-parity/', 'developer/releases/',
+    'developer/directional-security-profiles/', 'developer/live-verification/', 'developer/feature-quality/', 'developer/typescript-parity/', 'developer/releases/',
     'about/release-notes/', 'about/license/',
     'overview/', 'getting-started/', 'getting-started/authentication/', 'examples/',
     'examples/model-security/', 'examples/red-team-inventory/', 'examples/gateway-crud/',

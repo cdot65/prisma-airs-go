@@ -47,3 +47,42 @@ gaps; corrections were independently re-reviewed through four rounds before publ
 | Typed workspace settings clearing | 9.4/10 | 9.4/10 | Selective wire bodies, validation and typed HTTP errors |
 | Workspace clearing tests and live verification | 9.2/10 | 9.5/10 | Per-field populated-to-cleared receipts and independent cleanup |
 | v0.8.1 documentation and release preparation | 9.3/10 | 9.3/10 | Go checks, generated references, browser and pixel checks |
+
+
+## Observed directional security profiles
+
+The owner requires at least **9.1/10** for implementation and documentation.
+Actual Claude Code review of the observed-profile change initially scored
+implementation standards 8.5/10, spec fulfillment 9/10, and documentation 8.5/10.
+Follow-up changes initialize extension maps, expose `HasField` and `SetExtension`,
+cache scoped JSON metadata, check wrapper coverage, preserve list-envelope
+extensions, encode policies once, and document embedding and legacy empty-action
+wire behavior. Completed reviews are recorded below; subsequent corrections are
+reviewed separately rather than assigning a score before the reviewer returns.
+
+| Review snapshot | Standards | Spec | Documentation |
+|---|---:|---:|---:|
+| Initial implementation | 8.5/10 | 9/10 | 8.5/10 |
+| Staged tree `42f85b5` after initial corrections | 9.2/10 | 9.4/10 | 9/10 |
+| Final staged tree `a2468f3` | **9.4/10** | **9.5/10** | **9.4/10** |
+
+The intermediate review found no blockers but placed documentation below the
+required bar. Follow-up edits clarify extension removal, sorted JSON keys, and Go request
+validation choices, and split presence rules into construction/editing/validation
+sections. A separately reproduced caller-built nullable-array accessor issue is
+corrected with regression tests; reachability checks now cover future nested
+profile models as well as existing embedded models. The final actual Claude Code
+review confirms all prior documentation concerns are resolved, exceeds the
+9.1/10 target on all three axes, and reports no blockers. The verbatim receipt is
+`plans/reviews/directional-security-profiles-claude-final.md`. Remaining nits concern
+codec cost, guard allowlisting, and documentation placement; none changes the
+recorded wire behavior.
+
+Acceptance evidence is offline: complete sanitized POST and derived GET fixtures,
+exact policy JSON comparisons, isolated edits, malformed-field validation, and
+mocked OAuth create/list/GetByID/update. Audit fields are replayed because request
+models retain them; no independent live create request was captured in full.
+The TypeScript source hashes are recorded separately from frozen OpenAPI pins.
+Go race/build/lint checks and documentation source/example/browser/pixel checks
+pass; a tagged SDK version for Terraform consumption remains a separate release
+step. Scores describe review judgement, not live tenant certification.

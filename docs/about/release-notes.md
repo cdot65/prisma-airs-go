@@ -1,5 +1,19 @@
 # Release Notes
 
+## Unreleased: directional security profiles
+
+- Preserve legacy and observed prompt/response/tool-call/tool-response layouts
+  with typed protection settings, severities, toxicity confidence overrides,
+  source-code detection, conversation inspection, and optional DLP tenant metadata.
+- Preserve omitted/false/null/empty values and future additive fields during
+  profile edits. Existing keyed literals and constructed false masking booleans
+  remain compatible; new presence helpers support faithful Terraform state.
+- Validate locally malformed profile payloads before OAuth/API I/O. Mocked
+  fixture replay establishes offline compatibility; OpenAPI pins are unchanged.
+- See [consumer migration](../developer/directional-security-profiles.md).
+  Terraform consumers need an actual release tag containing this work; publication
+  and tagging remain pending separate authorization.
+
 ## v0.8.1
 
 Add typed workspace settings clearing for native Terraform ownership: default config/metadata, usage limits, rate limits and icon. Explicit null writes supplement the captured non-nullable update schema. Disposable SCM HTTP verification establishes clearing, label identity, workspace archival and dedicated IAM cleanup; existing-user access-policy management remains separate.
