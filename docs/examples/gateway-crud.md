@@ -21,7 +21,7 @@ can retry the deletion explicitly.
 
 ## 1. Run the complete lifecycle
 
-Save this program as `main.go` in a Go module with v0.8.1 installed:
+Save this program as `main.go` in a Go module with v0.9.0 installed:
 
 ```go
 package main

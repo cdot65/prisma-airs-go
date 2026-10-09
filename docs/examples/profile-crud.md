@@ -376,4 +376,4 @@ For Terraform, inspect `FieldPresence` and preserve `ProfileJSON.Extensions` whe
 reading and rebuilding state. A decoded omitted `MaskDataInline` requires its
 setter to express an explicit false. See the
 [presence and migration guide](../developer/directional-security-profiles.md)
-for omitted/null/empty mapping, metadata, provenance, and the pending tagged release.
+for omitted/null/empty mapping, metadata, provenance, and the v0.9.0 provider dependency.

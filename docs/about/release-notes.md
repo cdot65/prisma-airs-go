@@ -1,6 +1,6 @@
 # Release Notes
 
-## Unreleased: directional security profiles
+## v0.9.0 — directional security profiles
 
 - Preserve legacy and observed prompt/response/tool-call/tool-response layouts
   with typed protection settings, severities, toxicity confidence overrides,
@@ -14,8 +14,10 @@
 - Validate locally malformed profile payloads before OAuth/API I/O. Mocked
   fixture replay establishes offline compatibility; OpenAPI pins are unchanged.
 - See [consumer migration](../developer/directional-security-profiles.md).
-  Terraform consumers need an actual release tag containing this work; publication
-  and tagging remain pending separate authorization.
+  Terraform consumers can depend on `github.com/cdot65/prisma-airs-go@v0.9.0`.
+- Actual Claude Code consumer reviews score implementation standards 9.5/10,
+  spec fulfillment 9.6/10, and documentation 9.5/10. See
+  [review evidence](../developer/feature-quality.md).
 
 ## v0.8.1
 

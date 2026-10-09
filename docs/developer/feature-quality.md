@@ -84,8 +84,8 @@ mocked OAuth create/list/GetByID/update. Audit fields are replayed because reque
 models retain them; no independent live create request was captured in full.
 The TypeScript source hashes are recorded separately from frozen OpenAPI pins.
 Go race/build/lint checks and documentation source/example/browser/pixel checks
-pass; a tagged SDK version for Terraform consumption remains a separate release
-step. Scores describe review judgement, not live tenant certification.
+pass. Release v0.9.0 includes the reviewed implementation. Scores describe review
+judgement, not live tenant certification.
 
 ## Terraform directional-profile consumer follow-up
 
@@ -115,11 +115,13 @@ remaining process requirement is to name the resulting tested commit in the
 handoff, rather than the earlier implementation-only commit. The verbatim
 receipt is `plans/reviews/directional-security-profiles-terraform-consumer-claude-final.md`;
 both earlier completed reviews are adjacent, including round 2's disclosed tool
-permission limitation. Only the final receipt and this score record were added
-after the final reviewed tree.
+permission limitation. Implementation commit `f310474` adds only the final receipt
+and this score record beyond the final reviewed tree. Release preparation later
+updates version references and publication status.
 
 `make check`, `make build`, Go 1.22–1.24 consumer race checks, frozen snapshot/model
 checks, and the full documentation gate pass (19 compiled examples, nine browser
 checks, and nine pixel comparisons). The provider can develop against the tested
-local commit with a module `replace`. An actual tag containing the changes remains
-pending separate release authorization; published `v0.8.1` does not include them.
+implementation commit `f3104745312eea9208098f0ef9eb6a093ce48f95`, included in
+release v0.9.0. Published `v0.8.1` does not include these changes; use
+`github.com/cdot65/prisma-airs-go@v0.9.0` for the provider dependency.

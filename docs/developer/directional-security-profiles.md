@@ -283,10 +283,17 @@ can explicitly omit audit fields with the presence API. Frozen OpenAPI snapshots
 and coverage denominators are unchanged.
 
 Terraform currently requires `github.com/cdot65/prisma-airs-go v0.8.1`; that
-requirement does not include this work. The next authorized release must tag a
-commit containing these changes, update SDK version/reference metadata according
-to [release instructions](releases.md), and publish the corresponding module.
-Until then, use a local `replace` for development. The handoff reports the exact
-implementation commit and review artifact; neither is a published version.
-The CLI can migrate independently. This change does not perform live writes,
-tagging, or publication.
+requirement does not include this work. Release **v0.9.0** includes the tested
+implementation commit
+[`f3104745312eea9208098f0ef9eb6a093ce48f95`](https://github.com/cdot65/prisma-airs-go/commit/f3104745312eea9208098f0ef9eb6a093ce48f95)
+and its recorded Claude Code consumer review (standards 9.5/10, spec 9.6/10,
+documentation 9.5/10). Update the provider dependency with:
+
+```sh
+go get github.com/cdot65/prisma-airs-go@v0.9.0
+```
+
+Remove any development `replace` when switching to the published module. See
+[release instructions](releases.md) for assets and checksums. The CLI can migrate
+independently. Verification remains offline; release publication does not add
+live-tenant evidence.
