@@ -702,3 +702,178 @@ func (v SecurityProfileListResponse) HasField(name string) bool {
 	type plain SecurityProfileListResponse
 	return profileHasField(plain(v), v.ProfileJSON, name)
 }
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v LatencyConfig) FieldNames() []string {
+	type plain LatencyConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v ToxicCategoryConfig) FieldNames() []string {
+	type plain ToxicCategoryConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v TopicRef) FieldNames() []string {
+	type plain TopicRef
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v TopicArrayConfig) FieldNames() []string {
+	type plain TopicArrayConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v DataLeakMember) FieldNames() []string {
+	type plain DataLeakMember
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v DataLeakDetectionConfig) FieldNames() []string {
+	type plain DataLeakDetectionConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v DatabaseSecurityConfig) FieldNames() []string {
+	type plain DatabaseSecurityConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v DataProtectionConfig) FieldNames() []string {
+	type plain DataProtectionConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v URLCategoryMember) FieldNames() []string {
+	type plain URLCategoryMember
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v MaliciousCodeProtectionConfig) FieldNames() []string {
+	type plain MaliciousCodeProtectionConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v AppProtectionConfig) FieldNames() []string {
+	type plain AppProtectionConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v ModelProtectionConfig) FieldNames() []string {
+	type plain ModelProtectionConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v AgentProtectionConfig) FieldNames() []string {
+	type plain AgentProtectionConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v ModelConfiguration) FieldNames() []string {
+	type plain ModelConfiguration
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v AiSecurityProfileConfig) FieldNames() []string {
+	type plain AiSecurityProfileConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v DLPDataProfileConfig) FieldNames() []string {
+	type plain DLPDataProfileConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v ProfilePolicy) FieldNames() []string {
+	type plain ProfilePolicy
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v SecurityProfile) FieldNames() []string {
+	type plain SecurityProfile
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v CreateProfileRequest) FieldNames() []string {
+	type plain CreateProfileRequest
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v UpdateProfileRequest) FieldNames() []string {
+	type plain UpdateProfileRequest
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v SeverityByConfidence) FieldNames() []string {
+	type plain SeverityByConfidence
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v SourceCodeDetectionConfig) FieldNames() []string {
+	type plain SourceCodeDetectionConfig
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v ProtectionConfiguration) FieldNames() []string {
+	type plain ProtectionConfiguration
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v ContentTypeConfigurations) FieldNames() []string {
+	type plain ContentTypeConfigurations
+	return profileFieldNames(plain(v))
+}
+
+// FieldNames returns a fresh sorted list of known typed JSON field names, including
+// omitted fields. Extension keys are available separately through Extensions.
+func (v SecurityProfileListResponse) FieldNames() []string {
+	type plain SecurityProfileListResponse
+	return profileFieldNames(plain(v))
+}

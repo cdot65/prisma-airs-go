@@ -148,6 +148,15 @@ type AgentProtectionConfig struct {
 }
 ```
 
+### AgentProtectionConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v AgentProtectionConfig) FieldNames() []string
+```
+
 ### AgentProtectionConfig.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -190,6 +199,15 @@ type AiSecurityProfileConfig struct {
 	ContentType			string			`json:"content-type,omitempty"`
 	ModelConfiguration		*ModelConfiguration	`json:"model-configuration,omitempty"`
 }
+```
+
+### AiSecurityProfileConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v AiSecurityProfileConfig) FieldNames() []string
 ```
 
 ### AiSecurityProfileConfig.FieldPresence
@@ -286,6 +304,15 @@ type AppProtectionConfig struct {
 	UrlDetectedAction	string				`json:"url-detected-action,omitempty"`
 	MaliciousCodeProtection	*MaliciousCodeProtectionConfig	`json:"malicious-code-protection,omitempty"`
 }
+```
+
+### AppProtectionConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v AppProtectionConfig) FieldNames() []string
 ```
 
 ### AppProtectionConfig.FieldPresence
@@ -407,6 +434,15 @@ type ContentTypeConfigurations struct {
 }
 ```
 
+### ContentTypeConfigurations.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v ContentTypeConfigurations) FieldNames() []string
+```
+
 ### ContentTypeConfigurations.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -455,6 +491,15 @@ type CreateProfileRequest struct {
 	UpdatedBy	string		`json:"updated_by,omitempty"`
 	LastModifiedTs	string		`json:"last_modified_ts,omitempty"`
 }
+```
+
+### CreateProfileRequest.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v CreateProfileRequest) FieldNames() []string
 ```
 
 ### CreateProfileRequest.FieldPresence
@@ -561,6 +606,15 @@ type DLPDataProfileConfig struct {
 	NonFileBased	string		`json:"non-file-based,omitempty"`
 	FileBased	string		`json:"file-based,omitempty"`
 }
+```
+
+### DLPDataProfileConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v DLPDataProfileConfig) FieldNames() []string
 ```
 
 ### DLPDataProfileConfig.FieldPresence
@@ -833,6 +887,15 @@ type DataLeakDetectionConfig struct {
 }
 ```
 
+### DataLeakDetectionConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v DataLeakDetectionConfig) FieldNames() []string
+```
+
 ### DataLeakDetectionConfig.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -881,6 +944,15 @@ type DataLeakMember struct {
 	ID		string	`json:"id,omitempty"`
 	Version		string	`json:"version,omitempty"`
 }
+```
+
+### DataLeakMember.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v DataLeakMember) FieldNames() []string
 ```
 
 ### DataLeakMember.FieldPresence
@@ -1049,6 +1121,15 @@ type DataProtectionConfig struct {
 }
 ```
 
+### DataProtectionConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v DataProtectionConfig) FieldNames() []string
+```
+
 ### DataProtectionConfig.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -1089,6 +1170,15 @@ type DatabaseSecurityConfig struct {
 	Name		string	`json:"name"`
 	Action		string	`json:"action"`
 }
+```
+
+### DatabaseSecurityConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v DatabaseSecurityConfig) FieldNames() []string
 ```
 
 ### DatabaseSecurityConfig.FieldPresence
@@ -1250,6 +1340,15 @@ type LatencyConfig struct {
 }
 ```
 
+### LatencyConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v LatencyConfig) FieldNames() []string
+```
+
 ### LatencyConfig.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -1290,6 +1389,15 @@ type MaliciousCodeProtectionConfig struct {
 	Name		string	`json:"name"`
 	Action		string	`json:"action"`
 }
+```
+
+### MaliciousCodeProtectionConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v MaliciousCodeProtectionConfig) FieldNames() []string
 ```
 
 ### MaliciousCodeProtectionConfig.FieldPresence
@@ -1336,6 +1444,15 @@ type ModelConfiguration struct {
 	ModelProtection				[]ModelProtectionConfig	`json:"model-protection,omitempty"`
 	AgentProtection				[]AgentProtectionConfig	`json:"agent-protection,omitempty"`
 }
+```
+
+### ModelConfiguration.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v ModelConfiguration) FieldNames() []string
 ```
 
 ### ModelConfiguration.FieldPresence
@@ -1392,6 +1509,15 @@ type ModelProtectionConfig struct {
 	// property named items. Preserve the intended topic-list wire format.
 	TopicList	[]TopicArrayConfig	`json:"topic-list,omitempty"`
 }
+```
+
+### ModelProtectionConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v ModelProtectionConfig) FieldNames() []string
 ```
 
 ### ModelProtectionConfig.FieldPresence
@@ -1536,6 +1662,7 @@ type ProfileJSON struct {
 
 ResetFieldPresence removes an explicit override and infers presence from the
 typed value. On a decoded object, zero scalar values then become omitted.
+It also removes decoded presence state; retained nonzero values become present.
 
 ```go
 func (p *ProfileJSON) ResetFieldPresence(name string)
@@ -1545,6 +1672,8 @@ func (p *ProfileJSON) ResetFieldPresence(name string)
 
 SetExtension adds a future field, initializing extension storage as needed.
 It copies the map and input bytes; known typed fields still take precedence.
+A colliding typed name is accepted but never emitted. Use FieldNames on the
+owning model to identify typed fields, and modify their values/presence instead.
 
 ```go
 func (p *ProfileJSON) SetExtension(name string, value json.RawMessage) error
@@ -1557,6 +1686,8 @@ emission of zero values; JSONNull requires a nullable nil field; JSONOmitted
 suppresses the field. Invalid names/states are rejected at marshal/submission.
 Value fields remain authoritative: assigning a non-nil value after decoding a
 null array emits that value. To remove an override, use ResetFieldPresence.
+This method does not change the typed value. Clear that value as well when
+removal must survive a subsequent reset of the presence override.
 
 ```go
 func (p *ProfileJSON) SetFieldPresence(name string, presence JSONPresence)
@@ -1572,6 +1703,15 @@ type ProfilePolicy struct {
 	DlpDataProfiles		[]DLPDataProfileConfig		`json:"dlp-data-profiles,omitempty"`
 	AiSecurityProfiles	[]AiSecurityProfileConfig	`json:"ai-security-profiles,omitempty"`
 }
+```
+
+### ProfilePolicy.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v ProfilePolicy) FieldNames() []string
 ```
 
 ### ProfilePolicy.FieldPresence
@@ -1705,6 +1845,15 @@ type ProtectionConfiguration struct {
 }
 ```
 
+### ProtectionConfiguration.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v ProtectionConfiguration) FieldNames() []string
+```
+
 ### ProtectionConfiguration.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -1815,6 +1964,15 @@ type SecurityProfile struct {
 }
 ```
 
+### SecurityProfile.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v SecurityProfile) FieldNames() []string
+```
+
 ### SecurityProfile.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -1856,6 +2014,15 @@ type SecurityProfileListResponse struct {
 }
 ```
 
+### SecurityProfileListResponse.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v SecurityProfileListResponse) FieldNames() []string
+```
+
 ### SecurityProfileListResponse.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -1894,6 +2061,15 @@ type SeverityByConfidence struct {
 	High		string	`json:"high,omitempty"`
 	Moderate	string	`json:"moderate,omitempty"`
 }
+```
+
+### SeverityByConfidence.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v SeverityByConfidence) FieldNames() []string
 ```
 
 ### SeverityByConfidence.FieldPresence
@@ -1937,6 +2113,15 @@ type SourceCodeDetectionConfig struct {
 }
 ```
 
+### SourceCodeDetectionConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v SourceCodeDetectionConfig) FieldNames() []string
+```
+
 ### SourceCodeDetectionConfig.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -1976,6 +2161,15 @@ type TopicArrayConfig struct {
 	Action		ProfileAction	`json:"action"`
 	Topic		[]TopicRef	`json:"topic" profile:"nullable"`
 }
+```
+
+### TopicArrayConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v TopicArrayConfig) FieldNames() []string
 ```
 
 ### TopicArrayConfig.FieldPresence
@@ -2019,6 +2213,15 @@ type TopicRef struct {
 	TopicID		string	`json:"topic_id"`
 	Revision	int64	`json:"revision"`
 }
+```
+
+### TopicRef.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v TopicRef) FieldNames() []string
 ```
 
 ### TopicRef.FieldPresence
@@ -2145,6 +2348,15 @@ type ToxicCategoryConfig struct {
 }
 ```
 
+### ToxicCategoryConfig.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v ToxicCategoryConfig) FieldNames() []string
+```
+
 ### ToxicCategoryConfig.FieldPresence
 
 FieldPresence reports the current wire presence of a field by its JSON name.
@@ -2183,6 +2395,15 @@ type URLCategoryMember struct {
 	ProfileJSON	`json:"-"`
 	Member		[]string	`json:"member,omitempty" profile:"nullable"`
 }
+```
+
+### URLCategoryMember.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v URLCategoryMember) FieldNames() []string
 ```
 
 ### URLCategoryMember.FieldPresence
@@ -2233,6 +2454,15 @@ type UpdateProfileRequest struct {
 	CreatedBy	string		`json:"created_by,omitempty"`
 	LastModifiedTs	string		`json:"last_modified_ts,omitempty"`
 }
+```
+
+### UpdateProfileRequest.FieldNames
+
+FieldNames returns a fresh sorted list of known typed JSON field names, including
+omitted fields. Extension keys are available separately through Extensions.
+
+```go
+func (v UpdateProfileRequest) FieldNames() []string
 ```
 
 ### UpdateProfileRequest.FieldPresence

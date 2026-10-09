@@ -86,3 +86,40 @@ The TypeScript source hashes are recorded separately from frozen OpenAPI pins.
 Go race/build/lint checks and documentation source/example/browser/pixel checks
 pass; a tagged SDK version for Terraform consumption remains a separate release
 step. Scores describe review judgement, not live tenant certification.
+
+## Terraform directional-profile consumer follow-up
+
+The additional Terraform requirements were reviewed separately against the
+implementation and the external-package consumer suite. All completed scores
+below are actual Claude Code results; the final review exceeds the required
+9.1/10 on every axis.
+
+| Review snapshot | Standards | Spec | Documentation |
+|---|---:|---:|---:|
+| Initial consumer additions, staged tree `7ab572a` | 8.5/10 | 9/10 | 8.5/10 |
+| Wire-name enumeration and deeper rebuild proof, tree `240b5bb` | 9.2/10 | 9.4/10 | 9.1/10 |
+| Final consumer corrections, tree `b712c26` | **9.5/10** | **9.6/10** | **9.5/10** |
+
+The follow-up exposes `FieldNames()` on every profile model, avoiding
+caller-maintained wire-name lists when transferring presence. External consumers
+rebuild all four directions and nested protection branches using public APIs,
+persist JSON bytes, change only response toxicity, remove a managed detector,
+and reload in separate processes. Entire-policy comparisons pin unrelated
+directions, future keys, nested extensions, explicit empty values, nulls, and raw
+numeric precision. Additional tests pin both directions of explicit overrides:
+setting a previously omitted field and removing a previously present object.
+
+The final review independently executes the focused race suite and reads the
+completed host validation receipts. It reports no required code changes; its
+remaining process requirement is to name the resulting tested commit in the
+handoff, rather than the earlier implementation-only commit. The verbatim
+receipt is `plans/reviews/directional-security-profiles-terraform-consumer-claude-final.md`;
+both earlier completed reviews are adjacent, including round 2's disclosed tool
+permission limitation. Only the final receipt and this score record were added
+after the final reviewed tree.
+
+`make check`, `make build`, Go 1.22–1.24 consumer race checks, frozen snapshot/model
+checks, and the full documentation gate pass (19 compiled examples, nine browser
+checks, and nine pixel comparisons). The provider can develop against the tested
+local commit with a module `replace`. An actual tag containing the changes remains
+pending separate release authorization; published `v0.8.1` does not include them.

@@ -26,12 +26,30 @@ may omit it. `CspID` and `TsgID` also retain observed response metadata.
 
 ## Presence API
 
-Every profile model embeds `ProfileJSON`. Check `HasField(jsonName)` first:
+Every profile model embeds `ProfileJSON` and exposes these public APIs. Names
+are exact wire names, including hyphens or underscores from the relevant model.
+
+| API | Behavior |
+| --- | --- |
+| `HasField(name string) bool` | Recognizes a typed field or a stored extension key, even if the typed field is omitted |
+| `FieldNames() []string` | Returns a fresh sorted list of all known typed wire names, including omitted fields; enumerate extensions separately |
+| `FieldPresence(name string) JSONPresence` | Reports `JSONOmitted`, `JSONNull`, or `JSONPresent` from the current typed value and presence state |
+| `SetFieldPresence(name string, state JSONPresence)` | Overrides serialization of a known field; does **not** assign or clear its typed value |
+| `ResetFieldPresence(name string)` | Removes the field's presence state and infers serialization from its current typed value |
+| `SetMaskDataInline(value bool)` | Assigns the DLP masking boolean and marks `mask-data-inline` present |
+| `SetMaskDataInStorage(value bool)` | Assigns the model masking boolean and marks `mask-data-in-storage` present |
+| `SetExtension(name string, value json.RawMessage) error` | Validates and copies an extension value; initializes storage and copies the map |
+| `Extensions map[string]json.RawMessage` | Public nested extension storage; use `delete(model.Extensions, name)` to remove an extension |
+
+Check `HasField(jsonName)` first:
 it recognizes typed names even when omitted and stored extension names. This
 detects typos such as `mask_data_inline`. Presence setters address typed fields
 only. For a stored extension, use `SetExtension` to replace it or
 `delete(model.Extensions, name)` to omit it; `HasField` does not make extension
 keys valid presence-setter targets.
+`SetExtension` accepts a colliding typed name but its bytes will never be emitted;
+the typed field controls serialization even when omitted. Use `FieldNames()` to
+identify typed names and assign those fields with the presence helpers instead.
 
 `FieldPresence(jsonName)` returns
 `JSONOmitted`, `JSONNull`, or `JSONPresent` for the current serialized field.
@@ -41,8 +59,9 @@ arrays. Use JSON names, such as `mask-data-inline` and `database-security`.
 Decoding preserves these distinctions. Successful decoding into a reused model
 replaces its fields, presence state, and extensions. It does not insert defaults
 or copy protections between directions. Invalid known JSON types fail decoding;
-within policy models, null is accepted only for DLP/URL member arrays,
-database-security arrays, and nullable topic buckets. The profile list envelope
+within policy models, null is accepted only for `DataLeakDetectionConfig.member`,
+`URLCategoryMember.member`, `DataProtectionConfig.database-security`, and
+`TopicArrayConfig.topic`. The profile list envelope
 also preserves its legacy nullable `ai_profiles` array and future sibling fields. Detector `Options` can contain arbitrary JSON values.
 
 For caller-built values:
@@ -60,6 +79,10 @@ For caller-built values:
 | Omitted decoded scalar | `SetFieldPresence(jsonName, JSONOmitted)` |
 | Explicit zero/empty optional scalar | Assign the value and use `SetFieldPresence(jsonName, JSONPresent)` |
 
+Caller-built required nullable arrays report `JSONNull` when nil, matching the
+serialized value. To deliberately emit `{}`, assign a pointer to an empty object,
+such as `&runtime.AppProtectionConfig{}`, or a non-nil empty typed map.
+
 ### Editing decoded values
 
 Existing constructed `MaskDataInline`, `MaskDataInStorage`, and response `Active`
@@ -67,11 +90,34 @@ booleans still serialize false. Decoded omitted booleans stay omitted until set
 true or explicitly marked present, as shown in the table. New optional booleans
 use pointers.
 
-Assigning a non-nil slice to a decoded null array emits that array, including an
-empty slice. `JSONOmitted` suppresses a field even when it has a value.
-`ResetFieldPresence(jsonName)` removes a presence override; decoded zero scalars
-then become omitted. Caller-built required nullable arrays report `JSONNull`
-when nil, matching the serialized value.
+Direct assignment uses the current typed value; the SDK never caches and replays
+known raw values. Without an explicit override, a decoded present scalar remains
+present after assigning false or an empty string. An omitted scalar assigned its
+zero value stays omitted; mark it present to emit that value. Assigning nil to a
+decoded optional, non-nullable object or list removes it. A nullable list assigned
+nil becomes null if it was present; use `JSONOmitted` to remove it. Assigning a
+non-nil slice to a decoded null array emits that array, including an empty slice.
+
+Explicit overrides take precedence. `JSONOmitted` suppresses a field even when it
+has a nonzero value. `JSONPresent` on a nil non-nullable object/list fails encoding;
+after explicitly marking it present, clear that override or mark it omitted when
+removing it. `JSONNull` requires a nullable nil value; assigning a non-nil value
+afterward emits the new value. For example:
+
+```go
+// response is a decoded *runtime.ProtectionConfiguration.
+response.ModelProtection = []runtime.ModelProtectionConfig{} // Emit [].
+response.SetFieldPresence("model-protection", runtime.JSONPresent)
+response.ModelProtection = nil
+response.SetFieldPresence("model-protection", runtime.JSONOmitted) // Remove the field.
+```
+
+`SetFieldPresence` never clears the exported field. `ResetFieldPresence` removes
+both decoded presence state and explicit overrides, then infers from the current
+value. On a decoded model, zero scalars become omitted; retained nonzero values
+become present. To remove a field durably, clear its typed value and mark it
+omitted. To remove one detector, replace the list with the retained typed entries;
+use a non-nil empty slice when removing the last entry should emit `[]`.
 
 ### Validation and compatibility
 
@@ -103,6 +149,14 @@ cannot distinguish omission from false. Non-nil empty slices represent empty
 arrays. Retain these three states in the provider's own model; do not normalize
 null/missing arrays to empty or default missing booleans to false.
 
+Persist policy JSON bytes with `json.Marshal(policy)` and restore them in the next
+process with `json.Unmarshal(bytes, &policy)`. Every nested model restores presence
+and extensions from the wire. Preservation does not require the original SDK
+object or a private presence cache. Serialization stores the effective wire
+state, not private override flags or suppressed typed values: a field omitted
+from those bytes reloads as omitted with a zero/nil typed value. JSON key ordering
+or whitespace may change; values, presence, and raw numeric precision survive.
+
 When building an update, keep the decoded policy and edit the owned detector,
 or restore values using the table above. To change response models into request
 models while preserving top-level metadata and extensions, marshal the response
@@ -129,6 +183,85 @@ Unknown JSON numbers remain raw, without float conversion. Existing DLP rule
 maps use `json.Number` on decode for the same reason. Profiles, maps, slices, and
 pointer members should belong to one editor; a shallow struct copy still shares
 those objects. A JSON round-trip provides an independent editable copy.
+
+For a rebuilt object, preserve its known typed values, enumerate
+`source.FieldNames()` and transfer presence with
+`target.SetFieldPresence(name, source.FieldPresence(name))`, then copy extensions
+with `SetExtension` at **each rebuilt level**. Do not transfer only the top-level
+extension map. Enumeration avoids maintaining a separate list of wire names. A
+struct copy preserves every known typed value; replace its `ProfileJSON` with
+fresh public presence/extension state and rebuild owned nested objects as needed.
+Copies still share pointers, slices, and maps until you copy those separately.
+
+Transferred presence is an **explicit override**. The decoded-object nil-removal
+shortcut therefore does not apply to a rebuilt field marked `JSONPresent`:
+after assigning nil, use `SetFieldPresence(name, JSONOmitted)` to remove it, or
+`ResetFieldPresence(name)` to infer from its current value. Clear scalar values
+too when resetting an omission should keep them absent. The consumer test covers
+removing a rebuilt confidence object with this rule.
+Likewise, assigning a value to a rebuilt field that was omitted in the source
+requires `SetFieldPresence(name, JSONPresent)` or `ResetFieldPresence(name)`;
+otherwise its transferred `JSONOmitted` override still suppresses the new value.
+The SDK provides JSON round-tripping and these public state primitives; consumers
+implement any selective rebuilding or deep copying they need.
+
+This complete, offline example transfers an explicitly empty ID
+and a future field without relying on private SDK state:
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+
+    "github.com/cdot65/prisma-airs-go/aisec/runtime"
+)
+
+func main() {
+    var source runtime.DataLeakMember
+    if err := json.Unmarshal([]byte(`{"text":"sensitive","id":"","future":900719925474099312345}`), &source); err != nil {
+        panic(err)
+    }
+    target := source
+    target.ProfileJSON = runtime.ProfileJSON{}
+    for _, name := range source.FieldNames() {
+        target.SetFieldPresence(name, source.FieldPresence(name))
+    }
+    for name, raw := range source.Extensions {
+        if err := target.SetExtension(name, raw); err != nil {
+            panic(err)
+        }
+    }
+    body, err := json.Marshal(target)
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(string(body))
+}
+```
+
+The external-package `aisec/runtime/profile_consumer_test.go` applies those APIs
+to the full directional fixture. Separate processes reload disk bytes, rebuild
+all four direction containers and their data/app/model/agent branches, change only
+response toxicity, remove a
+managed detector, and reload again. It compares entire policies so unrelated
+directions, nested extensions, future direction keys, and large raw numbers must
+survive. In-test additions of topic references, toxicity categories, source-code
+settings, and nested extensions exercise branches absent from the original
+fixture; the checked-in fixture remains unchanged. DLP members from the fixture
+are rebuilt too.
+Each child process confirms that its requested operation actually ran. It also
+tests caller-built create/update requests with explicit false,
+empty strings, empty objects, and empty lists. Run it with:
+
+```sh
+go test -race ./aisec/runtime -run TestTerraformProfileConsumer -count=1
+```
+
+Terraform owns detector identity matching, merge rules, and field ownership. The
+SDK exposes wire fidelity and mutation primitives; it does not select which
+detectors an adapter manages.
 
 ## Evidence and release status
 

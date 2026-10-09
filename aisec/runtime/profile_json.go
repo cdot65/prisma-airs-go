@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"sort"
 	"strings"
 	"sync"
 )
@@ -36,6 +37,8 @@ type ProfileJSON struct {
 // suppresses the field. Invalid names/states are rejected at marshal/submission.
 // Value fields remain authoritative: assigning a non-nil value after decoding a
 // null array emits that value. To remove an override, use ResetFieldPresence.
+// This method does not change the typed value. Clear that value as well when
+// removal must survive a subsequent reset of the presence override.
 func (p *ProfileJSON) SetFieldPresence(name string, presence JSONPresence) {
 	// Copy on write also avoids changing the source when a profile value is copied.
 	next := make(map[string]JSONPresence, len(p.presence)+1)
@@ -54,6 +57,7 @@ func (p *ProfileJSON) SetFieldPresence(name string, presence JSONPresence) {
 
 // ResetFieldPresence removes an explicit override and infers presence from the
 // typed value. On a decoded object, zero scalar values then become omitted.
+// It also removes decoded presence state; retained nonzero values become present.
 func (p *ProfileJSON) ResetFieldPresence(name string) {
 	next := make(map[string]JSONPresence, len(p.presence))
 	for k, v := range p.presence {
@@ -73,6 +77,8 @@ func (p *ProfileJSON) ResetFieldPresence(name string) {
 
 // SetExtension adds a future field, initializing extension storage as needed.
 // It copies the map and input bytes; known typed fields still take precedence.
+// A colliding typed name is accepted but never emitted. Use FieldNames on the
+// owning model to identify typed fields, and modify their values/presence instead.
 func (p *ProfileJSON) SetExtension(name string, value json.RawMessage) error {
 	if !json.Valid(value) {
 		return fmt.Errorf("%s: invalid extension JSON", name)
@@ -162,6 +168,16 @@ func profileHasField(value any, state ProfileJSON, name string) bool {
 	}
 	_, ok := state.Extensions[name]
 	return ok
+}
+
+func profileFieldNames(value any) []string {
+	fields := profileJSONFields(reflect.TypeOf(value))
+	names := make([]string, len(fields))
+	for i, field := range fields {
+		names[i] = field.name
+	}
+	sort.Strings(names)
+	return names
 }
 
 func profileFieldPresence(value any, state ProfileJSON, name string) JSONPresence {

@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-// Profile models require all four scoped JSON/presence methods. Detect a future
+// Profile models require all scoped JSON/presence methods. Detect a future
 // embedded model that forgets wrappers before it can silently lose wire fields.
 func TestProfileJSONMethodCoverage(t *testing.T) {
 	packages, err := parser.ParseDir(token.NewFileSet(), ".", nil, 0)
@@ -72,7 +72,7 @@ func TestProfileJSONMethodCoverage(t *testing.T) {
 		t.Fatal("no scoped profile models found")
 	}
 	for name := range models {
-		for _, method := range []string{"MarshalJSON", "UnmarshalJSON", "FieldPresence", "HasField"} {
+		for _, method := range []string{"MarshalJSON", "UnmarshalJSON", "FieldPresence", "HasField", "FieldNames"} {
 			if !methods[name][method] {
 				t.Errorf("%s embeds ProfileJSON but lacks %s", name, method)
 			}
@@ -87,6 +87,7 @@ func TestProfileJSONReachableModelCoverage(t *testing.T) {
 		json.Marshaler
 		FieldPresence(string) JSONPresence
 		HasField(string) bool
+		FieldNames() []string
 	}
 	encoder := reflect.TypeOf((*profileEncoder)(nil)).Elem()
 	decoder := reflect.TypeOf((*json.Unmarshaler)(nil)).Elem()
@@ -111,6 +112,9 @@ func TestProfileJSONReachableModelCoverage(t *testing.T) {
 			field := typ.Field(i)
 			if field.PkgPath != "" || field.Tag.Get("json") == "-" {
 				continue
+			}
+			if strings.Split(field.Tag.Get("json"), ",")[0] == "" {
+				t.Errorf("reachable model %s field %s lacks a wire name", typ, field.Name)
 			}
 			visit(field.Type)
 		}

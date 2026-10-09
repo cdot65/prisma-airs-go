@@ -8,6 +8,9 @@
 - Preserve omitted/false/null/empty values and future additive fields during
   profile edits. Existing keyed literals and constructed false masking booleans
   remain compatible; new presence helpers support faithful Terraform state.
+- Verify public presence/extension APIs from an external Go package, including
+  policy persistence across separate processes, rebuilt nested objects, isolated
+  response-toxicity edits, and managed-detector removal without resurrection.
 - Validate locally malformed profile payloads before OAuth/API I/O. Mocked
   fixture replay establishes offline compatibility; OpenAPI pins are unchanged.
 - See [consumer migration](../developer/directional-security-profiles.md).
